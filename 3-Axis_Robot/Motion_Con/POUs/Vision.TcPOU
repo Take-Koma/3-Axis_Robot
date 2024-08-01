@@ -99,7 +99,9 @@ TCVN_CS_ACQUIRING:
 	3:
 		// グレー画像に変換
 		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageProc, ETcVnColorSpaceTransform.TCVN_CST_RGB_TO_GRAY, hr);
+		iStep:=4;
 		
+	4:
 		// ブロブ検出パラメータをセット
 		stBlobParams.bFilterByArea := TRUE;
 		stBlobParams.fMinArea := 100;
@@ -120,7 +122,9 @@ TCVN_CS_ACQUIRING:
 		IF SUCCEEDED(hr) AND ipContourList <> 0 THEN
 			hr := ipContourList.GetElementNum(nDetectedNum);	// 検出したブロブ数を取得
 		END_IF
+		iStep:=5;
 
+	5:
 		IF nDetectedNum > 0 THEN
 			// 検出したブロブの輪郭を描画
 			hr := F_VN_DrawContours(ipContourList, -1, ipImageRes,  Vision.aColorGreen, 3, hr);
@@ -145,7 +149,7 @@ TCVN_CS_ACQUIRING:
 				hrTemp := F_VN_DrawPointExp(aDrawPos[0], aDrawPos[1], 
 											ipImageRes, 
 											ETcVnDrawShape.TCVN_DS_PLUS, 
-											Vision.aColorGreen, 5, 1, 
+											aColorGreen, 5, 1, 
 											ETcVnLineType.TCVN_LT_4_CONNECTED, 0);
 				
 				// 面積値を結果画像に対して出力
@@ -153,7 +157,7 @@ TCVN_CS_ACQUIRING:
 				hrTemp := F_VN_PutText(	sText, 
 										ipImageRes, 
 										aDrawPos[0] - 50, aDrawPos[1] + 20, 
-										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, Vision.aColorRed, 0);
+										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, aColorRed, 0);
 				
 				// 座標情報を結果画像に対して出力
 				fbFormatString(	sFormat := '(X, Y) = (%0.3f, %0.3f)', 
@@ -161,7 +165,7 @@ TCVN_CS_ACQUIRING:
 				hrTemp := F_VN_PutText(	sText, 
 										ipImageRes, 
 										aDrawPos[0] - 110, aDrawPos[1] + 80, 
-										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, Vision.aColorRed, 0);
+										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, aColorRed, 0);
 			END_WHILE
 			
 			FW_SafeRelease(ADR(ipContour));		// ループの外で開放するほうが効率的なので、ここで開放する
@@ -169,9 +173,9 @@ TCVN_CS_ACQUIRING:
 		END_IF
 		FW_SafeRelease(ADR(ipContourList));
 							
-		istep:=4;
+		istep:=6;
 	
-	4:		
+	6:		
 		// 画面表示イメージを作成する
 		hr := F_VN_TransformIntoDisplayableImage(ipImageIn, ipImageInDisp, hr);
 		hr := F_VN_TransformIntoDisplayableImage(ipImageRes, ipImageResDisp, S_OK);
@@ -182,13 +186,18 @@ TCVN_CS_ACQUIRING:
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="Vision">
-      <LineId Id="1111" Count="63" />
+      <LineId Id="1111" Count="49" />
+      <LineId Id="1269" Count="0" />
+      <LineId Id="1161" Count="0" />
+      <LineId Id="1270" Count="0" />
+      <LineId Id="1162" Count="12" />
       <LineId Id="1196" Count="0" />
       <LineId Id="1201" Count="0" />
       <LineId Id="1203" Count="0" />
       <LineId Id="1206" Count="0" />
       <LineId Id="1204" Count="1" />
       <LineId Id="1199" Count="0" />
+      <LineId Id="1271" Count="1" />
       <LineId Id="1209" Count="0" />
       <LineId Id="1211" Count="45" />
       <LineId Id="1210" Count="0" />
