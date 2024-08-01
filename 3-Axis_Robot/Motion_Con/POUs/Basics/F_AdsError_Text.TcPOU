@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_AdsError_Text" Id="{fb5e6d18-7373-4fa3-930b-d3ecd995f927}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AdsError_Text : STRING
+VAR_INPUT
+	nCode: UDINT;
+END_VAR
+VAR
+	sText: STRING(255);
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE nCode OF
+	16#000 : sText := '0: No error  ';
+	16#001 : sText := '1: Internal error  ';
+	16#002 : sText := '2: No Rtime  ';
+	16#003 : sText := '3: Allocation locked memory error  ';
+	16#004 : sText := '4: Insert mailbox error  ';
+	16#005 : sText := '5: Wrong receive HMSG  ';
+	16#006 : sText := '6: target port not found  ';
+	16#007 : sText := '7: target machine not found  ';
+	16#008 : sText := '8: Unknown command ID  ';
+	16#009 : sText := '9: Bad task ID  ';
+	16#00A : sText := '10: No IO  ';
+	16#00B : sText := '11: Unknown AMS command  ';
+	16#00C : sText := '12: Win 32 error  ';
+	16#00D : sText := '13: Port not connected  ';
+	16#00E : sText := '14: Invalid AMS length  ';
+	16#00F : sText := '15: Invalid AMS Net ID  ';
+	16#010 : sText := '16: Low Installation level  ';
+	16#011 : sText := '17: No debug available  ';
+	16#012 : sText := '18: Port disabled  ';
+	16#013 : sText := '19: Port already connected  ';
+	16#014 : sText := '20: AMS Sync Win32 error  ';
+	16#015 : sText := '21: AMS Sync Timeout  ';
+	16#016 : sText := '22: AMS Sync AMS error  ';
+	16#017 : sText := '23: AMS Sync no index map  '; 
+	16#018 : sText := '24: Invalid AMS port  ';
+	16#019 : sText := '25: No memory  ';
+	16#01A : sText := '26: TCP send error  ';
+	16#01B : sText := '27: Host unreachable  ';
+	16#1000 : sText := '4096: Intern: RTERR_INTERNAL: $R$N Internal fatal error in the TwinCAT real-time system.  ';
+	16#1001 : sText := '4097: Intern: RTERR_BADTIMERPERIODS: $R$N Timer value not vaild.  ';
+	16#1002 : sText := '4098: Intern: RTERR_INVALIDTASKPTR: $R$N Task pointer has the invalid value ZERO. ';
+	16#1003 : sText := '4099: Intern: RTERR_INVALIDSTACKPTR: $R$N Task stack pointer has the invalid value ZERO. ';
+	16#1004 : sText := '4100: Intern: RTERR_PRIOEXISTS: $R$N The demand task priority is already assigned.  ';
+	16#1005 : sText := '4101: Intern: RTERR_NOMORETCB: $R$N No more free TCB (Task Control Block) available. Maximum number of TCBs is 64.  ';
+	16#1006 : sText := '4102: Intern: RTERR_NOMORESEMAS: $R$N No more free semaphores available. Maximum number of semaphores is 64.  ';
+	16#1007 : sText := '4103: Intern: RTERR_NOMOREQUEUES: $R$N No more free queue available. Maximum number of queue is 64.  ';
+	16#1008 : sText := '4104: Intern: TwinCAT reserved.:  ';
+	16#1009 : sText := '4105: Intern: TwinCAT reserved.:  '; 
+	16#100a : sText := '4106: Intern: TwinCAT reserved.:  '; 
+	16#100b : sText := '4107: Intern: TwinCAT reserved.:  '; 
+	16#100C : sText := '4108: Intern: TwinCAT reserved.:  ';
+	16#100D : sText := '4109: Intern: RTERR_EXTIRQALREADYDEF: $R$N An external synchronisation interrupt is already applied. ';
+	16#100E : sText := '4110: Intern: RTERR_EXTIRQNOTDEF: $R$N No external synchronsiation interrupt applied. ';
+	16#100F : sText := '4111: Intern: RTERR_EXTIRQINSTALLFAILED: $R$N The apply of the external synchronisation interrupt failed. ';
+	16#1010 : sText := '4112: Intern: RTERR_IRQLNOTLESSOREQUAL: $R$N Call of a service function in the wrong context.  ';
+	16#2000 : sText := ': ERR_IOERRS  ';
+	16#274C : sText := '10060: A socket operation was attempted to an unreachable host  ';
+	16#274D : sText := '10061: A connection attempt failed because the connected party did not properly respond after a period of time, $R$N or established connection failed because connected host has failed to respond.  ';
+	16#2751 : sText := '10065: No connection could be made because the target machine actively refused it  ';
+	16#2900 : sText := ': ERR_DPSLAVE (ERR_IOERRS+0x900)  ';
+	16#2A00 : sText := ': ERR_CP5412A2 (ERR_IOERRS+0xA00)  '; 
+	16#2B00 : sText := ': ERR_ASP (ERR_IOERRS+0xB00)  '; 
+	16#2C00 : sText := ': ERR_CANSLAVE (ERR_IOERRS+0xC00)  '; 
+	16#2D00 : sText := ': ERR_CIF30 (ERR_IOERRS+0xD00)  '; 
+	16#2E00 : sText := ': ERR_IBSSLAVE (ERR_IOERRS+0xE00)  ';
+	16#3000 : sText := ': ERR_SPSERRS  '; 
+	16#4000 : sText := ': ERR_NCERRS  ';
+	16#500 : sText := '1280: Intern: ROUTERERR_NOLOCKEDMEMORY: $R$N No locked memory can be allocated.  ';
+	16#501 : sText := '1281: Intern: ROUTERERR_RESIZEMEMORY: $R$N The size of the  router memory could not be changed. ';
+	16#502 : sText := '1282: Intern: ROUTERERR_MAILBOXFULL: $R$N The Mailbox of the AmsPort has reached the maximum number of possible entries. The current sent message was abolished.  ';
+	16#503 : sText := '1283: Intern: ROUTERERR_DEBUGBOXFULL: $R$N The Mailbox of the Ams debugger port has reached the maximum number of possible entries. $R$N The sent message wil not be displayed in the debug monitor.  ';
+	16#504 : sText := '1284: Intern: ROUTERERR_UNKNOWNPORTTYPE:  ';
+	16#505 : sText := '1285: Intern: ROUTERERR_NOTINITIALIZED: $R$N Router is not (yet) initialised.  ';
+	16#506 : sText := '1286: Intern: ROUTERERR_PORTALREADYINUSE: $R$N The desired port number is already assigned. ';
+	16#507 : sText := '1287: Intern: ROUTERERR_NOTREGISTERED: $R$N Ams Port not registered  ';
+	16#508 : sText := '1288: Intern: ROUTERERR_NOMOREQUEUES: $R$N The maximum number of Ams Ports reached.  ';
+	16#509 : sText := '1289: Intern: ROUTERERR_INVALIDPORT:  '; 
+	16#50A : sText := '1290: Intern: ROUTERERR_NOTACTIVATED: $R$N TwinCAT Router not (yet) active.  ';
+	16#6000 : sText := ': ERR_PLCERRS  ';
+	16#0700 : sText := '1792: error class <device error>  ';
+	16#7000 : sText := ': ERR_STRKERRS  '; 
+	16#0701 : sText := '1793: Service is not supported by server  ';
+	16#0702 : sText := '1794: invalid index group  ';
+	16#0703 : sText := '1795: invalid index offset  ';
+	16#0704 : sText := '1796: reading/writing not permitted  ';
+	16#0705 : sText := '1797: parameter size not correct  ';
+	16#0706 : sText := '1798: invalid parameter value(s)  ';
+	16#0707 : sText := '1799: device is not in a ready state  ';
+	16#708 : sText := '1800: device is busy  '; 
+	16#709 : sText := '1801: invalid context (must be in Windows)  ';
+	16#70A : sText := '1802: out of memory  '; 
+	16#70B : sText := '1803: invalid parameter value(s)  '; 
+	16#70C : sText := '1804: not found (files, ...)  ';
+	16#70D : sText := '1805: syntax error in command or file  '; 
+	16#70E : sText := '1806: objects do not match  '; 
+	16#70F : sText := '1807: object already exists  '; 
+	16#710 : sText := '1808: symbol not found  '; 
+	16#711 : sText := '1809: symbol version invalid  '; 
+	16#712 : sText := '1810: server is in invalid state  '; 
+	16#713 : sText := '1811: AdsTransMode not supported  '; 
+	16#714 : sText := '1812: Notification handle is invalid  '; 
+	16#715 : sText := '1813: Notification client not registered  '; 
+	16#716 : sText := '1814: no more notification handles  '; 
+	16#717 : sText := '1815: size for watch too big  ';
+	16#718 : sText := '1816: device not initialized  ';
+	16#719 : sText := '1817: device has a timeout  '; 
+	16#71A : sText := '1818: query interface failed  '; 
+	16#71B : sText := '1819: wrong interface required  '; 
+	16#71C : sText := '1820: class ID is invalid  '; 
+	16#71D : sText := '1821: object ID is invalid  '; 
+	16#71E : sText := '1822: request is pending  '; 
+	16#71F : sText := '1823: request is aborted  '; 
+	16#720 : sText := '1824: signal warning  '; 
+	16#721 : sText := '1825: invalid array index  ';
+	16#722 : sText := '1826: symbol not active -> release handle and try again  ';
+	16#723 : sText := '1827: access denied  ';
+	16#740 : sText := '1856: Error class <client error>  ';
+	16#741 : sText := '1857: invalid parameter at service  ';
+	16#742 : sText := '1858: polling list is empty  '; 
+	16#743 : sText := '1859: var connection already in use  ';
+	16#744 : sText := '1860: invoke ID in use  ';
+	16#745 : sText := '1861: timeout elapsed  ';
+	16#746 : sText := '1862: error in win32 subsystem  '; 
+	16#748 : sText := '1864: ads port not opened  '; 
+	16#750 : sText := '1872: internal error in ads sync  ';
+	16#751 : sText := '1873: hash table overflow  ';
+	16#752 : sText := '1874: key not found in hash  ';
+	16#753 : sText := '1875: no more symbols in cache  '; 
+	16#754 : sText := '1876: invalid response received   ';
+	16#755 : sText := '1877: Sync port locked: ADS-Client tries to send a ADS msg but another thread is still waiting for an ADS-response. $R$N This error occurs only if no ADS-router is installed $R$N or the router does not know the remote ADS device' ;
+	16#7800 : sText := ': ERR_PRJSPECIFIC  ';
+	ELSE
+		sText := 'No Text for this ErrorCode available';
+END_CASE;
+
+F_AdsError_Text := sText;]]></ST>
+    </Implementation>
+    <LineIds Name="F_AdsError_Text">
+      <LineId Id="7" Count="126" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

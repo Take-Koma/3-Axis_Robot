@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="P_BasicMotion" Id="{f27a55a5-997f-454a-b871-3cb76ed937db}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_BasicMotion
+VAR
+	eAxis				:E_Axis;
+	fbMcPower			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Power;
+	fbMCMoveHome		:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
+	fbMcMoveJog			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
+	fbMcReset			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Reset;
+	fbMCStop			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Stop;
+	fbMCHalt			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Halt;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FOR eAxis:= E_Axis.X_Axis TO E_Axis.Gripper DO
+	aMotion();
+END_FOR;]]></ST>
+    </Implementation>
+    <Action Name="aMotion" Id="{7128f73f-11b3-4c17-add6-4b6df319662d}">
+      <Implementation>
+        <ST><![CDATA[//パワーON
+	fbMcPower[eAxis](
+		Axis			:=GVL.stAxis[eAxis],
+		Enable			:=GVL.bPower,
+		Enable_Positive	:=GVL.bPower,
+		Enable_Negative	:=GVL.bPower,
+		Override		:=100,
+		Status			=>GVL.bMcPowerStatus[eAxis],
+		Busy			=>,
+		Active			=>,
+		Error			=>,
+		ErrorID			=>
+	);
+
+//ゼロポジションへ
+	fbMCMoveHome[eAxis](
+		Axis			:=GVL.stAxis[eAxis],
+		Execute			:=GVL.bHome,
+		Position		:=0,
+		Velocity		:=50,
+		Done			=>GVL.stMoveHomingOut[eAxis].Done,
+		Busy			=>GVL.stMoveHomingOut[eAxis].Busy,
+		Active			=>GVL.stMoveHomingOut[eAxis].Active,
+		CommandAborted	=>GVL.stMoveHomingOut[eAxis].CommandAborted,
+		Error			=>GVL.stMoveHomingOut[eAxis].Error,
+		ErrorID			=>GVL.stMoveHomingOut[eAxis].ErrorID
+	);	
+
+//Jog駆動
+	fbMcMoveJog[eAxis](
+		Axis			:=GVL.stAxis[eAxis],
+		Execute   		:=GVL.bJog[eAxis],
+		Position    	:=GVL.lrJogPosition[eAxis],
+		Velocity       	:=50,
+		Acceleration   	:=,
+		Deceleration    :=,
+		Jerk            :=,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>GVL.stMoveJogOut[eAxis].Done,
+		Busy			=>GVL.stMoveJogOut[eAxis].Busy,
+		Active			=>GVL.stMoveJogOut[eAxis].Active,
+		CommandAborted	=>GVL.stMoveJogOut[eAxis].CommandAborted,
+		Error			=>GVL.stMoveJogOut[eAxis].Error,
+		ErrorID			=>GVL.stMoveJogOut[eAxis].ErrorID
+	);
+
+
+//全軸一時停止
+	fbMCHalt[eAxis](
+		Axis			:=GVL.stAxis[eAxis],
+		Execute			:=GVL.bHalt,
+		Done			=>GVL.stHaltOut[eAxis].Done,
+		Busy			=>GVL.stHaltOut[eAxis].Busy,
+		Active			=>GVL.stHaltOut[eAxis].Active,
+		CommandAborted	=>GVL.stHaltOut[eAxis].CommandAborted,
+		Error			=>GVL.stHaltOut[eAxis].Error,
+		ErrorID			=>GVL.stHaltOut[eAxis].ErrorID
+	);
+
+//全軸ストップ
+	fbMCStop[eAxis](
+		Axis			:=GVL.stAxis[eAxis],
+		Execute			:=GVL.bStop,
+		Done			=>GVL.stStopOut[eAxis].Done,
+		Busy			=>GVL.stStopOut[eAxis].Busy,
+		Active			=>GVL.stStopOut[eAxis].Active,
+		CommandAborted	=>GVL.stStopOut[eAxis].CommandAborted,
+		Error			=>GVL.stStopOut[eAxis].Error,
+		ErrorID			=>GVL.stStopOut[eAxis].ErrorID
+	);
+	
+//全軸リセット
+	fbMcReset[eAxis](
+		Axis:=GVL.stAxis[eAxis],
+		Execute:=GVL.bReset
+	);]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="P_BasicMotion">
+      <LineId Id="20" Count="2" />
+    </LineIds>
+    <LineIds Name="P_BasicMotion.aMotion">
+      <LineId Id="107" Count="74" />
+      <LineId Id="53" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

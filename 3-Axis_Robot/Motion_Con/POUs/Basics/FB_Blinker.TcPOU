@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Blinker" Id="{fc1e2205-b40f-4441-bf36-8f228c1129bf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Blinker
+VAR_INPUT
+	tBlinkTime: TIME;
+END_VAR
+VAR_OUTPUT
+	bBlink: BOOL;
+END_VAR
+VAR
+	nIdxBlinker: UDINT;
+	fbTimer1: TON;
+	fbTimer2: TON;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*The value of the Output Variable bBlink changes all the time. *)
+
+CASE nIdxBlinker OF
+
+	0:	fbTimer2.IN:= FALSE;
+		fbTimer1.PT:= tBlinkTime;		(*This is how long bBlink stays TRUE*)
+		fbTimer1.IN:= TRUE;
+		IF fbTimer1.Q THEN
+			bBlink:= TRUE;
+			nIdxBlinker:= 10;
+		END_IF
+	10:	fbTimer1.IN:= FALSE;
+		fbTimer2.PT:= tBlinkTime;		(*This is how long bBlink stays FALSE*)
+		fbTimer2.IN:= TRUE;
+		IF fbTimer2.Q THEN
+			bBlink:= FALSE;
+			nIdxBlinker:= 0;
+		END_IF
+
+END_CASE
+
+fbTimer1();
+fbTimer2();]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Blinker">
+      <LineId Id="12" Count="22" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

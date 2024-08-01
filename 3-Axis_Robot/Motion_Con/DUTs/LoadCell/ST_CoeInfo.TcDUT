@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_CoeInfo" Id="{6aa55b4c-3f4e-436e-bb36-511f6a0905e4}">
+    <Declaration><![CDATA[TYPE ST_CoeInfo :
+STRUCT
+	bEnableUserScale: BOOL:= 0;
+	diUserScaleOffset: DINT:= 0;
+	diUserScaleGain: DINT:= 65536;
+	dwFilterSettings: DWORD:= 2;
+
+	bEnableUserScaleIndex8010: BOOL:= 0;
+	diUserScaleOffsetIndex8010: DINT:= 0;
+	diUserScaleGainIndex8010: DINT:= 65536;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

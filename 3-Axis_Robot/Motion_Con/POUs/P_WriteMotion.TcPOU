@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="P_WriteMotion" Id="{a13c4fb8-4faa-4e1e-970b-514f68ab2a7e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_WriteMotion
+VAR
+	eStep				:E_WriteStep:=E_WriteStep.Stay;
+	iStep				:INT:=0;
+	fbMCMoveAbsolute	:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
+	MoveAbsoluteOut		:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF ST_McOutputs;
+	fbGripperGripAngle	:FB_Gripper_GripAngle;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE eStep OF
+
+E_WriteStep.Stay:(*初期値、bMoveがTrueになったらステップを進める*)
+
+	IF GVL.bMove=TRUE THEN
+		GVL.bCircleWriteFin:=FALSE;
+		GVL.bEllipseWriteFin:=FALSE;
+		eStep:=E_WriteStep.GripperOpen;
+	ELSE
+		eStep:=E_WriteStep.Stay;
+	END_IF;
+
+E_WriteStep.GripperOpen:(*グリッパーを開ける*)
+
+	fbMCMoveAbsolute[E_Axis.Gripper].Execute:=TRUE;
+	fbMCMoveAbsolute[E_Axis.Gripper].Position:=0;
+	fbMCMoveAbsolute[E_Axis.Gripper].Velocity:=150;
+
+	IF MoveAbsoluteOut[E_Axis.Gripper].Done=TRUE THEN
+		eStep:=E_WriteStep.ZAxixZeroPotision;
+		fbMCMoveAbsolute[E_Axis.Gripper].Execute:=FALSE;
+	END_IF;
+
+E_WriteStep.ZAxixZeroPotision:(*Z軸をゼロポジションへ、衝突回避のためにまずZ軸を移動*)
+
+	fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=TRUE;
+	fbMCMoveAbsolute[E_Axis.Z_Axis].Position:=0;
+	fbMCMoveAbsolute[E_Axis.Z_Axis].Velocity:=150;
+
+	IF MoveAbsoluteOut[E_Axis.Z_Axis].Done=TRUE THEN
+		eStep:=E_WriteStep.XYAxixZeroPotision;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
+	END_IF;
+
+E_WriteStep.XYAxixZeroPotision:(*Z軸移動後に、X,Y軸をゼロポジションへ移動*)
+
+	fbMCMoveAbsolute[E_Axis.X_Axis].Execute:=TRUE;
+	fbMCMoveAbsolute[E_Axis.Y_Axis].Execute:=TRUE;
+	fbMCMoveAbsolute[E_Axis.X_Axis].Position:=0;
+	fbMCMoveAbsolute[E_Axis.Y_Axis].Position:=0;
+	fbMCMoveAbsolute[E_Axis.X_Axis].Velocity:=150;
+	fbMCMoveAbsolute[E_Axis.Y_Axis].Velocity:=150;
+	
+	IF MoveAbsoluteOut[E_Axis.X_Axis].Done=TRUE AND MoveAbsoluteOut[E_Axis.Y_Axis].Done=TRUE THEN
+		eStep:=E_WriteStep.PenGripp;
+		fbMCMoveAbsolute[E_Axis.X_Axis].Execute:=FALSE;
+		fbMCMoveAbsolute[E_Axis.Y_Axis].Execute:=FALSE;
+	END_IF;
+
+E_WriteStep.PenGripp:(*ペンを掴む*)
+
+	CASE iStep OF
+	0:(*何もしない*)
+		iStep:=1;
+	
+	1:(*ペンを掴む高さに移動*)
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Position:=205.0-GVL.lrPenHalfLength+GVL.lrPenGripLength;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Velocity:=150;
+
+		IF MoveAbsoluteOut[E_Axis.Z_Axis].Done=TRUE THEN
+			iStep:=2;
+			fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
+		END_IF;
+	
+	2:(*グリッパーを閉じてペンを掴む*)
+		fbMCMoveAbsolute[E_Axis.Gripper].Execute:=TRUE;
+		
+		fbGripperGripAngle(
+			lrPenDiameter:=GVL.lrPenDiameter,
+			lrGripAngle=>fbMCMoveAbsolute[E_Axis.Gripper].Position
+			);
+
+		fbMCMoveAbsolute[E_Axis.Gripper].Velocity:=150;
+	
+		IF MoveAbsoluteOut[E_Axis.Gripper].Done=TRUE THEN
+			iStep:=3;
+			fbMCMoveAbsolute[E_Axis.Gripper].Execute:=FALSE;
+		END_IF;
+	
+	3:(*Z軸をゼロポジションへ戻す*)
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Position:=0;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Velocity:=150;
+	
+		IF MoveAbsoluteOut[E_Axis.Z_Axis].Done=TRUE THEN
+			eStep:=E_WriteStep.Write;
+			fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
+			iStep:=0;
+		END_IF;
+	
+	END_CASE;
+
+E_WriteStep.Write:(*図形を書いていく*)
+	CASE iStep OF
+	0:
+		iStep:=1;
+	
+	1:
+		P_Circle();
+	
+		IF GVL.bCircleWriteFin=TRUE THEN;
+			iStep:=2;
+		END_IF;
+		
+	2:
+		P_Ellipse();
+		
+		IF GVL.bEllipseWriteFin=TRUE THEN;
+			iStep:=3;
+		END_IF;
+	
+	3:
+		eStep:=E_WriteStep.ZAxixZeroPotision2;
+		iStep:=0;
+		
+	END_CASE
+
+E_WriteStep.ZAxixZeroPotision2:(*Z軸をゼロポジションへ、衝突回避のためにまずZ軸を移動*)
+
+	fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=TRUE;
+	fbMCMoveAbsolute[E_Axis.Z_Axis].Position:=0;
+	fbMCMoveAbsolute[E_Axis.Z_Axis].Velocity:=150;
+
+	IF MoveAbsoluteOut[E_Axis.Z_Axis].Done=TRUE THEN
+		eStep:=E_WriteStep.XYAxixZeroPotision2;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
+	END_IF;
+	
+E_WriteStep.XYAxixZeroPotision2:(*Z軸移動後に、X,Y軸をゼロポジションへ移動*)
+
+	fbMCMoveAbsolute[E_Axis.X_Axis].Execute:=TRUE;
+	fbMCMoveAbsolute[E_Axis.Y_Axis].Execute:=TRUE;
+	fbMCMoveAbsolute[E_Axis.X_Axis].Position:=0;
+	fbMCMoveAbsolute[E_Axis.Y_Axis].Position:=0;
+	fbMCMoveAbsolute[E_Axis.X_Axis].Velocity:=150;
+	fbMCMoveAbsolute[E_Axis.Y_Axis].Velocity:=150;
+	
+	IF MoveAbsoluteOut[E_Axis.X_Axis].Done=TRUE AND MoveAbsoluteOut[E_Axis.Y_Axis].Done=TRUE THEN
+		eStep:=E_WriteStep.PenRelease;
+		fbMCMoveAbsolute[E_Axis.X_Axis].Execute:=FALSE;
+		fbMCMoveAbsolute[E_Axis.Y_Axis].Execute:=FALSE;
+	END_IF;
+
+E_WriteStep.PenRelease:(*ペンをリリースする*)
+
+	CASE iStep OF
+	0:
+		iStep:=1;
+		
+	1:
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Position:=205.0-GVL.lrPenHalfLength+GVL.lrPenGripLength;
+		
+		IF MoveAbsoluteOut[E_Axis.Z_Axis].Done=TRUE THEN
+			fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
+			iStep:=2;
+		END_IF;
+	
+	2:
+		fbMCMoveAbsolute[E_Axis.Gripper].Execute:=TRUE;
+		fbMCMoveAbsolute[E_Axis.Gripper].Position:=0;
+	
+		IF MoveAbsoluteOut[E_Axis.Gripper].Done=TRUE THEN
+			fbMCMoveAbsolute[E_Axis.Gripper].Execute:=FALSE;
+			iStep:=3;
+		END_IF;
+	
+	3:
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Position:=0;
+
+		IF MoveAbsoluteOut[E_Axis.Z_Axis].Done=TRUE THEN
+			eStep:=E_WriteStep.Stay;
+			fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
+			iStep:=0;
+		END_IF;
+	
+	END_CASE;
+
+END_CASE;
+
+	aMotion();]]></ST>
+    </Implementation>
+    <Action Name="aMotion" Id="{6baf6034-54bc-4a63-a4b5-3ae8298a5b7e}">
+      <Implementation>
+        <ST><![CDATA[//各軸とグリッパーの駆動用
+	fbMCMoveAbsolute[E_Axis.X_Axis](
+		Axis			:=GVL.stAxis[E_Axis.X_Axis],
+		Execute			:=fbMCMoveAbsolute[E_Axis.X_Axis].Execute,
+		Position		:=fbMCMoveAbsolute[E_Axis.X_Axis].Position,
+		Velocity		:=fbMCMoveAbsolute[E_Axis.X_Axis].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut[E_Axis.X_Axis].Done,
+		Busy			=>MoveAbsoluteOut[E_Axis.X_Axis].Busy,
+		Active			=>MoveAbsoluteOut[E_Axis.X_Axis].Active,
+		CommandAborted	=>MoveAbsoluteOut[E_Axis.X_Axis].CommandAborted,
+		Error			=>MoveAbsoluteOut[E_Axis.X_Axis].Error,
+		ErrorID			=>MoveAbsoluteOut[E_Axis.X_Axis].ErrorID
+	);
+
+	fbMCMoveAbsolute[E_Axis.Y_Axis](
+		Axis			:=GVL.stAxis[E_Axis.Y_Axis],
+		Execute			:=fbMCMoveAbsolute[E_Axis.Y_Axis].Execute,
+		Position		:=fbMCMoveAbsolute[E_Axis.Y_Axis].Position,
+		Velocity		:=fbMCMoveAbsolute[E_Axis.Y_Axis].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut[E_Axis.Y_Axis].Done,
+		Busy			=>MoveAbsoluteOut[E_Axis.Y_Axis].Busy,
+		Active			=>MoveAbsoluteOut[E_Axis.Y_Axis].Active,
+		CommandAborted	=>MoveAbsoluteOut[E_Axis.Y_Axis].CommandAborted,
+		Error			=>MoveAbsoluteOut[E_Axis.Y_Axis].Error,
+		ErrorID			=>MoveAbsoluteOut[E_Axis.Y_Axis].ErrorID
+	);
+
+	fbMCMoveAbsolute[E_Axis.Z_Axis](
+		Axis			:=GVL.stAxis[E_Axis.Z_Axis],
+		Execute			:=fbMCMoveAbsolute[E_Axis.Z_Axis].Execute,
+		Position		:=fbMCMoveAbsolute[E_Axis.Z_Axis].Position,
+		Velocity		:=fbMCMoveAbsolute[E_Axis.Z_Axis].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut[E_Axis.Z_Axis].Done,
+		Busy			=>MoveAbsoluteOut[E_Axis.Z_Axis].Busy,
+		Active			=>MoveAbsoluteOut[E_Axis.Z_Axis].Active,
+		CommandAborted	=>MoveAbsoluteOut[E_Axis.Z_Axis].CommandAborted,
+		Error			=>MoveAbsoluteOut[E_Axis.Z_Axis].Error,
+		ErrorID			=>MoveAbsoluteOut[E_Axis.Z_Axis].ErrorID
+	);
+	
+	fbMCMoveAbsolute[E_Axis.Gripper](
+		Axis			:=GVL.stAxis[E_Axis.Gripper],
+		Execute			:=fbMCMoveAbsolute[E_Axis.Gripper].Execute,
+		Position		:=fbMCMoveAbsolute[E_Axis.Gripper].Position,
+		Velocity		:=fbMCMoveAbsolute[E_Axis.Gripper].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut[E_Axis.Gripper].Done,
+		Busy			=>MoveAbsoluteOut[E_Axis.Gripper].Busy,
+		Active			=>MoveAbsoluteOut[E_Axis.Gripper].Active,
+		CommandAborted	=>MoveAbsoluteOut[E_Axis.Gripper].CommandAborted,
+		Error			=>MoveAbsoluteOut[E_Axis.Gripper].Error,
+		ErrorID			=>MoveAbsoluteOut[E_Axis.Gripper].ErrorID
+	);]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="P_WriteMotion">
+      <LineId Id="1820" Count="181" />
+      <LineId Id="861" Count="0" />
+    </LineIds>
+    <LineIds Name="P_WriteMotion.aMotion">
+      <LineId Id="3" Count="54" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

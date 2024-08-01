@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Gripper_GripAngle" Id="{e4688722-634f-464e-a20f-efe8a902898e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Gripper_GripAngle
+VAR_INPUT
+	lrPenDiameter	:lREAL;(*ペンの直径 単位mm*)
+END_VAR
+VAR_OUTPUT
+	lrGripAngle		:LREAL;(*グリップする角度*)
+END_VAR
+VAR
+	lrd				:LREAL:=6.000;(*アタッチメントの直径［mm］*)
+	lrr				:LREAL:=6.400;(*アタッチメントの回転半径［mm］*)
+	lrA				:LREAL;
+	lrB				:LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	lrA:=EXPT((lrPenDiameter+lrd)/2,2)-EXPT(9.05,2)-EXPT(lrr,2);
+	lrB:=2*9.05*lrr;
+
+	IF -1<lrA/lrB AND lrA/lrB<1 THEN
+		lrGripAngle:=180/PI*ACOS(lrA/lrB);
+	END_IF;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Gripper_GripAngle">
+      <LineId Id="9" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="91" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

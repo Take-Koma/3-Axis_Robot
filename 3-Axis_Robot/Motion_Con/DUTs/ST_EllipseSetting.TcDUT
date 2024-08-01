@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_EllipseSetting" Id="{efa16465-069c-4ce1-862e-547bba2e767c}">
+    <Declaration><![CDATA[TYPE ST_EllipseSetting :
+STRUCT
+	bWrite				:BOOL:=FALSE;
+	uiXCenter			:UINT:=150;
+	uiYCenter			:UINT:=150;
+	uiVertex			:UINT:=50;
+	uiCoVertex			:UINT:=25;
+	lrSlopeDeg			:LREAL :=0;
+	lrStartDeg			:LREAL :=0;
+	lrEndDeg			:LREAL :=370;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

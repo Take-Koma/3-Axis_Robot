@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="P_Alarm" Id="{2ba418d6-d2ad-4644-981b-51152d6f50c8}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_Alarm
+VAR
+	i								:INT;	
+	bMachineStateFlag				:ARRAY[E_MachineState.Base..E_MachineState.Moving] OF BOOL;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	//---フラグをリセット---
+	FOR i := E_AlarmList.SafetyNotRun TO E_AlarmList.LastAlarm DO
+		bMachineStateFlag[i]:=FALSE;
+	END_FOR
+
+	//---発生しているアラームをチェック---
+	FOR i := E_AlarmList.SafetyNotRun TO E_AlarmList.LastAlarm DO
+		IF GVL.stAlarm[i].bFlag=TRUE THEN
+			
+			CASE GVL.stAlarm[i].eMachineStateSet OF
+				E_MachineState.Base:
+					bMachineStateFlag[E_MachineState.Base]:=TRUE;
+				
+				E_MachineState.Emergency:
+					bMachineStateFlag[E_MachineState.Emergency]:=TRUE;
+					
+				E_MachineState.EmergencyReset:
+					bMachineStateFlag[E_MachineState.EmergencyReset]:=TRUE;
+					
+				E_MachineState.Warning:
+					bMachineStateFlag[E_MachineState.Warning]:=TRUE;
+					
+				E_MachineState.Stay:
+					bMachineStateFlag[E_MachineState.Stay]:=TRUE;
+					
+				E_MachineState.Stop:
+					bMachineStateFlag[E_MachineState.Stop]:=TRUE;
+					
+				E_MachineState.Moving:
+					bMachineStateFlag[E_MachineState.Moving]:=TRUE;
+			END_CASE
+			
+		END_IF
+	END_FOR
+
+	//---発生アラームの重いほうからマシンステートに登録---
+	IF bMachineStateFlag[E_MachineState.Emergency]=TRUE THEN
+		GVL.eMachineState:=E_MachineState.Emergency;
+		
+	ELSIF bMachineStateFlag[E_MachineState.Warning]=TRUE THEN
+		GVL.eMachineState:=E_MachineState.Warning;
+		
+	ELSIF bMachineStateFlag[E_MachineState.EmergencyReset]=TRUE THEN
+		GVL.eMachineState:=E_MachineState.EmergencyReset;
+		
+	ELSIF bMachineStateFlag[E_MachineState.Stay]=TRUE THEN
+		GVL.eMachineState:=E_MachineState.Stay;
+		
+	ELSIF bMachineStateFlag[E_MachineState.Stop]=TRUE THEN
+		GVL.eMachineState:=E_MachineState.Stop;
+		
+	ELSIF bMachineStateFlag[E_MachineState.Moving]=TRUE THEN
+		GVL.eMachineState:=E_MachineState.Moving;
+
+	ELSIF bMachineStateFlag[E_MachineState.Base]=TRUE THEN
+		GVL.eMachineState:=E_MachineState.Base;
+	
+	END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="P_Alarm">
+      <LineId Id="40" Count="0" />
+      <LineId Id="99" Count="2" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

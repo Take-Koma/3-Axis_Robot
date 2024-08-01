@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_CheckArrayBounds" Id="{e37e7ab9-2451-4b07-bc05-84971a30726f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_CheckArrayBounds
+VAR_INPUT
+	diArrayIndex: DINT;
+	diLowerBound: DINT;
+	diUpperBound: DINT;
+END_VAR
+VAR_OUTPUT
+	sLogMessage: STRING;
+	diReturnBound: DINT;
+END_VAR
+VAR
+	bErrorUpper: BOOL;
+	bErrorLower: BOOL;
+	fbRTrig_MessageOutputLower: R_TRIG;
+	fbRTrig_MessageOutputUpper: R_TRIG;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*++++++++++ Checkbounds ++++++++++*)
+(*If somehow it happens that a value of any of the used arrays that does not exist is being accessed,
+the value is either set to the highest declared value (if a value higher than the highest declared value is being accessed) 
+or it is set to the lowest declared value (if a value lower than the lowest declared value is being accessed)  *)
+
+IF diArrayIndex< diLowerBound THEN
+	diReturnBound:= diLowerBound;
+	bErrorLower:= TRUE;
+
+	sLogMessage:= 'CheckBounds: Array index too LOW! Lower Bound: ';			(*Message is put together*)
+	sLogMessage:=CONCAT(sLogMessage,DINT_TO_STRING(diLowerBound));
+	sLogMessage:=CONCAT(sLogMessage,' Index being accessed: ');
+	sLogMessage:=CONCAT(sLogMessage,DINT_TO_STRING(diArrayIndex));
+
+ELSIF diArrayIndex> diUpperBound THEN
+	diReturnBound:= diUpperBound;
+	bErrorUpper:= TRUE;
+
+	sLogMessage:= 'CheckBounds: Array index too HIGH! Upper Bound: ';			(*Message is put together*)
+	sLogMessage:=CONCAT(sLogMessage,DINT_TO_STRING(diUpperBound));
+	sLogMessage:=CONCAT(sLogMessage,' Index being accessed: ');
+	sLogMessage:=CONCAT(sLogMessage,DINT_TO_STRING(diArrayIndex));
+
+ELSIF NOT (diArrayIndex< diLowerBound) AND
+	NOT (diArrayIndex> diUpperBound) THEN
+		diReturnBound:= diArrayIndex;
+		bErrorUpper:= FALSE;
+		bErrorLower:= FALSE;
+END_IF
+
+(*++++++++++ ADSLOGDINT ++++++++++*)
+(*If somehow it happens that a value of any of the used arrays that does not exist is being accessed,
+the Error is written into the Logger Box of the TC System Manager  *)
+
+fbRTrig_MessageOutputLower( CLK:= bErrorLower, Q=> );
+fbRTrig_MessageOutputUpper( CLK:= bErrorUpper, Q=> );
+
+IF fbRTrig_MessageOutputLower.Q OR fbRTrig_MessageOutputUpper.Q THEN
+	ADSLOGDINT( ADSLOG_MSGTYPE_ERROR OR ADSLOG_MSGTYPE_LOG,sLogMessage,0);	(*Message is written into Event Log*)
+END_IF
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_CheckArrayBounds">
+      <LineId Id="16" Count="41" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

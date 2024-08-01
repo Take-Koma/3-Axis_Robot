@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_EL3351" Id="{52d948b3-db8b-46b9-870c-8db641a18825}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EL3351
+VAR_INPUT
+	bEnable: BOOL;
+	nTerminalNr: UINT;
+	bUseVisuInputs: BOOL;
+(*+++++ Inputs that are used if Visu-Inputs are not used +++++*)
+	rForcedRatedOutput: REAL;
+	rForcedRatedCapacity: REAL;
+	rForcedZeroBalance: REAL;
+END_VAR
+VAR_OUTPUT
+	bDeviceOk: BOOL;
+	sDeviceStatus: STRING(255);
+	rUref: REAL;
+	rUdiff: REAL;
+	rGrossWeight: REAL;
+	rNetWeight: REAL;
+	rTareWeight: REAL;
+END_VAR
+VAR
+(*+++++ AMS Address for CoE Com +++++*)
+	AdsAddr AT %I*: ST_AmsAddr;
+(*+++++ WcState (Working Counter)+++++ *)
+	bWcState AT%I*: BOOL;
+(*+++++ Info Data --> State +++++*)
+	uiState AT%I*: UINT;
+
+(*+++++ AIBridge Inputs +++++*)
+	bBridgeUnderrange AT%I*: BOOL;
+	bBridgeOverrangerange AT%I*: BOOL;
+	bBridgeError AT%I*: BOOL;
+	bBridgeState AT%I*: BOOL;
+
+(*+++++ AISupply Inputs +++++*)
+	bSupplyUnderrange AT%I*: BOOL;
+	bSupplyOverrangerange AT%I*: BOOL;
+	bSupplyError AT%I*: BOOL;
+	bSupplyState AT%I*: BOOL;
+
+(*+++++ Raw Values of Voltages +++++*)
+	diDiffvoltage AT%I* : DINT;
+	diRefvoltage AT%I* : DINT;
+
+(*+++++ TxPDO Toggle +++++*)
+	bToggleBridge AT%I* : BOOL;
+	bToggleSupply AT%I* : BOOL;
+
+	bTerminalOK: BOOL;
+	sTerminalStatus: STRING;
+
+	bFunctionBlockCoeAccessOK: BOOL;
+	bBridgeChannelOK: BOOL;
+	bSupplyChannelOK: BOOL;
+(*+++++ Instances +++++*)
+	fbTerminalDiagnosis: FB_Terminal_Diagnosis;
+	fbChannelDiagnosis: FB_EL3351_Channel_Diagnosis;
+	fbMeasure: FB_EL3351_Measuring;
+	fbToggleBit: FB_ToggleBit;
+	fbCoe: FB_EL3351_CoE;
+
+(*+++++ Miscellaneous +++++*)
+	bVisuZoom: BOOL:= 0;
+	bCoEZoom: BOOL:= 0;
+	fbRTrigVisuZoom: R_TRIG;
+	bQuestionMarkToggle: BOOL:= 0;
+	bQuestionMarkFilter: BOOL:= 0;
+	bQuestionMarkAdsError: BOOL := 0;
+	bConnection: BOOL:= 0;
+	dwButtonColour: DWORD:= 16#00F0F0F0;
+	sTerminalNr: STRING;
+	sShowTerminalNumber: STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT bEnable THEN
+	bDeviceOk:= TRUE;
+END_IF
+IF bEnable THEN
+
+	(*Terminal Diagnosis*)
+	fbTerminalDiagnosis(  	bWorkingCounter:= bWcState ,
+						uiInfoDataState:= uiState,
+						bTerminalOK=> bTerminalOK,
+						sTerminalStatus=> sTerminalStatus );
+
+	(*Channel Diagnosis*)
+	fbChannelDiagnosis( 	bBridgeUnderrange:= bBridgeUnderrange,
+						bBridgeOverrangerange:= bBridgeOverrangerange,
+						bBridgeError:= bBridgeError,
+						bBridgeState:= bBridgeState,
+						bSupplyUnderrange:= bSupplyUnderrange,
+						bSupplyOverrangerange:= bSupplyOverrangerange,
+					 	bSupplyError:= bSupplyError,
+						bSupplyState:= bSupplyState,
+						bBridgeChannelOK=> bBridgeChannelOK,
+						bSupplyChannelOK=> bSupplyChannelOK);
+
+		fbCoE( 			AdsAddr:= AdsAddr,
+						bCoeAccessOK => bFunctionBlockCoeAccessOK);
+
+		fbMeasure(		diDiffvoltage:= diDiffvoltage ,
+						diRefvoltage:= diRefvoltage,
+						bUseVisuInputs:= bUseVisuInputs,
+						rForcedRatedOutput:= rForcedRatedOutput,
+						rForcedRatedCapacity:= rForcedRatedCapacity,
+						rForcedZeroBalance:= rForcedZeroBalance,
+						rUref=> rUref,
+						rUdiff=> rUdiff,
+						rGrossWeight=> rGrossWeight,
+						rNetWeight=> rNetWeight,
+						rTareWeight=> rTareWeight );
+
+		fbToggleBit( 	bToggleBridge:= bToggleBridge ,
+					bToggleSupply:= bToggleSupply );
+
+	IF bFunctionBlockCoeAccessOK= TRUE AND bTerminalOK= TRUE AND bBridgeChannelOK= TRUE AND bSupplyChannelOK= TRUE  THEN
+		bDeviceOk:= TRUE;
+		sDeviceStatus:= '';
+	ELSE
+		bDeviceOK:= FALSE;
+		sDeviceStatus:= sTerminalNr;
+		sDeviceStatus:= CONCAT (sDeviceStatus, '. ');
+	END_IF
+
+	(*Visu Zoom*)
+	fbRTrigVisuZoom(CLK:= bCoEZoom, Q=>);
+	IF fbRTrigVisuZoom.Q THEN
+		bVisuZoom:= NOT bVisuZoom;
+	END_IF
+
+END_IF
+
+(*+++++ To show the number of the Terminal in the visu +++++*)
+sTerminalNr:= UINT_TO_STRING(nTerminalNr);
+sShowTerminalNumber:= 'Terminal ';
+sShowTerminalNumber:= CONCAT(sShowTerminalNumber, sTerminalNr);]]></ST>
+    </Implementation>
+    <LineIds Name="FB_EL3351">
+      <LineId Id="72" Count="61" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Colours_State" Id="{caa90c5c-bd43-40a6-8071-5d346faca0ff}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Colours_State
+VAR_INPUT
+	bRed: BOOL;
+	bGreen: BOOL;
+	bBlue: BOOL;
+	bGrey: BOOL;
+END_VAR
+VAR_OUTPUT
+	dwColour: DWORD;			(*16#00 Blue Green Red*)
+END_VAR
+VAR
+	byRed: BYTE;
+	byGreen: BYTE;
+	byBlue: BYTE;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bRed THEN
+	byRed:= 16#FF;
+	byGreen:= 16#00;
+	byBlue:= 16#00;
+ELSIF bGreen THEN
+	byRed:= 16#00;
+	byGreen:= 16#FF;
+	byBlue:= 16#00;
+ELSIF bBlue THEN
+	byRed:= 16#00;
+	byGreen:= 16#00;
+	byBlue:= 16#FF;
+ELSIF bGrey THEN
+	byRed:= 16#C0;
+	byGreen:= 16#C0;
+	byBlue:= 16#C0;
+ELSE
+	dwColour:= 16#FFFFFFFF;
+END_IF
+
+dwColour:= byRed; 										(*dwColour is now 16#00-00-00-byRed*)
+dwColour:= dwColour+ SHL(BYTE_TO_DWORD(byGreen), 8);	(*dwColour is now 16#00-00-byGreen-byRed*)
+dwColour:= dwColour+ SHL(BYTE_TO_DWORD(byBlue),16);		(*dwColour is now 16#00-byBlue-byGreen-byRed*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Colours_State">
+      <LineId Id="15" Count="23" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Vision_StartAcquiring_ExTrigger" Id="{f462b106-1bed-4708-b1c4-56a72d3cb301}" SpecialFunc="None">
+    <Declaration><![CDATA[// 画像取込可能な状態にする　【ライブ表示状態（常時連続取込）/ハードウェアトリガー版】
+FUNCTION Vision_StartAcquiring_ExTrigger : ETcVnCameraState
+VAR_INPUT
+	fbCamera				: FB_VN_SimpleCameraControl;	// Cameraオブジェクト or File Sourceオブジェクト
+END_VAR
+
+VAR
+	hr						: HRESULT;						// 関数の戻り値を表す変数
+	eState					: ETcVnCameraState;				// オブジェクトの状態を表す
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// カメラのステータスを取得
+eState := fbCamera.GetState();
+
+IF eState = TCVN_CS_ERROR THEN
+	// エラーの時はリセットを実行
+	hr := fbCamera.Reset();
+	
+ELSIF eState < TCVN_CS_ACQUIRING THEN
+	// 取込開始状態に移行させる
+	hr := fbCamera.StartAcquisition();
+END_IF
+
+Vision_StartAcquiring_ExTrigger := eState;
+]]></ST>
+    </Implementation>
+    <LineIds Name="Vision_StartAcquiring_ExTrigger">
+      <LineId Id="50" Count="0" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="28" Count="3" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

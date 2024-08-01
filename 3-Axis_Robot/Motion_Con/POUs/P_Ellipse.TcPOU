@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="P_Ellipse" Id="{9dc51ed6-f919-4c26-aa90-0595fc2530fd}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_Ellipse
+VAR
+	iEndNumberEllipse	:INT;(*書き終わった楕円の個数*)
+	iWrittingEllipse	:INT;(*今から何個目の楕円を書くのか*)
+	i					:INT;
+	stEllipseSettings	:ARRAY[1..32] OF ST_EllipseSetting;
+
+	eStep				:E_EllipseWriteStep:=E_EllipseWriteStep.Check;
+	iStep				:INT:=0;
+	lrDeg				:LREAL:=0;
+
+	lrBase0				:ARRAY[E_Axis.X_Axis..E_Axis.Y_Axis] OF LREAL;
+	lrBase1				:ARRAY[E_Axis.X_Axis..E_Axis.Y_Axis] OF LREAL;
+	fbMCMoveAbsolute0	:ARRAY[E_Axis.X_Axis..E_Axis.Z_Axis] OF MC_MoveAbsolute;
+	fbMCMoveAbsolute1	:ARRAY[E_Axis.X_Axis..E_Axis.Z_Axis] OF MC_MoveAbsolute;
+	MoveAbsoluteOut0	:ARRAY[E_Axis.X_Axis..E_Axis.Z_Axis] OF ST_McOutputs;
+	MoveAbsoluteOut1	:ARRAY[E_Axis.X_Axis..E_Axis.Z_Axis] OF ST_McOutputs;
+	fbZAxisTPCon0		:FB_Z_Axis_TargetPositionConvert;
+	fbZAxisTPCon1		:FB_Z_Axis_TargetPositionConvert;
+	bCheck0				:ARRAY[E_Axis.X_Axis..E_Axis.Z_Axis] OF BOOL;
+	bCheck1				:ARRAY[E_Axis.X_Axis..E_Axis.Z_Axis] OF BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE eStep OF
+	
+E_EllipseWriteStep.Check:(*まず書く楕円を確認*)
+	
+	iEndNumberEllipse:=iWrittingEllipse;
+	iWrittingEllipse:=0;
+
+	FOR i :=  iEndNumberEllipse + 1 TO 32 BY 1 DO
+		IF stEllipseSettings[i].bWrite=TRUE THEN
+			iWrittingEllipse:=i;
+			eStep:=E_EllipseWriteStep.FirstPotisionMove;
+			EXIT;
+		END_IF
+	END_FOR
+
+	IF iWrittingEllipse=0 THEN
+		GVL.bEllipseWriteFin:=TRUE;
+	END_IF
+	
+E_EllipseWriteStep.FirstPotisionMove:(*楕円の書き始め位置へ移動*)
+	
+	CASE iStep OF
+	0:
+		iStep:=1;
+		lrDeg:=stEllipseSettings[iWrittingEllipse].lrStartDeg;
+	
+	1:
+		lrBase0[E_Axis.X_Axis]:= stEllipseSettings[iWrittingEllipse].uiVertex * COS(lrDeg*PI/180);
+		lrBase0[E_Axis.Y_Axis]:= stEllipseSettings[iWrittingEllipse].uiCoVertex * SIN(lrDeg*PI/180);
+		fbMCMoveAbsolute0[E_Axis.X_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute0[E_Axis.Y_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute0[E_Axis.X_Axis].Position:=stEllipseSettings[iWrittingEllipse].uiXCenter + lrBase0[E_Axis.X_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) - lrBase0[E_Axis.Y_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+		fbMCMoveAbsolute0[E_Axis.Y_Axis].Position:=stEllipseSettings[iWrittingEllipse].uiYCenter + lrBase0[E_Axis.X_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) + lrBase0[E_Axis.Y_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+		fbMCMoveAbsolute0[E_Axis.X_Axis].Velocity:=150;
+		fbMCMoveAbsolute0[E_Axis.Y_Axis].Velocity:=150;
+
+		IF MoveAbsoluteOut0[E_Axis.X_Axis].Done=TRUE AND MoveAbsoluteOut0[E_Axis.Y_Axis].Done=TRUE THEN
+			iStep:=2;
+			fbMCMoveAbsolute0[E_Axis.X_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute0[E_Axis.Y_Axis].Execute:=FALSE;
+		END_IF;
+		
+	2:
+		fbMCMoveAbsolute0[E_Axis.Z_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute0[E_Axis.Z_Axis].Velocity:=150;
+		
+		fbZAxisTPCon0(
+			lrX_AxisTP		:=fbMCMoveAbsolute0[E_Axis.X_Axis].Position,
+			lrY_AxisTP		:=fbMCMoveAbsolute0[E_Axis.Y_Axis].Position,
+			lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
+			lrZ_AxisCorTP	=>fbMCMoveAbsolute0[E_Axis.Z_Axis].Position
+			);
+				
+		IF MoveAbsoluteOut0[E_Axis.Z_Axis].Done=TRUE THEN
+			eStep:=E_EllipseWriteStep.WriteEllipse;
+			fbMCMoveAbsolute0[E_Axis.Z_Axis].Execute:=FALSE;
+			iStep:=0;
+		END_IF;
+		
+	END_CASE
+	
+E_EllipseWriteStep.WriteEllipse:(*楕円を書いていく*)
+
+	CASE iStep OF
+	0:
+		bCheck0[E_Axis.X_Axis]:=TRUE;
+		bCheck1[E_Axis.X_Axis]:=TRUE;
+		bCheck0[E_Axis.Y_Axis]:=TRUE;
+		bCheck1[E_Axis.Y_Axis]:=TRUE;
+		bCheck0[E_Axis.Z_Axis]:=TRUE;
+		bCheck1[E_Axis.Z_Axis]:=TRUE;
+		lrDeg:=stEllipseSettings[iWrittingEllipse].lrStartDeg;
+		iStep:=1;
+
+	1:	
+		IF MoveAbsoluteOut0[E_Axis.X_Axis].Done=TRUE THEN bCheck0[E_Axis.X_Axis]:=TRUE; END_IF;
+		IF MoveAbsoluteOut1[E_Axis.X_Axis].Done=TRUE THEN bCheck1[E_Axis.X_Axis]:=TRUE; END_IF;
+		IF MoveAbsoluteOut0[E_Axis.Y_Axis].Done=TRUE THEN bCheck0[E_Axis.Y_Axis]:=TRUE; END_IF;
+		IF MoveAbsoluteOut1[E_Axis.Y_Axis].Done=TRUE THEN bCheck1[E_Axis.Y_Axis]:=TRUE; END_IF;
+		IF MoveAbsoluteOut0[E_Axis.Z_Axis].Done=TRUE THEN bCheck0[E_Axis.Z_Axis]:=TRUE; END_IF;
+		IF MoveAbsoluteOut1[E_Axis.Z_Axis].Done=TRUE THEN bCheck1[E_Axis.Z_Axis]:=TRUE; END_IF;
+
+		IF bCheck0[E_Axis.X_Axis]=TRUE AND bCheck0[E_Axis.Y_Axis]=TRUE AND bCheck0[E_Axis.Z_Axis]=TRUE THEN
+			bCheck0[E_Axis.X_Axis]:=FALSE;	
+			bCheck0[E_Axis.Y_Axis]:=FALSE;
+			bCheck0[E_Axis.Z_Axis]:=FALSE;
+			lrDeg:=lrDeg + 1;
+			lrBase0[E_Axis.X_Axis]:= stEllipseSettings[iWrittingEllipse].uiVertex * COS(lrDeg*PI/180);
+			lrBase0[E_Axis.Y_Axis]:= stEllipseSettings[iWrittingEllipse].uiCoVertex * SIN(lrDeg*PI/180);
+			fbMCMoveAbsolute0[E_Axis.X_Axis].Position:=stEllipseSettings[iWrittingEllipse].uiXCenter + lrBase0[E_Axis.X_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) - lrBase0[E_Axis.Y_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+			fbMCMoveAbsolute0[E_Axis.Y_Axis].Position:=stEllipseSettings[iWrittingEllipse].uiYCenter + lrBase0[E_Axis.X_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) + lrBase0[E_Axis.Y_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+			
+			fbZAxisTPCon0(
+				lrX_AxisTP		:=fbMCMoveAbsolute0[E_Axis.X_Axis].Position,
+				lrY_AxisTP		:=fbMCMoveAbsolute0[E_Axis.Y_Axis].Position,
+				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
+				lrZ_AxisCorTP	=>fbMCMoveAbsolute0[E_Axis.Z_Axis].Position
+				);
+
+			fbMCMoveAbsolute0[E_Axis.X_Axis].Execute:=TRUE;
+			fbMCMoveAbsolute0[E_Axis.Y_Axis].Execute:=TRUE;
+			fbMCMoveAbsolute0[E_Axis.Z_Axis].Execute:=TRUE;
+			fbMCMoveAbsolute0[E_Axis.X_Axis].Velocity:=150;
+			fbMCMoveAbsolute0[E_Axis.Y_Axis].Velocity:=150;
+			fbMCMoveAbsolute0[E_Axis.Z_Axis].Velocity:=150;
+		ELSE
+			fbMCMoveAbsolute0[E_Axis.X_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute0[E_Axis.Y_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute0[E_Axis.Z_Axis].Execute:=FALSE;
+		END_IF;
+
+		IF bCheck1[E_Axis.X_Axis]=TRUE AND bCheck1[E_Axis.Y_Axis]=TRUE AND bCheck1[E_Axis.Z_Axis]=TRUE THEN
+			bCheck1[E_Axis.X_Axis]:=FALSE;	
+			bCheck1[E_Axis.Y_Axis]:=FALSE;
+			bCheck1[E_Axis.Z_Axis]:=FALSE;
+			lrDeg:=lrDeg + 1;
+			lrBase1[E_Axis.X_Axis]:= stEllipseSettings[iWrittingEllipse].uiVertex * COS(lrDeg*PI/180);
+			lrBase1[E_Axis.Y_Axis]:= stEllipseSettings[iWrittingEllipse].uiCoVertex * SIN(lrDeg*PI/180);
+			fbMCMoveAbsolute1[E_Axis.X_Axis].Position:=stEllipseSettings[iWrittingEllipse].uiXCenter + lrBase1[E_Axis.X_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) - lrBase1[E_Axis.Y_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+			fbMCMoveAbsolute1[E_Axis.Y_Axis].Position:=stEllipseSettings[iWrittingEllipse].uiYCenter + lrBase1[E_Axis.X_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) + lrBase1[E_Axis.Y_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+			
+			fbZAxisTPCon1(
+				lrX_AxisTP		:=fbMCMoveAbsolute1[E_Axis.X_Axis].Position,
+				lrY_AxisTP		:=fbMCMoveAbsolute1[E_Axis.Y_Axis].Position,
+				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
+				lrZ_AxisCorTP	=>fbMCMoveAbsolute1[E_Axis.Z_Axis].Position
+				);
+
+			fbMCMoveAbsolute1[E_Axis.X_Axis].Execute:=TRUE;
+			fbMCMoveAbsolute1[E_Axis.Y_Axis].Execute:=TRUE;
+			fbMCMoveAbsolute1[E_Axis.Z_Axis].Execute:=TRUE;
+			fbMCMoveAbsolute1[E_Axis.X_Axis].Velocity:=150;
+			fbMCMoveAbsolute1[E_Axis.Y_Axis].Velocity:=150;
+			fbMCMoveAbsolute1[E_Axis.Z_Axis].Velocity:=150;
+		ELSE
+			fbMCMoveAbsolute1[E_Axis.X_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute1[E_Axis.Y_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute1[E_Axis.Z_Axis].Execute:=FALSE;
+		END_IF;
+	
+		IF stEllipseSettings[iWrittingEllipse].lrEndDeg < lrDeg THEN
+			fbMCMoveAbsolute0[E_Axis.X_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute0[E_Axis.Y_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute0[E_Axis.Z_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute1[E_Axis.X_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute1[E_Axis.Y_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute1[E_Axis.Z_Axis].Execute:=FALSE;
+			eStep:=E_EllipseWriteStep.ZAxixUpPotision;
+			iStep:=0;
+			lrDeg:=0;
+		END_IF;
+	
+	END_CASE;
+
+E_EllipseWriteStep.ZAxixUpPotision:(*Z軸を持ち上げる、ペンが紙に当たらないように*)
+
+	fbMCMoveAbsolute0[E_Axis.Z_Axis].Execute:=TRUE;
+	fbMCMoveAbsolute0[E_Axis.Z_Axis].Position:=273-GVL.lrPenFullLength+GVL.lrPenGripLength-50;
+	fbMCMoveAbsolute0[E_Axis.Z_Axis].Velocity:=150;
+
+	IF MoveAbsoluteOut0[E_Axis.Z_Axis].Done=TRUE THEN
+		eStep:=E_EllipseWriteStep.Check;
+		fbMCMoveAbsolute0[E_Axis.Z_Axis].Execute:=FALSE;
+	END_IF;
+	
+END_CASE
+
+aMotion();]]></ST>
+    </Implementation>
+    <Action Name="aMotion" Id="{8cd58c59-596c-443b-9f09-59156bf02c33}">
+      <Implementation>
+        <ST><![CDATA[	fbMCMoveAbsolute0[E_Axis.X_Axis](
+		Axis			:=GVL.stAxis[E_Axis.X_Axis],
+		Execute			:=fbMCMoveAbsolute0[E_Axis.X_Axis].Execute,
+		Position		:=fbMCMoveAbsolute0[E_Axis.X_Axis].Position,
+		Velocity		:=fbMCMoveAbsolute0[E_Axis.X_Axis].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut0[E_Axis.X_Axis].Done,
+		Busy			=>MoveAbsoluteOut0[E_Axis.X_Axis].Busy,
+		Active			=>MoveAbsoluteOut0[E_Axis.X_Axis].Active,
+		CommandAborted	=>MoveAbsoluteOut0[E_Axis.X_Axis].CommandAborted,
+		Error			=>MoveAbsoluteOut0[E_Axis.X_Axis].Error,
+		ErrorID			=>MoveAbsoluteOut0[E_Axis.X_Axis].ErrorID
+	);
+		
+	fbMCMoveAbsolute1[E_Axis.X_Axis](
+		Axis			:=GVL.stAxis[E_Axis.X_Axis],
+		Execute			:=fbMCMoveAbsolute1[E_Axis.X_Axis].Execute,
+		Position		:=fbMCMoveAbsolute1[E_Axis.X_Axis].Position,
+		Velocity		:=fbMCMoveAbsolute1[E_Axis.X_Axis].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut1[E_Axis.X_Axis].Done,
+		Busy			=>MoveAbsoluteOut1[E_Axis.X_Axis].Busy,
+		Active			=>MoveAbsoluteOut1[E_Axis.X_Axis].Active,
+		CommandAborted	=>MoveAbsoluteOut1[E_Axis.X_Axis].CommandAborted,
+		Error			=>MoveAbsoluteOut1[E_Axis.X_Axis].Error,
+		ErrorID			=>MoveAbsoluteOut1[E_Axis.X_Axis].ErrorID
+	);
+
+	fbMCMoveAbsolute0[E_Axis.Y_Axis](
+		Axis			:=GVL.stAxis[E_Axis.Y_Axis],
+		Execute			:=fbMCMoveAbsolute0[E_Axis.Y_Axis].Execute,
+		Position		:=fbMCMoveAbsolute0[E_Axis.Y_Axis].Position,
+		Velocity		:=fbMCMoveAbsolute0[E_Axis.Y_Axis].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut0[E_Axis.Y_Axis].Done,
+		Busy			=>MoveAbsoluteOut0[E_Axis.Y_Axis].Busy,
+		Active			=>MoveAbsoluteOut0[E_Axis.Y_Axis].Active,
+		CommandAborted	=>MoveAbsoluteOut0[E_Axis.Y_Axis].CommandAborted,
+		Error			=>MoveAbsoluteOut0[E_Axis.Y_Axis].Error,
+		ErrorID			=>MoveAbsoluteOut0[E_Axis.Y_Axis].ErrorID
+	);
+
+	fbMCMoveAbsolute1[E_Axis.Y_Axis](
+		Axis			:=GVL.stAxis[E_Axis.Y_Axis],
+		Execute			:=fbMCMoveAbsolute1[E_Axis.Y_Axis].Execute,
+		Position		:=fbMCMoveAbsolute1[E_Axis.Y_Axis].Position,
+		Velocity		:=fbMCMoveAbsolute1[E_Axis.Y_Axis].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut1[E_Axis.Y_Axis].Done,
+		Busy			=>MoveAbsoluteOut1[E_Axis.Y_Axis].Busy,
+		Active			=>MoveAbsoluteOut1[E_Axis.Y_Axis].Active,
+		CommandAborted	=>MoveAbsoluteOut1[E_Axis.Y_Axis].CommandAborted,
+		Error			=>MoveAbsoluteOut1[E_Axis.Y_Axis].Error,
+		ErrorID			=>MoveAbsoluteOut1[E_Axis.Y_Axis].ErrorID
+	);
+
+	fbMCMoveAbsolute0[E_Axis.Z_Axis](
+		Axis			:=GVL.stAxis[E_Axis.Z_Axis],
+		Execute			:=fbMCMoveAbsolute0[E_Axis.Z_Axis].Execute,
+		Position		:=fbMCMoveAbsolute0[E_Axis.Z_Axis].Position,
+		Velocity		:=fbMCMoveAbsolute0[E_Axis.Z_Axis].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut0[E_Axis.Z_Axis].Done,
+		Busy			=>MoveAbsoluteOut0[E_Axis.Z_Axis].Busy,
+		Active			=>MoveAbsoluteOut0[E_Axis.Z_Axis].Active,
+		CommandAborted	=>MoveAbsoluteOut0[E_Axis.Z_Axis].CommandAborted,
+		Error			=>MoveAbsoluteOut0[E_Axis.Z_Axis].Error,
+		ErrorID			=>MoveAbsoluteOut0[E_Axis.Z_Axis].ErrorID
+	);
+	
+	fbMCMoveAbsolute1[E_Axis.Z_Axis](
+		Axis			:=GVL.stAxis[E_Axis.Z_Axis],
+		Execute			:=fbMCMoveAbsolute1[E_Axis.Z_Axis].Execute,
+		Position		:=fbMCMoveAbsolute1[E_Axis.Z_Axis].Position,
+		Velocity		:=fbMCMoveAbsolute1[E_Axis.Z_Axis].Velocity,
+		BufferMode		:=MC_BlendingNext,
+		Done			=>MoveAbsoluteOut1[E_Axis.Z_Axis].Done,
+		Busy			=>MoveAbsoluteOut1[E_Axis.Z_Axis].Busy,
+		Active			=>MoveAbsoluteOut1[E_Axis.Z_Axis].Active,
+		CommandAborted	=>MoveAbsoluteOut1[E_Axis.Z_Axis].CommandAborted,
+		Error			=>MoveAbsoluteOut1[E_Axis.Z_Axis].Error,
+		ErrorID			=>MoveAbsoluteOut1[E_Axis.Z_Axis].ErrorID
+	);]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="P_Ellipse">
+      <LineId Id="477" Count="166" />
+      <LineId Id="266" Count="0" />
+    </LineIds>
+    <LineIds Name="P_Ellipse.aMotion">
+      <LineId Id="24" Count="25" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="54" Count="25" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="80" Count="25" />
+      <LineId Id="53" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

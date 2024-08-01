@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_EL3351_Measuring" Id="{5ce20ade-2410-4672-bc0e-6624a7dc766b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EL3351_Measuring
+VAR_INPUT
+(*+++++ Inputs from Device +++++*)
+	diDiffvoltage: DINT;
+	diRefvoltage: DINT;
+	bUseVisuInputs: BOOL;
+(*+++++ Inputs that are used if Visu-Inputs are not used +++++*)
+	rForcedRatedOutput: REAL;
+	rForcedRatedCapacity: REAL;
+	rForcedZeroBalance: REAL;
+END_VAR
+VAR_OUTPUT
+	rUref: REAL;
+	rUdiff: REAL;
+	rGrossWeight: REAL;
+	rNetWeight: REAL;
+	rTareWeight: REAL;
+END_VAR
+VAR
+(*+++++ Inputs that can be made in the visu +++++*)
+	rRatedOutput: REAL;
+	rRatedCapacity: REAL;
+	rZeroBalance: REAL;
+(*+++++ Instance of FB_Blinker +++++*)
+	fbBlinker: FB_Blinker;
+	bBlinker: BOOL;
+(*+++++ Values that are needed to do calculations  +++++*)
+	rRefvoltageConv: REAL;
+	rDiffvoltageConv: REAL;
+(*+++++ Visu Buttons / Strings +++++*)
+	fbRTrig_SetTare: R_TRIG;
+	fbRTrig_ResetTare: R_TRIG;
+	bSetTare: BOOL;
+	bResetTare: BOOL;
+	sSettings: STRING(150);
+	dwTareColour: DWORD:= 16#00C0C0C0;
+(*+++++ Auto Calibration +++++*)
+	bCalibration: BOOL;
+	bStartCalibration: BOOL;
+	fbRTrig_StartCalibration: R_TRIG;
+	bNextStep: BOOL;
+	fbRTrig_NextStep: R_TRIG;
+	nStepCalibrate: UDINT;
+	rReferenceWeight: REAL;
+	rOffset: REAL;
+	rCalculatedRatedOutput: REAL;
+	rUdiffWithoutOffset: REAL;
+	dwColourRatedCapacity: DWORD:= 16#00FFFFFF;
+	dwColourRatedOutput: DWORD:= 16#00FFFFFF;
+	dwColourReferenceWeight: DWORD:= 16#00FFFFFF;
+	dwColourStartCalibration: DWORD:= 16#00F0F0F0;
+	dwColourSave: DWORD:= 16#00F0F0F0;
+	dwColourWeight: DWORD:= 16#00C0C0C0;
+	dwColourZeroBalance: DWORD:= 16#00FFFFFF;
+	sRatedCapacity: STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bUseVisuInputs= FALSE THEN
+	rRatedOutput:= rForcedRatedOutput;
+	rRatedCapacity:= rForcedRatedCapacity;
+	rZeroBalance:= rForcedZeroBalance;
+	sSettings:= 'Settings are forced. No Inputs can be made in the Visu.';
+END_IF
+
+(*For being able to do calculations, the Inputs from the device need to be converted to REAL values*)
+rRefvoltageConv:= DINT_TO_REAL(diRefvoltage);
+rDiffvoltageConv:= DINT_TO_REAL(diDiffvoltage);
+
+(*Calculation of Voltages*)
+rUref:= rRefvoltageConv*(12.0/2147483647);
+rUdiff:= rDiffvoltageConv*(20.0/2147483647);
+
+(*++++++++++++++++++++++++++++++ Manual Mode +++++++++++++++++++++++++++++*)
+IF NOT bCalibration AND bUseVisuInputs THEN									(*Settings can be changed manually by default*)
+	nStepCalibrate:= 0;
+	sSettings:= 'Settings can be changed manually! ';
+	IF rRatedCapacity= 0 THEN													(*It is checked if inputs have yet been made*)
+		sSettings:=  CONCAT(sSettings, 'Enter Rated Capacity! ');
+		IF bBlinker THEN
+			dwColourRatedCapacity:= 16#00FF0000;
+		ELSE
+			dwColourRatedCapacity:= 16#00FFFFFF;
+		END_IF
+	ELSE
+		dwColourRatedCapacity:= 16#00FFFFFF;
+	END_IF
+
+	IF rRatedOutput = 0 THEN
+		sSettings:= CONCAT(sSettings, 'Enter Rated Output! ');
+		IF bBlinker THEN
+			dwColourRatedOutput:= 16#00FF0000;
+		ELSE
+			dwColourRatedOutput:= 16#00FFFFFF;
+		END_IF
+	ELSE
+		dwColourRatedOutput:= 16#00FFFFFF;
+	END_IF
+	sSettings:= CONCAT(sSettings, '$n');
+	sSettings:= CONCAT(sSettings, 'If you want Settings to be set automatically, activate Calibration Mode. ');
+END_IF
+
+(*++++++++++++++++++++++++++++++ Calibration Mode +++++++++++++++++++++++++++++*)
+IF bCalibration AND bUseVisuInputs THEN
+	CASE nStepCalibrate OF
+
+		0:	(*Calibration is started, when button "Start Calibration" is pressed. As long as it hasn't been pressed, the button blinks blue *)
+			IF NOT fbRTrig_StartCalibration.Q THEN
+				sSettings:= 'Calibration Mode ON. Press Start Calibration or deactivate Calibration Mode. ';
+				IF rRatedOutput= 0 THEN
+					IF bBlinker THEN
+						dwColourStartCalibration:= 16#00FF0000;
+					ELSE
+						dwColourStartCalibration:= 16#00F0F0F0;
+					END_IF
+				ELSE
+					dwColourStartCalibration:= 16#00F0F0F0;
+				END_IF
+			ELSE
+				dwColourStartCalibration:= 16#00F0F0F0;
+				nStepCalibrate:= nStepCalibrate+10;
+			END_IF
+	
+		10:	(*First of all it is checked, if the Rated Capacity has yet been typed in. If not, the shape blinks blue.
+			If some value has been typed in, the user is asked, whether it is correct. Pressing "Save" starts the next step. *)
+			rGrossWeight:= 0;
+			rOffset:= 0;
+			rCalculatedRatedOutput:= 0;
+			rReferenceWeight:= 0;
+			IF rRatedCapacity= 0 THEN
+				sSettings:= 'Calibration Mode ON. Enter Rated Capacity of Load Cell! Then press Save! ';
+				IF bBlinker THEN
+					dwColourRatedCapacity:= 16#00FF0000;
+				ELSE
+					dwColourRatedCapacity:= 16#00FFFFFF;
+				END_IF
+			ELSIF rRatedCapacity <> 0 THEN
+				dwColourRatedCapacity:= 16#00FFFFFF;
+				sSettings:= 'Calibration Mode ON. If Rated Capacity of ';
+				sRatedCapacity:= REAL_TO_STRING(rRatedCapacity);
+				sSettings:= CONCAT(sSettings, sRatedCapacity);
+				sSettings:= CONCAT(sSettings, 'kg is correct, press Save! ');
+				IF bBlinker THEN
+					dwColourSave:= 16#00FF0000;
+				ELSE
+					dwColourSave:= 16#00F0F0F0;
+				END_IF
+				IF fbRTrig_NextStep.Q THEN
+					nStepCalibrate:= nStepCalibrate+10;
+				END_IF
+			END_IF
+	
+		20:	(*The Zero Balance of the load cell is detected. Therefore, no load must be put on the load cell. *)
+			sSettings:= 'Remove all load from load cell! Then press Save! ';
+			IF bBlinker THEN
+				dwColourSave:= 16#00FF0000;
+			ELSE
+				dwColourSave:= 16#00F0F0F0;
+			END_IF
+			IF fbRTrig_NextStep.Q THEN
+				dwColourSave:= 16#00F0F0F0;
+				rOffset:= rUdiff/rUref;
+				rZeroBalance:= rOffset;
+				nStepCalibrate:= nStepCalibrate+10;
+			END_IF
+
+			IF fbRTrig_StartCalibration.Q THEN
+				nStepCalibrate:= 10;
+			END_IF
+	
+		30:	(*The Rated Output is detected. Therefore, a reference weight must be put on the load cell and it must be entered.*)
+			sSettings:= 'Put Reference Weight on load cell! Enter reference weight! Then press Save! ';
+			IF bBlinker THEN
+				dwColourReferenceWeight:= 16#00FF0000;
+			ELSE
+				dwColourReferenceWeight:= 16#00FFFFFF;
+			END_IF
+			IF rReferenceWeight <> 0 THEN
+				dwColourReferenceWeight:= 16#00FFFFFF;
+				sSettings:= 'Make sure reference weight is on load cell! Then press Save! ';
+				IF bBlinker THEN
+					dwColourSave:= 16#00FF0000;
+				ELSE
+					dwColourSave:= 16#00F0F0F0;
+				END_IF
+				IF fbRTrig_NextStep.Q THEN
+					dwColourSave:= 16#00F0F0F0;
+					rCalculatedRatedOutput:= (rUdiffWithoutOffset/rUref)*(rRatedCapacity/rReferenceWeight);
+					rRatedOutput:= rCalculatedRatedOutput;
+					nStepCalibrate:= nStepCalibrate+ 10;
+				END_IF
+			END_IF
+
+			IF fbRTrig_StartCalibration.Q THEN
+				nStepCalibrate:= 10;
+			END_IF
+	
+		40:	(*Once the zero balance and the Rated Output have been detected, "Start Calibration" can be pressed to restart the Calibration process*)
+			sSettings:= 'Auto Calibration complete. If necessary, press Start Calibration to reconfigure.';
+			IF fbRTrig_StartCalibration.Q THEN
+				nStepCalibrate:= 10;
+			END_IF
+			IF rRatedCapacity= 0 THEN
+			sSettings:=  CONCAT(sSettings, '$n');
+			sSettings:=  CONCAT(sSettings, 'Enter Rated Capacity! ');
+			IF bBlinker THEN
+				dwColourRatedCapacity:= 16#00FF0000;
+			ELSE
+				dwColourRatedCapacity:= 16#00C0C0C0;
+			END_IF
+		ELSE
+			dwColourRatedCapacity:= 16#00C0C0C0;
+		END_IF
+	END_CASE
+END_IF
+
+(*++++++++++++++++++++++++++++++ Calculation of Weight +++++++++++++++++++++++++++++*)
+rUdiffWithoutOffset:= rUdiff-(rZeroBalance*rUref);
+
+IF rRatedOutput<>0 THEN
+	rGrossWeight:= (rUdiffWithoutOffset/rUref)*(rRatedCapacity/rRatedOutput);
+ELSE
+	rGrossWeight:= 0;
+END_IF
+IF rRatedCapacity <> 0 AND rRatedOutput <> 0 THEN
+	IF rGrossWeight<= rRatedCapacity THEN
+		 dwColourWeight:= 16#0000FF00;
+	ELSIF  rGrossWeight> rRatedCapacity THEN
+		dwColourWeight:= 16#000000FF;
+	ELSE
+		dwColourWeight:= 16#00C0C0C0;
+	END_IF
+END_IF
+
+(*++++++++++++++++++++++++++++++ Tare Weight +++++++++++++++++++++++++++++*)
+IF rRatedCapacity <> 0 AND rRatedOutput <> 0 THEN
+	fbRTrig_SetTare( CLK:= bSetTare, Q=> );
+	IF fbRTrig_SetTare.Q THEN
+		rTareWeight:= rGrossWeight;
+	END_IF
+
+	IF rTareWeight= 0 THEN
+		rNetWeight:= 0;
+		dwTareColour:= 16#00C0C0C0;
+	ELSE
+		rNetWeight:= rGrossWeight- rTareWeight;		(*Calculation of the shown Net Weight*)
+		dwTareColour:= 16#0000FF00;
+	END_IF
+END_IF
+(*When the Button 'Reset Tare Weight' is pressed, the Tare Value is reset*)
+fbRTrig_ResetTare( CLK:= bResetTare, Q=> );
+IF fbRTrig_ResetTare.Q THEN
+	rTareWeight:= 0;
+END_IF
+
+(*++++++++++++++++++++++++++++++ Colours ++++++++++++++++++++++++++++++*)
+
+(*Depending on the step of the Calibration process, the colours of the buttons/ view boxes must be changed*)
+IF NOT bCalibration AND bUseVisuInputs THEN
+	dwColourStartCalibration:= 16#00F0F0F0;
+	dwColourSave:= 16#00F0F0F0;
+	dwColourReferenceWeight:= 16#00C0C0C0;
+	dwColourZeroBalance:= 16#00FFFFFF;
+ELSIF bUseVisuInputs= FALSE THEN
+	dwColourStartCalibration:= 16#00F0F0F0;
+	dwColourSave:= 16#00F0F0F0;
+	dwColourZeroBalance:= 16#00C0C0C0;
+	dwColourRatedCapacity:= 16#00C0C0C0;
+	dwColourRatedOutput:= 16#00C0C0C0;
+	dwColourReferenceWeight:= 16#00C0C0C0;
+ELSIF bCalibration AND bUseVisuInputs THEN
+	CASE nStepCalibrate OF
+
+		0:	dwColourZeroBalance:= 16#00C0C0C0;
+			dwColourWeight:= 16#00C0C0C0;
+			dwColourRatedCapacity:= 16#00C0C0C0;
+			dwColourRatedOutput:= 16#00C0C0C0;
+
+		10:	dwColourZeroBalance:= 16#00C0C0C0;
+			dwColourWeight:= 16#00C0C0C0;
+			dwColourRatedOutput:= 16#00C0C0C0;
+			dwColourReferenceWeight:= 16#00C0C0C0;
+
+		20:	dwColourZeroBalance:= 16#00C0C0C0;
+			dwColourRatedCapacity:= 16#00C0C0C0;
+			dwColourRatedOutput:= 16#00C0C0C0;
+			dwColourReferenceWeight:= 16#00C0C0C0;
+
+		30:	dwColourZeroBalance:= 16#00C0C0C0;
+			dwColourRatedCapacity:= 16#00C0C0C0;
+			dwColourRatedOutput:= 16#00C0C0C0;
+
+		40:	dwColourZeroBalance:= 16#00C0C0C0;
+			dwColourRatedCapacity:= 16#00C0C0C0;
+			dwColourRatedOutput:= 16#00C0C0C0;
+			dwColourReferenceWeight:= 16#00C0C0C0;
+	END_CASE
+END_IF
+
+fbRTrig_StartCalibration( CLK:= bStartCalibration, Q=> );
+fbRTrig_NextStep( CLK:= bNextStep, Q=> );
+fbBlinker (tBlinkTime:= t#1000ms, bBlink=> bBlinker );]]></ST>
+    </Implementation>
+    <LineIds Name="FB_EL3351_Measuring">
+      <LineId Id="56" Count="243" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GlobalImagePool Name="GlobalImagePool" Id="{48fc1a57-1a91-4e70-b4a1-16e9da4fc93e}">
+    <XmlArchive>
+      <Data>
+        <o xml:space="preserve" t="GlobalImagePoolObject">
+          <v n="UniqueIdGenerator">"14"</v>
+          <l n="BitmapPool" t="ArrayList" cet="ImagePoolItem">
+            <o>
+              <v n="BitmapID">"terminal"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|VISUs\Placeholder Visus\terminal.bmp"</v>
+              <v n="ItemID">5</v>
+            </o>
+            <o>
+              <v n="BitmapID">"terminalsmall"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|VISUs\Placeholder Visus\terminalsmall.bmp"</v>
+              <v n="ItemID">6</v>
+            </o>
+            <o>
+              <v n="BitmapID">"Logo"</v>
+              <v n="FileID">"5ce3da45-db07-42e7-a21c-a00fff4ed8f6|VISUs\Placeholder Visus\Logo.bmp"</v>
+              <v n="ItemID">7</v>
+            </o>
+            <o>
+              <v n="BitmapID">""</v>
+              <v n="FileID">""</v>
+              <v n="ItemID">8</v>
+            </o>
+          </l>
+          <v n="GuidInit">{9d54f7ff-d359-4d44-9862-bb2a0a3411dd}</v>
+          <v n="GuidReInit">{566b5052-1624-408c-926f-e059461a5542}</v>
+          <v n="GuidExitX">{ac96b294-d1de-4fc1-b088-d37f0022e57a}</v>
+          <v n="ValidIds">true</v>
+        </o>
+      </Data>
+      <TypeList>
+        <Type n="ArrayList">System.Collections.ArrayList</Type>
+        <Type n="Boolean">System.Boolean</Type>
+        <Type n="GlobalImagePoolObject">{795b536d-9cec-4fc3-a972-50e1e08d20e8}</Type>
+        <Type n="Guid">System.Guid</Type>
+        <Type n="ImagePoolItem">{215b2719-0347-4e4d-ba85-8bcd66946f66}</Type>
+        <Type n="Int32">System.Int32</Type>
+        <Type n="String">System.String</Type>
+      </TypeList>
+    </XmlArchive>
+  </GlobalImagePool>
+</TcPlcObject>

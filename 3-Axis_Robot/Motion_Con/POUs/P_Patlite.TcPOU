@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="P_Patlite" Id="{a5bb9a40-855c-4dd1-9843-b749d06b4679}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_Patlite
+VAR
+	bRedLed				AT %Q* :BOOL;
+	bGreenLed			AT %Q* :BOOL;
+	bBlueLed			AT %Q* :BOOL;
+	bBuzzerON			AT %Q* :BOOL;
+	
+	bSwitch				AT %I* :BOOL;
+
+	eLedColor			:E_LedColor;
+	fbREdge				:R_TRIG;
+	bBuzzerFlag			:BOOL;
+	tBlinkTime			:TIME;
+	fbTonBlink1			:ton;
+	fbTonBlink2			:ton;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
+CASE GVL.eMachineState OF
+	
+E_MachineState.Emergency:
+	eLedColor:=E_LedColor.Red;
+	tBlinkTime:=T#100MS;
+	IF bBuzzerFlag=FALSE THEN
+		bBuzzerON:=TRUE;
+	END_IF
+	
+E_MachineState.EmergencyReset:
+	eLedColor:=E_LedColor.Blue;
+	tBlinkTime:=T#0.5S;
+	bBuzzerON:=FALSE;
+	bBuzzerFlag:=FALSE;
+
+E_MachineState.Warning:
+	eLedColor:=E_LedColor.Red;
+	tBlinkTime:=T#100MS;
+	IF bBuzzerFlag=FALSE THEN
+		bBuzzerON:=TRUE;
+	END_IF
+
+E_MachineState.Stop:
+	eLedColor:=E_LedColor.Yellow;
+	tBlinkTime:=T#0S;
+	bBuzzerON:=FALSE;
+	bBuzzerFlag:=FALSE;
+	
+E_MachineState.Stay:
+	eLedColor:=E_LedColor.White;
+	tBlinkTime:=T#0S;
+	bBuzzerON:=FALSE;
+	bBuzzerFlag:=FALSE;
+	
+E_MachineState.Moving:
+	eLedColor:=E_LedColor.Green;
+	tBlinkTime:=T#0S;
+	bBuzzerON:=FALSE;
+	bBuzzerFlag:=FALSE;
+	
+END_CASE;
+
+//---スイッチが押されたらブザー停止---
+IF bSwitch=TRUE THEN
+	bBuzzerON:=FALSE;
+	bBuzzerFlag:=TRUE;
+END_IF
+
+//---ブリンク用のタイマー---
+fbTonBlink1(IN:=NOT fbTonBlink2.Q,PT:=tBlinkTime,Q=>fbTonBlink2.IN,ET=>);
+fbTonBlink2(IN:=,PT:=tBlinkTime,Q=>,ET=>);
+
+
+//---LEDを点灯制御---
+IF fbTonBlink1.Q=FALSE OR tBlinkTime=T#0S  THEN;
+	CASE eLedColor OF
+	E_LedColor.Red:
+		bRedLed:=TRUE;
+		bGreenLed:=FALSE;
+		bBlueLed:=FALSE;
+	
+	E_LedColor.Green:
+		bRedLed:=FALSE;
+		bGreenLed:=TRUE;
+		bBlueLed:=FALSE;	
+	
+	E_LedColor.Blue:
+		bRedLed:=FALSE;
+		bGreenLed:=FALSE;
+		bBlueLed:=TRUE;
+		
+	E_LedColor.Yellow:
+		bRedLed:=TRUE;
+		bGreenLed:=TRUE;
+		bBlueLed:=FALSE;
+	
+	E_LedColor.Cyan:
+		bRedLed:=FALSE;
+		bGreenLed:=TRUE;
+		bBlueLed:=TRUE;
+	
+	E_LedColor.Purple:
+		bRedLed:=TRUE;
+		bGreenLed:=FALSE;
+		bBlueLed:=TRUE;
+	
+	E_LedColor.White:
+		bRedLed:=TRUE;
+		bGreenLed:=TRUE;
+		bBlueLed:=TRUE;
+	
+	E_LedColor.Black:
+		bRedLed:=FALSE;
+		bGreenLed:=FALSE;
+		bBlueLed:=FALSE;
+	END_CASE
+ELSE;
+	bRedLed:=FALSE;
+	bGreenLed:=FALSE;
+	bBlueLed:=FALSE;
+END_IF;
+]]></ST>
+    </Implementation>
+    <LineIds Name="P_Patlite">
+      <LineId Id="20" Count="0" />
+      <LineId Id="94" Count="3" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="204" Count="2" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="207" Count="1" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="110" Count="1" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="198" Count="2" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="202" Count="1" />
+      <LineId Id="125" Count="1" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="147" Count="1" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="22" Count="47" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

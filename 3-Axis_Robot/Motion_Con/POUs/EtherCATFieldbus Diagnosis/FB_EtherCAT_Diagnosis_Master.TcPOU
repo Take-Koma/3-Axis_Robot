@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_EtherCAT_Diagnosis_Master" Id="{bef25f95-ba24-45c7-aa50-ed0154fe7c22}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EtherCAT_Diagnosis_Master
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+(*+++++ General Status Information +++++*)
+	bFieldbusOK: BOOL;
+	sFieldBusStatus: STRING;
+END_VAR
+VAR
+(*+++++ EtherCAT Diagnosis +++++*)
+	uiFrmState AT%I*: UINT;
+	uiFrmWcState AT%I*: UINT;
+	uiSlaveCount AT%I*: UINT;
+	uiDevState AT%I*: UINT;
+
+	bDevStateOk: BOOL;
+	sDevState: STRING;
+	bFrmStateOK: BOOL;
+	sFrmState: STRING;
+	bFrmWcState: BOOL;
+	sFrmWcState: STRING;
+(*+++++ Instances +++++*)
+	fbFrmStateDiagnosis: FB_FrmState_Diagnosis;
+	fbFrmWcStateDiagnosis: FB_FrmWcState_Diagnosis;
+	fbDevStateDiagnosis: FB_DevState_Diagnosis;
+	(*Colour*)
+	dwFieldbusStatus: DWORD;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbFrmStateDiagnosis(	uiFrmState:= uiFrmState,
+					bFrmStateOK=> bFrmStateOK,
+					sFrmState=> sFrmState );
+
+fbFrmWcStateDiagnosis(	uiFrmWcState:= uiFrmWcState,
+						bFrmWcState=> bFrmWcState,
+						sFrmWcState=> sFrmWcState);
+
+fbDevStateDiagnosis(	uiDevState:= uiDevState,
+					bDevStateOk=> bDevStateOk ,
+					sDevState=> sDevState );
+
+IF bDevStateOk= TRUE AND bFrmStateOK= TRUE AND bFrmWcState= TRUE THEN
+	bFieldbusOK:= TRUE;
+	dwFieldbusStatus:= 16#0000FF00;
+	sFieldBusStatus:= 'Fieldbus OK ';
+ELSE
+	bFieldbusOK:= FALSE;
+	dwFieldbusStatus:= 16#000000FF;
+	sFieldBusStatus:= 'Fieldbus Error';
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_EtherCAT_Diagnosis_Master">
+      <LineId Id="28" Count="20" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

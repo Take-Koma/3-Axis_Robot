@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_MachineState" Id="{b577c7d7-176f-4952-a6b4-4f333edaf8f8}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_MachineState :
+(
+	Base,					//何もなし
+	Emergency,				//非常停止ボタンON
+	EmergencyReset,			//非常停止ボタンリセット中
+	Warning,				//不具合発生中
+	Stay,					//McPowerがOFF
+	Stop,					//McPowerがON
+	Moving					//軸動作中
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

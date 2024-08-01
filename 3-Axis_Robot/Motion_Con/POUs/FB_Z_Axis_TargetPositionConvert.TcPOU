@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Z_Axis_TargetPositionConvert" Id="{a4b216e6-5f91-43c0-9777-25764d252227}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Z_Axis_TargetPositionConvert
+VAR_INPUT
+	lrX_AxisTP		:LREAL;	(*X軸のターゲットポジション*)
+	lrY_AxisTP		:LREAL;	(*Y軸のターゲットポジション*)
+	lrZ_AxisTP		:LREAL;	(*Z軸のターゲットポジション*)
+END_VAR
+VAR_OUTPUT
+	lrZ_AxisCorTP	:LREAL;	(*調整後のZ軸のターゲットポジション*)
+END_VAR
+VAR
+	lrXbuf			:LREAL;
+	lrYbuf			:LREAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	lrXbuf:=GVL.lrXZ_Slope*lrX_AxisTP;
+	lrYbuf:=GVL.lrYZ_Slope*lrY_AxisTP;
+	
+	lrZ_AxisCorTP:=lrZ_AxisTP+lrXbuf+lrYbuf;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Z_Axis_TargetPositionConvert">
+      <LineId Id="9" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

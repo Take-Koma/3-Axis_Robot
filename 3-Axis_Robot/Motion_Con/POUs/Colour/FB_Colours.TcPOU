@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Colours" Id="{c6db3a76-ec48-45bc-902a-da6e7f9b4ed6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Colours
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	dwColour: DWORD;			(*16#00 Blue Green Red*)
+END_VAR
+VAR
+	(*RGB*)
+	(*All colours are a mix of Red, Green and Blue. All of these three colours can have values between 0 and 255. So one Byte (8 Bit) is enough to represent one colour.
+	To generate a colour that is a mix of red, green and blue, 24 Bits are needed. A DoubleWord (DWORD) which consists of 4 Byte (=32Bit) is used to represent the mixed colour. 
+	Because 8 Bit of the DWORD are not needed, the MSB always has the value 16#00.
+	The value of the DWORD dwColour is put together of the four Bytes.
+	Now, if  for example byRed, byGreen and byBlue are all given the value 16#30 dwColour gets the value 16#00303030. *)
+	byRed: BYTE:= 0;
+	byGreen: BYTE:= 16#FF;
+	byBlue: BYTE:= 16#FF;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+dwColour:= byRed; 										(*dwColour is now 16#00-00-00-byRed*)
+dwColour:= dwColour+ SHL(BYTE_TO_DWORD(byGreen), 8);	(*dwColour is now 16#00-00-byGreen-byRed*)
+dwColour:= dwColour+ SHL(BYTE_TO_DWORD(byBlue),16);		(*dwColour is now 16#00-byBlue-byGreen-byRed*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Colours">
+      <LineId Id="17" Count="4" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

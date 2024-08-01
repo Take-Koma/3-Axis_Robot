@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_CircleSettings" Id="{a5239e9c-7f97-4be1-a261-fe7118863d21}">
+    <Declaration><![CDATA[TYPE ST_CircleSettings :
+STRUCT
+	bWrite				:BOOL:=FALSE;
+	uiXCenter			:UINT:=150;
+	uiYCenter			:UINT:=150;
+	uiRadius			:UINT:=50;
+	lrStartDeg			:LREAL :=0;
+	lrEndDeg			:LREAL :=370;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

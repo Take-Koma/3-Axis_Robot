@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Terminal_Diagnosis" Id="{55be3121-29cf-4d21-a67d-b738d57600c5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Terminal_Diagnosis
+VAR_INPUT
+(*+++++ WcState / InfoData State +++++*)
+	bWorkingCounter: BOOL;
+	uiInfoDataState: UINT;
+END_VAR
+VAR_OUTPUT
+	bRed: BOOL;
+	bGreen: BOOL;
+	bBlue: BOOL;
+	bGrey: BOOL;
+	bTerminalOK: BOOL;
+	sTerminalStatus: STRING;
+END_VAR
+VAR
+(*+++++ Instances +++++*)
+	fbColours: FB_Colours_State;
+
+(*+++++ Strings for the possible errors that can occur +++++*)
+	sStateStatusAll: STRING(255);
+	sState: STRING;
+	sWorkingState: STRING;
+
+(*+++++ Colours for the view boxes +++++*)
+	dwWcStateColour: DWORD;
+	dwStateStatusColour: DWORD;
+	dwStateStatusAllColour: DWORD;
+
+(*+++++ For the adjustment of the flashing of the State view box +++++*)
+	bBlinker: BOOL;
+	fbBlinkerPreop: FB_Blinker;
+	fbBlinkerBootstrap: FB_Blinker;
+	nIdx: UDINT;
+	fbTimer1: TON;
+	fbTimer2: TON;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*This Function returns the State of the Device. Either one of the States INIT, PREOP, OP, BOOTSTRAP or SAFE-OP is returned. stState is given the Value of the Function. *)
+sState:= FUN_StateReturn(state:= uiInfoDataState);
+
+(*Depending on the state of the Device, the colour of the view box in the visualisation is changed and also depending on the state, some flashing is adjusted. *)
+(*When the Slave is in INIT state, the colour of the view box is grey.*)
+IF sState= 'Slave in INIT state' THEN
+	bGreen:= FALSE;
+	bBlue:= FALSE;
+	bGrey:= TRUE;
+END_IF
+
+(*When the Slave is in PREOP state, the view box is blinking.*)
+IF sState= 'Slave in PREOP state' THEN
+	fbBlinkerPreop (tBlinkTime:= t#600ms, bBlink=> bBlinker );
+	IF bBlinker THEN
+		bGrey:= FALSE;
+		bGreen:= TRUE;
+	ELSE
+		bGreen:= FALSE;
+		bGrey:= TRUE;
+	END_IF
+END_IF
+
+(*When the Slave is in OP state, the colour of the view box is green.*)
+IF sState= 'Slave in OP state' THEN
+	bGrey:= FALSE;
+	bGreen:= TRUE;
+END_IF
+
+(*When the Slave is in SAFEOP state, the view box is doing single flashes.*)
+IF sState= 'Slave in SAFEOP state' THEN
+	CASE nIdx OF
+		0:	fbTimer2.IN:= FALSE;
+			fbTimer1.IN:= TRUE;
+			fbTimer1.PT:=t#300ms;
+			IF fbTimer1.Q THEN
+				bGreen:= FALSE;
+				bGrey:= TRUE;
+				nIdx:= 10;
+			END_IF
+		10:	fbTimer1.IN:= FALSE;
+			fbTimer2.IN:= TRUE;
+			fbTimer2.PT:=t#1000ms;
+			IF fbTimer2.Q THEN
+				bGrey:= FALSE;
+				bGreen:= TRUE;
+				nIdx:= 0;
+			END_IF
+	END_CASE
+END_IF
+
+(*When the Slave is in BOOTSTRAP state, the view box is flickering.*)
+IF sState= 'Slave in BOOTSTRAP state' THEN
+	fbBlinkerBootstrap (tBlinkTime:= t#600ms, bBlink=> bBlinker );
+	IF bBlinker THEN
+		bBlue:= FALSE;
+		bGrey:= TRUE;
+	ELSE
+		bBlue:= TRUE;
+		bGrey:= FALSE;
+	END_IF
+END_IF
+
+(*All other Errors that can occur concerning the State of the Device*)
+(*Because theoratically all the other errors could occur all together, CONCAT is done to show them all in one view box.*)
+IF uiInfoDataState.4 THEN
+	sStateStatusAll:= 'Slave signals error. ';
+ELSE
+	sStateStatusAll:= '';
+END_IF
+IF uiInfoDataState.5 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Invalid vendorID. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.6 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Initialization error occurred. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.7 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave disabled. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.8 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave not present. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.9 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave signals link error. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.10 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave signals missing link. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.11 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave signals unexpected link. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.12 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll,  'Communication port A. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.13 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Communication port B. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.14 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Communication port C. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.15 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll,  'Communication port D. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+
+(*If none of the other errors occur, the text of the view box is 'None'.*)
+IF sStateStatusAll= '' THEN
+	sStateStatusAll:= 'No error';
+END_IF
+IF sStateStatusAll= 'No error' THEN
+	dwStateStatusAllColour:= 16#0000FF00;
+ELSE
+	dwStateStatusAllColour:= 16#000000FF;
+END_IF
+
+(*The colour and text of the view box WcState is adjusted.*)
+IF bWorkingCounter = 0 THEN
+	sWorkingState:= 'Working State OK ';
+	dwWcStateColour:= 16#0000FF00;	 (*Green, when device is working*)
+ELSE
+	sWorkingState:= 'Working State NOT OK ';
+	dwWcStateColour:= 16#000000FF;	 (*Red, when device is not working*)
+END_IF
+
+fbColours(	bRed:= bRed ,
+			bGreen:= bGreen,
+			bBlue:= bBlue,
+			bGrey:= bGrey,
+			dwColour=> dwStateStatusColour );
+
+(*General Status Information*)
+IF bWorkingCounter= 0 AND sStateStatusAll= 'No error' THEN
+	bTerminalOK:= TRUE;
+	sTerminalStatus:= 'Terminal OK ';
+ELSE
+	bTerminalOK:= FALSE;
+	sTerminalStatus:= 'Terminal Error ';
+END_IF
+
+fbTimer1();
+fbTimer2();]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Terminal_Diagnosis">
+      <LineId Id="36" Count="161" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

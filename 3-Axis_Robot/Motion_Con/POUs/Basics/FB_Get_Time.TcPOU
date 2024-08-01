@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Get_Time" Id="{d76a6563-ad9c-4b09-945f-6c2152de942e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Get_Time
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	sDateAndTime: STRING;
+END_VAR
+VAR
+	bBusy: BOOL;
+	bError: BOOL;
+	udiErrorID: UDINT;
+	fbGetTime: NT_GetTime;
+	stTime: TIMESTRUCT;
+	nStep: UDINT;
+	bBlinker: BOOL;
+	fbBlinker: FB_Blinker;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*This Function Block gets the Windows Systemtime*)
+
+CASE nStep OF
+	0:	IF NOT bError AND NOT bBusy THEN
+			nStep:= 10;
+		ELSE
+			nStep:= 30;
+		END_IF
+
+	10:	IF bBlinker THEN
+			fbGetTime.START:= TRUE;
+		ELSE
+			fbGetTime.START:= FALSE;
+			nStep:= 0;
+		END_IF
+
+	30:	IF NOT bError AND NOT bBusy THEN
+			nStep:= 10;
+		END_IF
+END_CASE
+fbBlinker(tBlinkTime:= t#500ms , bBlink=>bBlinker );
+
+fbGetTime(
+			NETID:= '' ,
+			START:=   ,
+			TMOUT:= DEFAULT_ADS_TIMEOUT ,
+			BUSY=> bBusy ,
+			ERR=> bError ,
+			ERRID=> udiErrorID ,
+			TIMESTR=> stTime );
+
+sDateAndTime:= SYSTEMTIME_TO_STRING(stTime);]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Get_Time">
+      <LineId Id="16" Count="31" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

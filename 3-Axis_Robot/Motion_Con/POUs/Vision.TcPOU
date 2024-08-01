@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Vision" Id="{01db0ff9-afb1-4980-a0cc-1cc5a7f8bb47}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Vision
+VAR
+	hr					: HRESULT;					// Vision関数の戻り値を表す変数
+
+	fbCamera			: FB_VN_SimpleCameraControl;// Cameraオブジェクト or File Sourceオブジェクト
+	eState				: ETcVnCameraState;			// Cameraオブジェクト (or FileSourceオブジェクト) の状態を表す
+
+	// Images
+	ipImageIn			: ITcVnImage;				// 入力画像
+	ipImageRes			: ITcVnImage;				// 結果画像
+	ipImageProc1		: ITcVnImage;				// 途中経過画像１
+	ipImageProc2		: ITcVnImage;				// 途中経過画像2
+	ipImageProc3		: ITcVnImage;				// 途中経過画像3
+	
+	// Displayable Images
+	ipImageInDisp		: ITcVnDisplayableImage;	// 入力画像の画面表示用変数
+	ipImageResDisp		: ITcVnDisplayableImage;	// 結果画像の画面表示用変数
+	ipImageProc1Disp	: ITcVnDisplayableImage;	// 途中経過画像1の画面表示用変数
+	ipImageProc2Disp	: ITcVnDisplayableImage;	// 途中経過画像2の画面表示用変数
+	ipImageProc3Disp	: ITcVnDisplayableImage;	// 途中経過画像3の画面表示用変数
+	
+	// その他ローカル変数
+	nNewImageCounter	: UINT;						// 画像取得カウンタ
+	bNewImageArrived	: BOOL;						// 画像取得すると TRUE  (※TRUEの後、すぐにFALSEに戻す)
+	bSoftWareTrigger	: BOOL;						// ソフトウェアトリガー
+	fbR_TRIG			: R_TRIG;					// ボタンスイッチの立ち上がりエッジを検出
+	stImageInfo			: TcVnImageInfo;			// 画像情報構造体
+	iStep				: int:=0;					// 画像処理のステップ進行用
+	
+	// カラー定義
+	aColorRed			: TcVnVector4_LREAL := [255, 50, 50, 0];
+	aColorGreen			: TcVnVector4_LREAL := [0, 255, 0, 0];
+	aColorBlue			: TcVnVector4_LREAL := [0, 0, 255, 0];
+	aColorWhite			: TcVnVector4_LREAL := [255, 255, 255, 0];
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[eState := fbCamera.GetState();
+
+CASE eState OF
+TCVN_CS_ERROR:
+	hr := fbCamera.Reset();	// エラーの時はリセットを実行
+
+TCVN_CS_TRIGGERING:
+	hr := fbCamera.TriggerImage();	// ソフトウェアトリガー
+
+TCVN_CS_INITIAL..TCVN_CS_STARTACQUISITION:
+	hr := fbCamera.StartAcquisition();	// 取込開始状態に移行させる
+
+TCVN_CS_ACQUIRING:
+
+	CASE iStep OF
+	0:
+		fbR_TRIG(CLK := GVL.mb_Output_Coils[7], Q => bSoftWareTrigger);	// ボタンスイッチを押すとソフトウェアトリガーを発行する
+		
+		IF bSoftwareTrigger=TRUE THEN
+			hr := fbCamera.TriggerImage();
+			IF SUCCEEDED(hr)=TRUE THEN
+				bSoftwareTrigger := FALSE;
+			END_IF
+		ELSE
+			hr := fbCamera.GetCurrentImage(ipImageIn);	// 最新画像を取得
+			
+			// new image was received.
+			IF SUCCEEDED(hr)=TRUE AND ipImageIn <> 0 THEN
+				nNewImageCounter := nNewImageCounter + 1;
+				iStep := 1;
+			END_IF
+		END_IF
+	
+	1:	
+		// Bayerフォーマットからカラー画像へ変換
+		// ※画像情報をチェックし、ピクセルフォーマットがBayerエンコーディングされている時はカラー画像に変更。
+		// ※最初からカラー画像の時はカラー変換しない。
+		hr := F_VN_GetImageInfo(ipImageIn, stImageInfo, hr);
+		IF SUCCEEDED(hr) AND_THEN stImageInfo.stPixelFormat.ePixelEncoding <> ETcVnPixelEncoding.TCVN_PE_NONE THEN
+			hr := F_VN_ConvertColorSpace(ipImageIn, ipImageIn, TCVN_CST_BAYER_RG_TO_RGB, hr);
+		END_IF
+		iStep:=2;
+	
+	2:
+		hr := F_VN_CopyImage(ipImageIn, ipimageRes, hr);	// copy to ResultImage
+		iStep:=3;
+	
+	3:
+		// ブロブ検出処理
+		hr := Vision_DetectBlob(ipImageIn:= ipImageIn, 
+								ipImageRes:= ipImageRes, 
+								ipImageGray:= ipImageProc1, 
+								ipImageFillHole:= ipImageProc2, 
+								hrPrev:= hr);
+		istep:=4;
+	
+	4:		
+		// 画面表示イメージを作成する
+		hr := F_VN_TransformIntoDisplayableImage(ipImageIn, ipImageInDisp, hr);
+		hr := F_VN_TransformIntoDisplayableImage(ipImageRes, ipImageResDisp, S_OK);
+		hr := F_VN_TransformIntoDisplayableImage(ipImageProc1, ipImageProc1Disp, S_OK);
+		hr := F_VN_TransformIntoDisplayableImage(ipImageProc2, ipImageProc2Disp, S_OK);
+		hr := F_VN_TransformIntoDisplayableImage(ipImageProc3, ipImageProc3Disp, S_OK);
+		istep:=0;
+	END_CASE
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="Vision">
+      <LineId Id="621" Count="0" />
+      <LineId Id="899" Count="0" />
+      <LineId Id="833" Count="0" />
+      <LineId Id="1006" Count="0" />
+      <LineId Id="902" Count="0" />
+      <LineId Id="907" Count="0" />
+      <LineId Id="903" Count="0" />
+      <LineId Id="908" Count="0" />
+      <LineId Id="910" Count="3" />
+      <LineId Id="909" Count="0" />
+      <LineId Id="962" Count="0" />
+      <LineId Id="954" Count="0" />
+      <LineId Id="958" Count="0" />
+      <LineId Id="632" Count="0" />
+      <LineId Id="846" Count="0" />
+      <LineId Id="636" Count="5" />
+      <LineId Id="643" Count="8" />
+      <LineId Id="961" Count="0" />
+      <LineId Id="666" Count="2" />
+      <LineId Id="670" Count="1" />
+      <LineId Id="673" Count="1" />
+      <LineId Id="964" Count="6" />
+      <LineId Id="685" Count="0" />
+      <LineId Id="760" Count="0" />
+      <LineId Id="762" Count="2" />
+      <LineId Id="687" Count="0" />
+      <LineId Id="1007" Count="2" />
+      <LineId Id="695" Count="1" />
+      <LineId Id="698" Count="3" />
+      <LineId Id="1010" Count="0" />
+      <LineId Id="916" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
