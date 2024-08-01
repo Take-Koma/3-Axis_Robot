@@ -11,12 +11,10 @@ P_Alarm();
 P_Patlite();
 P_BasicMotion();
 P_WriteMotion();
-P_MitsubishiCommunication();
-P_LoadCell();]]></ST>
+P_MitsubishiCommunication();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="7" Count="5" />
-      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

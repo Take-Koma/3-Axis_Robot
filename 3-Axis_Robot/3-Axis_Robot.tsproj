@@ -1433,66 +1433,6 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-000000000041}" TcBaseType="true" HideSubItems="true" CName="AmsNetId">AMSNETID</Name>
-			<BitSize>48</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>6</Elements>
-			</ArrayInfo>
-			<Format>
-				<Printf>%d.%d.%d.%d.%d.%d</Printf>
-				<Parameter>[0]</Parameter>
-				<Parameter>[1]</Parameter>
-				<Parameter>[2]</Parameter>
-				<Parameter>[3]</Parameter>
-				<Parameter>[4]</Parameter>
-				<Parameter>[5]</Parameter>
-			</Format>
-		</DataType>
-		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-000000000042}" TcBaseType="true" CName="AmsAddr">AMSADDR</Name>
-			<BitSize>64</BitSize>
-			<SubItem>
-				<Name>netId</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
-				<BitSize>48</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>port</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000004}">WORD</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>48</BitOffs>
-			</SubItem>
-			<Format>
-				<Printf>%d.%d.%d.%d.%d.%d:%d</Printf>
-				<Parameter>.netId[0]</Parameter>
-				<Parameter>.netId[1]</Parameter>
-				<Parameter>.netId[2]</Parameter>
-				<Parameter>.netId[3]</Parameter>
-				<Parameter>.netId[4]</Parameter>
-				<Parameter>.netId[5]</Parameter>
-				<Parameter>.port</Parameter>
-			</Format>
-			<Format Name="Iec">
-				<Printf>(netId:=[%d.%d.%d.%d.%d.%d], port :=%d)</Printf>
-				<Parameter>.netId[0]</Parameter>
-				<Parameter>.netId[1]</Parameter>
-				<Parameter>.netId[2]</Parameter>
-				<Parameter>.netId[3]</Parameter>
-				<Parameter>.netId[4]</Parameter>
-				<Parameter>.netId[5]</Parameter>
-				<Parameter>.port</Parameter>
-			</Format>
-		</DataType>
-		<DataType>
-			<Name GUID="{C92AF341-7BD6-622A-489B-93F78F170DEA}" Namespace="Tc2_System" AutoDeleteType="true">ST_AmsAddr</Name>
-			<Comment><![CDATA[ TwinCAT AMS network address. ]]></Comment>
-			<BitSize>64</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000042}">AMSADDR</BaseType>
-		</DataType>
-		<DataType>
 			<Name GUID="{DB6B59A0-4FB0-4B14-A83C-AC7A76AD688D}">JobTaskId</Name>
 			<BitSize>32</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
@@ -6149,7 +6089,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{1C83A720-35A4-CEBB-B56F-34B29B995591}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{BA2F7AEE-C1BD-ACD2-8D12-235B285BE2B2}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6158,6 +6098,11 @@ External Setpoint Generation:
 							<Name>P_Safety.bSafetyRunCheck</Name>
 							<Comment><![CDATA[セーフティーランの確認]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>P_Safety.bMainPowerEDMIn</Name>
+							<Comment><![CDATA[非常停止の電源OFF確認]]></Comment>
+							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
 						</Var>
 						<Var>
 							<Name>P_Safety.bEStop1</Name>
@@ -6170,13 +6115,13 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>P_Safety.bMainPowerEDMIn</Name>
-							<Comment><![CDATA[非常停止の電源OFF確認]]></Comment>
-							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
-						</Var>
-						<Var>
 							<Name>P_Safety.bEstopOutOut</Name>
 							<Comment><![CDATA[非常停止解除確認 EL2911 output]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>P_Safety.bGripSwich</Name>
+							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -6188,11 +6133,6 @@ External Setpoint Generation:
 							<Name>P_Safety.bMoveCheckIn</Name>
 							<Comment><![CDATA[各軸が動いていることを確認]]></Comment>
 							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bGripSwich</Name>
-							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>P_Patlite.bSwitch</Name>
@@ -6211,90 +6151,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>P_MitsubishiCommunication.bMitsubishiAlarm</Name>
 							<Comment><![CDATA[三菱のY6より出力]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.fbEtherCATDiagnosis.uiFrmState</Name>
-							<Comment><![CDATA[+++++ EtherCAT Diagnosis +++++]]></Comment>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.fbEtherCATDiagnosis.uiFrmWcState</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.fbEtherCATDiagnosis.uiSlaveCount</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.fbEtherCATDiagnosis.uiDevState</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].AdsAddr</Name>
-							<Comment><![CDATA[+++++ AMS Address for CoE Com +++++]]></Comment>
-							<Type GUID="{C92AF341-7BD6-622A-489B-93F78F170DEA}" Namespace="Tc2_System">ST_AmsAddr</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bWcState</Name>
-							<Comment><![CDATA[+++++ WcState (Working Counter)+++++ ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].uiState</Name>
-							<Comment><![CDATA[+++++ Info Data --> State +++++]]></Comment>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bBridgeUnderrange</Name>
-							<Comment><![CDATA[+++++ AIBridge Inputs +++++]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bBridgeOverrangerange</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bBridgeError</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bBridgeState</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bSupplyUnderrange</Name>
-							<Comment><![CDATA[+++++ AISupply Inputs +++++]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bSupplyOverrangerange</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bSupplyError</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bSupplyState</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].diDiffvoltage</Name>
-							<Comment><![CDATA[+++++ Raw Values of Voltages +++++]]></Comment>
-							<Type>DINT</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].diRefvoltage</Name>
-							<Type>DINT</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bToggleBridge</Name>
-							<Comment><![CDATA[+++++ TxPDO Toggle +++++]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_LoadCell.afbEL3351[1].bToggleSupply</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
