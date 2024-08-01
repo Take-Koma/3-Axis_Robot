@@ -1,3 +1,0 @@
-Username	:Administrator
-Serial Mumber	:02702367
-Password	:TwinSAFE
