@@ -4,6 +4,7 @@
     <Declaration><![CDATA[PROGRAM Vision
 VAR
 	hr					: HRESULT;					// Vision関数の戻り値を表す変数
+	hrTemp				: HRESULT;					// 関数戻り値
 
 	fbCamera			: FB_VN_SimpleCameraControl;// Cameraオブジェクト or File Sourceオブジェクト
 	eState				: ETcVnCameraState;			// Cameraオブジェクト (or FileSourceオブジェクト) の状態を表す
@@ -11,16 +12,12 @@ VAR
 	// Images
 	ipImageIn			: ITcVnImage;				// 入力画像
 	ipImageRes			: ITcVnImage;				// 結果画像
-	ipImageProc1		: ITcVnImage;				// 途中経過画像１
-	ipImageProc2		: ITcVnImage;				// 途中経過画像2
-	ipImageProc3		: ITcVnImage;				// 途中経過画像3
+	ipImageProc			: ITcVnImage;				// 途中経過画像
 	
 	// Displayable Images
 	ipImageInDisp		: ITcVnDisplayableImage;	// 入力画像の画面表示用変数
 	ipImageResDisp		: ITcVnDisplayableImage;	// 結果画像の画面表示用変数
-	ipImageProc1Disp	: ITcVnDisplayableImage;	// 途中経過画像1の画面表示用変数
-	ipImageProc2Disp	: ITcVnDisplayableImage;	// 途中経過画像2の画面表示用変数
-	ipImageProc3Disp	: ITcVnDisplayableImage;	// 途中経過画像3の画面表示用変数
+	ipImageProcDisp		: ITcVnDisplayableImage;	// 途中経過画像1の画面表示用変数
 	
 	// その他ローカル変数
 	nNewImageCounter	: UINT;						// 画像取得カウンタ
@@ -29,6 +26,20 @@ VAR
 	fbR_TRIG			: R_TRIG;					// ボタンスイッチの立ち上がりエッジを検出
 	stImageInfo			: TcVnImageInfo;			// 画像情報構造体
 	iStep				: int:=0;					// 画像処理のステップ進行用
+	
+	// ブロブ検出用
+	stBlobParams		: TcVnParamsBlobDetection;	// Blob params
+	ipContourList		: ITcVnContainer;			// Blob Container
+	ipContour			: ITcVnContainer;			// Blob個々の輪郭情報
+	ipIterator			: ITcVnForwardIterator;		// 個々のBlobが格納されたコンテナから各要素へアクセスする為のイテレータ （≒ポインタ）	
+
+	nDetectedNum		: ULINT;					// 検出したブログ数
+	fArea				: LREAL;					// 面積 [pixel]
+	aMassCenter			: TcVnPoint2_LREAL;			// ブロブの重心座標 (x, y)[pixel]
+
+	fbFormatString		: FB_FormatString;			// (need library : "Tc2_Utilities")
+	sText				: STRING;
+	aDrawPos			: ARRAY[0..1] OF UDINT;
 	
 	// カラー定義
 	aColorRed			: TcVnVector4_LREAL := [255, 50, 50, 0];
@@ -86,57 +97,105 @@ TCVN_CS_ACQUIRING:
 		iStep:=3;
 	
 	3:
-		// ブロブ検出処理
-		hr := Vision_DetectBlob(ipImageIn:= ipImageIn, 
-								ipImageRes:= ipImageRes, 
-								ipImageGray:= ipImageProc1, 
-								ipImageFillHole:= ipImageProc2, 
-								hrPrev:= hr);
+		// グレー画像に変換
+		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageProc, ETcVnColorSpaceTransform.TCVN_CST_RGB_TO_GRAY, hr);
+		
+		// ブロブ検出パラメータをセット
+		stBlobParams.bFilterByArea := TRUE;
+		stBlobParams.fMinArea := 100;
+		stBlobParams.fMaxArea := 1000000;
+		
+		// 円形度判別
+		stBlobParams.bFilterByCircularity := TRUE;
+		stBlobParams.fMinCircularity := 0.80;
+		
+		// 輝度閾値
+		stBlobParams.fMinThreshold	:= 30;
+		stBlobParams.fMaxThreshold := 255;
+		stBlobParams.fThresholdStep := 0;
+		
+		// Detect Blobs
+		hr := F_VN_DetectBlobs(ipImageProc, ipContourList, stBlobParams, hr);
+		
+		IF SUCCEEDED(hr) AND ipContourList <> 0 THEN
+			hr := ipContourList.GetElementNum(nDetectedNum);	// 検出したブロブ数を取得
+		END_IF
+
+		IF nDetectedNum > 0 THEN
+			// 検出したブロブの輪郭を描画
+			hr := F_VN_DrawContours(ipContourList, -1, ipImageRes,  Vision.aColorGreen, 3, hr);
+			
+			// 各ブロブ情報が格納されたコンテナ(ContourList)から、最初の要素へのイテレータを取得
+			hr := F_VN_GetForwardIterator(ipContourList, ipIterator, hr);
+			
+			WHILE SUCCEEDED(hr) AND_THEN ipIterator.CheckIfEnd() <> S_OK DO
+				// イテレータが指し示しているContourを取り出す。その後イテレータが次のContourを指し示すよう進める
+				hr := F_VN_GetContainer(ipIterator, ipContour, hr);
+				hr := F_VN_IncrementIterator(ipIterator, hr);
+				
+				// Containerから欲しい結果を取得
+				hr := F_VN_ContourArea(ipContour, fArea, hr);
+				hr := F_VN_ContourCenterOfMass(ipContour, aMassCenter, hr);
+				
+				// 個々の結果を描画
+				aDrawPos[0] := LREAL_TO_UDINT(aMassCenter[0]);
+				aDrawPos[1] := LREAL_TO_UDINT(aMassCenter[1]);
+				
+				// 重心位置をマーク
+				hrTemp := F_VN_DrawPointExp(aDrawPos[0], aDrawPos[1], 
+											ipImageRes, 
+											ETcVnDrawShape.TCVN_DS_PLUS, 
+											Vision.aColorGreen, 5, 1, 
+											ETcVnLineType.TCVN_LT_4_CONNECTED, 0);
+				
+				// 面積値を結果画像に対して出力
+				sText := CONCAT('Area : ', DINT_TO_STRING(LREAL_TO_DINT(fArea)));
+				hrTemp := F_VN_PutText(	sText, 
+										ipImageRes, 
+										aDrawPos[0] - 50, aDrawPos[1] + 20, 
+										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, Vision.aColorRed, 0);
+				
+				// 座標情報を結果画像に対して出力
+				fbFormatString(	sFormat := '(X, Y) = (%0.3f, %0.3f)', 
+								arg1 := F_LREAL(aMassCenter[0]), arg2 := F_LREAL(aMassCenter[1]), sOut => sText);
+				hrTemp := F_VN_PutText(	sText, 
+										ipImageRes, 
+										aDrawPos[0] - 110, aDrawPos[1] + 80, 
+										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, Vision.aColorRed, 0);
+			END_WHILE
+			
+			FW_SafeRelease(ADR(ipContour));		// ループの外で開放するほうが効率的なので、ここで開放する
+			FW_SafeRelease(ADR(ipIterator));	
+		END_IF
+		FW_SafeRelease(ADR(ipContourList));
+							
 		istep:=4;
 	
 	4:		
 		// 画面表示イメージを作成する
 		hr := F_VN_TransformIntoDisplayableImage(ipImageIn, ipImageInDisp, hr);
 		hr := F_VN_TransformIntoDisplayableImage(ipImageRes, ipImageResDisp, S_OK);
-		hr := F_VN_TransformIntoDisplayableImage(ipImageProc1, ipImageProc1Disp, S_OK);
-		hr := F_VN_TransformIntoDisplayableImage(ipImageProc2, ipImageProc2Disp, S_OK);
-		hr := F_VN_TransformIntoDisplayableImage(ipImageProc3, ipImageProc3Disp, S_OK);
+		hr := F_VN_TransformIntoDisplayableImage(ipImageProc, ipImageProcDisp, S_OK);
+		
 		istep:=0;
 	END_CASE
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="Vision">
-      <LineId Id="621" Count="0" />
-      <LineId Id="899" Count="0" />
-      <LineId Id="833" Count="0" />
-      <LineId Id="1006" Count="0" />
-      <LineId Id="902" Count="0" />
-      <LineId Id="907" Count="0" />
-      <LineId Id="903" Count="0" />
-      <LineId Id="908" Count="0" />
-      <LineId Id="910" Count="3" />
-      <LineId Id="909" Count="0" />
-      <LineId Id="962" Count="0" />
-      <LineId Id="954" Count="0" />
-      <LineId Id="958" Count="0" />
-      <LineId Id="632" Count="0" />
-      <LineId Id="846" Count="0" />
-      <LineId Id="636" Count="5" />
-      <LineId Id="643" Count="8" />
-      <LineId Id="961" Count="0" />
-      <LineId Id="666" Count="2" />
-      <LineId Id="670" Count="1" />
-      <LineId Id="673" Count="1" />
-      <LineId Id="964" Count="6" />
-      <LineId Id="685" Count="0" />
-      <LineId Id="760" Count="0" />
-      <LineId Id="762" Count="2" />
-      <LineId Id="687" Count="0" />
-      <LineId Id="1007" Count="2" />
-      <LineId Id="695" Count="1" />
-      <LineId Id="698" Count="3" />
-      <LineId Id="1010" Count="0" />
-      <LineId Id="916" Count="0" />
+      <LineId Id="1111" Count="63" />
+      <LineId Id="1196" Count="0" />
+      <LineId Id="1201" Count="0" />
+      <LineId Id="1203" Count="0" />
+      <LineId Id="1206" Count="0" />
+      <LineId Id="1204" Count="1" />
+      <LineId Id="1199" Count="0" />
+      <LineId Id="1209" Count="0" />
+      <LineId Id="1211" Count="45" />
+      <LineId Id="1210" Count="0" />
+      <LineId Id="1198" Count="0" />
+      <LineId Id="1182" Count="6" />
+      <LineId Id="1268" Count="0" />
+      <LineId Id="1191" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

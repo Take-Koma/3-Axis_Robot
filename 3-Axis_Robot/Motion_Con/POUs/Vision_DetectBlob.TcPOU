@@ -30,7 +30,9 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// --------------------------------------------------------------
+      <ST><![CDATA[(*
+
+// --------------------------------------------------------------
 // 入力パラメータのチェック
 // --------------------------------------------------------------
 IF FAILED(hrPrev) THEN
@@ -49,7 +51,6 @@ END_IF
 // --------------------------------------------------------------
 hr := F_VN_ConvertColorSpace(ipImageIn, ipImageGray, ETcVnColorSpaceTransform.TCVN_CST_RGB_TO_GRAY, hr);
 //hr := F_VN_FillHoles(ipImageGray, ipImageFillHole, hr);
-
 
 // --------------------------------------------------------------
 // ブロブ検出パラメータをセット
@@ -125,26 +126,23 @@ IF nDetectedNum > 0 THEN
 END_IF
 FW_SafeRelease(ADR(ipContourList));
 
-Vision_DetectBlob := hr;]]></ST>
+Vision_DetectBlob := hr;
+
+
+*)
+]]></ST>
     </Implementation>
     <LineIds Name="Vision_DetectBlob">
-      <LineId Id="214" Count="0" />
-      <LineId Id="217" Count="0" />
-      <LineId Id="215" Count="1" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="220" Count="0" />
-      <LineId Id="219" Count="0" />
-      <LineId Id="228" Count="0" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="227" Count="0" />
-      <LineId Id="223" Count="2" />
+      <LineId Id="299" Count="1" />
+      <LineId Id="288" Count="10" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="302" Count="0" />
       <LineId Id="213" Count="0" />
       <LineId Id="78" Count="0" />
       <LineId Id="72" Count="0" />
       <LineId Id="204" Count="0" />
       <LineId Id="83" Count="0" />
       <LineId Id="73" Count="0" />
-      <LineId Id="211" Count="0" />
       <LineId Id="71" Count="0" />
       <LineId Id="205" Count="0" />
       <LineId Id="18" Count="0" />
@@ -202,6 +200,8 @@ Vision_DetectBlob := hr;]]></ST>
       <LineId Id="230" Count="0" />
       <LineId Id="229" Count="0" />
       <LineId Id="66" Count="0" />
+      <LineId Id="307" Count="2" />
+      <LineId Id="306" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
