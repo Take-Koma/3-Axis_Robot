@@ -38,18 +38,6 @@
     <Compile Include="DUTs\E_WriteStep.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\LoadCell\ST_CoeInfo.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\LoadCell\ST_CoeReadData.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\LoadCell\ST_CoeWriteData.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\LoadCell\ST_DeviceStatus.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DUTs\ST_Alarm.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -65,68 +53,11 @@
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\Globale_Variablen.TcGVL">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="GVLs\GVL.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Basics\CheckBounds.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Basics\CheckDivReal.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Basics\FB_Blinker.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Basics\FB_CheckArrayBounds.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Basics\FB_CheckDivRealInfo.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Basics\FB_Get_Time.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Basics\F_AdsError_Text.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Colour\FB_ColourCheck.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Colour\FB_Colours.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Colour\FB_Colours_State.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\EL3351\FB_EL3351.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\EL3351\FB_EL3351_Channel_Diagnosis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\EL3351\FB_EL3351_CoE.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\EL3351\FB_EL3351_Measuring.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\EtherCATFieldbus Diagnosis\FB_DevState_Diagnosis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\EtherCATFieldbus Diagnosis\FB_EtherCAT_Diagnosis_Master.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\EtherCATFieldbus Diagnosis\FB_FrmState_Diagnosis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\EtherCATFieldbus Diagnosis\FB_FrmWcState_Diagnosis.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FB_Gripper_GripAngle.TcPOU">
@@ -147,9 +78,6 @@
     <Compile Include="POUs\P_Ellipse.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\P_LoadCell.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -165,15 +93,6 @@
     <Compile Include="POUs\P_MitsubishiCommunication.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Terminal\FB_Terminal_Diagnosis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Terminal\FB_ToggleBit.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Terminal\FUN_StateReturn.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\Vision.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -183,19 +102,7 @@
     <Compile Include="VisionTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VISUs\Placeholder Visus\VISU_EL3351_BASIC.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>ビジュアリゼーション マネージャ.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="VISUs\Placeholder Visus\VISU_EL3351_CoE.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>ビジュアリゼーション マネージャ.TcVMO</DependentUpon>
-    </Compile>
     <Compile Include="VISUs\Visualization.TcVIS">
-      <SubType>Code</SubType>
-      <DependentUpon>ビジュアリゼーション マネージャ.TcVMO</DependentUpon>
-    </Compile>
-    <Compile Include="VISUs\VSU_EL3351.TcVIS">
       <SubType>Code</SubType>
       <DependentUpon>ビジュアリゼーション マネージャ.TcVMO</DependentUpon>
     </Compile>
@@ -205,16 +112,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
-    <Folder Include="DUTs\LoadCell" />
     <Folder Include="GVLs" />
-    <Folder Include="POUs\Basics" />
-    <Folder Include="POUs\Colour" />
-    <Folder Include="POUs\EL3351" />
-    <Folder Include="POUs\EtherCATFieldbus Diagnosis" />
-    <Folder Include="POUs\Terminal" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
-    <Folder Include="VISUs\Placeholder Visus" />
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="System_VisuElemMeter">
