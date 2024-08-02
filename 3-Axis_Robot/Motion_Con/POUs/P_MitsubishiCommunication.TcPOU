@@ -51,6 +51,9 @@ END_VAR
 	ELSIF GVL.mb_Output_Coils[8]=TRUE THEN
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Base;
+	ELSIF GVL.mb_Output_Coils[9]=TRUE AND GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag=FALSE THEN
+		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Base;
 	ELSIF bMitsubishiAlarm=FALSE THEN
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Warning;
@@ -183,6 +186,8 @@ END_VAR
       <LineId Id="1130" Count="0" />
       <LineId Id="1207" Count="1" />
       <LineId Id="1206" Count="0" />
+      <LineId Id="1240" Count="1" />
+      <LineId Id="1239" Count="0" />
       <LineId Id="1166" Count="1" />
       <LineId Id="1201" Count="0" />
       <LineId Id="1131" Count="0" />

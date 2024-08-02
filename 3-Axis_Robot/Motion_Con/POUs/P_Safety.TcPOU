@@ -42,7 +42,7 @@ END_VAR]]></Declaration>
 	ELSIF uiCouterActValue=1 THEN
 		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.EmergencyReset;
-	ELSIF bEStop1=TRUE AND bEStop2=TRUE AND BEStopOutOut=TRUE THEN
+	ELSIF bEStop1=TRUE AND bEStop2=TRUE AND bEStopOutOut=TRUE THEN
 		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.Base;
 	END_IF;
