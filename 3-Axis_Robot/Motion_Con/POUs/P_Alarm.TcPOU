@@ -25,9 +25,6 @@ END_VAR
 				E_MachineState.Emergency:
 					bMachineStateFlag[E_MachineState.Emergency]:=TRUE;
 					
-				E_MachineState.EmergencyReset:
-					bMachineStateFlag[E_MachineState.EmergencyReset]:=TRUE;
-					
 				E_MachineState.Warning:
 					bMachineStateFlag[E_MachineState.Warning]:=TRUE;
 					
@@ -50,9 +47,6 @@ END_VAR
 		
 	ELSIF bMachineStateFlag[E_MachineState.Warning]=TRUE THEN
 		GVL.eMachineState:=E_MachineState.Warning;
-		
-	ELSIF bMachineStateFlag[E_MachineState.EmergencyReset]=TRUE THEN
-		GVL.eMachineState:=E_MachineState.EmergencyReset;
 		
 	ELSIF bMachineStateFlag[E_MachineState.Stay]=TRUE THEN
 		GVL.eMachineState:=E_MachineState.Stay;
@@ -80,9 +74,8 @@ END_VAR
       <LineId Id="43" Count="0" />
       <LineId Id="51" Count="1" />
       <LineId Id="44" Count="0" />
-      <LineId Id="53" Count="1" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="55" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="56" Count="0" />
       <LineId Id="46" Count="0" />
       <LineId Id="57" Count="1" />
       <LineId Id="47" Count="0" />
@@ -100,10 +93,7 @@ END_VAR
       <LineId Id="65" Count="0" />
       <LineId Id="87" Count="0" />
       <LineId Id="67" Count="0" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="78" Count="0" />
+      <LineId Id="108" Count="0" />
       <LineId Id="89" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="79" Count="0" />

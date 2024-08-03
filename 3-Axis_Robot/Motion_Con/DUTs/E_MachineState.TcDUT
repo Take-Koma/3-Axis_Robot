@@ -7,7 +7,6 @@ TYPE E_MachineState :
 (
 	Base,					//何もなし
 	Emergency,				//非常停止ボタンON
-	EmergencyReset,			//非常停止ボタンリセット中
 	Warning,				//不具合発生中
 	Stay,					//McPowerがOFF
 	Stop,					//McPowerがON

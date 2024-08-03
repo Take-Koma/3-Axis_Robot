@@ -28,12 +28,6 @@ E_MachineState.Emergency:
 	IF bBuzzerFlag=FALSE THEN
 		bBuzzerON:=TRUE;
 	END_IF
-	
-E_MachineState.EmergencyReset:
-	eLedColor:=E_LedColor.Blue;
-	tBlinkTime:=T#0.5S;
-	bBuzzerON:=FALSE;
-	bBuzzerFlag:=FALSE;
 
 E_MachineState.Warning:
 	eLedColor:=E_LedColor.Red;
@@ -128,12 +122,6 @@ END_IF;
       <LineId Id="94" Count="3" />
       <LineId Id="120" Count="0" />
       <LineId Id="204" Count="2" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="119" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="179" Count="0" />
-      <LineId Id="209" Count="0" />
       <LineId Id="161" Count="0" />
       <LineId Id="105" Count="0" />
       <LineId Id="164" Count="0" />

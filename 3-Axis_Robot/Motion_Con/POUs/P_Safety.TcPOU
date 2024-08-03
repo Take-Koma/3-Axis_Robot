@@ -14,7 +14,6 @@ VAR
 	bEStop2					AT %I* :BOOL;												//非常停止ボタン2_EL2911 input CH.2
 	bEstopOutOut			AT %I* :BOOL;												//非常停止解除確認 EL2911 output
 	bEStopReset				AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
-	uiCouterActValue		AT %I* :UINT;												//非常停止解除のカウンター
 	
 	bMoveCheckIn			AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることを確認
 	bMoveCheckOut			AT %Q* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることの結果をセーフティーへ
@@ -39,9 +38,6 @@ END_VAR]]></Declaration>
 	IF bEStop1=FALSE AND bEStop2=FALSE AND BEStopOutOut=FALSE THEN
 		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.Emergency;
-	ELSIF uiCouterActValue=1 THEN
-		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.EmergencyReset;
 	ELSIF bEStop1=TRUE AND bEStop2=TRUE AND bEStopOutOut=TRUE THEN
 		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.Base;
@@ -87,9 +83,8 @@ END_VAR]]></Declaration>
       <LineId Id="271" Count="3" />
       <LineId Id="188" Count="6" />
       <LineId Id="275" Count="0" />
-      <LineId Id="196" Count="1" />
-      <LineId Id="296" Count="0" />
-      <LineId Id="199" Count="1" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="200" Count="0" />
       <LineId Id="297" Count="0" />
       <LineId Id="201" Count="2" />
       <LineId Id="360" Count="0" />
