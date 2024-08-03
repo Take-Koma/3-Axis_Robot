@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SafetyDeviceDesc Crc="2940419842" FileFormatVersion="1.9">
+<SafetyDeviceDesc Crc="1264576870" FileFormatVersion="1.9">
   <AliasDeviceType>
     <Type>4</Type>
     <SubType>2911</SubType>
@@ -61,6 +61,7 @@
           <BitSize>1</BitSize>
           <BitOffsMessage>8</BitOffsMessage>
           <BitOffsData>0</BitOffsData>
+          <MapInfoData>true</MapInfoData>
         </IO>
         <IO>
           <Name>FSOUT Module.ErrAck</Name>
@@ -72,6 +73,7 @@
           <BitSize>1</BitSize>
           <BitOffsMessage>9</BitOffsMessage>
           <BitOffsData>1</BitOffsData>
+          <MapInfoData>true</MapInfoData>
         </IO>
         <IO>
           <Name>FSIN Module.ErrAck</Name>
@@ -83,6 +85,7 @@
           <BitSize>1</BitSize>
           <BitOffsMessage>10</BitOffsMessage>
           <BitOffsData>2</BitOffsData>
+          <MapInfoData>true</MapInfoData>
         </IO>
         <IO>
           <Name />
@@ -138,6 +141,7 @@
           <BitSize>1</BitSize>
           <BitOffsMessage>8</BitOffsMessage>
           <BitOffsData>0</BitOffsData>
+          <MapInfoData>true</MapInfoData>
         </IO>
         <IO>
           <Name>FSIN Module.Channel 1.Input</Name>
@@ -149,6 +153,7 @@
           <BitSize>1</BitSize>
           <BitOffsMessage>9</BitOffsMessage>
           <BitOffsData>1</BitOffsData>
+          <MapInfoData>true</MapInfoData>
         </IO>
         <IO>
           <Name>FSIN Module.Channel 2.Input</Name>
@@ -160,6 +165,7 @@
           <BitSize>1</BitSize>
           <BitOffsMessage>10</BitOffsMessage>
           <BitOffsData>2</BitOffsData>
+          <MapInfoData>true</MapInfoData>
         </IO>
         <IO>
           <Name>FSIN Module.Channel 3.Input</Name>
@@ -171,6 +177,7 @@
           <BitSize>1</BitSize>
           <BitOffsMessage>11</BitOffsMessage>
           <BitOffsData>3</BitOffsData>
+          <MapInfoData>true</MapInfoData>
         </IO>
         <IO>
           <Name>FSIN Module.Channel 4.Input</Name>
@@ -182,6 +189,7 @@
           <BitSize>1</BitSize>
           <BitOffsMessage>12</BitOffsMessage>
           <BitOffsData>4</BitOffsData>
+          <MapInfoData>true</MapInfoData>
         </IO>
         <IO>
           <Name>FSIN Module.Module Fault</Name>
@@ -193,6 +201,7 @@
           <BitSize>1</BitSize>
           <BitOffsMessage>13</BitOffsMessage>
           <BitOffsData>5</BitOffsData>
+          <MapInfoData>true</MapInfoData>
         </IO>
         <IO>
           <Name />

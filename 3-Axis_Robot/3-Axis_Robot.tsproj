@@ -4173,6 +4173,64 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
+			<Name GUID="{B62F343F-3864-EBAE-321E-B2B111C236E2}" AutoDeleteType="true">INFODATA_668805986</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Input Safe Data FSOUT Module.Module Fault</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input Safe Data FSIN Module.Channel 1.Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input Safe Data FSIN Module.Channel 2.Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input Safe Data FSIN Module.Channel 3.Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input Safe Data FSIN Module.Channel 4.Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input Safe Data FSIN Module.Module Fault</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Output Safe Data FSOUT Module.Output</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Output Safe Data FSOUT Module.ErrAck</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>9</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Output Safe Data FSIN Module.ErrAck</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>10</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
 			<BitSize>6</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
@@ -6089,7 +6147,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{D5EC5193-CE02-A3D3-CDD7-3B7573DBAB2F}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{9709CB0D-9987-3DFC-A4D8-CE9CAA4BB606}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -25175,7 +25233,7 @@ External Setpoint Generation:
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>001203002400010003000000000000000700001224010000</SyncMan>
-							<SyncMan>001d04002000010004000000000000000900001d20010000</SyncMan>
+							<SyncMan>001d06002000010004000000000000000900001d20010000</SyncMan>
 							<SyncMan>002e00002400000003000000000000000000002e24000000</SyncMan>
 							<SyncMan>002f00002000000004000000000000000000002f20000000</SyncMan>
 							<SyncMan>fa2f01002400010003000000000000000200fa2f24010000</SyncMan>
@@ -25242,6 +25300,11 @@ External Setpoint Generation:
 								</Entry>
 								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_GripperMove.sds_18" Index="#x6000" Sub="#x08">
 									<Type>BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Device Info Data" Index="#x1bfb" Flags="#x2011" SyncMan="3">
+								<Entry Name="Internal I/O" Index="#x7000" Sub="#x01">
+									<Type GUID="{B62F343F-3864-EBAE-321E-B2B111C236E2}">INFODATA_668805986</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="Outputs" Index="#x17fe" InOut="1" Flags="#x0091" SyncMan="6" SyncUnit="2">
