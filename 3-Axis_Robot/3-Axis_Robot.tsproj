@@ -6147,7 +6147,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{9709CB0D-9987-3DFC-A4D8-CE9CAA4BB606}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{48588056-9A5D-E363-DA56-676521A9019C}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6178,19 +6178,14 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>P_Safety.bGripSwich</Name>
-							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.uiCouterActValue</Name>
-							<Comment><![CDATA[非常停止解除のカウンター]]></Comment>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
 							<Name>P_Safety.bMoveCheckIn</Name>
 							<Comment><![CDATA[各軸が動いていることを確認]]></Comment>
 							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
+						</Var>
+						<Var>
+							<Name>P_Safety.bGripSwich</Name>
+							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>P_Patlite.bSwitch</Name>
@@ -25233,7 +25228,7 @@ External Setpoint Generation:
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>001203002400010003000000000000000700001224010000</SyncMan>
-							<SyncMan>001d06002000010004000000000000000900001d20010000</SyncMan>
+							<SyncMan>001d0c002000010004000000000000000900001d20010000</SyncMan>
 							<SyncMan>002e00002400000003000000000000000000002e24000000</SyncMan>
 							<SyncMan>002f00002000000004000000000000000000002f20000000</SyncMan>
 							<SyncMan>fa2f01002400010003000000000000000200fa2f24010000</SyncMan>
@@ -25303,7 +25298,13 @@ External Setpoint Generation:
 								</Entry>
 							</Pdo>
 							<Pdo Name="Device Info Data" Index="#x1bfb" Flags="#x2011" SyncMan="3">
-								<Entry Name="Internal I/O" Index="#x7000" Sub="#x01">
+								<Entry Name="Project CRC" Index="#x7000" Sub="#x01">
+									<Type>WORD</Type>
+								</Entry>
+								<Entry Name="Serial Number" Index="#x7000" Sub="#x02">
+									<Type>UDINT</Type>
+								</Entry>
+								<Entry Name="Internal I/O" Index="#x7000" Sub="#x03">
 									<Type GUID="{B62F343F-3864-EBAE-321E-B2B111C236E2}">INFODATA_668805986</Type>
 								</Entry>
 							</Pdo>
