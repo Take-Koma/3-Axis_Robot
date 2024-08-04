@@ -25296,7 +25296,7 @@ External Setpoint Generation:
 								<Entry Name="Serial Number" Index="#x7000" Sub="#x02">
 									<Type>UDINT</Type>
 								</Entry>
-								<Entry Name="Internal I/O" Index="#x7000" Sub="#x03">
+								<Entry Name="Internal I/O" Index="#x7000" Sub="#x03" Flags="#x00008000">
 									<Type GUID="{B62F343F-3864-EBAE-321E-B2B111C236E2}">INFODATA_668805986</Type>
 								</Entry>
 							</Pdo>
