@@ -46,12 +46,8 @@ END_VAR]]></Declaration>
 	//---GOTからの非常停止リセットをセーフティーへ---
 	bEStopReset:=GVL.mb_Output_Coils[9];
 	
-	//---各軸が動いているかをセーフティーへ---
-	IF bMoveCheckIn[E_Axis.X_Axis]=TRUE OR bMoveCheckIn[E_Axis.Y_Axis]=TRUE OR bMoveCheckIn[E_Axis.Z_Axis]=TRUE OR bMoveCheckIn[E_Axis.Gripper]=TRUE THEN
-		bAxisMove:=TRUE;
-	ELSE
-		bAxisMove:=FALSE;
-	END_IF
+	//---各軸が動いているかをまとめてセーフティーへ---
+	bAxisMove:= bMoveCheckIn[E_Axis.X_Axis] OR bMoveCheckIn[E_Axis.Y_Axis] OR bMoveCheckIn[E_Axis.Z_Axis] OR bMoveCheckIn[E_Axis.Gripper];
 	
 	//---軸が動いているときにグリップスイッチが押されてなかったら、マシンステートをワーニングにしてブザーを鳴らす---
 	IF bGripSwich=FALSE AND bAxisMove=TRUE THEN
@@ -75,10 +71,9 @@ END_VAR]]></Declaration>
     </Implementation>
     <LineIds Name="P_Safety">
       <LineId Id="616" Count="26" />
-      <LineId Id="672" Count="1" />
-      <LineId Id="675" Count="1" />
+      <LineId Id="672" Count="0" />
       <LineId Id="674" Count="0" />
-      <LineId Id="646" Count="4" />
+      <LineId Id="647" Count="3" />
       <LineId Id="660" Count="11" />
       <LineId Id="164" Count="0" />
       <LineId Id="677" Count="1" />
