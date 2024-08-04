@@ -6147,7 +6147,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{2555B5BB-4213-DA6B-3025-E8DE16A72D2D}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{76391830-D573-7C3C-79F3-448EB080ED04}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6178,14 +6178,14 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>P_Safety.bMoveCheckIn</Name>
-							<Comment><![CDATA[各軸が動いていることを確認]]></Comment>
-							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
-						</Var>
-						<Var>
 							<Name>P_Safety.bGripSwich</Name>
 							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>P_Safety.bMoveCheckIn</Name>
+							<Comment><![CDATA[各軸が動いていることを確認]]></Comment>
+							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
 						</Var>
 						<Var>
 							<Name>P_Patlite.bSwitch</Name>
@@ -25296,7 +25296,7 @@ External Setpoint Generation:
 								<Entry Name="Serial Number" Index="#x7000" Sub="#x02">
 									<Type>UDINT</Type>
 								</Entry>
-								<Entry Name="Internal I/O" Index="#x7000" Sub="#x03" Flags="#x00008000">
+								<Entry Name="Internal I/O" Index="#x7000" Sub="#x03">
 									<Type GUID="{B62F343F-3864-EBAE-321E-B2B111C236E2}">INFODATA_668805986</Type>
 								</Entry>
 							</Pdo>
