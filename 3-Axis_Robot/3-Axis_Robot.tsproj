@@ -4164,12 +4164,12 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000002}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BIT</Name>
-			<BitSize>2</BitSize>
+			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
+			<BitSize>6</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
 				<LBound>0</LBound>
-				<Elements>2</Elements>
+				<Elements>6</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -4229,15 +4229,6 @@ External Setpoint Generation:
 				<BitSize>1</BitSize>
 				<BitOffs>10</BitOffs>
 			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
-			<BitSize>6</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>6</Elements>
-			</ArrayInfo>
 		</DataType>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000010}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BYTE</Name>
@@ -6147,7 +6138,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{48588056-9A5D-E363-DA56-676521A9019C}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{CA3D10A6-1A31-9966-F22A-B26D17FF53AA}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6163,17 +6154,17 @@ External Setpoint Generation:
 							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
 						</Var>
 						<Var>
-							<Name>P_Safety.bEStop1</Name>
+							<Name>P_Safety.bEStopInput1</Name>
 							<Comment><![CDATA[非常停止ボタン1_EL2911 input CH.1]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>P_Safety.bEStop2</Name>
+							<Name>P_Safety.bEStopInput2</Name>
 							<Comment><![CDATA[非常停止ボタン2_EL2911 input CH.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>P_Safety.bEstopOutOut</Name>
+							<Name>P_Safety.bEstopOutput</Name>
 							<Comment><![CDATA[非常停止解除確認 EL2911 output]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -25249,26 +25240,14 @@ External Setpoint Generation:
 							<SuTask>#x00000000</SuTask>
 							<MBoxUserCmdData>004003000a00000000000000000000000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
 							<Pdo Name="StandardInputs" Index="#x1bf0" Flags="#x2011" SyncMan="3">
-								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_EStop1_8" Index="#x7000" Sub="#x01">
+								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_InRun_12" Index="#x7000" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_EStop2_9" Index="#x7000" Sub="#x02">
-									<Type>BIT</Type>
-								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_EStopOutOut_10" Index="#x7000" Sub="#x03">
-									<Type>BIT</Type>
-								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_InRun_12" Index="#x7000" Sub="#x04">
-									<Type>BIT</Type>
-								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_AllAxisStop_19" Index="#x7000" Sub="#x05">
-									<Type>BIT</Type>
-								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_GripSwich_20" Index="#x7000" Sub="#x06">
+								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_AllAxisStop_19" Index="#x7000" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry>
-									<Type GUID="{18071995-0000-0000-0000-002000000002}">ARRAY [0..1] OF BIT</Type>
+									<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="StandardOutputs" Index="#x17f0" InOut="1" Flags="#x2011" SyncMan="2">
@@ -26444,10 +26423,10 @@ External Setpoint Generation:
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 13 (EL2911)">
 				<Link VarA="PlcTask Inputs^GVL.bStop" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_AllAxisStop_19"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bEStop1" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_EStop1_8"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bEStop2" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_EStop2_9"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bEstopOutOut" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_EStopOutOut_10"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bGripSwich" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_GripSwich_20"/>
+				<Link VarA="PlcTask Inputs^P_Safety.bEStopInput1" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input"/>
+				<Link VarA="PlcTask Inputs^P_Safety.bEStopInput2" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input"/>
+				<Link VarA="PlcTask Inputs^P_Safety.bEstopOutput" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output"/>
+				<Link VarA="PlcTask Inputs^P_Safety.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input"/>
 				<Link VarA="PlcTask Inputs^P_Safety.bSafetyRunCheck" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_InRun_12"/>
 				<Link VarA="PlcTask Outputs^P_Safety.bEStopReset" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_Reset_5"/>
 				<Link VarA="PlcTask Outputs^P_Safety.bMainPowerEDMOut" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_EDM_7"/>

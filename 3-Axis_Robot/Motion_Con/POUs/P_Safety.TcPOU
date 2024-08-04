@@ -10,9 +10,9 @@ VAR
 	bMainPowerEDMIn			AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//非常停止の電源OFF確認
 	bMainPowerEDMOut		AT %Q* :BOOL;												//非常停止の電源OFFの結果をセーフティーへ	
 	
-	bEStop1					AT %I* :BOOL;												//非常停止ボタン1_EL2911 input CH.1
-	bEStop2					AT %I* :BOOL;												//非常停止ボタン2_EL2911 input CH.2
-	bEstopOutOut			AT %I* :BOOL;												//非常停止解除確認 EL2911 output
+	bEStopInput1			AT %I* :BOOL;												//非常停止ボタン1_EL2911 input CH.1
+	bEStopInput2			AT %I* :BOOL;												//非常停止ボタン2_EL2911 input CH.2
+	bEstopOutput			AT %I* :BOOL;												//非常停止解除確認 EL2911 output
 	bEStopReset				AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
 	
 	bMoveCheckIn			AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることを確認
@@ -35,10 +35,10 @@ END_VAR]]></Declaration>
 	bMainPowerEDMOut:= NOT bMainPowerEDMIn[E_Axis.X_Axis] AND NOT bMainPowerEDMIn[E_Axis.Y_Axis] AND NOT bMainPowerEDMIn[E_Axis.Z_Axis] AND NOT bMainPowerEDMIn[E_Axis.Gripper];
 
 	//---非常停止ボタンの制御---
-	IF bEStop1=FALSE AND bEStop2=FALSE AND BEStopOutOut=FALSE THEN
+	IF bEStopInput1=FALSE AND bEStopInput2=FALSE AND bEstopOutput=FALSE THEN
 		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.Emergency;
-	ELSIF bEStop1=TRUE AND bEStop2=TRUE AND bEStopOutOut=TRUE THEN
+	ELSIF bEStopInput1=TRUE AND bEStopInput2=TRUE AND bEstopOutput=TRUE THEN
 		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.Base;
 	END_IF;
@@ -79,43 +79,7 @@ END_VAR]]></Declaration>
 	END_IF]]></ST>
     </Implementation>
     <LineIds Name="P_Safety">
-      <LineId Id="182" Count="4" />
-      <LineId Id="271" Count="3" />
-      <LineId Id="188" Count="6" />
-      <LineId Id="275" Count="0" />
-      <LineId Id="196" Count="0" />
-      <LineId Id="200" Count="0" />
-      <LineId Id="297" Count="0" />
-      <LineId Id="201" Count="2" />
-      <LineId Id="360" Count="0" />
-      <LineId Id="362" Count="0" />
-      <LineId Id="361" Count="0" />
-      <LineId Id="210" Count="0" />
-      <LineId Id="212" Count="0" />
-      <LineId Id="215" Count="0" />
-      <LineId Id="214" Count="0" />
-      <LineId Id="211" Count="0" />
-      <LineId Id="217" Count="0" />
-      <LineId Id="277" Count="0" />
-      <LineId Id="298" Count="0" />
-      <LineId Id="222" Count="0" />
-      <LineId Id="224" Count="0" />
-      <LineId Id="299" Count="0" />
-      <LineId Id="223" Count="0" />
-      <LineId Id="227" Count="0" />
-      <LineId Id="300" Count="0" />
-      <LineId Id="226" Count="0" />
-      <LineId Id="230" Count="0" />
-      <LineId Id="301" Count="0" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="232" Count="0" />
-      <LineId Id="302" Count="0" />
-      <LineId Id="233" Count="0" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="204" Count="2" />
-      <LineId Id="321" Count="1" />
-      <LineId Id="340" Count="1" />
+      <LineId Id="543" Count="55" />
       <LineId Id="164" Count="0" />
     </LineIds>
   </POU>
