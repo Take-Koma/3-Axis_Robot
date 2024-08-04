@@ -16,7 +16,7 @@ VAR
 	bEStopReset				AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
 	
 	bMoveCheckIn			AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることを確認
-	bMoveCheckOut			AT %Q* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることの結果をセーフティーへ
+	bAxisMove				AT %Q* :BOOL;												//いずれかの軸が動いていることの結果をセーフティーへ
 	bGripSwich				AT %I* :BOOL;												//グリップスイッチ_EL2911 input CH.3
 END_VAR]]></Declaration>
     <Implementation>
@@ -47,21 +47,14 @@ END_VAR]]></Declaration>
 	bEStopReset:=GVL.mb_Output_Coils[9];
 	
 	//---各軸が動いているかをセーフティーへ---
-	FOR i := E_Axis.X_Axis TO E_Axis.Gripper DO
-		bMoveCheckOut[i]:=bMoveCheckIn[i];		
-	END_FOR
+	IF bMoveCheckIn[E_Axis.X_Axis]=TRUE OR bMoveCheckIn[E_Axis.Y_Axis]=TRUE OR bMoveCheckIn[E_Axis.Z_Axis]=TRUE OR bMoveCheckIn[E_Axis.Gripper]=TRUE THEN
+		bAxisMove:=TRUE;
+	ELSE
+		bAxisMove:=FALSE;
+	END_IF
 	
 	//---軸が動いているときにグリップスイッチが押されてなかったら、マシンステートをワーニングにしてブザーを鳴らす---
-	IF bGripSwich=FALSE AND bMoveCheckIn[E_Axis.X_Axis]=TRUE THEN
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Warning;
-	ELSIF bGripSwich=FALSE AND bMoveCheckIn[E_Axis.Y_Axis]=TRUE THEN
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Warning;
-	ELSIF bGripSwich=FALSE AND bMoveCheckIn[E_Axis.Z_Axis]=TRUE THEN
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Warning;
-	ELSIF bGripSwich=FALSE AND bMoveCheckIn[E_Axis.Gripper]=TRUE THEN
+	IF bGripSwich=FALSE AND bAxisMove=TRUE THEN
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Warning;
 	ELSIF GVL.mb_Output_Coils[8]=TRUE THEN
@@ -76,11 +69,19 @@ END_VAR]]></Declaration>
 		GVL.eMachineState:=E_MachineState.Stop;
 	ELSIF GVL.bPower=FALSE THEN
 		GVL.eMachineState:=E_MachineState.Stay;
-	END_IF]]></ST>
+	END_IF
+	
+	]]></ST>
     </Implementation>
     <LineIds Name="P_Safety">
-      <LineId Id="543" Count="55" />
+      <LineId Id="616" Count="26" />
+      <LineId Id="672" Count="1" />
+      <LineId Id="675" Count="1" />
+      <LineId Id="674" Count="0" />
+      <LineId Id="646" Count="4" />
+      <LineId Id="660" Count="11" />
       <LineId Id="164" Count="0" />
+      <LineId Id="677" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

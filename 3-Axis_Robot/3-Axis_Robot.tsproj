@@ -4173,6 +4173,15 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000003}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..2] OF BIT</Name>
+			<BitSize>3</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>3</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{B62F343F-3864-EBAE-321E-B2B111C236E2}" AutoDeleteType="true">INFODATA_668805986</Name>
 			<BitSize>16</BitSize>
 			<SubItem>
@@ -6138,7 +6147,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{CA3D10A6-1A31-9966-F22A-B26D17FF53AA}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{2555B5BB-4213-DA6B-3025-E8DE16A72D2D}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6236,9 +6245,9 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>P_Safety.bMoveCheckOut</Name>
-							<Comment><![CDATA[各軸が動いていることの結果をセーフティーへ]]></Comment>
-							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
+							<Name>P_Safety.bAxisMove</Name>
+							<Comment><![CDATA[いずれかの軸が動いていることの結果をセーフティーへ]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>P_Patlite.bRedLed</Name>
@@ -6336,6 +6345,16 @@ External Setpoint Generation:
 						<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
 							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 10 (EL1088)">
 								<Link VarA="GVL.bResetButton" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 8^Input" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-08-04T13:48:29">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 13 (EL2911)">
+								<Link VarA="P_Safety.bAxisMove[0]" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_XAxisMove_15" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bAxisMove[1]" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_YAxisMove_16" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bAxisMove[2]" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_ZAxisMove_17" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bAxisMove[3]" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_GripperMove.sds_18" Size="1" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -25263,17 +25282,11 @@ External Setpoint Generation:
 								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_EDM_7" Index="#x6000" Sub="#x04">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_XAxisMove_15" Index="#x6000" Sub="#x05">
+								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_AxisMove_18" Index="#x6000" Sub="#x05">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_YAxisMove_16" Index="#x6000" Sub="#x06">
-									<Type>BIT</Type>
-								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_ZAxisMove_17" Index="#x6000" Sub="#x07">
-									<Type>BIT</Type>
-								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_GripperMove.sds_18" Index="#x6000" Sub="#x08">
-									<Type>BIT</Type>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-002000000003}">ARRAY [0..2] OF BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="Device Info Data" Index="#x1bfb" Flags="#x2011" SyncMan="3">
@@ -26428,12 +26441,9 @@ External Setpoint Generation:
 				<Link VarA="PlcTask Inputs^P_Safety.bEstopOutput" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output"/>
 				<Link VarA="PlcTask Inputs^P_Safety.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input"/>
 				<Link VarA="PlcTask Inputs^P_Safety.bSafetyRunCheck" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_InRun_12"/>
+				<Link VarA="PlcTask Outputs^P_Safety.bAxisMove" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_AxisMove_18"/>
 				<Link VarA="PlcTask Outputs^P_Safety.bEStopReset" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_Reset_5"/>
 				<Link VarA="PlcTask Outputs^P_Safety.bMainPowerEDMOut" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_EDM_7"/>
-				<Link VarA="PlcTask Outputs^P_Safety.bMoveCheckOut[0]" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_XAxisMove_15"/>
-				<Link VarA="PlcTask Outputs^P_Safety.bMoveCheckOut[1]" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_YAxisMove_16"/>
-				<Link VarA="PlcTask Outputs^P_Safety.bMoveCheckOut[2]" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_ZAxisMove_17"/>
-				<Link VarA="PlcTask Outputs^P_Safety.bMoveCheckOut[3]" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_GripperMove.sds_18"/>
 				<Link VarA="PlcTask Outputs^P_Safety.bSafetyRun" VarB="StandardOutputs^TwinSafeGroup1.Run_2"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 8 (EL1004)">
