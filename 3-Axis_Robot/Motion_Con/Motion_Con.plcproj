@@ -96,9 +96,6 @@
     <Compile Include="POUs\Vision.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Vision_DetectBlob.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="VisionTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
