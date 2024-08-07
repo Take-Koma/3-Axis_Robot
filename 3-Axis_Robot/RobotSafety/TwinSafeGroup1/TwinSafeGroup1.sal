@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplication Crc="225226095" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+<safetyApplication Crc="1083491878" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
   <networks>
     <safetyApplicationHasNetworks Id="2dfc7f51-388f-4443-b6ee-d734239cbc30">
       <Network Id="f769d51b-efc3-40dc-b34a-941dc0c52773" name="Network1" networkName="Network1" intId="1" networkOrderId="0">
@@ -388,6 +388,70 @@
                       </fbPortUsageReferencesFunctionBlockPort>
                     </functionBlockPort>
                   </fbPortUsage>
+                </variableUsagesHasUsages>
+              </usages>
+            </variableUsages>
+          </variableHasTargetUsages>
+        </targetUsages>
+      </variable>
+    </safetyApplicationHasVariables>
+    <safetyApplicationHasVariables Id="159d0429-8a06-4838-859c-01f714c29071">
+      <variable Id="53643e8c-f935-4abb-9960-db49d045e222" name="FBEstopError" isLocal="false">
+        <sourceUsages>
+          <variableHasSourceUsages Id="ac964faf-0b57-4690-8667-c13f32add92e">
+            <variableUsages Id="28befaf0-41e5-4eee-8ba9-5f1ce4a6bc81">
+              <usages>
+                <variableUsagesHasUsages Id="d499b093-92d9-48bc-90b5-4b30c795e611">
+                  <fbPortUsage Id="5c865ad7-dced-4b84-8c6a-0b5d548f2a73">
+                    <functionBlockPort>
+                      <fbPortUsageReferencesFunctionBlockPort Id="5aaaf85f-86d0-44ca-8f86-b1bbad34644d">
+                        <outPortMoniker name="//Network1/FBEstop1/Error" />
+                      </fbPortUsageReferencesFunctionBlockPort>
+                    </functionBlockPort>
+                  </fbPortUsage>
+                </variableUsagesHasUsages>
+              </usages>
+            </variableUsages>
+          </variableHasSourceUsages>
+        </sourceUsages>
+        <targetUsages>
+          <variableHasTargetUsages Id="03df7ec3-fcc4-4b7d-8ca4-0a6b2b50084a">
+            <variableUsages Id="392a2d48-dc67-4e5a-ab4b-a64d001d13e0">
+              <usages>
+                <variableUsagesHasUsages Id="3b15b027-0de3-41b8-9aa8-fbd7240792b1">
+                  <aliasDeviceIoUsage Id="f1f26a6e-7ea0-4968-9e78-e382e75bfe21" sdsId="21" channelId="1" functionId="1131179972" />
+                </variableUsagesHasUsages>
+              </usages>
+            </variableUsages>
+          </variableHasTargetUsages>
+        </targetUsages>
+      </variable>
+    </safetyApplicationHasVariables>
+    <safetyApplicationHasVariables Id="a0e6fcca-c2ae-4c96-9ab5-e376fd6c814e">
+      <variable Id="de5cfe00-12b3-421c-890b-e4981a6a5bd2" name="FBEdmError" isLocal="false">
+        <sourceUsages>
+          <variableHasSourceUsages Id="b1421abe-c84d-4b5c-ab54-3a9c6c3012e6">
+            <variableUsages Id="66d25f48-ce58-4da0-a8e7-4e87d1aee118">
+              <usages>
+                <variableUsagesHasUsages Id="7bc26f05-1b52-4dc9-8aa5-e229152cb8ba">
+                  <fbPortUsage Id="14019c49-2f82-4199-b75a-6f23e7c4dd5a">
+                    <functionBlockPort>
+                      <fbPortUsageReferencesFunctionBlockPort Id="dc0c5c98-4181-4ae3-802a-a460e494a0e7">
+                        <outPortMoniker name="//Network1/FBEdm1/Error" />
+                      </fbPortUsageReferencesFunctionBlockPort>
+                    </functionBlockPort>
+                  </fbPortUsage>
+                </variableUsagesHasUsages>
+              </usages>
+            </variableUsages>
+          </variableHasSourceUsages>
+        </sourceUsages>
+        <targetUsages>
+          <variableHasTargetUsages Id="775a2f2d-659f-4d4e-b39a-cc944f0cd223">
+            <variableUsages Id="cc8035de-c410-4ade-89ba-e5f4862ed663">
+              <usages>
+                <variableUsagesHasUsages Id="1252720e-6788-4a18-bf78-a64d04eccad7">
+                  <aliasDeviceIoUsage Id="d28cdf4a-efdc-4a24-8008-d550c7ba4cf2" sdsId="22" channelId="1" functionId="1131179972" />
                 </variableUsagesHasUsages>
               </usages>
             </variableUsages>

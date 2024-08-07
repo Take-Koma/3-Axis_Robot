@@ -4164,6 +4164,15 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
+			<BitSize>5</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>5</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{2B008623-51EE-EF6A-ACDE-0017707F5BB8}" AutoDeleteType="true">INFODATA_FB_3</Name>
 			<BitSize>24</BitSize>
 			<SubItem>
@@ -6170,7 +6179,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{82BAF697-292E-0E95-1521-36CE9EA80768}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{50579DE7-BEBE-A5DE-F55D-DA460EAC846F}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6314,6 +6323,19 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL.stAxis[3].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
+						<Name>VisionTask Inputs</Name>
+						<Var>
+							<Name>P_Safety.bFBEstopError</Name>
+							<Comment><![CDATA[セーフティーの非常停止ファンクションブロックエラー]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>P_Safety.bFBEdmError</Name>
+							<Comment><![CDATA[セーフティーのEDMファンクションブロックのエラー]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2024-03-26T16:55:50">
@@ -25281,8 +25303,14 @@ External Setpoint Generation:
 								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_InRun_12" Index="#x7000" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
+								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_FBEstopError_21" Index="#x7000" Sub="#x02">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_FBEdmError_22" Index="#x7000" Sub="#x03">
+									<Type>BIT</Type>
+								</Entry>
 								<Entry>
-									<Type GUID="{18071995-0000-0000-0000-002000000007}">ARRAY [0..6] OF BIT</Type>
+									<Type GUID="{18071995-0000-0000-0000-002000000005}">ARRAY [0..4] OF BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="StandardOutputs" Index="#x17f0" InOut="1" Flags="#x2011" SyncMan="2">
@@ -26464,6 +26492,8 @@ External Setpoint Generation:
 				<Link VarA="PlcTask Outputs^P_Safety.bEStopReset" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_Reset_5"/>
 				<Link VarA="PlcTask Outputs^P_Safety.bMainPowerEDMOut" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_EDM_7"/>
 				<Link VarA="PlcTask Outputs^P_Safety.bSafetyRun" VarB="StandardOutputs^TwinSafeGroup1.Run_2"/>
+				<Link VarA="VisionTask Inputs^P_Safety.bFBEdmError" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_FBEdmError_22"/>
+				<Link VarA="VisionTask Inputs^P_Safety.bFBEstopError" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_FBEstopError_21"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 8 (EL1004)">
 				<Link VarA="PlcTask Inputs^P_Safety.bMainPowerEDMIn[0]" VarB="Channel 1^Input"/>
