@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplication Crc="2896162051" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+<safetyApplication Crc="225226095" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
   <networks>
     <safetyApplicationHasNetworks Id="2dfc7f51-388f-4443-b6ee-d734239cbc30">
       <Network Id="f769d51b-efc3-40dc-b34a-941dc0c52773" name="Network1" networkName="Network1" intId="1" networkOrderId="0">
@@ -46,7 +46,13 @@
                   <outPort Id="dec92b73-e570-4a9e-a465-1af71bb00be2" name="Error" portName="Error" portNum="4" objectIndex="0" varId="16" filter="7" portDataType="1" replacementValue="0" />
                 </functionBlockHasOutPorts>
                 <functionBlockHasOutPorts Id="94a25c68-4d10-4df4-83a4-c4dc560da926">
-                  <outPort Id="0f878b88-2683-407b-a6af-f490f9e5c526" name="EStopOut" portName="EStopOut" portNum="11" objectIndex="1" varId="23" filter="7" portDataType="1" replacementValue="0" />
+                  <outPort Id="0f878b88-2683-407b-a6af-f490f9e5c526" name="EStopOut" portName="EStopOut" portNum="11" objectIndex="1" varId="23" filter="7" portDataType="1" replacementValue="0">
+                    <targetFunctionBlockPorts>
+                      <wiredLink Id="c59613b0-ccd3-409e-b05a-7195957c634c">
+                        <inPortMoniker name="//Network1/FBEdm1/Mon1" />
+                      </wiredLink>
+                    </targetFunctionBlockPorts>
+                  </outPort>
                 </functionBlockHasOutPorts>
                 <functionBlockHasOutPorts Id="f847b00d-92c4-4a0b-b52c-4464ab3c3158">
                   <outPort Id="d3b6e305-63fd-4685-b7d8-50a28fa71a1e" name="EStopDelOut" portName="EStopDelOut" portNum="12" objectIndex="2" varId="26" filter="7" portDataType="1" replacementValue="0" />
@@ -58,6 +64,31 @@
                 </functionBlockHasParamPorts>
               </parameterPorts>
             </fBEstop>
+          </networkHasFunctionBlocks>
+          <networkHasFunctionBlocks Id="84a5f5a1-ee76-4ef9-b52e-8860ff44747d">
+            <fBEdm Id="65e4c03a-98dc-4364-9724-950f38edd4be" name="FBEdm1" instanceName="FBEdm" orderOfExecution="2" mapState="true" mapDiag="true" functionName="safeEdm">
+              <inPorts>
+                <functioBlockHasInPorts Id="adf2024b-c660-4d06-adc2-7dea4e8b9a4b">
+                  <inPort Id="77ecbafd-dcf9-4a58-97ea-1b0becc4847a" name="Mon1" portName="Mon1" portNum="5" objectIndex="8" varId="1" filter="3" portDataType="1" channelInterface="Single-Channel Both Activated" deactivate1="Break Contact (NC)" deactivate2="Make Contact (NO)" maxDeviation="0" resetTime="0" />
+                </functioBlockHasInPorts>
+                <functioBlockHasInPorts Id="d3f2267c-87da-49ee-a1da-746e482290b1">
+                  <inPort Id="d04dd8cd-2c2f-46d5-b039-83d7b822cac2" name="Mon2" portName="Mon2" portNum="6" objectIndex="9" varId="2" filter="3" portDataType="1" channelInterface="Single-Channel Both Activated" deactivate1="Break Contact (NC)" deactivate2="Break Contact (NC)" maxDeviation="0" resetTime="0" />
+                </functioBlockHasInPorts>
+              </inPorts>
+              <outPorts>
+                <functionBlockHasOutPorts Id="c719512f-928b-48bd-bb9f-3788afe4f17e">
+                  <outPort Id="a1f9a434-94e9-4b31-987d-62bd81096d2f" name="Error" portName="Error" portNum="2" objectIndex="0" varId="3" filter="7" portDataType="1" replacementValue="0" />
+                </functionBlockHasOutPorts>
+              </outPorts>
+              <parameterPorts>
+                <functionBlockHasParamPorts Id="4027c82e-c7d9-44db-861c-f23e02fb1ebe">
+                  <parameterPort Id="2423614d-235c-4055-9ea1-059a1af2ec56" name="Switch On Monitoring (ms)" portName="Switch On Monitoring (ms)" portNum="5" objectIndex="0" varId="0" filter="0" portDataType="0" timing="100" userFbPortName="Switch On Monitoring (ms)" useInUserFb="false" />
+                </functionBlockHasParamPorts>
+                <functionBlockHasParamPorts Id="aec8ecdd-d510-4314-99e7-8f55a44ee602">
+                  <parameterPort Id="206fe002-f35e-4541-8eec-7eb5cb0ae128" name="Switch Off Monitoring (ms)" portName="Switch Off Monitoring (ms)" portNum="6" objectIndex="0" varId="0" filter="0" portDataType="0" timing="100" userFbPortName="Switch Off Monitoring (ms)" useInUserFb="false" />
+                </functionBlockHasParamPorts>
+              </parameterPorts>
+            </fBEdm>
           </networkHasFunctionBlocks>
         </functionBlocks>
       </Network>
@@ -249,6 +280,15 @@
                     <functionBlockPort>
                       <fbPortUsageReferencesFunctionBlockPort Id="dd19f323-b813-4c71-8ca7-2f5a97d3f6b9">
                         <inPortMoniker name="//Network1/FBEstop1/EDM1" />
+                      </fbPortUsageReferencesFunctionBlockPort>
+                    </functionBlockPort>
+                  </fbPortUsage>
+                </variableUsagesHasUsages>
+                <variableUsagesHasUsages Id="85efd85e-19ca-41d8-8b8b-67ccedfbf665">
+                  <fbPortUsage Id="13e270fa-7d5b-47b4-9e3c-ae64869933bd">
+                    <functionBlockPort>
+                      <fbPortUsageReferencesFunctionBlockPort Id="f463067a-a2bd-4067-a93b-58f3105e424c">
+                        <inPortMoniker name="//Network1/FBEdm1/Mon2" />
                       </fbPortUsageReferencesFunctionBlockPort>
                     </functionBlockPort>
                   </fbPortUsage>

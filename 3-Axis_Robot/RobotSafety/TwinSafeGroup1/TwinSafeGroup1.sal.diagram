@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplicationLanguageDiagram Crc="1622928207" dslVersion="1.5.0.0" Id="46022a29-7b18-4df2-a439-18f324bcbe76" absoluteBounds="0, 0, 34.125, 8.5" name="TwinSAFE">
+<safetyApplicationLanguageDiagram Crc="989687929" dslVersion="1.5.0.0" Id="46022a29-7b18-4df2-a439-18f324bcbe76" absoluteBounds="0, 0, 34.125, 8.5" name="TwinSAFE">
   <safetyApplicationMoniker name="/" />
   <nestedChildShapes>
     <networkSwimLane Id="fe881ae6-3e49-40b0-8659-54b6efcc496a" absoluteBounds="0, 0, 34.125, 5.2">
@@ -70,6 +70,38 @@
             </paramPortShape>
           </relativeChildShapes>
         </fBEstopShape>
+        <fBEdmShape Id="3c7e8832-d90f-40e2-8268-ccb1b0daf9bc" absoluteBounds="5.75, 0.625, 3.35, 3">
+          <fBEdmMoniker name="//Network1/FBEdm1" />
+          <relativeChildShapes>
+            <inPortShape Id="da91695b-b889-4eed-8026-c0f471747443" absoluteBounds="5.67, 2.2025, 0.15, 0.15">
+              <inPortMoniker name="//Network1/FBEdm1/Mon1" />
+              <relativeChildShapes />
+            </inPortShape>
+            <inPortShape Id="bd0f7a94-9dc7-42d0-9917-ef4760f3afff" absoluteBounds="5.67, 2.4275, 0.15, 0.15">
+              <inPortMoniker name="//Network1/FBEdm1/Mon2" />
+              <relativeChildShapes />
+            </inPortShape>
+            <outPortShape Id="6b033a97-bef0-4493-8d36-740abbff216e" absoluteBounds="9, 1.37, 0.15, 0.15">
+              <outPortMoniker name="//Network1/FBEdm1/Error" />
+              <relativeChildShapes />
+            </outPortShape>
+            <paramPortShape Id="5cbf0775-bfc4-43cf-b52d-40c1436b683b" absoluteBounds="7.67, 2.7, 0.7, 0.2">
+              <parameterPortMoniker name="//Network1/FBEdm1/Switch On Monitoring (ms)" />
+              <relativeChildShapes />
+            </paramPortShape>
+            <paramPortShape Id="184c131a-f595-4bbc-9f01-334acb26e461" absoluteBounds="7.67, 3.1, 0.7, 0.2">
+              <parameterPortMoniker name="//Network1/FBEdm1/Switch Off Monitoring (ms)" />
+              <relativeChildShapes />
+            </paramPortShape>
+          </relativeChildShapes>
+        </fBEdmShape>
+        <wiredLinkConnector Id="7e833d5e-a47c-44fd-8ace-ea46f2d70981" edgePoints="[(4.275 : 3.75); (4.65 : 3.75); (4.65 : 2.2775); (5.67 : 2.2775)]" fixedFrom="Caller" fixedTo="Caller" color="0, 0, 0" thickness="0.01" expandedManuallyRouted="false">
+          <wiredLinkMoniker Id="c59613b0-ccd3-409e-b05a-7195957c634c" />
+          <nodes>
+            <outPortShapeMoniker Id="dc61cef0-3f3a-4dc0-a8d6-b9b46e0fc6c3" />
+            <inPortShapeMoniker Id="da91695b-b889-4eed-8026-c0f471747443" />
+          </nodes>
+        </wiredLinkConnector>
       </nestedChildShapes>
     </networkSwimLane>
   </nestedChildShapes>
