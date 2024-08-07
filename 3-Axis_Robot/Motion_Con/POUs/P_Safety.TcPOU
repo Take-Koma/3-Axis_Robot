@@ -16,7 +16,7 @@ VAR
 	bEStopReset				AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
 	
 	bMoveCheckIn			AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることを確認
-	bAxisMove				AT %Q* :BOOL;												//いずれかの軸が動いていることの結果をセーフティーへ
+	bAxisMove				AT %Q* :BOOL;												//いずれかの軸が動いていることの結果
 	bGripSwich				AT %I* :BOOL;												//グリップスイッチ_EL2911 input CH.3
 END_VAR]]></Declaration>
     <Implementation>
@@ -46,20 +46,22 @@ END_VAR]]></Declaration>
 	//---GOTからの非常停止リセットをセーフティーへ---
 	bEStopReset:=GVL.mb_Output_Coils[9];
 	
-	//---各軸が動いているかをまとめてセーフティーへ---
+	//---各軸が動いているかをまとめる---
 	bAxisMove:= bMoveCheckIn[E_Axis.X_Axis] OR bMoveCheckIn[E_Axis.Y_Axis] OR bMoveCheckIn[E_Axis.Z_Axis] OR bMoveCheckIn[E_Axis.Gripper];
 	
-	//---軸が動いているときにグリップスイッチが押されてなかったら、マシンステートをワーニングにしてブザーを鳴らす---
+	//---軸が動いているときにグリップスイッチが押されてなかったら、マシンステートをワーニングにしてブザーを鳴らす、また各軸停止---
 	IF bGripSwich=FALSE AND bAxisMove=TRUE THEN
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Warning;
+		GVL.bStop:=TRUE;
 	ELSIF GVL.mb_Output_Coils[8]=TRUE THEN
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Base;
+		GVL.bStop:=FALSE;
 	END_IF
 	
 	//各軸が動いていたら、マシンステートをムービングへ
-	IF bMoveCheckIn[E_Axis.X_Axis]=TRUE OR bMoveCheckIn[E_Axis.Y_Axis]=TRUE OR bMoveCheckIn[E_Axis.Z_Axis]=TRUE OR bMoveCheckIn[E_Axis.Gripper]=TRUE THEN
+	IF bAxisMove=TRUE THEN
 		GVL.eMachineState:=E_MachineState.Moving;
 	ELSIF GVL.bPower=TRUE THEN
 		GVL.eMachineState:=E_MachineState.Stop;
@@ -74,7 +76,10 @@ END_VAR]]></Declaration>
       <LineId Id="672" Count="0" />
       <LineId Id="674" Count="0" />
       <LineId Id="647" Count="3" />
-      <LineId Id="660" Count="11" />
+      <LineId Id="696" Count="0" />
+      <LineId Id="660" Count="2" />
+      <LineId Id="697" Count="0" />
+      <LineId Id="663" Count="8" />
       <LineId Id="164" Count="0" />
       <LineId Id="677" Count="1" />
     </LineIds>

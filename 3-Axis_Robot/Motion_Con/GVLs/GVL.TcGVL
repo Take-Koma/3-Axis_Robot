@@ -8,7 +8,7 @@ VAR_GLOBAL
 	bHome						:BOOL;
 	stMoveHomingOut				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF ST_McOutputs;
 	bReset						:BOOL;
-	bStop				AT %I*	:BOOL;
+	bStop						:BOOL;
 	stStopOut					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF ST_McOutputs;
 	bHalt						:BOOL;
 	stHaltOut					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF ST_McOutputs;
