@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplication Crc="1083491878" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+<safetyApplication Crc="2200951113" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
   <networks>
     <safetyApplicationHasNetworks Id="2dfc7f51-388f-4443-b6ee-d734239cbc30">
       <Network Id="f769d51b-efc3-40dc-b34a-941dc0c52773" name="Network1" networkName="Network1" intId="1" networkOrderId="0">
@@ -69,7 +69,7 @@
             <fBEdm Id="65e4c03a-98dc-4364-9724-950f38edd4be" name="FBEdm1" instanceName="FBEdm" orderOfExecution="2" mapState="true" mapDiag="true" functionName="safeEdm">
               <inPorts>
                 <functioBlockHasInPorts Id="adf2024b-c660-4d06-adc2-7dea4e8b9a4b">
-                  <inPort Id="77ecbafd-dcf9-4a58-97ea-1b0becc4847a" name="Mon1" portName="Mon1" portNum="5" objectIndex="8" varId="1" filter="3" portDataType="1" channelInterface="Single-Channel Both Activated" deactivate1="Break Contact (NC)" deactivate2="Make Contact (NO)" maxDeviation="0" resetTime="0" />
+                  <inPort Id="77ecbafd-dcf9-4a58-97ea-1b0becc4847a" name="Mon1" portName="Mon1" portNum="5" objectIndex="8" varId="1" filter="3" portDataType="1" channelInterface="Single-Channel Both Activated" deactivate1="Break Contact (NC)" deactivate2="Break Contact (NC)" maxDeviation="0" resetTime="0" />
                 </functioBlockHasInPorts>
                 <functioBlockHasInPorts Id="d3f2267c-87da-49ee-a1da-746e482290b1">
                   <inPort Id="d04dd8cd-2c2f-46d5-b039-83d7b822cac2" name="Mon2" portName="Mon2" portNum="6" objectIndex="9" varId="2" filter="3" portDataType="1" channelInterface="Single-Channel Both Activated" deactivate1="Break Contact (NC)" deactivate2="Break Contact (NC)" maxDeviation="0" resetTime="0" />
@@ -82,10 +82,10 @@
               </outPorts>
               <parameterPorts>
                 <functionBlockHasParamPorts Id="4027c82e-c7d9-44db-861c-f23e02fb1ebe">
-                  <parameterPort Id="2423614d-235c-4055-9ea1-059a1af2ec56" name="Switch On Monitoring (ms)" portName="Switch On Monitoring (ms)" portNum="5" objectIndex="0" varId="0" filter="0" portDataType="0" timing="100" userFbPortName="Switch On Monitoring (ms)" useInUserFb="false" />
+                  <parameterPort Id="2423614d-235c-4055-9ea1-059a1af2ec56" name="Switch On Monitoring (ms)" portName="Switch On Monitoring (ms)" portNum="5" objectIndex="0" varId="0" filter="0" portDataType="0" timing="1000" userFbPortName="Switch On Monitoring (ms)" useInUserFb="false" />
                 </functionBlockHasParamPorts>
                 <functionBlockHasParamPorts Id="aec8ecdd-d510-4314-99e7-8f55a44ee602">
-                  <parameterPort Id="206fe002-f35e-4541-8eec-7eb5cb0ae128" name="Switch Off Monitoring (ms)" portName="Switch Off Monitoring (ms)" portNum="6" objectIndex="0" varId="0" filter="0" portDataType="0" timing="100" userFbPortName="Switch Off Monitoring (ms)" useInUserFb="false" />
+                  <parameterPort Id="206fe002-f35e-4541-8eec-7eb5cb0ae128" name="Switch Off Monitoring (ms)" portName="Switch Off Monitoring (ms)" portNum="6" objectIndex="0" varId="0" filter="0" portDataType="0" timing="1000" userFbPortName="Switch Off Monitoring (ms)" useInUserFb="false" />
                 </functionBlockHasParamPorts>
               </parameterPorts>
             </fBEdm>
