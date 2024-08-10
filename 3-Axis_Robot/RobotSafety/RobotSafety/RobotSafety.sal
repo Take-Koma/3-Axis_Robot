@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplication Crc="2200951113" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+<safetyApplication Crc="203582259" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
   <networks>
     <safetyApplicationHasNetworks Id="2dfc7f51-388f-4443-b6ee-d734239cbc30">
-      <Network Id="f769d51b-efc3-40dc-b34a-941dc0c52773" name="Network1" networkName="Network1" intId="1" networkOrderId="0">
+      <Network Id="f769d51b-efc3-40dc-b34a-941dc0c52773" name="Network1" networkName="EStopEdm" intId="1" networkOrderId="0">
         <functionBlocks>
           <networkHasFunctionBlocks Id="0179fc97-78ed-4d2a-a910-c1483cc34877">
             <fBEstop Id="eb1cb791-94a9-4d90-b268-a7e486f70c3f" name="FBEstop1" instanceName="FBEstop" orderOfExecution="1" mapState="true" mapDiag="true" functionName="safeEstop" safeInputsAfterDiscError="true">
