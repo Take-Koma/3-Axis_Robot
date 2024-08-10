@@ -6179,7 +6179,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{B6359E42-04E4-3416-B0E2-EB9EBE73F452}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{931AC9DD-7B52-F236-4BCB-897E8B96FF8C}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6220,7 +6220,7 @@ External Setpoint Generation:
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.bSafetyRunCheck</Name>
+							<Name>GVL_Safety.bSafetyInRun</Name>
 							<Comment><![CDATA[セーフティーランの確認]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -6230,14 +6230,14 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Safety.bAxisMainPower</Name>
+							<Comment><![CDATA[非常停止の電源OFF確認]]></Comment>
+							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Safety.bFBEStopInput2</Name>
 							<Comment><![CDATA[非常停止ボタン2_EL2911 input CH.2]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.bFBEStopEDMIn</Name>
-							<Comment><![CDATA[非常停止の電源OFF確認]]></Comment>
-							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Safety.bFBEstopOutput</Name>
@@ -6289,7 +6289,7 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.bSafetyRun</Name>
+							<Name>GVL_Safety.bSafetyRun_Stop</Name>
 							<Comment><![CDATA[セーフティーラン]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -6310,7 +6310,7 @@ External Setpoint Generation:
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.bFBEStopEDMOut</Name>
+							<Name>GVL_Safety.bFBEStopEDM</Name>
 							<Comment><![CDATA[非常停止の電源OFFの結果をセーフティーへ	]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -6330,6 +6330,14 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Safety.bFBEdmError</Name>
 							<Comment><![CDATA[セーフティーのEDMファンクションブロックのエラー]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
+						<Name>VisionTask Outputs</Name>
+						<Var>
+							<Name>GVL_Safety.bSafetyErrAck</Name>
+							<Comment><![CDATA[セーフティーのエラーリセット]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -25329,13 +25337,13 @@ External Setpoint Generation:
 							<SuTask>#x00000000</SuTask>
 							<MBoxUserCmdData>004003000a00000000000000000000000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
 							<Pdo Name="StandardInputs" Index="#x1bf0" Flags="#x2011" SyncMan="3">
-								<Entry Name="RobotSafety.InRun_12" Index="#x7000" Sub="#x01">
+								<Entry Name="RobotSafety.bSafetyInRun_12" Index="#x7000" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="RobotSafety.bFBEstop_Error_21" Index="#x7000" Sub="#x02">
+								<Entry Name="RobotSafety.bFBEstopError_21" Index="#x7000" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="RobotSafety.bFBEdm_Error_22" Index="#x7000" Sub="#x03">
+								<Entry Name="RobotSafety.bFBEdmError_22" Index="#x7000" Sub="#x03">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry>
@@ -25343,16 +25351,16 @@ External Setpoint Generation:
 								</Entry>
 							</Pdo>
 							<Pdo Name="StandardOutputs" Index="#x17f0" InOut="1" Flags="#x2011" SyncMan="2">
-								<Entry Name="RobotSafety.ErrorAcknowledgement_1" Index="#x6000" Sub="#x01">
+								<Entry Name="RobotSafety.bSafetyErrAck_1" Index="#x6000" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="RobotSafety.Run_Stop_2" Index="#x6000" Sub="#x02">
+								<Entry Name="RobotSafety.bSafetyRun_Stop_2" Index="#x6000" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="RobotSafety.bFBEStop_Reset_5" Index="#x6000" Sub="#x03">
+								<Entry Name="RobotSafety.bFBEStopReset_5" Index="#x6000" Sub="#x03">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="RobotSafety.bFBEStop_EDM_7" Index="#x6000" Sub="#x04">
+								<Entry Name="RobotSafety.bFBEStopEDM_7" Index="#x6000" Sub="#x04">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry>
@@ -26518,18 +26526,19 @@ External Setpoint Generation:
 				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopInput2" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEstopOutput" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output"/>
 				<Link VarA="PlcTask Inputs^GVL_Safety.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bSafetyRunCheck" VarB="StandardInputs^RobotSafety.InRun_12"/>
-				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopEDMOut" VarB="StandardOutputs^RobotSafety.bFBEStop_EDM_7"/>
-				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopReset" VarB="StandardOutputs^RobotSafety.bFBEStop_Reset_5"/>
-				<Link VarA="PlcTask Outputs^GVL_Safety.bSafetyRun" VarB="StandardOutputs^RobotSafety.Run_Stop_2"/>
-				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEdmError" VarB="StandardInputs^RobotSafety.bFBEdm_Error_22"/>
-				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEstopError" VarB="StandardInputs^RobotSafety.bFBEstop_Error_21"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bSafetyInRun" VarB="StandardInputs^RobotSafety.bSafetyInRun_12"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopEDM" VarB="StandardOutputs^RobotSafety.bFBEStopEDM_7"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopReset" VarB="StandardOutputs^RobotSafety.bFBEStopReset_5"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bSafetyRun_Stop" VarB="StandardOutputs^RobotSafety.bSafetyRun_Stop_2"/>
+				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEdmError" VarB="StandardInputs^RobotSafety.bFBEdmError_22"/>
+				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEstopError" VarB="StandardInputs^RobotSafety.bFBEstopError_21"/>
+				<Link VarA="VisionTask Outputs^GVL_Safety.bSafetyErrAck" VarB="StandardOutputs^RobotSafety.bSafetyErrAck_1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 8 (EL1004)">
-				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopEDMIn[0]" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopEDMIn[1]" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopEDMIn[2]" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopEDMIn[3]" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bAxisMainPower[0]" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bAxisMainPower[1]" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bAxisMainPower[2]" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bAxisMainPower[3]" VarB="Channel 4^Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 9 (EL1004)">
 				<Link VarA="PlcTask Inputs^GVL_Safety.bMoveCheckIn[0]" VarB="Channel 1^Input"/>

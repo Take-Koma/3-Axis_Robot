@@ -8,9 +8,9 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[	//---セーフティーをランする,セフティーがランしたかもチェック---
-	GVL_Safety.bSafetyRun:=TRUE;
+	GVL_Safety.bSafetyRun_Stop:=TRUE;
 	
-	IF GVL_Safety.bSafetyRun=TRUE AND GVL_Safety.bSafetyRunCheck=FALSE THEN
+	IF GVL_Safety.bSafetyRun_Stop=TRUE AND GVL_Safety.bSafetyInRun=FALSE THEN
 		GVL.stAlarm[E_AlarmList.SafetyNotRun].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.SafetyNotRun].eMachineStateSet:=E_MachineState.Emergency;
 	ELSE
@@ -19,7 +19,7 @@ END_VAR]]></Declaration>
 	END_IF;
 	
 	//---非常停止の電源OFF確認をまとめてセーフティーへ---
-	GVL_Safety.bFBEStopEDMOut:= NOT GVL_Safety.bFBEStopEDMIn[E_Axis.X_Axis] AND NOT GVL_Safety.bFBEStopEDMIn[E_Axis.Y_Axis] AND NOT GVL_Safety.bFBEStopEDMIn[E_Axis.Z_Axis] AND NOT GVL_Safety.bFBEStopEDMIn[E_Axis.Gripper];
+	GVL_Safety.bFBEStopEDM:= NOT GVL_Safety.bAxisMainPower[E_Axis.X_Axis] AND NOT GVL_Safety.bAxisMainPower[E_Axis.Y_Axis] AND NOT GVL_Safety.bAxisMainPower[E_Axis.Z_Axis] AND NOT GVL_Safety.bAxisMainPower[E_Axis.Gripper];
 
 	//---非常停止ボタンの制御---
 	IF GVL_Safety.bFBEStopInput1=FALSE AND GVL_Safety.bFBEStopInput2=FALSE AND GVL_Safety.bFBEstopOutput=FALSE THEN
