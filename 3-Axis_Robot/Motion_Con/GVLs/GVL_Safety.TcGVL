@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_Safety" Id="{a1cf7a70-5669-431a-9ce1-d9c619dc82cc}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+
+	bSafetyRun				AT %Q* :BOOL;												//セーフティーラン
+	bSafetyRunCheck			AT %I* :BOOL;												//セーフティーランの確認
+	bFBEStopEDMIn			AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//非常停止の電源OFF確認
+	bFBEStopEDMOut			AT %Q* :BOOL;												//非常停止の電源OFFの結果をセーフティーへ	
+	
+	bFBEStopInput1			AT %I* :BOOL;												//非常停止ボタン1_EL2911 input CH.1
+	bFBEStopInput2			AT %I* :BOOL;												//非常停止ボタン2_EL2911 input CH.2
+	bFBEstopOutput			AT %I* :BOOL;												//非常停止解除確認 EL2911 output
+	bFBEStopReset			AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
+	
+	bMoveCheckIn			AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることを確認
+	bGripSwich				AT %I* :BOOL;												//グリップスイッチ_EL2911 input CH.3
+	
+	bFBEstopError			AT %I* :BOOL;												//セーフティーの非常停止ファンクションブロックエラー
+	bFBEdmError				AT %I* :BOOL;												//セーフティーのEDMファンクションブロックのエラー
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
