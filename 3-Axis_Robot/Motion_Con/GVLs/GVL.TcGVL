@@ -22,7 +22,7 @@ VAR_GLOBAL
 	
 	eMachineState				:E_MachineState:=E_MachineState.Base;	//マシーンステート
 	stAlarm						:ARRAY[E_AlarmList.SafetyNotRun..E_AlarmList.LastAlarm] OF ST_Alarm;
-	
+
 	(*Modbusマスター読み取りのみ
 	0:Beckhoffより通信をブリンクで通知
 	1:
