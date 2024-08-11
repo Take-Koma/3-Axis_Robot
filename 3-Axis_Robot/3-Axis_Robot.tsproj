@@ -4164,22 +4164,45 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
-			<BitSize>6</BitSize>
+			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
+			<BitSize>5</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
 				<LBound>0</LBound>
-				<Elements>6</Elements>
+				<Elements>5</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000003}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..2] OF BIT</Name>
-			<BitSize>3</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>3</Elements>
-			</ArrayInfo>
+			<Name GUID="{2B008623-51EE-EF6A-ACDE-0017707F5BB8}" AutoDeleteType="true">INFODATA_FB_3</Name>
+			<BitSize>24</BitSize>
+			<SubItem>
+				<Name>State</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Diag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{91BA7A38-806B-5E06-59E6-F04F15D6B8FF}" AutoDeleteType="true">INFODATA_FB_5</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>State</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Diag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
 		</DataType>
 		<DataType>
 			<Name GUID="{B62F343F-3864-EBAE-321E-B2B111C236E2}" AutoDeleteType="true">INFODATA_668805986</Name>
@@ -4238,6 +4261,15 @@ External Setpoint Generation:
 				<BitSize>1</BitSize>
 				<BitOffs>10</BitOffs>
 			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
+			<BitSize>6</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>6</Elements>
+			</ArrayInfo>
 		</DataType>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000010}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BYTE</Name>
@@ -6147,46 +6179,11 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{76391830-D573-7C3C-79F3-448EB080ED04}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{931AC9DD-7B52-F236-4BCB-897E8B96FF8C}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
-						<Var>
-							<Name>P_Safety.bSafetyRunCheck</Name>
-							<Comment><![CDATA[セーフティーランの確認]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bMainPowerEDMIn</Name>
-							<Comment><![CDATA[非常停止の電源OFF確認]]></Comment>
-							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bEStopInput1</Name>
-							<Comment><![CDATA[非常停止ボタン1_EL2911 input CH.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bEStopInput2</Name>
-							<Comment><![CDATA[非常停止ボタン2_EL2911 input CH.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bEstopOutput</Name>
-							<Comment><![CDATA[非常停止解除確認 EL2911 output]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bGripSwich</Name>
-							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bMoveCheckIn</Name>
-							<Comment><![CDATA[各軸が動いていることを確認]]></Comment>
-							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
-						</Var>
 						<Var>
 							<Name>P_Patlite.bSwitch</Name>
 							<Type>BOOL</Type>
@@ -6207,10 +6204,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.bStop</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL.stAxis[0].NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
@@ -6226,29 +6219,44 @@ External Setpoint Generation:
 							<Name>GVL.stAxis[3].NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
+						<Var>
+							<Name>GVL_Safety.bSafetyInRun</Name>
+							<Comment><![CDATA[セーフティーランの確認]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEStopInput1</Name>
+							<Comment><![CDATA[非常停止ボタン1_EL2911 input CH.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bAxisMainPower</Name>
+							<Comment><![CDATA[非常停止の電源OFF確認]]></Comment>
+							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEStopInput2</Name>
+							<Comment><![CDATA[非常停止ボタン2_EL2911 input CH.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEstopOutput</Name>
+							<Comment><![CDATA[非常停止解除確認 EL2911 output]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bMoveCheckIn</Name>
+							<Comment><![CDATA[各軸が動いていることを確認]]></Comment>
+							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bGripSwich</Name>
+							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>P_Safety.bSafetyRun</Name>
-							<Comment><![CDATA[セーフティーラン]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bMainPowerEDMOut</Name>
-							<Comment><![CDATA[非常停止の電源OFFの結果をセーフティーへ	]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bEStopReset</Name>
-							<Comment><![CDATA[GOTからの非常停止リセットをセーフティーへ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>P_Safety.bAxisMove</Name>
-							<Comment><![CDATA[いずれかの軸が動いていることの結果をセーフティーへ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>P_Patlite.bRedLed</Name>
 							<Type>BOOL</Type>
@@ -6281,12 +6289,9 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.stAxis[0].PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL.stAxis[1].PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Name>GVL_Safety.bSafetyRun_Stop</Name>
+							<Comment><![CDATA[セーフティーラン]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL.stAxis[2].PlcToNc</Name>
@@ -6295,6 +6300,45 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL.stAxis[3].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL.stAxis[0].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL.stAxis[1].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEStopEDM</Name>
+							<Comment><![CDATA[非常停止の電源OFFの結果をセーフティーへ	]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEStopReset</Name>
+							<Comment><![CDATA[GOTからの非常停止リセットをセーフティーへ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
+						<Name>VisionTask Inputs</Name>
+						<Var>
+							<Name>GVL_Safety.bFBEstopError</Name>
+							<Comment><![CDATA[セーフティーの非常停止ファンクションブロックエラー]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEdmError</Name>
+							<Comment><![CDATA[セーフティーのEDMファンクションブロックのエラー]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
+						<Name>VisionTask Outputs</Name>
+						<Var>
+							<Name>GVL_Safety.bSafetyErrAck</Name>
+							<Comment><![CDATA[セーフティーのエラーリセット]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2024-03-26T16:55:50">
@@ -6355,6 +6399,40 @@ External Setpoint Generation:
 								<Link VarA="P_Safety.bAxisMove[1]" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_YAxisMove_16" Size="1" RestoreInfo="ANotFound"/>
 								<Link VarA="P_Safety.bAxisMove[2]" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_ZAxisMove_17" Size="1" RestoreInfo="ANotFound"/>
 								<Link VarA="P_Safety.bAxisMove[3]" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_GripperMove.sds_18" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-08-11T05:50:23">
+						<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 13 (EL2911)">
+								<Link VarA="P_Safety.bEStopInput1" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bEStopInput2" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bEstopOutput" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bGripSwich" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bSafetyRunCheck" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_InRun_12" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 8 (EL1004)">
+								<Link VarA="P_Safety.bMainPowerEDMIn[0]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bMainPowerEDMIn[1]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bMainPowerEDMIn[2]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bMainPowerEDMIn[3]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^Input" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 9 (EL1004)">
+								<Link VarA="P_Safety.bMoveCheckIn[0]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bMoveCheckIn[1]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bMoveCheckIn[2]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bMoveCheckIn[3]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^Input" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 13 (EL2911)">
+								<Link VarA="P_Safety.bFBEdmError" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_FBEdmError_22" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bFBEstopError" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_FBEstopError_21" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 13 (EL2911)">
+								<Link VarA="P_Safety.bEStopReset" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_Reset_5" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bMainPowerEDMOut" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_EDM_7" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_Safety.bSafetyRun" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.Run_2" Size="1" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -25238,7 +25316,7 @@ External Setpoint Generation:
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>001203002400010003000000000000000700001224010000</SyncMan>
-							<SyncMan>001d0c002000010004000000000000000900001d20010000</SyncMan>
+							<SyncMan>001d11002000010004000000000000000900001d20010000</SyncMan>
 							<SyncMan>002e00002400000003000000000000000000002e24000000</SyncMan>
 							<SyncMan>002f00002000000004000000000000000000002f20000000</SyncMan>
 							<SyncMan>fa2f01002400010003000000000000000200fa2f24010000</SyncMan>
@@ -25259,34 +25337,42 @@ External Setpoint Generation:
 							<SuTask>#x00000000</SuTask>
 							<MBoxUserCmdData>004003000a00000000000000000000000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
 							<Pdo Name="StandardInputs" Index="#x1bf0" Flags="#x2011" SyncMan="3">
-								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_InRun_12" Index="#x7000" Sub="#x01">
+								<Entry Name="RobotSafety.bSafetyInRun_12" Index="#x7000" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Output (Standard)_AllAxisStop_19" Index="#x7000" Sub="#x02">
+								<Entry Name="RobotSafety.bFBEstopError_21" Index="#x7000" Sub="#x02">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="RobotSafety.bFBEdmError_22" Index="#x7000" Sub="#x03">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry>
-									<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
+									<Type GUID="{18071995-0000-0000-0000-002000000005}">ARRAY [0..4] OF BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="StandardOutputs" Index="#x17f0" InOut="1" Flags="#x2011" SyncMan="2">
-								<Entry Name="TwinSafeGroup1.ErrorAcknowledgement_1" Index="#x6000" Sub="#x01">
+								<Entry Name="RobotSafety.bSafetyErrAck_1" Index="#x6000" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="TwinSafeGroup1.Run_2" Index="#x6000" Sub="#x02">
+								<Entry Name="RobotSafety.bSafetyRun_Stop_2" Index="#x6000" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_Reset_5" Index="#x6000" Sub="#x03">
+								<Entry Name="RobotSafety.bFBEStopReset_5" Index="#x6000" Sub="#x03">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_EDM_7" Index="#x6000" Sub="#x04">
-									<Type>BIT</Type>
-								</Entry>
-								<Entry Name="TwinSafeGroup1.1 Digital Input (Standard)_AxisMove_18" Index="#x6000" Sub="#x05">
+								<Entry Name="RobotSafety.bFBEStopEDM_7" Index="#x6000" Sub="#x04">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry>
-									<Type GUID="{18071995-0000-0000-0000-002000000003}">ARRAY [0..2] OF BIT</Type>
+									<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Function Block Info Data" Index="#x1bf8" Flags="#x2011" SyncMan="3">
+								<Entry Name="RobotSafety.EStopEdm.FBEstop Info Data" Index="#x7000" Sub="#x01">
+									<Type GUID="{2B008623-51EE-EF6A-ACDE-0017707F5BB8}">INFODATA_FB_3</Type>
+								</Entry>
+								<Entry Name="RobotSafety.EStopEdm.FBEdm Info Data" Index="#x7000" Sub="#x02">
+									<Type GUID="{91BA7A38-806B-5E06-59E6-F04F15D6B8FF}">INFODATA_FB_5</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="Device Info Data" Index="#x1bfb" Flags="#x2011" SyncMan="3">
@@ -26345,6 +26431,7 @@ External Setpoint Generation:
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500821000403}" Id="#x02030040"/>
 		<MappingInfo Identifier="{00000000-0030-0304-1000-040330000403}" Id="#x02030010"/>
 		<MappingInfo Identifier="{00000000-0040-0304-1000-040342000403}" Id="#x02030050"/>
+		<MappingInfo Identifier="{08502003-0020-0304-0020-500820000403}" Id="#x02030020" Watchdog="00000000000000000000000000000000"/>
 		<MappingInfo Identifier="{05000010-2001-0850-1000-040300205008}" Id="#x02030030" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Gripper">
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Drive 14 (AZD4A-KED)">
@@ -26435,28 +26522,29 @@ External Setpoint Generation:
 				<Link VarA="PlcTask Outputs^P_Patlite.bRedLed" VarB="Channel 5^Output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 13 (EL2911)">
-				<Link VarA="PlcTask Inputs^GVL.bStop" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_AllAxisStop_19"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bEStopInput1" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bEStopInput2" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bEstopOutput" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bSafetyRunCheck" VarB="StandardInputs^TwinSafeGroup1.1 Digital Output (Standard)_InRun_12"/>
-				<Link VarA="PlcTask Outputs^P_Safety.bAxisMove" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_AxisMove_18"/>
-				<Link VarA="PlcTask Outputs^P_Safety.bEStopReset" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_Reset_5"/>
-				<Link VarA="PlcTask Outputs^P_Safety.bMainPowerEDMOut" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_EDM_7"/>
-				<Link VarA="PlcTask Outputs^P_Safety.bSafetyRun" VarB="StandardOutputs^TwinSafeGroup1.Run_2"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopInput1" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopInput2" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEstopOutput" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bSafetyInRun" VarB="StandardInputs^RobotSafety.bSafetyInRun_12"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopEDM" VarB="StandardOutputs^RobotSafety.bFBEStopEDM_7"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopReset" VarB="StandardOutputs^RobotSafety.bFBEStopReset_5"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bSafetyRun_Stop" VarB="StandardOutputs^RobotSafety.bSafetyRun_Stop_2"/>
+				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEdmError" VarB="StandardInputs^RobotSafety.bFBEdmError_22"/>
+				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEstopError" VarB="StandardInputs^RobotSafety.bFBEstopError_21"/>
+				<Link VarA="VisionTask Outputs^GVL_Safety.bSafetyErrAck" VarB="StandardOutputs^RobotSafety.bSafetyErrAck_1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 8 (EL1004)">
-				<Link VarA="PlcTask Inputs^P_Safety.bMainPowerEDMIn[0]" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bMainPowerEDMIn[1]" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bMainPowerEDMIn[2]" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bMainPowerEDMIn[3]" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bAxisMainPower[0]" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bAxisMainPower[1]" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bAxisMainPower[2]" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bAxisMainPower[3]" VarB="Channel 4^Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 9 (EL1004)">
-				<Link VarA="PlcTask Inputs^P_Safety.bMoveCheckIn[0]" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bMoveCheckIn[1]" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bMoveCheckIn[2]" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^P_Safety.bMoveCheckIn[3]" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bMoveCheckIn[0]" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bMoveCheckIn[1]" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bMoveCheckIn[2]" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bMoveCheckIn[3]" VarB="Channel 4^Input"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
 				<Link VarA="PlcTask Inputs^GVL.stAxis[3].NcToPlc" VarB="Outputs^ToPlc"/>

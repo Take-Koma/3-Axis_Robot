@@ -4,26 +4,13 @@
     <Declaration><![CDATA[PROGRAM P_Safety
 VAR
 	i								:INT;	
-
-	bSafetyRun				AT %Q* :BOOL;												//セーフティーラン
-	bSafetyRunCheck			AT %I* :BOOL;												//セーフティーランの確認
-	bMainPowerEDMIn			AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//非常停止の電源OFF確認
-	bMainPowerEDMOut		AT %Q* :BOOL;												//非常停止の電源OFFの結果をセーフティーへ	
-	
-	bEStopInput1			AT %I* :BOOL;												//非常停止ボタン1_EL2911 input CH.1
-	bEStopInput2			AT %I* :BOOL;												//非常停止ボタン2_EL2911 input CH.2
-	bEstopOutput			AT %I* :BOOL;												//非常停止解除確認 EL2911 output
-	bEStopReset				AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
-	
-	bMoveCheckIn			AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることを確認
-	bAxisMove				AT %Q* :BOOL;												//いずれかの軸が動いていることの結果をセーフティーへ
-	bGripSwich				AT %I* :BOOL;												//グリップスイッチ_EL2911 input CH.3
+	bAxisMove						:BOOL;												//いずれかの軸が動いていることの結果
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[	//---セーフティーをランする,セフティーがランしたかもチェック---
-	bSafetyRun:=TRUE;
+	GVL_Safety.bSafetyRun_Stop:=TRUE;
 	
-	IF bSafetyRun=TRUE AND bSafetyRunCheck=FALSE THEN
+	IF GVL_Safety.bSafetyRun_Stop=TRUE AND GVL_Safety.bSafetyInRun=FALSE THEN
 		GVL.stAlarm[E_AlarmList.SafetyNotRun].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.SafetyNotRun].eMachineStateSet:=E_MachineState.Emergency;
 	ELSE
@@ -32,34 +19,36 @@ END_VAR]]></Declaration>
 	END_IF;
 	
 	//---非常停止の電源OFF確認をまとめてセーフティーへ---
-	bMainPowerEDMOut:= NOT bMainPowerEDMIn[E_Axis.X_Axis] AND NOT bMainPowerEDMIn[E_Axis.Y_Axis] AND NOT bMainPowerEDMIn[E_Axis.Z_Axis] AND NOT bMainPowerEDMIn[E_Axis.Gripper];
+	GVL_Safety.bFBEStopEDM:= NOT GVL_Safety.bAxisMainPower[E_Axis.X_Axis] AND NOT GVL_Safety.bAxisMainPower[E_Axis.Y_Axis] AND NOT GVL_Safety.bAxisMainPower[E_Axis.Z_Axis] AND NOT GVL_Safety.bAxisMainPower[E_Axis.Gripper];
 
 	//---非常停止ボタンの制御---
-	IF bEStopInput1=FALSE AND bEStopInput2=FALSE AND bEstopOutput=FALSE THEN
+	IF GVL_Safety.bFBEStopInput1=FALSE AND GVL_Safety.bFBEStopInput2=FALSE AND GVL_Safety.bFBEstopOutput=FALSE THEN
 		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.Emergency;
-	ELSIF bEStopInput1=TRUE AND bEStopInput2=TRUE AND bEstopOutput=TRUE THEN
+	ELSIF GVL_Safety.bFBEStopInput1=TRUE AND GVL_Safety.bFBEStopInput2=TRUE AND GVL_Safety.bFBEstopOutput=TRUE THEN
 		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.Base;
 	END_IF;
 	
 	//---GOTからの非常停止リセットをセーフティーへ---
-	bEStopReset:=GVL.mb_Output_Coils[9];
+	GVL_Safety.bFBEStopReset:=GVL.mb_Output_Coils[9];
 	
-	//---各軸が動いているかをまとめてセーフティーへ---
-	bAxisMove:= bMoveCheckIn[E_Axis.X_Axis] OR bMoveCheckIn[E_Axis.Y_Axis] OR bMoveCheckIn[E_Axis.Z_Axis] OR bMoveCheckIn[E_Axis.Gripper];
+	//---各軸が動いているかをまとめる---
+	bAxisMove:= GVL_Safety.bMoveCheckIn[E_Axis.X_Axis] OR GVL_Safety.bMoveCheckIn[E_Axis.Y_Axis] OR GVL_Safety.bMoveCheckIn[E_Axis.Z_Axis] OR GVL_Safety.bMoveCheckIn[E_Axis.Gripper];
 	
-	//---軸が動いているときにグリップスイッチが押されてなかったら、マシンステートをワーニングにしてブザーを鳴らす---
-	IF bGripSwich=FALSE AND bAxisMove=TRUE THEN
+	//---軸が動いているときにグリップスイッチが押されてなかったら、マシンステートをワーニングにしてブザーを鳴らす、また各軸停止---
+	IF GVL_Safety.bGripSwich=FALSE AND bAxisMove=TRUE THEN
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Warning;
+		GVL.bStop:=TRUE;
 	ELSIF GVL.mb_Output_Coils[8]=TRUE THEN
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Base;
+		GVL.bStop:=FALSE;
 	END_IF
 	
 	//各軸が動いていたら、マシンステートをムービングへ
-	IF bMoveCheckIn[E_Axis.X_Axis]=TRUE OR bMoveCheckIn[E_Axis.Y_Axis]=TRUE OR bMoveCheckIn[E_Axis.Z_Axis]=TRUE OR bMoveCheckIn[E_Axis.Gripper]=TRUE THEN
+	IF bAxisMove=TRUE THEN
 		GVL.eMachineState:=E_MachineState.Moving;
 	ELSIF GVL.bPower=TRUE THEN
 		GVL.eMachineState:=E_MachineState.Stop;
@@ -70,13 +59,8 @@ END_VAR]]></Declaration>
 	]]></ST>
     </Implementation>
     <LineIds Name="P_Safety">
-      <LineId Id="616" Count="26" />
-      <LineId Id="672" Count="0" />
-      <LineId Id="674" Count="0" />
-      <LineId Id="647" Count="3" />
-      <LineId Id="660" Count="11" />
-      <LineId Id="164" Count="0" />
-      <LineId Id="677" Count="1" />
+      <LineId Id="767" Count="48" />
+      <LineId Id="678" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
