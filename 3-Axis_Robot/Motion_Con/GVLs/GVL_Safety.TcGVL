@@ -8,13 +8,13 @@ VAR_GLOBAL
 	bSafetyInRun					AT %I* :BOOL;												//セーフティーランの確認
 	bSafetyErrAck 					AT %Q* :BOOL;												//セーフティーのエラーリセット
 	
-	bAxisMainPower					AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//非常停止の電源OFF確認
 	bFBEStopEDM						AT %Q* :BOOL;												//非常停止の電源OFFの結果をセーフティーへ	
 	
 	bFBEStopInput1					AT %I* :BOOL;												//非常停止ボタン1_EL2911 input CH.1
 	bFBEStopInput2					AT %I* :BOOL;												//非常停止ボタン2_EL2911 input CH.2
-	bFBEstopOutput					AT %I* :BOOL;												//非常停止解除確認 EL2911 output
+	bFBEstopOutput					AT %I* :BOOL;												//非常停止の電源ON EL2911 output
 	bFBEStopReset					AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
+	bEStopDelOut					AT %I* :BOOL;												//非常停止の電源ONのディレイ出力 EL2911 output
 	
 	bMoveCheckIn					AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることを確認
 	bGripSwich						AT %I* :BOOL;												//グリップスイッチ_EL2911 input CH.3

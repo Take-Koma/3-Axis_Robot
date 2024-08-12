@@ -18,8 +18,8 @@ END_VAR]]></Declaration>
 		GVL.stAlarm[E_AlarmList.SafetyNotRun].eMachineStateSet:=E_MachineState.Base;
 	END_IF;
 	
-	//---非常停止の電源OFF確認をまとめてセーフティーへ---
-	GVL_Safety.bFBEStopEDM:= NOT GVL_Safety.bAxisMainPower[E_Axis.X_Axis] AND NOT GVL_Safety.bAxisMainPower[E_Axis.Y_Axis] AND NOT GVL_Safety.bAxisMainPower[E_Axis.Z_Axis] AND NOT GVL_Safety.bAxisMainPower[E_Axis.Gripper];
+	//---非常停止の電源ONを反転してセーフティーのEDMへ---
+	GVL_Safety.bFBEStopEDM:= NOT GVL_Safety.bEStopDelOut;
 
 	//---非常停止ボタンの制御---
 	IF GVL_Safety.bFBEStopInput1=FALSE AND GVL_Safety.bFBEStopInput2=FALSE AND GVL_Safety.bFBEstopOutput=FALSE THEN
