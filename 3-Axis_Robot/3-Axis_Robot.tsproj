@@ -1424,15 +1424,6 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..3] OF BOOL</Name>
-			<BitSize>32</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>4</Elements>
-			</ArrayInfo>
-		</DataType>
-		<DataType>
 			<Name GUID="{DB6B59A0-4FB0-4B14-A83C-AC7A76AD688D}">JobTaskId</Name>
 			<BitSize>32</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
@@ -6179,7 +6170,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{EF5AC520-2380-F115-3E32-A7D0E1E48233}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{527FF3C2-9D5E-7BFA-BE41-3662084DA3D5}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6204,6 +6195,22 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL.stAxis[0].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL.stAxis[1].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL.stAxis[2].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL.stAxis[3].NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Safety.bSafetyInRun</Name>
 							<Comment><![CDATA[セーフティーランの確認]]></Comment>
 							<Type>BOOL</Type>
@@ -6224,30 +6231,9 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.bMoveCheckIn</Name>
-							<Comment><![CDATA[各軸が動いていることを確認]]></Comment>
-							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Safety.bGripSwich</Name>
 							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL.stAxis[0].NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL.stAxis[1].NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL.stAxis[2].NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL.stAxis[3].NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -6289,16 +6275,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.bFBEStopEDM</Name>
-							<Comment><![CDATA[非常停止の電源OFFの結果をセーフティーへ	]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.bFBEStopReset</Name>
-							<Comment><![CDATA[GOTからの非常停止リセットをセーフティーへ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL.stAxis[0].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
@@ -6313,6 +6289,16 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL.stAxis[3].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEStopEDM</Name>
+							<Comment><![CDATA[非常停止の電源OFFの結果をセーフティーへ	]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEStopReset</Name>
+							<Comment><![CDATA[GOTからの非常停止リセットをセーフティーへ]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="1" ContextId="1" AreaNo="16">
@@ -6438,6 +6424,16 @@ External Setpoint Generation:
 								<Link VarA="GVL_Safety.bAxisMainPower[1]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1" RestoreInfo="ANotFound"/>
 								<Link VarA="GVL_Safety.bAxisMainPower[2]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Input" Size="1" RestoreInfo="ANotFound"/>
 								<Link VarA="GVL_Safety.bAxisMainPower[3]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^Input" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-08-12T17:45:50">
+						<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 9 (EL1004)">
+								<Link VarA="GVL_Safety.bMoveCheckIn[0]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Safety.bMoveCheckIn[1]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Safety.bMoveCheckIn[2]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Safety.bMoveCheckIn[3]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 4^Input" Size="1" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -25387,7 +25383,7 @@ External Setpoint Generation:
 								<Entry Name="Serial Number" Index="#x7000" Sub="#x02">
 									<Type>UDINT</Type>
 								</Entry>
-								<Entry Name="Internal I/O" Index="#x7000" Sub="#x03" Flags="#x00008000">
+								<Entry Name="Internal I/O" Index="#x7000" Sub="#x03">
 									<Type GUID="{B62F343F-3864-EBAE-321E-B2B111C236E2}">INFODATA_668805986</Type>
 								</Entry>
 							</Pdo>
@@ -26538,12 +26534,6 @@ External Setpoint Generation:
 				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEdmError" VarB="StandardInputs^RobotSafety.bFBEdmError_22"/>
 				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEstopError" VarB="StandardInputs^RobotSafety.bFBEstopError_21"/>
 				<Link VarA="VisionTask Outputs^GVL_Safety.bSafetyErrAck" VarB="StandardOutputs^RobotSafety.bSafetyErrAck_1"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 9 (EL1004)">
-				<Link VarA="PlcTask Inputs^GVL_Safety.bMoveCheckIn[0]" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bMoveCheckIn[1]" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bMoveCheckIn[2]" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bMoveCheckIn[3]" VarB="Channel 4^Input"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
 				<Link VarA="PlcTask Inputs^GVL.stAxis[3].NcToPlc" VarB="Outputs^ToPlc"/>

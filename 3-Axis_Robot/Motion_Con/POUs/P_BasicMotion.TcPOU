@@ -14,6 +14,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[FOR eAxis:= E_Axis.X_Axis TO E_Axis.Gripper DO
+	GVL.stAxis[eAxis].ReadStatus();
 	aMotion();
 END_FOR;]]></ST>
     </Implementation>
@@ -98,7 +99,9 @@ END_FOR;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="P_BasicMotion">
-      <LineId Id="20" Count="2" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="21" Count="1" />
     </LineIds>
     <LineIds Name="P_BasicMotion.aMotion">
       <LineId Id="107" Count="74" />

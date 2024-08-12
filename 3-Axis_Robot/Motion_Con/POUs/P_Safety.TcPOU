@@ -34,7 +34,18 @@ END_VAR]]></Declaration>
 	GVL_Safety.bFBEStopReset:=GVL.mb_Output_Coils[9];
 	
 	//---各軸が動いているかをまとめる---
-	bAxisMove:= GVL_Safety.bMoveCheckIn[E_Axis.X_Axis] OR GVL_Safety.bMoveCheckIn[E_Axis.Y_Axis] OR GVL_Safety.bMoveCheckIn[E_Axis.Z_Axis] OR GVL_Safety.bMoveCheckIn[E_Axis.Gripper];
+	IF GVL.stAxis[E_Axis.X_Axis].Status.MotionState=MC_AXISSTATE_DISCRETEMOTION THEN
+		bAxisMove:=TRUE;
+	ELSIF GVL.stAxis[E_Axis.Y_Axis].Status.MotionState=MC_AXISSTATE_DISCRETEMOTION THEN
+		bAxisMove:=TRUE;
+	ELSIF GVL.stAxis[E_Axis.Z_Axis].Status.MotionState=MC_AXISSTATE_DISCRETEMOTION THEN
+		bAxisMove:=TRUE;
+	ELSIF GVL.stAxis[E_Axis.Gripper].Status.MotionState=MC_AXISSTATE_DISCRETEMOTION THEN
+		bAxisMove:=TRUE;
+	ELSE
+		bAxisMove:=FALSE;
+	END_IF
+
 	
 	//---軸が動いているときにグリップスイッチが押されてなかったら、マシンステートをワーニングにしてブザーを鳴らす、また各軸停止---
 	IF GVL_Safety.bGripSwich=FALSE AND bAxisMove=TRUE THEN
@@ -59,7 +70,17 @@ END_VAR]]></Declaration>
 	]]></ST>
     </Implementation>
     <LineIds Name="P_Safety">
-      <LineId Id="767" Count="48" />
+      <LineId Id="767" Count="26" />
+      <LineId Id="822" Count="1" />
+      <LineId Id="826" Count="1" />
+      <LineId Id="830" Count="0" />
+      <LineId Id="828" Count="0" />
+      <LineId Id="832" Count="0" />
+      <LineId Id="831" Count="0" />
+      <LineId Id="833" Count="1" />
+      <LineId Id="824" Count="0" />
+      <LineId Id="820" Count="1" />
+      <LineId Id="796" Count="19" />
       <LineId Id="678" Count="0" />
     </LineIds>
   </POU>
