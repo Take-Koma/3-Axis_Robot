@@ -6170,7 +6170,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{527FF3C2-9D5E-7BFA-BE41-3662084DA3D5}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{E30E3D2C-73A5-0BB7-C71A-9A3791F40844}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6195,6 +6195,11 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Safety.bFBEStopInput1</Name>
+							<Comment><![CDATA[EL2911 input CH.1 非常停止ボタン1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL.stAxis[0].NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
@@ -6211,28 +6216,23 @@ External Setpoint Generation:
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.bSafetyInRun</Name>
-							<Comment><![CDATA[セーフティーランの確認]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.bFBEStopInput1</Name>
-							<Comment><![CDATA[非常停止ボタン1_EL2911 input CH.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Safety.bFBEStopInput2</Name>
-							<Comment><![CDATA[非常停止ボタン2_EL2911 input CH.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.bFBEstopOutput</Name>
-							<Comment><![CDATA[非常停止の電源ON EL2911 output]]></Comment>
+							<Comment><![CDATA[EL2911 input CH.2 非常停止ボタン2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Safety.bGripSwich</Name>
-							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
+							<Comment><![CDATA[EL2911 input CH.3 グリップスイッチ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEstopOutput</Name>
+							<Comment><![CDATA[EL2911 output 非常停止の電源ON]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bSafetyInRun</Name>
+							<Comment><![CDATA[セーフティーランの確認]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -6270,11 +6270,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.bSafetyRun_Stop</Name>
-							<Comment><![CDATA[セーフティーラン]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL.stAxis[0].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
@@ -6289,6 +6284,11 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL.stAxis[3].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bSafetyRun_Stop</Name>
+							<Comment><![CDATA[セーフティーラン]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Safety.bFBEStopEDM</Name>
