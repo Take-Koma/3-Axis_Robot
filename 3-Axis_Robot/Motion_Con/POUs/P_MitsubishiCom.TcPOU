@@ -22,7 +22,12 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//-----三菱へ出力-----
+      <ST><![CDATA[//---GVLのModbus TCPの変数をGVL_Mitsubishiの変数に書き込み---
+	(*Modbusマスター読み取りのみ*)
+	GVL_MitsubishiCom.bToBlink			:=GVL.mb_Input_Coils[0];
+	GVL_MitsubishiCom.bToMcPowerOn		:=GVL.mb_Input_Coils[4];
+
+//-----三菱へ出力-----
 	GVL_MitsubishiCom.bTwinCATModbusStart:=TRUE;
 	GVL_MitsubishiCom.bTwinCATRun:=TRUE;
 	
@@ -150,6 +155,10 @@ END_VAR
 ]]></ST>
     </Implementation>
     <LineIds Name="P_MitsubishiCom">
+      <LineId Id="1277" Count="0" />
+      <LineId Id="1281" Count="0" />
+      <LineId Id="1279" Count="1" />
+      <LineId Id="1278" Count="0" />
       <LineId Id="779" Count="1" />
       <LineId Id="1002" Count="0" />
       <LineId Id="1161" Count="0" />

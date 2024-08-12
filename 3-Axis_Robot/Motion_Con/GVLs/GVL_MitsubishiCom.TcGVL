@@ -5,13 +5,62 @@
 VAR_GLOBAL
 	
 	//---三菱Fx5sの実入出力と接続---
-	bTwinCATRun						AT %Q* :BOOL;		//三菱のX2に入力
-	bTwinCATModbusStart				AT %Q* :BOOL;		//三菱のX3に入力
-	bTwinCATAlarm					AT %Q* :BOOL;		//三菱のx4に入力
-	bMitsubishiRun					AT %I* :BOOL;		//三菱のY4より出力
-	bMitsubishiModbusStart			AT %I* :BOOL;		//三菱のY5より出力	
-	bMitsubishiAlarm				AT %I* :BOOL;		//三菱のY6より出力
+	bTwinCATRun								AT %Q* :BOOL;				//三菱のX2に入力
+	bTwinCATModbusStart						AT %Q* :BOOL;				//三菱のX3に入力
+	bTwinCATAlarm							AT %Q* :BOOL;				//三菱のx4に入力
+	bMitsubishiRun							AT %I* :BOOL;				//三菱のY4より出力
+	bMitsubishiModbusStart					AT %I* :BOOL;				//三菱のY5より出力	
+	bMitsubishiAlarm						AT %I* :BOOL;				//三菱のY6より出力
+	
+	
+	(*Modbusマスター読み取りのみ_GVL.mb_Input_Coils*)
+	bToBlink										:BOOL;				//0:Beckhoffより通信をブリンクで通知
+	bToMcPowerOn									:BOOL;				//4:McPower On
+	bToMcMoveHomeOn									:BOOL;				//5:McMoveHome On
+	bToMcHaltOn										:BOOL;				//6:McHalt On
+	bToCameraSoftWareTrigger						:BOOL;				//7:カメラのトリガー
+	bToAlarmReset									:BOOL;				//8:アラームリセット
+	bToSafetyReset									:BOOL;				//9:セフティーリセット
+	bToResponseSpeedCheckStart						:BOOL;				//14:応答速度確認TRUEでスタート
+	bToResponseSpeedCheckReturn						:BOOL;				//15:応答速度確認を三菱に応答
 
+
+	
+	(*Modbusマスターが読み書き可能
+	0:三菱シーケンサーより通信をブリンクで通知
+	1:非常停止ボタン（通常ON）
+	2:キースイッチ(開)
+	3:キースイッチ(閉)
+	4:スイッチ1 ドライブON 長押しOFF
+	5:スイッチ2　原点復帰
+	6:スイッチ3　停止
+	7:スイッチ4　カメラシャッターON
+	8:スイッチ5　アラームリセット
+	9:スイッチ6　非常停止リセット
+	10:グリップスイッチ
+	14:応答速度確認
+	15:応答速度確認
+	16:X軸Jog起動
+	17:Y軸Jog起動
+	18:Z軸Jog起動
+	19:グリッパーJog起動
+	*)
+	mb_Output_Coils 			:    ARRAY [0..255] OF BOOL;
+	
+	(*Modbusマスター読み取りのみ*)
+	mb_Input_Registers 			:    ARRAY [0..255] OF WORD; 
+	
+	(*Modbusマスターが読み書き可能
+	16:X軸Jogターゲットポジション
+	17:Y軸Jogターゲットポジション
+	18:Z軸Jogターゲットポジション
+	19:グリッパーJogターゲットポジション
+	*)
+	mb_Output_Registers 		:    ARRAY [0..255] OF WORD; 
+	
+	
+	
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

@@ -6179,7 +6179,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{B4B8DD71-4D51-7CEF-279B-9A3C24982EAC}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{E27BE2FB-A6F5-4783-0588-A10A0DC584B8}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6279,15 +6279,15 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.stAxis[2].PlcToNc</Name>
-							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
 							<Name>GVL.stAxis[0].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL.stAxis[1].PlcToNc</Name>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL.stAxis[2].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
@@ -6341,22 +6341,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
-					<UnrestoredVarLinks ImportTime="2024-08-13T06:30:39">
-						<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
-							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 10 (EL1088)">
-								<Link VarA="P_MitsubishiCommunication.bMitsubishiAlarm" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Input" Size="1" RestoreInfo="ANotFound"/>
-								<Link VarA="P_MitsubishiCommunication.bMitsubishiModbusStart" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1" RestoreInfo="ANotFound"/>
-								<Link VarA="P_MitsubishiCommunication.bMitsubishiRun" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1" RestoreInfo="ANotFound"/>
-							</OwnerB>
-						</OwnerA>
-						<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
-							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 11 (EL2088)">
-								<Link VarA="P_MitsubishiCommunication.bTwinCATAlarm" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Output" Size="1" RestoreInfo="ANotFound"/>
-								<Link VarA="P_MitsubishiCommunication.bTwinCATModbusStart" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Output" Size="1" RestoreInfo="ANotFound"/>
-								<Link VarA="P_MitsubishiCommunication.bTwinCATRun" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Output" Size="1" RestoreInfo="ANotFound"/>
-							</OwnerB>
-						</OwnerA>
-					</UnrestoredVarLinks>
 					<UnrestoredVarLinks ImportTime="2024-03-26T16:55:50">
 						<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
 							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 8 (EL1004)">
@@ -6449,6 +6433,22 @@ External Setpoint Generation:
 								<Link VarA="P_Safety.bEStopReset" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_Reset_5" Size="1" RestoreInfo="ANotFound"/>
 								<Link VarA="P_Safety.bMainPowerEDMOut" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.1 Digital Input (Standard)_EDM_7" Size="1" RestoreInfo="ANotFound"/>
 								<Link VarA="P_Safety.bSafetyRun" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.Run_2" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2024-08-13T06:30:39">
+						<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 10 (EL1088)">
+								<Link VarA="P_MitsubishiCommunication.bMitsubishiAlarm" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_MitsubishiCommunication.bMitsubishiModbusStart" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_MitsubishiCommunication.bMitsubishiRun" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Input" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+							<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 11 (EL2088)">
+								<Link VarA="P_MitsubishiCommunication.bTwinCATAlarm" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 3^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_MitsubishiCommunication.bTwinCATModbusStart" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 2^Output" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="P_MitsubishiCommunication.bTwinCATRun" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Output" Size="1" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
