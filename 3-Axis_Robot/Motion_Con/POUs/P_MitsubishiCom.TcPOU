@@ -1,17 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="P_MitsubishiCommunication" Id="{7551431c-0546-4892-8591-c118fe27ff05}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM P_MitsubishiCommunication
+  <POU Name="P_MitsubishiCom" Id="{7551431c-0546-4892-8591-c118fe27ff05}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_MitsubishiCom
 VAR
 	i								:INT;
-	j								:INT;
-
-	bTwinCATRun						AT %Q* :BOOL;		//三菱のX2に入力
-	bTwinCATModbusStart				AT %Q* :BOOL;		//三菱のX3に入力
-	bTwinCATAlarm					AT %Q* :BOOL;		//三菱のx4に入力
-	bMitsubishiRun					AT %I* :BOOL;		//三菱のY4より出力
-	bMitsubishiModbusStart			AT %I* :BOOL;		//三菱のY5より出力	
-	bMitsubishiAlarm				AT %I* :BOOL;		//三菱のY6より出力
 	
 	bMitsubishiModbusOK				: BOOL;
 	
@@ -27,26 +19,24 @@ VAR
 	fbTonMcPower					:ton;
 	fbMcPowerREdge					:R_TRIG;
 	fbMcPowerFEdge					:F_TRIG;
-	
-	testes							:ARRAY[1..30] OF REAL;
 
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//-----三菱へ出力-----
-	bTwinCATModbusStart:=TRUE;
-	bTwinCATRun:=TRUE;
+	GVL_MitsubishiCom.bTwinCATModbusStart:=TRUE;
+	GVL_MitsubishiCom.bTwinCATRun:=TRUE;
 	
 	IF GVL.eMachineState < E_MachineState.Stay THEN
-		bTwinCATAlarm:=FALSE;
+		GVL_MitsubishiCom.bTwinCATAlarm:=FALSE;
 	ELSE
-		bTwinCATAlarm:=TRUE;
+		GVL_MitsubishiCom.bTwinCATAlarm:=TRUE;
 	END_IF
 
 //---三菱より入力---
-	IF bMitsubishiRun=FALSE THEN
+	IF GVL_MitsubishiCom.bMitsubishiRun=FALSE THEN
 		RETURN;
-	ELSIF bMitsubishiModbusStart=FALSE THEN
+	ELSIF GVL_MitsubishiCom.bMitsubishiModbusStart=FALSE THEN
 		RETURN;
 	ELSIF GVL.mb_Output_Coils[8]=TRUE THEN
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
@@ -54,7 +44,7 @@ END_VAR
 	ELSIF GVL.mb_Output_Coils[9]=TRUE AND GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag=FALSE THEN
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Base;
-	ELSIF bMitsubishiAlarm=FALSE THEN
+	ELSIF GVL_MitsubishiCom.bMitsubishiAlarm=FALSE THEN
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Warning;
 	END_IF
@@ -158,20 +148,9 @@ END_VAR
 
 //-----セーフティー非常停止リセット応答-----
 	GVL.mb_Input_Coils[9]:=GVL.mb_Output_Coils[9];
-
-	
-//-----TEST-----
-	IF GVL.mb_Output_Coils[30]=TRUE THEN;
-		FOR i := 1 TO 30 BY 1 DO;
-			testes[i]:=GVL.mb_Output_Registers[29+i];
-		END_FOR
-		j:=j+1;
-		GVL.mb_Input_Coils[30]:=TRUE;
-	ELSE;
-		GVL.mb_Input_Coils[30]:=FALSE;
-	END_IF]]></ST>
+]]></ST>
     </Implementation>
-    <LineIds Name="P_MitsubishiCommunication">
+    <LineIds Name="P_MitsubishiCom">
       <LineId Id="779" Count="1" />
       <LineId Id="1002" Count="0" />
       <LineId Id="1161" Count="0" />
@@ -218,12 +197,6 @@ END_VAR
       <LineId Id="1096" Count="0" />
       <LineId Id="1095" Count="0" />
       <LineId Id="884" Count="0" />
-      <LineId Id="935" Count="0" />
-      <LineId Id="719" Count="0" />
-      <LineId Id="936" Count="1" />
-      <LineId Id="939" Count="0" />
-      <LineId Id="946" Count="1" />
-      <LineId Id="973" Count="3" />
       <LineId Id="940" Count="0" />
     </LineIds>
   </POU>
