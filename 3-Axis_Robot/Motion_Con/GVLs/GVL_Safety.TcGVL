@@ -14,7 +14,6 @@ VAR_GLOBAL
 	bFBEStopInput2					AT %I* :BOOL;												//非常停止ボタン2_EL2911 input CH.2
 	bFBEstopOutput					AT %I* :BOOL;												//非常停止の電源ON EL2911 output
 	bFBEStopReset					AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
-	bEStopDelOut					AT %I* :BOOL;												//非常停止の電源ONのディレイ出力 EL2911 output
 	
 	bMoveCheckIn					AT %I* :ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;		//各軸が動いていることを確認
 	bGripSwich						AT %I* :BOOL;												//グリップスイッチ_EL2911 input CH.3

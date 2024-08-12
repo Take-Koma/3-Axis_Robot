@@ -4164,6 +4164,15 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
+			<BitSize>5</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>5</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{2B008623-51EE-EF6A-ACDE-0017707F5BB8}" AutoDeleteType="true">INFODATA_FB_3</Name>
 			<BitSize>24</BitSize>
 			<SubItem>
@@ -6170,7 +6179,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{D380285F-8398-FFCA-0B56-17BD0927C1CC}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{EF5AC520-2380-F115-3E32-A7D0E1E48233}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6212,11 +6221,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Safety.bFBEstopOutput</Name>
 							<Comment><![CDATA[非常停止の電源ON EL2911 output]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.bEStopDelOut</Name>
-							<Comment><![CDATA[非常停止の電源ONのディレイ出力 EL2911 output]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -25347,11 +25351,8 @@ External Setpoint Generation:
 								<Entry Name="RobotSafety.bFBEdmError_22" Index="#x7000" Sub="#x03">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="RobotSafety.bEStopDelOut_23" Index="#x7000" Sub="#x04">
-									<Type>BIT</Type>
-								</Entry>
 								<Entry>
-									<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
+									<Type GUID="{18071995-0000-0000-0000-002000000005}">ARRAY [0..4] OF BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="StandardOutputs" Index="#x17f0" InOut="1" Flags="#x2011" SyncMan="2">
@@ -25386,7 +25387,7 @@ External Setpoint Generation:
 								<Entry Name="Serial Number" Index="#x7000" Sub="#x02">
 									<Type>UDINT</Type>
 								</Entry>
-								<Entry Name="Internal I/O" Index="#x7000" Sub="#x03">
+								<Entry Name="Internal I/O" Index="#x7000" Sub="#x03" Flags="#x00008000">
 									<Type GUID="{B62F343F-3864-EBAE-321E-B2B111C236E2}">INFODATA_668805986</Type>
 								</Entry>
 							</Pdo>
@@ -26526,7 +26527,6 @@ External Setpoint Generation:
 				<Link VarA="PlcTask Outputs^P_Patlite.bRedLed" VarB="Channel 5^Output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 7 (EK1100)^Term 13 (EL2911)">
-				<Link VarA="PlcTask Inputs^GVL_Safety.bEStopDelOut" VarB="StandardInputs^RobotSafety.bEStopDelOut_23"/>
 				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopInput1" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopInput2" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEstopOutput" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output"/>
