@@ -32,6 +32,12 @@ END_VAR]]></Declaration>
 	
 	//---GOTからの非常停止リセットをセーフティーへ---
 	GVL_Safety.bFBEStopReset:=GVL.mb_Output_Coils[9];
+
+	//---各軸のステータスを読み込む---
+	GVL.stAxis[E_Axis.X_Axis].ReadStatus();
+	GVL.stAxis[E_Axis.Y_Axis].ReadStatus();
+	GVL.stAxis[E_Axis.Z_Axis].ReadStatus();
+	GVL.stAxis[E_Axis.Gripper].ReadStatus();
 	
 	//---各軸が動いているかをまとめる---
 	IF GVL.stAxis[E_Axis.X_Axis].Status.MotionState=MC_AXISSTATE_DISCRETEMOTION THEN
@@ -70,7 +76,13 @@ END_VAR]]></Declaration>
 	]]></ST>
     </Implementation>
     <LineIds Name="P_Safety">
-      <LineId Id="767" Count="26" />
+      <LineId Id="767" Count="24" />
+      <LineId Id="840" Count="0" />
+      <LineId Id="835" Count="0" />
+      <LineId Id="792" Count="0" />
+      <LineId Id="837" Count="2" />
+      <LineId Id="836" Count="0" />
+      <LineId Id="793" Count="0" />
       <LineId Id="822" Count="1" />
       <LineId Id="826" Count="1" />
       <LineId Id="830" Count="0" />
