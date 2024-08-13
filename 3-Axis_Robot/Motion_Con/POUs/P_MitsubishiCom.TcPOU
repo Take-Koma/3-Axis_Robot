@@ -19,13 +19,49 @@ VAR
 	fbMcPowerREdge					:R_TRIG;
 	fbMcPowerFEdge					:F_TRIG;
 
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//---GVLのModbus TCPの変数をGVL_Mitsubishiの変数に書き込み---
-	(*Modbusマスター読み取りのみ*)
-	GVL_MitsubishiCom.bToBlink			:=GVL.mb_Input_Coils[0];
-	GVL_MitsubishiCom.bToMcPowerOn		:=GVL.mb_Input_Coils[4];
+
+	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
+	GVL_MitsubishiCom.bToBlink									:=GVL.mb_Input_Coils[0];
+	GVL_MitsubishiCom.bToMcPowerOn								:=GVL.mb_Input_Coils[4];
+	GVL_MitsubishiCom.bToMcMoveHomeOn							:=GVL.mb_Input_Coils[5];
+	GVL_MitsubishiCom.bToMcHaltOn								:=GVL.mb_Input_Coils[6];
+	GVL_MitsubishiCom.bToCameraSoftWareTrigger					:=GVL.mb_Input_Coils[7];
+	GVL_MitsubishiCom.bToAlarmReset								:=GVL.mb_Input_Coils[8];
+	GVL_MitsubishiCom.bToSafetyReset							:=GVL.mb_Input_Coils[9];
+	GVL_MitsubishiCom.bToResponseSpeedCheckStart				:=GVL.mb_Input_Coils[14];
+	GVL_MitsubishiCom.bToResponseSpeedCheckReturn				:=GVL.mb_Input_Coils[15];
+	
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
+	GVL_MitsubishiCom.bFromBlink								:=GVL.mb_Output_Coils[0];
+	GVL_MitsubishiCom.bFromEStop								:=GVL.mb_Output_Coils[1];
+	GVL_MitsubishiCom.bFromKeySwitchOpen						:=GVL.mb_Output_Coils[2];
+	GVL_MitsubishiCom.bFromKeySwitchClose						:=GVL.mb_Output_Coils[3];
+	GVL_MitsubishiCom.bFromMcPowerOn							:=GVL.mb_Output_Coils[4];
+	GVL_MitsubishiCom.bFromMcMoveHomeOn							:=GVL.mb_Output_Coils[5];
+	GVL_MitsubishiCom.bFromMcHaltOn								:=GVL.mb_Output_Coils[6];
+	GVL_MitsubishiCom.bFromCameraSoftWareTrigger				:=GVL.mb_Output_Coils[7];
+	GVL_MitsubishiCom.bFromAlarmReset							:=GVL.mb_Output_Coils[8];
+	GVL_MitsubishiCom.bFromSafetyReset							:=GVL.mb_Output_Coils[9];
+	GVL_MitsubishiCom.bFromGripSwich							:=GVL.mb_Output_Coils[10];
+	GVL_MitsubishiCom.bFromResponseSpeedCheckReturn				:=GVL.mb_Output_Coils[14];
+	GVL_MitsubishiCom.bFromResponseSpeedCheckStart				:=GVL.mb_Output_Coils[15];
+	GVL_MitsubishiCom.bFromXAxisJogStart						:=GVL.mb_Output_Coils[16];
+	GVL_MitsubishiCom.bFromYAxisJogStart						:=GVL.mb_Output_Coils[17];
+	GVL_MitsubishiCom.bFromZAxisJogStart						:=GVL.mb_Output_Coils[18];
+	GVL_MitsubishiCom.bFromGripperJogStart						:=GVL.mb_Output_Coils[19];
+
+	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
+	//変数なし
+	
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
+	GVL_MitsubishiCom.wFromXAxisJogTarget						:=GVL.mb_Output_Registers[16];
+	GVL_MitsubishiCom.wFromYAxisJogTarget						:=GVL.mb_Output_Registers[17];
+	GVL_MitsubishiCom.wFromZAxisJogTarget						:=GVL.mb_Output_Registers[18];
+	GVL_MitsubishiCom.wFromGripperJogTarget						:=GVL.mb_Output_Registers[19];
+
 
 //-----三菱へ出力-----
 	GVL_MitsubishiCom.bTwinCATModbusStart:=TRUE;
@@ -156,9 +192,22 @@ END_VAR
     </Implementation>
     <LineIds Name="P_MitsubishiCom">
       <LineId Id="1277" Count="0" />
+      <LineId Id="1309" Count="0" />
       <LineId Id="1281" Count="0" />
       <LineId Id="1279" Count="1" />
+      <LineId Id="1283" Count="5" />
+      <LineId Id="1282" Count="0" />
+      <LineId Id="1289" Count="0" />
+      <LineId Id="1310" Count="16" />
+      <LineId Id="1290" Count="0" />
+      <LineId Id="1328" Count="0" />
+      <LineId Id="1330" Count="0" />
       <LineId Id="1278" Count="0" />
+      <LineId Id="1329" Count="0" />
+      <LineId Id="1333" Count="3" />
+      <LineId Id="1331" Count="0" />
+      <LineId Id="1337" Count="0" />
+      <LineId Id="1332" Count="0" />
       <LineId Id="779" Count="1" />
       <LineId Id="1002" Count="0" />
       <LineId Id="1161" Count="0" />

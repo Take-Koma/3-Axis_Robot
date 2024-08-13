@@ -12,8 +12,7 @@ VAR_GLOBAL
 	bMitsubishiModbusStart					AT %I* :BOOL;				//三菱のY5より出力	
 	bMitsubishiAlarm						AT %I* :BOOL;				//三菱のY6より出力
 	
-	
-	(*Modbusマスター読み取りのみ_GVL.mb_Input_Coils*)
+	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
 	bToBlink										:BOOL;				//0:Beckhoffより通信をブリンクで通知
 	bToMcPowerOn									:BOOL;				//4:McPower On
 	bToMcMoveHomeOn									:BOOL;				//5:McMoveHome On
@@ -23,43 +22,34 @@ VAR_GLOBAL
 	bToSafetyReset									:BOOL;				//9:セフティーリセット
 	bToResponseSpeedCheckStart						:BOOL;				//14:応答速度確認TRUEでスタート
 	bToResponseSpeedCheckReturn						:BOOL;				//15:応答速度確認を三菱に応答
-
-
 	
-	(*Modbusマスターが読み書き可能
-	0:三菱シーケンサーより通信をブリンクで通知
-	1:非常停止ボタン（通常ON）
-	2:キースイッチ(開)
-	3:キースイッチ(閉)
-	4:スイッチ1 ドライブON 長押しOFF
-	5:スイッチ2　原点復帰
-	6:スイッチ3　停止
-	7:スイッチ4　カメラシャッターON
-	8:スイッチ5　アラームリセット
-	9:スイッチ6　非常停止リセット
-	10:グリップスイッチ
-	14:応答速度確認
-	15:応答速度確認
-	16:X軸Jog起動
-	17:Y軸Jog起動
-	18:Z軸Jog起動
-	19:グリッパーJog起動
-	*)
-	mb_Output_Coils 			:    ARRAY [0..255] OF BOOL;
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
+	bFromBlink										:BOOL;				//0:三菱シーケンサーより通信をブリンクで通知
+	bFromEStop										:BOOL;				//1:非常停止ボタン（通常ON）
+	bFromKeySwitchOpen								:BOOL;				//2:キースイッチ(開)
+	bFromKeySwitchClose								:BOOL;				//3:キースイッチ(閉)
+	bFromMcPowerOn									:BOOL;				//4:スイッチ1 ドライブON 長押しOFF
+	bFromMcMoveHomeOn								:BOOL;				//5:スイッチ2　原点復帰
+	bFromMcHaltOn									:BOOL;				//6:スイッチ3　停止
+	bFromCameraSoftWareTrigger						:BOOL;				//7:スイッチ4　カメラトリガーON
+	bFromAlarmReset									:BOOL;				//8:スイッチ5　アラームリセット
+	bFromSafetyReset								:BOOL;				//9:スイッチ6　非常停止リセット
+	bFromGripSwich									:BOOL;				//10:グリップスイッチ
+	bFromResponseSpeedCheckReturn					:BOOL;				//14:応答速度確認スタート後の三菱からの応答
+	bFromResponseSpeedCheckStart					:BOOL;				//15:応答速度確認が三菱側でスタート
+	bFromXAxisJogStart								:BOOL;				//16:X軸Jog起動
+	bFromYAxisJogStart								:BOOL;				//17:Y軸Jog起動
+	bFromZAxisJogStart								:BOOL;				//18:Z軸Jog起動
+	bFromGripperJogStart							:BOOL;				//19:グリッパーJog起動
 	
-	(*Modbusマスター読み取りのみ*)
-	mb_Input_Registers 			:    ARRAY [0..255] OF WORD; 
+	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
+	//変数なし
 	
-	(*Modbusマスターが読み書き可能
-	16:X軸Jogターゲットポジション
-	17:Y軸Jogターゲットポジション
-	18:Z軸Jogターゲットポジション
-	19:グリッパーJogターゲットポジション
-	*)
-	mb_Output_Registers 		:    ARRAY [0..255] OF WORD; 
-	
-	
-	
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
+	wFromXAxisJogTarget								:WORD;				//16:X軸Jogターゲットポジション
+	wFromYAxisJogTarget								:WORD;				//17:Y軸Jogターゲットポジション
+	wFromZAxisJogTarget								:WORD;				//18:Z軸Jogターゲットポジション
+	wFromGripperJogTarget							:WORD;				//19:グリッパーJogターゲットポジション
 	
 END_VAR]]></Declaration>
   </GVL>
