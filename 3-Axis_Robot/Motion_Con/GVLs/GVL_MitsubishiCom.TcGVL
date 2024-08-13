@@ -3,7 +3,6 @@
   <GVL Name="GVL_MitsubishiCom" Id="{c96c0658-07f7-40dc-a919-7656d8fefdd1}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
-	
 	//---三菱Fx5sの実入出力と接続---
 	bTwinCATRun								AT %Q* :BOOL;				//三菱のX2に入力
 	bTwinCATModbusStart						AT %Q* :BOOL;				//三菱のX3に入力
@@ -50,7 +49,6 @@ VAR_GLOBAL
 	wFromYAxisJogTarget								:WORD;				//17:Y軸Jogターゲットポジション
 	wFromZAxisJogTarget								:WORD;				//18:Z軸Jogターゲットポジション
 	wFromGripperJogTarget							:WORD;				//19:グリッパーJogターゲットポジション
-	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

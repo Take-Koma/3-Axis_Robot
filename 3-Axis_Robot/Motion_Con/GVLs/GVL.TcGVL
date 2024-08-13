@@ -22,69 +22,25 @@ VAR_GLOBAL
 	
 	eMachineState				:E_MachineState:=E_MachineState.Base;	//マシーンステート
 	stAlarm						:ARRAY[E_AlarmList.SafetyNotRun..E_AlarmList.LastAlarm] OF ST_Alarm;
-
-	(*Modbusマスター読み取りのみ
-	0:Beckhoffより通信をブリンクで通知
-	1:
-	2:
-	3:
-	4:McPower On
-	5:McMoveHome On
-	6:McHalt On
-	7:スイッチ4応答
-	8:スイッチ5応答
-	9:スイッチ6応答
-	14:応答速度確認
-	15:応答速度確認
-	*)
-	mb_Input_Coils    			:    ARRAY [0..255] OF BOOL; 
 	
-	(*Modbusマスターが読み書き可能
-	0:三菱シーケンサーより通信をブリンクで通知
-	1:非常停止ボタン（通常ON）
-	2:キースイッチ(開)
-	3:キースイッチ(閉)
-	4:スイッチ1 ドライブON 長押しOFF
-	5:スイッチ2　原点復帰
-	6:スイッチ3　停止
-	7:スイッチ4　カメラシャッターON
-	8:スイッチ5　アラームリセット
-	9:スイッチ6　非常停止リセット
-	10:グリップスイッチ
-	14:応答速度確認
-	15:応答速度確認
-	16:X軸Jog起動
-	17:Y軸Jog起動
-	18:Z軸Jog起動
-	19:グリッパーJog起動
-	*)
-	mb_Output_Coils 			:    ARRAY [0..255] OF BOOL;
-	
-	(*Modbusマスター読み取りのみ*)
-	mb_Input_Registers 			:    ARRAY [0..255] OF WORD; 
-	
-	(*Modbusマスターが読み書き可能
-	16:X軸Jogターゲットポジション
-	17:Y軸Jogターゲットポジション
-	18:Z軸Jogターゲットポジション
-	19:グリッパーJogターゲットポジション
-	*)
-	mb_Output_Registers 		:    ARRAY [0..255] OF WORD; 
+	//---Modbus TCPの変数---
+	mb_Input_Coils    			:ARRAY [0..255] OF BOOL;	//Modbusマスター読み取りのみ
+	mb_Output_Coils 			:ARRAY [0..255] OF BOOL;	//Modbusマスターが読み書き可能
+	mb_Input_Registers 			:ARRAY [0..255] OF WORD;	//Modbusマスター読み取りのみ
+	mb_Output_Registers 		:ARRAY [0..255] OF WORD;	//Modbusマスターが読み書き可能
 
 END_VAR
 
 VAR_GLOBAL CONSTANT
-	lrXZ_Slope			:LREAL:=-0.1/300;(*ステージのXZ軸の傾き*)
-	lrYZ_Slope			:LREAL:=-2.0/300;(*ステージのYZ軸の傾き*)
+	lrXZ_Slope					:LREAL:=-0.1/300;(*ステージのXZ軸の傾き*)
+	lrYZ_Slope					:LREAL:=-2.0/300;(*ステージのYZ軸の傾き*)
 	
 	(*ペンに合わせて調整必須!!!!!!!!!!!!!!!!!!!!!!!!*)
-	lrPenFullLength		:LREAL:=165.00;(*ペンの全長 単位mm*)
-	lrPenDiameter		:LREAL:=9.10;(*ペンの直径 単位mm*)
-	lrPenHalfLength		:LREAL:=142.00;(*ペンのドリルチャックからの出代 単位mm 緩さしで142mmしっかりさしで130mm*)
-	lrPenGripLength		:LREAL:=40.00;(*ペンのグリップ長　単位mm*)
+	lrPenFullLength				:LREAL:=165.00;(*ペンの全長 単位mm*)
+	lrPenDiameter				:LREAL:=9.10;(*ペンの直径 単位mm*)
+	lrPenHalfLength				:LREAL:=142.00;(*ペンのドリルチャックからの出代 単位mm 緩さしで142mmしっかりさしで130mm*)
+	lrPenGripLength				:LREAL:=40.00;(*ペンのグリップ長　単位mm*)
 	(*ペンに合わせて調整必須!!!!!!!!!!!!!!!!!!!!!!!!*)
-END_VAR
-
-]]></Declaration>
+END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

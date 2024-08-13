@@ -13,7 +13,7 @@ VAR
 	
 	fbTonRunCheck1					:ton;								//500ms以内にModbus TCPの信号がON,OFFしているか確認のタイマー
 	fbTonRunCheck2					:ton;								//500ms以内にModbus TCPの信号がON,OFFしているか確認のタイマー
-	bMitsubishiModbusOK				: BOOL;								//500ms以内にModbus TCPの信号がON,OFFしているか確認	
+	bMitsubishiModbusOK				:BOOL;								//500ms以内にModbus TCPの信号がON,OFFしているか確認	
 	
 	fbTonMcPower					:ton;
 	fbMcPowerREdge					:R_TRIG;
@@ -78,10 +78,10 @@ END_VAR]]></Declaration>
 		RETURN;
 	ELSIF GVL_MitsubishiCom.bMitsubishiModbusStart=FALSE THEN
 		RETURN;
-	ELSIF GVL.mb_Output_Coils[8]=TRUE THEN
+	ELSIF GVL_MitsubishiCom.bFromAlarmReset=TRUE THEN
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Base;
-	ELSIF GVL.mb_Output_Coils[9]=TRUE AND GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag=FALSE THEN
+	ELSIF GVL_MitsubishiCom.bFromSafetyReset=TRUE AND GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag=FALSE THEN
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Base;
 	ELSIF GVL_MitsubishiCom.bMitsubishiAlarm=FALSE THEN
@@ -90,32 +90,32 @@ END_VAR]]></Declaration>
 	END_IF
 
 //-----応答速度確認-----
-	IF GVL.mb_Input_Coils[14]=TRUE AND GVL.mb_Output_Coils[14]=FALSE THEN;
+	IF GVL_MitsubishiCom.bToResponseSpeedCheckStart=TRUE AND GVL_MitsubishiCom.bFromResponseSpeedCheckReturn=FALSE THEN;
 		uliCountSpeed:=uliCountSpeed+1;
 	END_IF
 
-	GVL.mb_Input_Coils[15]:=GVL.mb_Output_Coils[15];//三菱へ応答
+	GVL_MitsubishiCom.bToResponseSpeedCheckReturn:=GVL_MitsubishiCom.bFromResponseSpeedCheckStart;//三菱へ応答
 
 
 //-----三菱にBeckhoff通信中ブリンクで通知-----
 	fbTonBlink1(IN:=NOT fbTonBlink2.Q,PT:=tBlinkTine,Q=>fbTonBlink2.IN,ET=>);
 
-	GVL.mb_Input_Coils[0]:=fbTonBlink1.Q;
+	GVL_MitsubishiCom.bToBlink:=fbTonBlink1.Q;
 
 	fbTonBlink2(IN:=,PT:=tBlinkTine,Q=>,ET=>);
 
 
 //-----三菱シーケンサ通信中確認-----
-	fbTonRunCheck1(IN:=GVL.mb_Output_Coils[0],PT:=T#500MS,Q=>,ET=>);
-	fbTonRunCheck2(IN:=NOT GVL.mb_Output_Coils[0],PT:=T#500MS,Q=>,ET=>);
+	fbTonRunCheck1(IN:=GVL_MitsubishiCom.bFromBlink,PT:=T#500MS,Q=>,ET=>);
+	fbTonRunCheck2(IN:=NOT GVL_MitsubishiCom.bFromBlink,PT:=T#500MS,Q=>,ET=>);
 	
 	bMitsubishiModbusOK:=fbTonRunCheck1.Q OR fbTonRunCheck2.Q;
 
 
 //-----McPoerのOnとOff------
-	fbMcPowerREdge(CLK:=GVL.mb_Output_Coils[4],Q=>);
-	fbMcPowerFEdge(CLK:=GVL.mb_Input_Coils[4],Q=>);
-	fbTonMcPower(IN:=GVL.mb_Output_Coils[4],PT:=T#3S,Q=>,ET=>);
+	fbMcPowerREdge(CLK:=GVL_MitsubishiCom.bFromMcPowerOn,Q=>);
+	fbMcPowerFEdge(CLK:=GVL_MitsubishiCom.bToMcPowerOn,Q=>);
+	fbTonMcPower(IN:=GVL_MitsubishiCom.bFromMcPowerOn,PT:=T#3S,Q=>,ET=>);
 
 	IF GVL.bPower=FALSE AND fbMcPowerREdge.Q=TRUE THEN;
 		GVL.bPower:=TRUE;
@@ -126,68 +126,68 @@ END_VAR]]></Declaration>
 	END_IF;
 	
 	IF GVL.bMcPowerStatus[E_Axis.X_Axis]=TRUE AND GVL.bMcPowerStatus[E_Axis.Y_Axis]=TRUE AND GVL.bMcPowerStatus[E_Axis.Z_Axis]=TRUE AND GVL.bMcPowerStatus[E_Axis.Gripper]=TRUE THEN;
-		GVL.mb_Input_Coils[4]:=TRUE;
+		GVL_MitsubishiCom.bToMcPowerOn:=TRUE;
 	ELSE;
-		GVL.mb_Input_Coils[4]:=FALSE;
+		GVL_MitsubishiCom.bToMcPowerOn:=FALSE;
 	END_IF;
 
 
 //-----ゼロポジション実行-----
-	IF GVL.mb_Input_Coils[4]=TRUE THEN;
-		GVL.bHome:=GVL.mb_Output_Coils[5];
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL.bHome:=GVL_MitsubishiCom.bFromMcMoveHomeOn;
 	END_IF
 
 	IF GVL.stMoveHomingOut[E_Axis.X_Axis].Busy=TRUE OR GVL.stMoveHomingOut[E_Axis.Y_Axis].Busy=TRUE OR GVL.stMoveHomingOut[E_Axis.Z_Axis].Busy=TRUE OR GVL.stMoveHomingOut[E_Axis.Gripper].Busy=TRUE THEN;
-		GVL.mb_Input_Coils[5]:=TRUE;
+		GVL_MitsubishiCom.bToMcMoveHomeOn:=TRUE;
 	ELSE;
-		GVL.mb_Input_Coils[5]:=FALSE;
+		GVL_MitsubishiCom.bToMcMoveHomeOn:=FALSE;
 	END_IF;
 
 
 //-----Jog実行-----
-	IF GVL.mb_Input_Coils[4]=TRUE THEN;
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
 		//X軸
-		GVL.bJog[E_Axis.X_Axis]:=GVL.mb_Output_Coils[16];
-		GVL.lrJogPosition[E_Axis.X_Axis]:=GVL.mb_Output_Registers[16];
+		GVL.bJog[E_Axis.X_Axis]:=GVL_MitsubishiCom.bFromXAxisJogStart;
+		GVL.lrJogPosition[E_Axis.X_Axis]:=GVL_MitsubishiCom.wFromXAxisJogTarget;
 		
 		//Y軸
-		GVL.bJog[E_Axis.Y_Axis]:=GVL.mb_Output_Coils[17];
-		GVL.lrJogPosition[E_Axis.Y_Axis]:=GVL.mb_Output_Registers[17];
+		GVL.bJog[E_Axis.Y_Axis]:=GVL_MitsubishiCom.bFromYAxisJogStart;
+		GVL.lrJogPosition[E_Axis.Y_Axis]:=GVL_MitsubishiCom.wFromYAxisJogTarget;
 		
 		//Z軸 ステージにグリッパーがあたるのでZ軸は300無しで
-		GVL.bJog[E_Axis.Z_Axis]:=GVL.mb_Output_Coils[18];
-		GVL.lrJogPosition[E_Axis.Z_Axis]:=GVL.mb_Output_Registers[18];
+		GVL.bJog[E_Axis.Z_Axis]:=GVL_MitsubishiCom.bFromZAxisJogStart;
+		GVL.lrJogPosition[E_Axis.Z_Axis]:=GVL_MitsubishiCom.wFromZAxisJogTarget;
 		IF GVL.lrJogPosition[E_Axis.Z_Axis]>230 THEN;
 			GVL.lrJogPosition[E_Axis.Z_Axis]:=225;
 		END_IF
 
 		//グリッパー
-		GVL.bJog[E_Axis.Gripper]:=GVL.mb_Output_Coils[19];
-		GVL.lrJogPosition[E_Axis.Gripper]:=WORD_TO_INT(GVL.mb_Output_Registers[19]);
+		GVL.bJog[E_Axis.Gripper]:=GVL_MitsubishiCom.bFromGripperJogStart;
+		GVL.lrJogPosition[E_Axis.Gripper]:=WORD_TO_INT(GVL_MitsubishiCom.wFromGripperJogTarget);
 	END_IF
 
 
 //-----停止ボタン----
-	IF GVL.mb_Input_Coils[4]=TRUE THEN;
-		GVL.bHalt:=GVL.mb_Output_Coils[6];
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL.bHalt:=GVL_MitsubishiCom.bFromMcHaltOn;
 	END_IF
 
 	
 
 //-----非常停止ボタン-----
-	IF GVL.mb_Input_Coils[4]=TRUE THEN;
-		GVL.bStop:=NOT GVL.mb_Output_Coils[1];
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL.bStop:=NOT GVL_MitsubishiCom.bFromEStop;
 	END_IF
 
 
 //-----カメラシャッター応答-----
-	GVL.mb_Input_Coils[7]:=GVL.mb_Output_Coils[7];
+	GVL_MitsubishiCom.bToCameraSoftWareTrigger:=GVL_MitsubishiCom.bFromCameraSoftWareTrigger;
 
 //-----アラームリセット応答-----
-	GVL.mb_Input_Coils[8]:=GVL.mb_Output_Coils[8];
+	GVL_MitsubishiCom.bToAlarmReset:=GVL_MitsubishiCom.bFromAlarmReset;
 
 //-----セーフティー非常停止リセット応答-----
-	GVL.mb_Input_Coils[9]:=GVL.mb_Output_Coils[9];
+	GVL_MitsubishiCom.bToSafetyReset:=GVL_MitsubishiCom.bFromSafetyReset;
 ]]></ST>
     </Implementation>
     <LineIds Name="P_MitsubishiCom">

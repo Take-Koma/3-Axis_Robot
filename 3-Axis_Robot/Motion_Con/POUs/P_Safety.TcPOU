@@ -31,7 +31,7 @@ END_VAR]]></Declaration>
 	END_IF;
 	
 	//---GOTからの非常停止リセットをセーフティーへ---
-	GVL_Safety.bFBEStopReset:=GVL.mb_Output_Coils[9];
+	GVL_Safety.bFBEStopReset:=GVL_MitsubishiCom.bFromSafetyReset;
 	
 	//---各軸が動いているかをまとめる---
 	bAxisMove:= GVL_Safety.bMoveCheckIn[E_Axis.X_Axis] OR GVL_Safety.bMoveCheckIn[E_Axis.Y_Axis] OR GVL_Safety.bMoveCheckIn[E_Axis.Z_Axis] OR GVL_Safety.bMoveCheckIn[E_Axis.Gripper];
@@ -41,7 +41,7 @@ END_VAR]]></Declaration>
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Warning;
 		GVL.bStop:=TRUE;
-	ELSIF GVL.mb_Output_Coils[8]=TRUE THEN
+	ELSIF GVL_MitsubishiCom.bFromAlarmReset=TRUE THEN
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Base;
 		GVL.bStop:=FALSE;

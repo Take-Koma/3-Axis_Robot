@@ -6179,7 +6179,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{729DDFB3-EFA4-4460-B6A5-303F4A74C00A}" Name="Motion_Con" PrjFilePath="Motion_Con\Motion_Con.plcproj" TmcFilePath="Motion_Con\Motion_Con.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{7B1AB00A-2574-4603-0C1D-943FADD06B00}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{1D48C3BD-666B-23E3-F85E-7D7224DB6928}">
 					<Name>Motion_Con Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -6205,8 +6205,18 @@ External Setpoint Generation:
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.bFBEStopInput1</Name>
-							<Comment><![CDATA[非常停止ボタン1_EL2911 input CH.1]]></Comment>
+							<Name>GVL_MitsubishiCom.bMitsubishiRun</Name>
+							<Comment><![CDATA[三菱のY4より出力]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MitsubishiCom.bMitsubishiModbusStart</Name>
+							<Comment><![CDATA[三菱のY5より出力	]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MitsubishiCom.bMitsubishiAlarm</Name>
+							<Comment><![CDATA[三菱のY6より出力]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -6218,6 +6228,11 @@ External Setpoint Generation:
 							<Name>GVL_Safety.bAxisMainPower</Name>
 							<Comment><![CDATA[非常停止の電源OFF確認]]></Comment>
 							<Type GUID="{ACB00D92-8A3C-90A7-DB92-3AB4C0604945}">ARRAY [0..3] OF BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEStopInput1</Name>
+							<Comment><![CDATA[非常停止ボタン1_EL2911 input CH.1]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Safety.bFBEStopInput2</Name>
@@ -6237,21 +6252,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Safety.bGripSwich</Name>
 							<Comment><![CDATA[グリップスイッチ_EL2911 input CH.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MitsubishiCom.bMitsubishiRun</Name>
-							<Comment><![CDATA[三菱のY4より出力]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MitsubishiCom.bMitsubishiModbusStart</Name>
-							<Comment><![CDATA[三菱のY5より出力	]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MitsubishiCom.bMitsubishiAlarm</Name>
-							<Comment><![CDATA[三菱のY6より出力]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -6274,12 +6274,12 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.bSafetyRun_Stop</Name>
-							<Comment><![CDATA[セーフティーラン]]></Comment>
+							<Name>GVL_MitsubishiCom.bTwinCATRun</Name>
+							<Comment><![CDATA[三菱のX2に入力]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL.stAxis[2].PlcToNc</Name>
+							<Name>GVL.stAxis[1].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
@@ -6291,23 +6291,8 @@ External Setpoint Generation:
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>GVL.stAxis[1].PlcToNc</Name>
+							<Name>GVL.stAxis[2].PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.bFBEStopEDM</Name>
-							<Comment><![CDATA[非常停止の電源OFFの結果をセーフティーへ	]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.bFBEStopReset</Name>
-							<Comment><![CDATA[GOTからの非常停止リセットをセーフティーへ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MitsubishiCom.bTwinCATRun</Name>
-							<Comment><![CDATA[三菱のX2に入力]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_MitsubishiCom.bTwinCATModbusStart</Name>
@@ -6317,6 +6302,21 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_MitsubishiCom.bTwinCATAlarm</Name>
 							<Comment><![CDATA[三菱のx4に入力]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bSafetyRun_Stop</Name>
+							<Comment><![CDATA[セーフティーラン]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEStopEDM</Name>
+							<Comment><![CDATA[非常停止の電源OFFの結果をセーフティーへ	]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.bFBEStopReset</Name>
+							<Comment><![CDATA[GOTからの非常停止リセットをセーフティーへ]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
