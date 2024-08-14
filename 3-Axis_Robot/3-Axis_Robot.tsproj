@@ -1441,10 +1441,7 @@
 		</Vision>
 		<Io>
 			<Device File="デバイス 1 (RT-Ethernet Adapter).xti" Id="1"/>
+			<Device File="デバイス 3 (EtherCAT).xti" Id="3"/>
 		</Io>
 	</Project>
-	<Mappings>
-		<MappingInfo Identifier="{00000000-0030-0304-1000-040330000403}" Id="#x02030010"/>
-		<MappingInfo Identifier="{00000000-0040-0304-1000-040341000403}" Id="#x02030020"/>
-	</Mappings>
 </TcSmProject>
