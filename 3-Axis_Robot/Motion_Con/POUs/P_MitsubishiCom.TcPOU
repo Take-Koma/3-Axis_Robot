@@ -24,15 +24,15 @@ END_VAR]]></Declaration>
       <ST><![CDATA[//---GVLのModbus TCPの変数をGVL_Mitsubishiの変数に書き込み---
 
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
-	GVL_MitsubishiCom.bToBlink									:=GVL.mb_Input_Coils[0];
-	GVL_MitsubishiCom.bToMcPowerOn								:=GVL.mb_Input_Coils[4];
-	GVL_MitsubishiCom.bToMcMoveHomeOn							:=GVL.mb_Input_Coils[5];
-	GVL_MitsubishiCom.bToMcHaltOn								:=GVL.mb_Input_Coils[6];
-	GVL_MitsubishiCom.bToCameraSoftWareTrigger					:=GVL.mb_Input_Coils[7];
-	GVL_MitsubishiCom.bToAlarmReset								:=GVL.mb_Input_Coils[8];
-	GVL_MitsubishiCom.bToSafetyReset							:=GVL.mb_Input_Coils[9];
-	GVL_MitsubishiCom.bToResponseSpeedCheckStart				:=GVL.mb_Input_Coils[14];
-	GVL_MitsubishiCom.bToResponseSpeedCheckReturn				:=GVL.mb_Input_Coils[15];
+	GVL.mb_Input_Coils[0]										:=GVL_MitsubishiCom.bToBlink;
+	GVL.mb_Input_Coils[4]										:=GVL_MitsubishiCom.bToMcPowerOn;
+	GVL.mb_Input_Coils[5]										:=GVL_MitsubishiCom.bToMcMoveHomeOn;
+	GVL.mb_Input_Coils[6]										:=GVL_MitsubishiCom.bToMcHaltOn;
+	GVL.mb_Input_Coils[7]										:=GVL_MitsubishiCom.bToCameraSoftWareTrigger;
+	GVL.mb_Input_Coils[8]										:=GVL_MitsubishiCom.bToAlarmReset;
+	GVL.mb_Input_Coils[9]										:=GVL_MitsubishiCom.bToSafetyReset;
+	GVL.mb_Input_Coils[14]										:=GVL_MitsubishiCom.bToResponseSpeedCheckStart;
+	GVL.mb_Input_Coils[15]										:=GVL_MitsubishiCom.bToResponseSpeedCheckReturn;
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
 	GVL_MitsubishiCom.bFromBlink								:=GVL.mb_Output_Coils[0];
