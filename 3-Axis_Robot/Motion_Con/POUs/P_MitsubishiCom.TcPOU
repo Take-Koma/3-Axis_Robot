@@ -42,7 +42,7 @@ END_VAR]]></Declaration>
 	GVL_MitsubishiCom.bFromMcPowerOn							:=GVL.mb_Output_Coils[4];
 	GVL_MitsubishiCom.bFromMcMoveHomeOn							:=GVL.mb_Output_Coils[5];
 	GVL_MitsubishiCom.bFromMcHaltOn								:=GVL.mb_Output_Coils[6];
-	GVL_MitsubishiCom.bFromCameraSoftWareTrigger				:=GVL.mb_Output_Coils[7];
+	GVL_MitsubishiCom.bFromCameraTrigger						:=GVL.mb_Output_Coils[7];
 	GVL_MitsubishiCom.bFromAlarmReset							:=GVL.mb_Output_Coils[8];
 	GVL_MitsubishiCom.bFromSafetyReset							:=GVL.mb_Output_Coils[9];
 	GVL_MitsubishiCom.bFromGripSwich							:=GVL.mb_Output_Coils[10];
@@ -181,7 +181,7 @@ END_VAR]]></Declaration>
 
 
 //-----カメラシャッター応答-----
-	GVL_MitsubishiCom.bToCameraSoftWareTrigger:=GVL_MitsubishiCom.bFromCameraSoftWareTrigger;
+	GVL_MitsubishiCom.bToCameraSoftWareTrigger:=GVL_MitsubishiCom.bFromCameraTrigger;
 
 //-----アラームリセット応答-----
 	GVL_MitsubishiCom.bToAlarmReset:=GVL_MitsubishiCom.bFromAlarmReset;

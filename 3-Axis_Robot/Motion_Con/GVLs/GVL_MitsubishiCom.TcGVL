@@ -32,7 +32,7 @@ VAR_GLOBAL
 	bFromMcPowerOn									:BOOL;				//4:スイッチ1 ドライブON 長押しOFF
 	bFromMcMoveHomeOn								:BOOL;				//5:スイッチ2　原点復帰
 	bFromMcHaltOn									:BOOL;				//6:スイッチ3　停止
-	bFromCameraSoftWareTrigger						:BOOL;				//7:スイッチ4　カメラトリガーON
+	bFromCameraTrigger								:BOOL;				//7:スイッチ4　カメラトリガーON
 	bFromAlarmReset									:BOOL;				//8:スイッチ5　アラームリセット
 	bFromSafetyReset								:BOOL;				//9:スイッチ6　非常停止リセット
 	bFromGripSwich									:BOOL;				//10:グリップスイッチ
