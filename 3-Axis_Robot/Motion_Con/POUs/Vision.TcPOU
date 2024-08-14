@@ -65,7 +65,7 @@ TCVN_CS_ACQUIRING:
 
 	CASE iStep OF
 	0:
-		fbR_TRIG(CLK := GVL.mb_Output_Coils[7], Q => bSoftWareTrigger);	// ボタンスイッチを押すとソフトウェアトリガーを発行する
+		fbR_TRIG(CLK := GVL_MitsubishiCom.bFromCameraSoftWareTrigger, Q => bSoftWareTrigger);	// ボタンスイッチを押すとソフトウェアトリガーを発行する
 		
 		IF bSoftwareTrigger=TRUE THEN
 			hr := fbCamera.TriggerImage();

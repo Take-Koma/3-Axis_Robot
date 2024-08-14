@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_MitsubishiCom" Id="{c96c0658-07f7-40dc-a919-7656d8fefdd1}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	//---三菱Fx5sの実入出力と接続---
+	bTwinCATRun								AT %Q* :BOOL;				//三菱のX2に入力
+	bTwinCATModbusStart						AT %Q* :BOOL;				//三菱のX3に入力
+	bTwinCATAlarm							AT %Q* :BOOL;				//三菱のx4に入力
+	bMitsubishiRun							AT %I* :BOOL;				//三菱のY4より出力
+	bMitsubishiModbusStart					AT %I* :BOOL;				//三菱のY5より出力	
+	bMitsubishiAlarm						AT %I* :BOOL;				//三菱のY6より出力
+	
+	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
+	bToBlink										:BOOL;				//0:Beckhoffより通信をブリンクで通知
+	bToMcPowerOn									:BOOL;				//4:McPower On
+	bToMcMoveHomeOn									:BOOL;				//5:McMoveHome On
+	bToMcHaltOn										:BOOL;				//6:McHalt On
+	bToCameraSoftWareTrigger						:BOOL;				//7:カメラのトリガー
+	bToAlarmReset									:BOOL;				//8:アラームリセット
+	bToSafetyReset									:BOOL;				//9:セフティーリセット
+	bToResponseSpeedCheckStart						:BOOL;				//14:応答速度確認TRUEでスタート
+	bToResponseSpeedCheckReturn						:BOOL;				//15:応答速度確認を三菱に応答
+	
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
+	bFromBlink										:BOOL;				//0:三菱シーケンサーより通信をブリンクで通知
+	bFromEStop										:BOOL;				//1:非常停止ボタン（通常ON）
+	bFromKeySwitchOpen								:BOOL;				//2:キースイッチ(開)
+	bFromKeySwitchClose								:BOOL;				//3:キースイッチ(閉)
+	bFromMcPowerOn									:BOOL;				//4:スイッチ1 ドライブON 長押しOFF
+	bFromMcMoveHomeOn								:BOOL;				//5:スイッチ2　原点復帰
+	bFromMcHaltOn									:BOOL;				//6:スイッチ3　停止
+	bFromCameraSoftWareTrigger						:BOOL;				//7:スイッチ4　カメラトリガーON
+	bFromAlarmReset									:BOOL;				//8:スイッチ5　アラームリセット
+	bFromSafetyReset								:BOOL;				//9:スイッチ6　非常停止リセット
+	bFromGripSwich									:BOOL;				//10:グリップスイッチ
+	bFromResponseSpeedCheckReturn					:BOOL;				//14:応答速度確認スタート後の三菱からの応答
+	bFromResponseSpeedCheckStart					:BOOL;				//15:応答速度確認が三菱側でスタート
+	bFromXAxisJogStart								:BOOL;				//16:X軸Jog起動
+	bFromYAxisJogStart								:BOOL;				//17:Y軸Jog起動
+	bFromZAxisJogStart								:BOOL;				//18:Z軸Jog起動
+	bFromGripperJogStart							:BOOL;				//19:グリッパーJog起動
+	
+	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
+	//変数なし
+	
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
+	wFromXAxisJogTarget								:WORD;				//16:X軸Jogターゲットポジション
+	wFromYAxisJogTarget								:WORD;				//17:Y軸Jogターゲットポジション
+	wFromZAxisJogTarget								:WORD;				//18:Z軸Jogターゲットポジション
+	wFromGripperJogTarget							:WORD;				//19:グリッパーJogターゲットポジション
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

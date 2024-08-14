@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="P_MitsubishiCom" Id="{7551431c-0546-4892-8591-c118fe27ff05}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_MitsubishiCom
+VAR
+	i								:INT;
+
+	uliCountSpeed					:ULINT;								//Modbus TCP通信の応答速度確認用
+	
+	fbTonBlink1						:ton;								//三菱へ130msでのブリック信号をModbus TCPで送信用のタイマー
+	fbTonBlink2						:ton;								//三菱へ130msでのブリック信号をModbus TCPで送信用のタイマー
+	tBlinkTine						:TIME:=T#130MS;						//三菱へ130msでのブリック信号をModbus TCPで送信用
+	
+	fbTonRunCheck1					:ton;								//500ms以内にModbus TCPの信号がON,OFFしているか確認のタイマー
+	fbTonRunCheck2					:ton;								//500ms以内にModbus TCPの信号がON,OFFしているか確認のタイマー
+	bMitsubishiModbusOK				:BOOL;								//500ms以内にModbus TCPの信号がON,OFFしているか確認	
+	
+	fbTonMcPower					:ton;
+	fbMcPowerREdge					:R_TRIG;
+	fbMcPowerFEdge					:F_TRIG;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//---GVLのModbus TCPの変数をGVL_Mitsubishiの変数に書き込み---
+
+	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
+	GVL.mb_Input_Coils[0]										:=GVL_MitsubishiCom.bToBlink;
+	GVL.mb_Input_Coils[4]										:=GVL_MitsubishiCom.bToMcPowerOn;
+	GVL.mb_Input_Coils[5]										:=GVL_MitsubishiCom.bToMcMoveHomeOn;
+	GVL.mb_Input_Coils[6]										:=GVL_MitsubishiCom.bToMcHaltOn;
+	GVL.mb_Input_Coils[7]										:=GVL_MitsubishiCom.bToCameraSoftWareTrigger;
+	GVL.mb_Input_Coils[8]										:=GVL_MitsubishiCom.bToAlarmReset;
+	GVL.mb_Input_Coils[9]										:=GVL_MitsubishiCom.bToSafetyReset;
+	GVL.mb_Input_Coils[14]										:=GVL_MitsubishiCom.bToResponseSpeedCheckStart;
+	GVL.mb_Input_Coils[15]										:=GVL_MitsubishiCom.bToResponseSpeedCheckReturn;
+	
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
+	GVL_MitsubishiCom.bFromBlink								:=GVL.mb_Output_Coils[0];
+	GVL_MitsubishiCom.bFromEStop								:=GVL.mb_Output_Coils[1];
+	GVL_MitsubishiCom.bFromKeySwitchOpen						:=GVL.mb_Output_Coils[2];
+	GVL_MitsubishiCom.bFromKeySwitchClose						:=GVL.mb_Output_Coils[3];
+	GVL_MitsubishiCom.bFromMcPowerOn							:=GVL.mb_Output_Coils[4];
+	GVL_MitsubishiCom.bFromMcMoveHomeOn							:=GVL.mb_Output_Coils[5];
+	GVL_MitsubishiCom.bFromMcHaltOn								:=GVL.mb_Output_Coils[6];
+	GVL_MitsubishiCom.bFromCameraSoftWareTrigger				:=GVL.mb_Output_Coils[7];
+	GVL_MitsubishiCom.bFromAlarmReset							:=GVL.mb_Output_Coils[8];
+	GVL_MitsubishiCom.bFromSafetyReset							:=GVL.mb_Output_Coils[9];
+	GVL_MitsubishiCom.bFromGripSwich							:=GVL.mb_Output_Coils[10];
+	GVL_MitsubishiCom.bFromResponseSpeedCheckReturn				:=GVL.mb_Output_Coils[14];
+	GVL_MitsubishiCom.bFromResponseSpeedCheckStart				:=GVL.mb_Output_Coils[15];
+	GVL_MitsubishiCom.bFromXAxisJogStart						:=GVL.mb_Output_Coils[16];
+	GVL_MitsubishiCom.bFromYAxisJogStart						:=GVL.mb_Output_Coils[17];
+	GVL_MitsubishiCom.bFromZAxisJogStart						:=GVL.mb_Output_Coils[18];
+	GVL_MitsubishiCom.bFromGripperJogStart						:=GVL.mb_Output_Coils[19];
+
+	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
+	//変数なし
+	
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
+	GVL_MitsubishiCom.wFromXAxisJogTarget						:=GVL.mb_Output_Registers[16];
+	GVL_MitsubishiCom.wFromYAxisJogTarget						:=GVL.mb_Output_Registers[17];
+	GVL_MitsubishiCom.wFromZAxisJogTarget						:=GVL.mb_Output_Registers[18];
+	GVL_MitsubishiCom.wFromGripperJogTarget						:=GVL.mb_Output_Registers[19];
+
+
+//-----三菱へ出力-----
+	GVL_MitsubishiCom.bTwinCATModbusStart:=TRUE;
+	GVL_MitsubishiCom.bTwinCATRun:=TRUE;
+	
+	IF GVL.eMachineState < E_MachineState.Stay THEN
+		GVL_MitsubishiCom.bTwinCATAlarm:=FALSE;
+	ELSE
+		GVL_MitsubishiCom.bTwinCATAlarm:=TRUE;
+	END_IF
+
+//---三菱より入力---
+	IF GVL_MitsubishiCom.bMitsubishiRun=FALSE THEN
+		RETURN;
+	ELSIF GVL_MitsubishiCom.bMitsubishiModbusStart=FALSE THEN
+		RETURN;
+	ELSIF GVL_MitsubishiCom.bFromAlarmReset=TRUE THEN
+		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Base;
+	ELSIF GVL_MitsubishiCom.bFromSafetyReset=TRUE AND GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag=FALSE THEN
+		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Base;
+	ELSIF GVL_MitsubishiCom.bMitsubishiAlarm=FALSE THEN
+		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=TRUE;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Warning;
+	END_IF
+
+//-----応答速度確認-----
+	IF GVL_MitsubishiCom.bToResponseSpeedCheckStart=TRUE AND GVL_MitsubishiCom.bFromResponseSpeedCheckReturn=FALSE THEN;
+		uliCountSpeed:=uliCountSpeed+1;
+	END_IF
+
+	GVL_MitsubishiCom.bToResponseSpeedCheckReturn:=GVL_MitsubishiCom.bFromResponseSpeedCheckStart;//三菱へ応答
+
+
+//-----三菱にBeckhoff通信中ブリンクで通知-----
+	fbTonBlink1(IN:=NOT fbTonBlink2.Q,PT:=tBlinkTine,Q=>fbTonBlink2.IN,ET=>);
+
+	GVL_MitsubishiCom.bToBlink:=fbTonBlink1.Q;
+
+	fbTonBlink2(IN:=,PT:=tBlinkTine,Q=>,ET=>);
+
+
+//-----三菱シーケンサ通信中確認-----
+	fbTonRunCheck1(IN:=GVL_MitsubishiCom.bFromBlink,PT:=T#500MS,Q=>,ET=>);
+	fbTonRunCheck2(IN:=NOT GVL_MitsubishiCom.bFromBlink,PT:=T#500MS,Q=>,ET=>);
+	
+	bMitsubishiModbusOK:=fbTonRunCheck1.Q OR fbTonRunCheck2.Q;
+
+
+//-----McPoerのOnとOff------
+	fbMcPowerREdge(CLK:=GVL_MitsubishiCom.bFromMcPowerOn,Q=>);
+	fbMcPowerFEdge(CLK:=GVL_MitsubishiCom.bToMcPowerOn,Q=>);
+	fbTonMcPower(IN:=GVL_MitsubishiCom.bFromMcPowerOn,PT:=T#3S,Q=>,ET=>);
+
+	IF GVL.bPower=FALSE AND fbMcPowerREdge.Q=TRUE THEN;
+		GVL.bPower:=TRUE;
+	ELSIF GVL.bPower=TRUE AND fbTonMcPower.Q=TRUE THEN ;
+		GVL.bPower:=FALSE;
+	ELSIF fbMcPowerFEdge.Q=TRUE THEN;
+		GVL.bPower:=FALSE;
+	END_IF;
+	
+	IF GVL.bMcPowerStatus[E_Axis.X_Axis]=TRUE AND GVL.bMcPowerStatus[E_Axis.Y_Axis]=TRUE AND GVL.bMcPowerStatus[E_Axis.Z_Axis]=TRUE AND GVL.bMcPowerStatus[E_Axis.Gripper]=TRUE THEN;
+		GVL_MitsubishiCom.bToMcPowerOn:=TRUE;
+	ELSE;
+		GVL_MitsubishiCom.bToMcPowerOn:=FALSE;
+	END_IF;
+
+
+//-----ゼロポジション実行-----
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL.bHome:=GVL_MitsubishiCom.bFromMcMoveHomeOn;
+	END_IF
+
+	IF GVL.stMoveHomingOut[E_Axis.X_Axis].Busy=TRUE OR GVL.stMoveHomingOut[E_Axis.Y_Axis].Busy=TRUE OR GVL.stMoveHomingOut[E_Axis.Z_Axis].Busy=TRUE OR GVL.stMoveHomingOut[E_Axis.Gripper].Busy=TRUE THEN;
+		GVL_MitsubishiCom.bToMcMoveHomeOn:=TRUE;
+	ELSE;
+		GVL_MitsubishiCom.bToMcMoveHomeOn:=FALSE;
+	END_IF;
+
+
+//-----Jog実行-----
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		//X軸
+		GVL.bJog[E_Axis.X_Axis]:=GVL_MitsubishiCom.bFromXAxisJogStart;
+		GVL.lrJogPosition[E_Axis.X_Axis]:=GVL_MitsubishiCom.wFromXAxisJogTarget;
+		
+		//Y軸
+		GVL.bJog[E_Axis.Y_Axis]:=GVL_MitsubishiCom.bFromYAxisJogStart;
+		GVL.lrJogPosition[E_Axis.Y_Axis]:=GVL_MitsubishiCom.wFromYAxisJogTarget;
+		
+		//Z軸 ステージにグリッパーがあたるのでZ軸は300無しで
+		GVL.bJog[E_Axis.Z_Axis]:=GVL_MitsubishiCom.bFromZAxisJogStart;
+		GVL.lrJogPosition[E_Axis.Z_Axis]:=GVL_MitsubishiCom.wFromZAxisJogTarget;
+		IF GVL.lrJogPosition[E_Axis.Z_Axis]>230 THEN;
+			GVL.lrJogPosition[E_Axis.Z_Axis]:=225;
+		END_IF
+
+		//グリッパー
+		GVL.bJog[E_Axis.Gripper]:=GVL_MitsubishiCom.bFromGripperJogStart;
+		GVL.lrJogPosition[E_Axis.Gripper]:=WORD_TO_INT(GVL_MitsubishiCom.wFromGripperJogTarget);
+	END_IF
+
+
+//-----停止ボタン----
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL.bHalt:=GVL_MitsubishiCom.bFromMcHaltOn;
+	END_IF
+
+	
+
+//-----非常停止ボタン-----
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL.bStop:=NOT GVL_MitsubishiCom.bFromEStop;
+	END_IF
+
+
+//-----カメラシャッター応答-----
+	GVL_MitsubishiCom.bToCameraSoftWareTrigger:=GVL_MitsubishiCom.bFromCameraSoftWareTrigger;
+
+//-----アラームリセット応答-----
+	GVL_MitsubishiCom.bToAlarmReset:=GVL_MitsubishiCom.bFromAlarmReset;
+
+//-----セーフティー非常停止リセット応答-----
+	GVL_MitsubishiCom.bToSafetyReset:=GVL_MitsubishiCom.bFromSafetyReset;
+]]></ST>
+    </Implementation>
+    <LineIds Name="P_MitsubishiCom">
+      <LineId Id="1277" Count="0" />
+      <LineId Id="1309" Count="0" />
+      <LineId Id="1281" Count="0" />
+      <LineId Id="1279" Count="1" />
+      <LineId Id="1283" Count="5" />
+      <LineId Id="1282" Count="0" />
+      <LineId Id="1289" Count="0" />
+      <LineId Id="1310" Count="16" />
+      <LineId Id="1290" Count="0" />
+      <LineId Id="1328" Count="0" />
+      <LineId Id="1330" Count="0" />
+      <LineId Id="1278" Count="0" />
+      <LineId Id="1329" Count="0" />
+      <LineId Id="1333" Count="3" />
+      <LineId Id="1331" Count="0" />
+      <LineId Id="1337" Count="0" />
+      <LineId Id="1332" Count="0" />
+      <LineId Id="779" Count="1" />
+      <LineId Id="1002" Count="0" />
+      <LineId Id="1161" Count="0" />
+      <LineId Id="1168" Count="0" />
+      <LineId Id="1163" Count="0" />
+      <LineId Id="1169" Count="1" />
+      <LineId Id="1164" Count="0" />
+      <LineId Id="1029" Count="0" />
+      <LineId Id="781" Count="0" />
+      <LineId Id="1125" Count="0" />
+      <LineId Id="1127" Count="1" />
+      <LineId Id="1130" Count="0" />
+      <LineId Id="1207" Count="1" />
+      <LineId Id="1206" Count="0" />
+      <LineId Id="1240" Count="1" />
+      <LineId Id="1239" Count="0" />
+      <LineId Id="1166" Count="1" />
+      <LineId Id="1201" Count="0" />
+      <LineId Id="1131" Count="0" />
+      <LineId Id="782" Count="25" />
+      <LineId Id="1064" Count="0" />
+      <LineId Id="808" Count="5" />
+      <LineId Id="1062" Count="0" />
+      <LineId Id="814" Count="0" />
+      <LineId Id="1063" Count="0" />
+      <LineId Id="815" Count="21" />
+      <LineId Id="838" Count="0" />
+      <LineId Id="907" Count="0" />
+      <LineId Id="842" Count="2" />
+      <LineId Id="908" Count="0" />
+      <LineId Id="848" Count="2" />
+      <LineId Id="909" Count="0" />
+      <LineId Id="854" Count="0" />
+      <LineId Id="910" Count="2" />
+      <LineId Id="856" Count="1" />
+      <LineId Id="913" Count="0" />
+      <LineId Id="863" Count="0" />
+      <LineId Id="865" Count="0" />
+      <LineId Id="906" Count="0" />
+      <LineId Id="867" Count="15" />
+      <LineId Id="1094" Count="0" />
+      <LineId Id="1093" Count="0" />
+      <LineId Id="883" Count="0" />
+      <LineId Id="1096" Count="0" />
+      <LineId Id="1095" Count="0" />
+      <LineId Id="884" Count="0" />
+      <LineId Id="940" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

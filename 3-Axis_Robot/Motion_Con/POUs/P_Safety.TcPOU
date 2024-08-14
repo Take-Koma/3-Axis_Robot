@@ -31,7 +31,7 @@ END_VAR]]></Declaration>
 	END_IF;
 	
 	//---GOTからの非常停止リセットをセーフティーへ---
-	GVL_Safety.bFBEStopReset:=GVL.mb_Output_Coils[9];
+	GVL_Safety.bFBEStopReset:=GVL_MitsubishiCom.bFromSafetyReset;
 
 	//---各軸のステータスを読み込む---
 	GVL.stAxis[E_Axis.X_Axis].ReadStatus();
@@ -58,7 +58,7 @@ END_VAR]]></Declaration>
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=TRUE;
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Warning;
 		GVL.bStop:=TRUE;
-	ELSIF GVL.mb_Output_Coils[8]=TRUE THEN
+	ELSIF GVL_MitsubishiCom.bFromAlarmReset=TRUE THEN
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=FALSE;
 		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Base;
 		GVL.bStop:=FALSE;
@@ -76,23 +76,7 @@ END_VAR]]></Declaration>
 	]]></ST>
     </Implementation>
     <LineIds Name="P_Safety">
-      <LineId Id="767" Count="24" />
-      <LineId Id="840" Count="0" />
-      <LineId Id="835" Count="0" />
-      <LineId Id="792" Count="0" />
-      <LineId Id="837" Count="2" />
-      <LineId Id="836" Count="0" />
-      <LineId Id="793" Count="0" />
-      <LineId Id="822" Count="1" />
-      <LineId Id="826" Count="1" />
-      <LineId Id="830" Count="0" />
-      <LineId Id="828" Count="0" />
-      <LineId Id="832" Count="0" />
-      <LineId Id="831" Count="0" />
-      <LineId Id="833" Count="1" />
-      <LineId Id="824" Count="0" />
-      <LineId Id="820" Count="1" />
-      <LineId Id="796" Count="19" />
+      <LineId Id="845" Count="65" />
       <LineId Id="678" Count="0" />
     </LineIds>
   </POU>
