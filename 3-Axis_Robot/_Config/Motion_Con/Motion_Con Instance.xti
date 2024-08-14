@@ -29,6 +29,15 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-000700000003}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..2] OF OTCID</Name>
+			<BitSize>96</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>3</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{CBC83B73-B816-4597-A9E5-2B03263CA131}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
@@ -10913,6 +10922,12 @@ External Setpoint Generation:
 					<BaseType GUID="{18071995-0000-0000-0000-000400000004}">ARRAY [0..3] OF WORD</BaseType>
 					<PTCID>#x0850801c</PTCID>
 				</Parameter>
+				<Parameter ReadOnly="true">
+					<Name>Mapping OIDs</Name>
+					<BitSize>96</BitSize>
+					<BaseType GUID="{18071995-0000-0000-0000-000700000003}">ARRAY [0..2] OF OTCID</BaseType>
+					<PTCID>#x08500006</PTCID>
+				</Parameter>
 			</Parameters>
 			<DataAreas>
 				<DataArea>
@@ -16823,6 +16838,10 @@ External Setpoint Generation:
 					<Name>Task Module ADI Indices</Name>
 					<Value>4785143323623424</Value>
 				</Value>
+				<Value>
+					<Name>Mapping OIDs</Name>
+					<Data>500003023000030220000302</Data>
+				</Value>
 			</ParameterValues>
 			<InitSymbolValues>
 				<Value>
@@ -16986,4 +17005,54 @@ External Setpoint Generation:
 			<TaskPouOid Prio="18" OTCID="#x08502003"/>
 		</TaskPouOids>
 	</Instance>
+	<Mappings>
+		<OwnerA>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1088)">
+				<Link VarA="PlcTask Inputs^GVL_MitsubishiCom.bMitsubishiAlarm" VarB="Channel 3^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^GVL_MitsubishiCom.bMitsubishiModbusStart" VarB="Channel 2^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^GVL_MitsubishiCom.bMitsubishiRun" VarB="Channel 1^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^P_Patlite.bSwitch" VarB="Channel 8^Input" Size="1"/>
+				<Link VarA="VisionTask Inputs^GVL_MitsubishiCom.bYI004" VarB="Channel 4^Input" Size="1"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 5 (EL2088)">
+				<Link VarA="PlcTask Outputs^GVL_MitsubishiCom.bTwinCATAlarm" VarB="Channel 3^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^GVL_MitsubishiCom.bTwinCATModbusStart" VarB="Channel 2^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^GVL_MitsubishiCom.bTwinCATRun" VarB="Channel 1^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^P_Patlite.bBlueLed" VarB="Channel 7^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^P_Patlite.bBuzzerON" VarB="Channel 8^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^P_Patlite.bGreenLed" VarB="Channel 6^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^P_Patlite.bRedLed" VarB="Channel 5^Output" Size="1"/>
+				<Link VarA="VisionTask Outputs^GVL_MitsubishiCom.bQX004" VarB="Channel 4^Output" Size="1"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 7 (EL2911)">
+				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopInput1" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEStopInput2" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bFBEstopOutput" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output" Size="1"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^GVL_Safety.bSafetyInRun" VarB="StandardInputs^RobotSafety.bSafetyInRun_12" Size="1"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopEDM" VarB="StandardOutputs^RobotSafety.bFBEStopEDM_7" Size="1"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopReset" VarB="StandardOutputs^RobotSafety.bFBEStopReset_5" Size="1"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bSafetyRun_Stop" VarB="StandardOutputs^RobotSafety.bSafetyRun_Stop_2" Size="1"/>
+				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEdmError" VarB="StandardInputs^RobotSafety.bFBEdmError_22" Size="1"/>
+				<Link VarA="VisionTask Inputs^GVL_Safety.bFBEstopError" VarB="StandardInputs^RobotSafety.bFBEstopError_21" Size="1"/>
+				<Link VarA="VisionTask Outputs^GVL_Safety.bSafetyErrAck" VarB="StandardOutputs^RobotSafety.bSafetyErrAck_1" Size="1"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
+				<Link VarA="PlcTask Inputs^GVL.stAxis[3].NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL.stAxis[3].PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^X">
+				<Link VarA="PlcTask Inputs^GVL.stAxis[0].NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL.stAxis[0].PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Y">
+				<Link VarA="PlcTask Inputs^GVL.stAxis[1].NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL.stAxis[1].PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Z">
+				<Link VarA="PlcTask Inputs^GVL.stAxis[2].NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL.stAxis[2].PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
 </TcSmItem>
