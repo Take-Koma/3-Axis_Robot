@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.56" ClassName="CNcSafTaskDef" SubType="0">
+	<NC>
+		<SafTask Priority="6" CycleTime="5000" AmsPort="501" IoAtBegin="true" SafTaskInfo="256">
+			<Name>NC-Task 1 SAF</Name>
+			<Vars VarGrpType="1" InsertType="1">
+				<Name>入力</Name>
+			</Vars>
+			<Vars VarGrpType="2" InsertType="1">
+				<Name>出力</Name>
+			</Vars>
+			<Image Id="1" AddrType="1" ImageType="1">
+				<Name>イメージ</Name>
+			</Image>
+		</SafTask>
+		<SvbTask Priority="8" CycleTime="5000" AmsPort="511">
+			<Name>NC-Task 1 SVB</Name>
+		</SvbTask>
+		<Axis File="X.xti" Id="1"/>
+		<Axis File="Y.xti" Id="2"/>
+		<Axis File="Z.xti" Id="3"/>
+		<Axis File="Gripper.xti" Id="4"/>
+	</NC>
+</TcSmItem>
