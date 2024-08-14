@@ -7,9 +7,11 @@ VAR_GLOBAL
 	bTwinCATRun								AT %Q* :BOOL;				//三菱のX2に入力
 	bTwinCATModbusStart						AT %Q* :BOOL;				//三菱のX3に入力
 	bTwinCATAlarm							AT %Q* :BOOL;				//三菱のx4に入力
+	bQX004									AT %Q* :BOOL;				//三菱のx5に入力
 	bMitsubishiRun							AT %I* :BOOL;				//三菱のY4より出力
 	bMitsubishiModbusStart					AT %I* :BOOL;				//三菱のY5より出力	
 	bMitsubishiAlarm						AT %I* :BOOL;				//三菱のY6より出力
+	bYI004									AT %I* :BOOL;				//三菱のY7より出力
 	
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
 	bToBlink										:BOOL;				//0:Beckhoffより通信をブリンクで通知
