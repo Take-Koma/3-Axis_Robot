@@ -40,13 +40,13 @@ END_VAR]]></Declaration>
 	GVL.stAxis[E_Axis.Gripper].ReadStatus();
 	
 	//---各軸が動いているかをまとめる---
-	IF GVL.stAxis[E_Axis.X_Axis].Status.MotionState=MC_AXISSTATE_DISCRETEMOTION THEN
+	IF GVL.stAxis[E_Axis.X_Axis].Status.Moving=TRUE THEN
 		bAxisMove:=TRUE;
-	ELSIF GVL.stAxis[E_Axis.Y_Axis].Status.MotionState=MC_AXISSTATE_DISCRETEMOTION THEN
+	ELSIF GVL.stAxis[E_Axis.Y_Axis].Status.Moving=TRUE THEN
 		bAxisMove:=TRUE;
-	ELSIF GVL.stAxis[E_Axis.Z_Axis].Status.MotionState=MC_AXISSTATE_DISCRETEMOTION THEN
+	ELSIF GVL.stAxis[E_Axis.Z_Axis].Status.Moving=TRUE THEN
 		bAxisMove:=TRUE;
-	ELSIF GVL.stAxis[E_Axis.Gripper].Status.MotionState=MC_AXISSTATE_DISCRETEMOTION THEN
+	ELSIF GVL.stAxis[E_Axis.Gripper].Status.Moving=TRUE THEN
 		bAxisMove:=TRUE;
 	ELSE
 		bAxisMove:=FALSE;
