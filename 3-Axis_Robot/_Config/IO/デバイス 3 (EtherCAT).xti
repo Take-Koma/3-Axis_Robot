@@ -15,6 +15,9 @@
 		<Image Id="4" AddrType="10" ImageType="3">
 			<Name>イメージ-2</Name>
 		</Image>
+		<Image Id="5" AddrType="10" ImageType="3">
+			<Name>イメージ-3</Name>
+		</Image>
 		<Box File="ターミナル 1 (EK1100).xti" Id="1">
 			<EtherCAT PortABoxInfo="#x00ffffff"/>
 		</Box>

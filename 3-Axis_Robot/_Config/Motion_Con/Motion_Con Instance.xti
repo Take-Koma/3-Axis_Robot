@@ -29,12 +29,12 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-000700000003}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..2] OF OTCID</Name>
-			<BitSize>96</BitSize>
+			<Name GUID="{18071995-0000-0000-0000-000700000004}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..3] OF OTCID</Name>
+			<BitSize>128</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
 			<ArrayInfo>
 				<LBound>0</LBound>
-				<Elements>3</Elements>
+				<Elements>4</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -10785,7 +10785,7 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 	</DataTypes>
-	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{648276F9-5AD3-8270-718C-923A1AB4B577}">
+	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{DDA26182-477F-A4DD-A4F8-5CA74DCB5382}">
 		<Name>__FILENAME__</Name>
 		<TmcDesc GUID="{3E578FBF-8593-4971-A049-A334D40A2DE2}" TcSmClass="TComPlcObjDef">
 			<Name>Motion_Con</Name>
@@ -10924,8 +10924,8 @@ External Setpoint Generation:
 				</Parameter>
 				<Parameter ReadOnly="true">
 					<Name>Mapping OIDs</Name>
-					<BitSize>96</BitSize>
-					<BaseType GUID="{18071995-0000-0000-0000-000700000003}">ARRAY [0..2] OF OTCID</BaseType>
+					<BitSize>128</BitSize>
+					<BaseType GUID="{18071995-0000-0000-0000-000700000004}">ARRAY [0..3] OF OTCID</BaseType>
 					<PTCID>#x08500006</PTCID>
 				</Parameter>
 			</Parameters>
@@ -12859,6 +12859,22 @@ External Setpoint Generation:
 							</Property>
 						</Properties>
 						<BitOffs>3736600</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Vision.bLedLight</Name>
+						<Comment><![CDATA[カメラ用LED照明]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>TcAddressType</Name>
+								<Value>Output</Value>
+							</Property>
+						</Properties>
+						<BitOffs>3736640</BitOffs>
 					</Symbol>
 				</DataArea>
 				<DataArea>
@@ -16199,7 +16215,7 @@ External Setpoint Generation:
 						<BitOffs>3285856</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.nNewImageCounter</Name>
+						<Name>P_Vision.nNewImageCounter</Name>
 						<Comment><![CDATA[ 画像取得カウンタ]]></Comment>
 						<BitSize>16</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000005}">UINT</BaseType>
@@ -16394,91 +16410,91 @@ External Setpoint Generation:
 						<BitOffs>3294336</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.hr</Name>
+						<Name>P_Vision.hr</Name>
 						<Comment><![CDATA[ Vision関数の戻り値を表す変数]]></Comment>
 						<BitSize>32</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000019}">HRESULT</BaseType>
 						<BitOffs>3294624</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.hrTemp</Name>
+						<Name>P_Vision.hrTemp</Name>
 						<Comment><![CDATA[ 関数戻り値]]></Comment>
 						<BitSize>32</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000019}">HRESULT</BaseType>
 						<BitOffs>3307712</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.eState</Name>
+						<Name>P_Vision.eState</Name>
 						<Comment><![CDATA[ Cameraオブジェクト (or FileSourceオブジェクト) の状態を表す]]></Comment>
 						<BitSize>32</BitSize>
 						<BaseType GUID="{3BBF6519-5088-82A0-728F-B69CFEE0B9CF}">Tc3_Vision.ETcVnCameraState</BaseType>
 						<BitOffs>3307744</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.fbCamera</Name>
+						<Name>P_Vision.fbCamera</Name>
 						<Comment><![CDATA[ Cameraオブジェクト or File Sourceオブジェクト]]></Comment>
 						<BitSize>192</BitSize>
 						<BaseType GUID="{32B7849B-9FF0-0A40-D3C4-0DF350AA16C1}">Tc3_Vision.FB_VN_SimpleCameraControl</BaseType>
 						<BitOffs>3307776</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.ipImageIn</Name>
+						<Name>P_Vision.ipImageIn</Name>
 						<Comment><![CDATA[ 入力画像]]></Comment>
 						<BitSize X64="64">32</BitSize>
 						<BaseType GUID="{70D42C6D-6F4E-4719-8B29-2883D5D59B1C}">ITcVnImage</BaseType>
 						<BitOffs>3307968</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.ipImageRes</Name>
+						<Name>P_Vision.ipImageRes</Name>
 						<Comment><![CDATA[ 結果画像]]></Comment>
 						<BitSize X64="64">32</BitSize>
 						<BaseType GUID="{70D42C6D-6F4E-4719-8B29-2883D5D59B1C}">ITcVnImage</BaseType>
 						<BitOffs>3308032</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.ipImageProc</Name>
+						<Name>P_Vision.ipImageProc</Name>
 						<Comment><![CDATA[ 途中経過画像]]></Comment>
 						<BitSize X64="64">32</BitSize>
 						<BaseType GUID="{70D42C6D-6F4E-4719-8B29-2883D5D59B1C}">ITcVnImage</BaseType>
 						<BitOffs>3308096</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.ipImageInDisp</Name>
+						<Name>P_Vision.ipImageInDisp</Name>
 						<Comment><![CDATA[ 入力画像の画面表示用変数]]></Comment>
 						<BitSize X64="64">32</BitSize>
 						<BaseType GUID="{6766D7F3-3908-4D4C-8A3B-39ED7C3EC1E2}">ITcVnDisplayableImage</BaseType>
 						<BitOffs>3308160</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.ipImageResDisp</Name>
+						<Name>P_Vision.ipImageResDisp</Name>
 						<Comment><![CDATA[ 結果画像の画面表示用変数]]></Comment>
 						<BitSize X64="64">32</BitSize>
 						<BaseType GUID="{6766D7F3-3908-4D4C-8A3B-39ED7C3EC1E2}">ITcVnDisplayableImage</BaseType>
 						<BitOffs>3308224</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.ipImageProcDisp</Name>
+						<Name>P_Vision.ipImageProcDisp</Name>
 						<Comment><![CDATA[ 途中経過画像1の画面表示用変数]]></Comment>
 						<BitSize X64="64">32</BitSize>
 						<BaseType GUID="{6766D7F3-3908-4D4C-8A3B-39ED7C3EC1E2}">ITcVnDisplayableImage</BaseType>
 						<BitOffs>3308288</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.bNewImageArrived</Name>
+						<Name>P_Vision.bNewImageArrived</Name>
 						<Comment><![CDATA[ 画像取得すると TRUE  (※TRUEの後、すぐにFALSEに戻す)]]></Comment>
 						<BitSize>8</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
 						<BitOffs>3308352</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.bSoftWareTrigger</Name>
+						<Name>P_Vision.bSoftWareTrigger</Name>
 						<Comment><![CDATA[ ソフトウェアトリガー]]></Comment>
 						<BitSize>8</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
 						<BitOffs>3308360</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.iStep</Name>
+						<Name>P_Vision.iStep</Name>
 						<Comment><![CDATA[ 画像処理のステップ進行用]]></Comment>
 						<BitSize>16</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000006}">INT</BaseType>
@@ -16494,83 +16510,83 @@ External Setpoint Generation:
 						<BitOffs>3308384</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.fbR_TRIG</Name>
+						<Name>P_Vision.fbR_TRIG</Name>
 						<Comment><![CDATA[ ボタンスイッチの立ち上がりエッジを検出]]></Comment>
 						<BitSize>128</BitSize>
 						<BaseType GUID="{61E1D0F9-17CD-6F72-1F2E-739132BB9C5B}">Tc2_Standard.R_TRIG</BaseType>
 						<BitOffs>3308416</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.stImageInfo</Name>
+						<Name>P_Vision.stImageInfo</Name>
 						<Comment><![CDATA[ 画像情報構造体]]></Comment>
 						<BitSize>256</BitSize>
 						<BaseType GUID="{98043368-D839-44FA-98E2-535171CBA052}">VN.TcVnImageInfo</BaseType>
 						<BitOffs>3308544</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.stBlobParams</Name>
+						<Name>P_Vision.stBlobParams</Name>
 						<Comment><![CDATA[ Blob params]]></Comment>
 						<BitSize>608</BitSize>
 						<BaseType GUID="{1568C92C-8C17-5BF3-4BED-EF8EA387E45C}">Tc3_Vision.TcVnParamsBlobDetection</BaseType>
 						<BitOffs>3308800</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.ipContourList</Name>
+						<Name>P_Vision.ipContourList</Name>
 						<Comment><![CDATA[ Blob Container]]></Comment>
 						<BitSize X64="64">32</BitSize>
 						<BaseType GUID="{BC72B333-E095-465B-9693-7979773CA3B8}">ITcVnContainer</BaseType>
 						<BitOffs>3309440</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.ipContour</Name>
+						<Name>P_Vision.ipContour</Name>
 						<Comment><![CDATA[ Blob個々の輪郭情報]]></Comment>
 						<BitSize X64="64">32</BitSize>
 						<BaseType GUID="{BC72B333-E095-465B-9693-7979773CA3B8}">ITcVnContainer</BaseType>
 						<BitOffs>3309504</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.ipIterator</Name>
+						<Name>P_Vision.ipIterator</Name>
 						<Comment><![CDATA[ 個々のBlobが格納されたコンテナから各要素へアクセスする為のイテレータ （≒ポインタ）	]]></Comment>
 						<BitSize X64="64">32</BitSize>
 						<BaseType GUID="{010A82ED-513F-4803-A63A-D4E4A54C2603}">ITcVnForwardIterator</BaseType>
 						<BitOffs>3309568</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.nDetectedNum</Name>
+						<Name>P_Vision.nDetectedNum</Name>
 						<Comment><![CDATA[ 検出したブログ数]]></Comment>
 						<BitSize>64</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-00000000000B}">ULINT</BaseType>
 						<BitOffs>3309632</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.fArea</Name>
+						<Name>P_Vision.fArea</Name>
 						<Comment><![CDATA[ 面積 [pixel]]]></Comment>
 						<BitSize>64</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</BaseType>
 						<BitOffs>3309696</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.aMassCenter</Name>
+						<Name>P_Vision.aMassCenter</Name>
 						<Comment><![CDATA[ ブロブの重心座標 (x, y)[pixel]]]></Comment>
 						<BitSize>128</BitSize>
 						<BaseType GUID="{74AA049A-5C1C-4950-8FB4-1D9BD2CE9B35}">VN.TcVnPoint2_LREAL</BaseType>
 						<BitOffs>3309760</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.fbFormatString</Name>
+						<Name>P_Vision.fbFormatString</Name>
 						<Comment><![CDATA[ (need library : "Tc2_Utilities")]]></Comment>
 						<BitSize>8576</BitSize>
 						<BaseType GUID="{4B190CAC-95D6-93FC-E8BA-49F49B76418D}">Tc2_Utilities.FB_FormatString</BaseType>
 						<BitOffs>3309888</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.sText</Name>
+						<Name>P_Vision.sText</Name>
 						<BitSize>648</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000100000050}">STRING(80)</BaseType>
 						<BitOffs>3318464</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.aDrawPos</Name>
+						<Name>P_Vision.aDrawPos</Name>
 						<BitSize>64</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
 						<ArrayInfo>
@@ -16580,7 +16596,7 @@ External Setpoint Generation:
 						<BitOffs>3319136</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.aColorRed</Name>
+						<Name>P_Vision.aColorRed</Name>
 						<Comment><![CDATA[ カラー定義]]></Comment>
 						<BitSize>256</BitSize>
 						<BaseType GUID="{D6F8E615-70A9-407A-8442-ED15E6633AE8}">VN.TcVnVector4_LREAL</BaseType>
@@ -16605,7 +16621,7 @@ External Setpoint Generation:
 						<BitOffs>3319232</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.aColorGreen</Name>
+						<Name>P_Vision.aColorGreen</Name>
 						<BitSize>256</BitSize>
 						<BaseType GUID="{D6F8E615-70A9-407A-8442-ED15E6633AE8}">VN.TcVnVector4_LREAL</BaseType>
 						<Default>
@@ -16629,7 +16645,7 @@ External Setpoint Generation:
 						<BitOffs>3319488</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.aColorBlue</Name>
+						<Name>P_Vision.aColorBlue</Name>
 						<BitSize>256</BitSize>
 						<BaseType GUID="{D6F8E615-70A9-407A-8442-ED15E6633AE8}">VN.TcVnVector4_LREAL</BaseType>
 						<Default>
@@ -16653,7 +16669,7 @@ External Setpoint Generation:
 						<BitOffs>3319744</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>Vision.aColorWhite</Name>
+						<Name>P_Vision.aColorWhite</Name>
 						<BitSize>256</BitSize>
 						<BaseType GUID="{D6F8E615-70A9-407A-8442-ED15E6633AE8}">VN.TcVnVector4_LREAL</BaseType>
 						<Default>
@@ -16781,7 +16797,7 @@ External Setpoint Generation:
 				</Property>
 				<Property>
 					<Name>ChangeDate</Name>
-					<Value>2024-08-15T06:38:33</Value>
+					<Value>2024-08-15T18:14:05</Value>
 				</Property>
 				<Property>
 					<Name>GeneratedCodeSize</Name>
@@ -16812,7 +16828,7 @@ External Setpoint Generation:
 				</Value>
 				<Value>
 					<Name>Application Timestamp</Name>
-					<Value>1723703913</Value>
+					<Value>1723745645</Value>
 				</Value>
 				<Value>
 					<Name>Symbolic Mapping</Name>
@@ -16840,12 +16856,12 @@ External Setpoint Generation:
 				</Value>
 				<Value>
 					<Name>Mapping OIDs</Name>
-					<Data>500003023000030220000302</Data>
+					<Data>50000302400003023000030220000302</Data>
 				</Value>
 			</ParameterValues>
 			<InitSymbolValues>
 				<Value>
-					<Name>Vision.fbCamera.oidITcVnImageProvider</Name>
+					<Name>P_Vision.fbCamera.oidITcVnImageProvider</Name>
 					<Value>16842880</Value>
 				</Value>
 			</InitSymbolValues>
@@ -16987,7 +17003,7 @@ External Setpoint Generation:
 		</Contexts>
 		<InitSymbols>
 			<InitSymbol>
-				<Name>Vision.fbCamera.oidITcVnImageProvider</Name>
+				<Name>P_Vision.fbCamera.oidITcVnImageProvider</Name>
 				<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
 				<Comment><![CDATA[ Internal reference to the corresponding TcVnImageProvider TcCOM module ID, which needs to be set via TC init symbol. ]]></Comment>
 				<AreaNo>#x00000013</AreaNo>
@@ -17007,6 +17023,9 @@ External Setpoint Generation:
 	</Instance>
 	<Mappings>
 		<OwnerA>
+			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 3 (EL2004)">
+				<Link VarA="VisionTask Outputs^GVL_Vision.bLedLight" VarB="Channel 1^Output" Size="1"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1088)">
 				<Link VarA="PlcTask Inputs^GVL_MitsubishiCom.bMitsubishiAlarm" VarB="Channel 3^Input" Size="1"/>
 				<Link VarA="PlcTask Inputs^GVL_MitsubishiCom.bMitsubishiModbusStart" VarB="Channel 2^Input" Size="1"/>

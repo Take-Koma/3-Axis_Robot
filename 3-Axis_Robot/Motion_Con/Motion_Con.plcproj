@@ -65,6 +65,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="GVLs\GVL_Vision.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -101,7 +105,7 @@
     <Compile Include="POUs\P_MitsubishiCom.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Vision.TcPOU">
+    <Compile Include="POUs\P_Vision.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VisionTask.TcTTO">
