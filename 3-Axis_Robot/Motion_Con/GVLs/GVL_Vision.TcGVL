@@ -3,7 +3,7 @@
   <GVL Name="GVL_Vision" Id="{19ce6139-658e-4644-9138-c7378a7b0ab0}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
-	bLedLight		AT %Q* :BOOL;			//カメラ用LED照明
+	bLedLight		AT %Q* :BOOL;			//カメラ用LED照明 ターミナル3(EL2004)チャンネル1
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

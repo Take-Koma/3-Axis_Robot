@@ -34,8 +34,7 @@ VAR_GLOBAL
 	bEL1004Channel2		AT %I*	:BOOL;		//ターミナル2(EL1004)チャンネル2
 	bEL1004Channel3		AT %I*	:BOOL;		//ターミナル2(EL1004)チャンネル3
 	bEL1004Channel4		AT %I*	:BOOL;		//ターミナル2(EL1004)チャンネル4
-	
-	bEL2004Channel1		AT %Q*	:BOOL;		//ターミナル3(EL2004)チャンネル1
+
 	bEL2004Channel2		AT %Q*	:BOOL;		//ターミナル3(EL2004)チャンネル2
 	bEL2004Channel3		AT %Q*	:BOOL;		//ターミナル3(EL2004)チャンネル3
 	bEL2004Channel4		AT %Q*	:BOOL;		//ターミナル3(EL2004)チャンネル4
