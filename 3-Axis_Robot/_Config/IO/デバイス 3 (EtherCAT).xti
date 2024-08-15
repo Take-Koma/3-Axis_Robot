@@ -4,7 +4,7 @@
 		<Name>__FILENAME__</Name>
 		<AddressInfo>
 			<Pnp>
-				<DeviceDesc>イーサネット 5 (TwinCAT-Intel PCI Ethernet Adapter </DeviceDesc>
+				<DeviceDesc>C[Tlbg 5 (TwinCAT-Intel PCI Ethernet Adapter </DeviceDesc>
 				<DeviceName>\DEVICE\{8C5F645C-544C-4E57-82B2-3317AEA58976}</DeviceName>
 				<DeviceData>7c8334bb4186</DeviceData>
 			</Pnp>
