@@ -23,12 +23,28 @@ VAR_GLOBAL
 	eMachineState				:E_MachineState:=E_MachineState.Base;	//マシーンステート
 	stAlarm						:ARRAY[E_AlarmList.SafetyNotRun..E_AlarmList.LastAlarm] OF ST_Alarm;
 	
-	//---Modbus TCPの変数---
+//---Modbus TCPの変数---
 	mb_Input_Coils    			:ARRAY [0..255] OF BOOL;	//Modbusマスター読み取りのみ
 	mb_Output_Coils 			:ARRAY [0..255] OF BOOL;	//Modbusマスターが読み書き可能
 	mb_Input_Registers 			:ARRAY [0..255] OF WORD;	//Modbusマスター読み取りのみ
 	mb_Output_Registers 		:ARRAY [0..255] OF WORD;	//Modbusマスターが読み書き可能
+	
+//---空き---
+	bEL1004Channel1		AT %I*	:BOOL;		//ターミナル2(EL1004)チャンネル1
+	bEL1004Channel2		AT %I*	:BOOL;		//ターミナル2(EL1004)チャンネル2
+	bEL1004Channel3		AT %I*	:BOOL;		//ターミナル2(EL1004)チャンネル3
+	bEL1004Channel4		AT %I*	:BOOL;		//ターミナル2(EL1004)チャンネル4
+	
+	bEL2004Channel1		AT %Q*	:BOOL;		//ターミナル3(EL2004)チャンネル1
+	bEL2004Channel2		AT %Q*	:BOOL;		//ターミナル3(EL2004)チャンネル2
+	bEL2004Channel3		AT %Q*	:BOOL;		//ターミナル3(EL2004)チャンネル3
+	bEL2004Channel4		AT %Q*	:BOOL;		//ターミナル3(EL2004)チャンネル4
 
+	bEL1088Channel5		AT %I*	:BOOL;		//ターミナル4(EL1088)チャンネル5
+	bEL1088Channel6		AT %I*	:BOOL;		//ターミナル4(EL1088)チャンネル6
+	bEL1088Channel7		AT %I*	:BOOL;		//ターミナル4(EL1088)チャンネル7
+
+	
 END_VAR
 
 VAR_GLOBAL CONSTANT
