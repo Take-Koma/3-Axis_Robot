@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="Vision" Id="{01db0ff9-afb1-4980-a0cc-1cc5a7f8bb47}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM Vision
+  <POU Name="P_Vision" Id="{01db0ff9-afb1-4980-a0cc-1cc5a7f8bb47}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_Vision
 VAR
 	hr					: HRESULT;					// Vision関数の戻り値を表す変数
 	hrTemp				: HRESULT;					// 関数戻り値
@@ -127,7 +127,7 @@ TCVN_CS_ACQUIRING:
 	5:
 		IF nDetectedNum > 0 THEN
 			// 検出したブロブの輪郭を描画
-			hr := F_VN_DrawContours(ipContourList, -1, ipImageRes,  Vision.aColorGreen, 3, hr);
+			hr := F_VN_DrawContours(ipContourList, -1, ipImageRes,  P_Vision.aColorGreen, 3, hr);
 			
 			// 各ブロブ情報が格納されたコンテナ(ContourList)から、最初の要素へのイテレータを取得
 			hr := F_VN_GetForwardIterator(ipContourList, ipIterator, hr);
@@ -185,26 +185,8 @@ TCVN_CS_ACQUIRING:
 	END_CASE
 END_CASE]]></ST>
     </Implementation>
-    <LineIds Name="Vision">
-      <LineId Id="1111" Count="49" />
-      <LineId Id="1269" Count="0" />
-      <LineId Id="1161" Count="0" />
-      <LineId Id="1270" Count="0" />
-      <LineId Id="1162" Count="12" />
-      <LineId Id="1196" Count="0" />
-      <LineId Id="1201" Count="0" />
-      <LineId Id="1203" Count="0" />
-      <LineId Id="1206" Count="0" />
-      <LineId Id="1204" Count="1" />
-      <LineId Id="1199" Count="0" />
-      <LineId Id="1271" Count="1" />
-      <LineId Id="1209" Count="0" />
-      <LineId Id="1211" Count="45" />
-      <LineId Id="1210" Count="0" />
-      <LineId Id="1198" Count="0" />
-      <LineId Id="1182" Count="6" />
-      <LineId Id="1268" Count="0" />
-      <LineId Id="1191" Count="1" />
+    <LineIds Name="P_Vision">
+      <LineId Id="1365" Count="133" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
