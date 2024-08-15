@@ -3,12 +3,12 @@
   <POU Name="P_Patlite" Id="{a5bb9a40-855c-4dd1-9843-b749d06b4679}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Patlite
 VAR
-	bRedLed				AT %Q* :BOOL;
-	bGreenLed			AT %Q* :BOOL;
-	bBlueLed			AT %Q* :BOOL;
-	bBuzzerON			AT %Q* :BOOL;
+	bRedLed				AT %Q* :BOOL;				//パトライト赤LED ターミナル5(EL2088)チャンネル5
+	bGreenLed			AT %Q* :BOOL;				//パトライト緑LED ターミナル5(EL2088)チャンネル6
+	bBlueLed			AT %Q* :BOOL;				//パトライト青LED ターミナル5(EL2088)チャンネル7
+	bBuzzerON			AT %Q* :BOOL;				//パトライトブザー ターミナル5(EL2088)チャンネル8
 	
-	bSwitch				AT %I* :BOOL;
+	bSwitch				AT %I* :BOOL; 				//パトライトスイッチ ターミナル5(EL1088)チャンネル8
 
 	eLedColor			:E_LedColor;
 	fbREdge				:R_TRIG;
