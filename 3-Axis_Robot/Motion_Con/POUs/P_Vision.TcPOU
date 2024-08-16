@@ -65,24 +65,34 @@ TCVN_CS_ACQUIRING:
 
 	CASE iStep OF
 	0:
-		fbR_TRIG(CLK := GVL_MitsubishiCom.bFromCameraTrigger, Q => bSoftWareTrigger);	// ボタンスイッチを押すとソフトウェアトリガーを発行する
+		fbR_TRIG(CLK := GVL_MitsubishiCom.bFromCameraTrigger, Q => );	// ボタンスイッチを押すとソフトウェアトリガーを発行する
 		
+		IF fbR_TRIG.Q=TRUE THEN
+			GVL_Vision.bLedLight:=TRUE;
+			bSoftWareTrigger:=TRUE;
+			iStep := 1;
+		END_IF
+	
+	1:
 		IF bSoftwareTrigger=TRUE THEN
 			hr := fbCamera.TriggerImage();
 			IF SUCCEEDED(hr)=TRUE THEN
 				bSoftwareTrigger := FALSE;
 			END_IF
 		ELSE
-			hr := fbCamera.GetCurrentImage(ipImageIn);	// 最新画像を取得
-			
+			hr := fbCamera.GetCurrentImage(ipImageIn);	// 最新画像を取得			
 			// new image was received.
 			IF SUCCEEDED(hr)=TRUE AND ipImageIn <> 0 THEN
 				nNewImageCounter := nNewImageCounter + 1;
-				iStep := 1;
+				iStep := 2;
 			END_IF
 		END_IF
+		
+	2:
+			GVL_Vision.bLedLight:=FALSE;
+			iStep:=3;
 	
-	1:	
+	3:	
 		// Bayerフォーマットからカラー画像へ変換
 		// ※画像情報をチェックし、ピクセルフォーマットがBayerエンコーディングされている時はカラー画像に変更。
 		// ※最初からカラー画像の時はカラー変換しない。
@@ -90,31 +100,31 @@ TCVN_CS_ACQUIRING:
 		IF SUCCEEDED(hr) AND_THEN stImageInfo.stPixelFormat.ePixelEncoding <> ETcVnPixelEncoding.TCVN_PE_NONE THEN
 			hr := F_VN_ConvertColorSpace(ipImageIn, ipImageIn, TCVN_CST_BAYER_RG_TO_RGB, hr);
 		END_IF
-		iStep:=2;
+		iStep:=4;
 	
-	2:
+	4:
 		hr := F_VN_CopyImage(ipImageIn, ipimageRes, hr);	// copy to ResultImage
-		iStep:=3;
+		iStep:=5;
 	
-	3:
+	5:
 		// グレー画像に変換
 		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageProc, ETcVnColorSpaceTransform.TCVN_CST_RGB_TO_GRAY, hr);
-		iStep:=4;
+		iStep:=6;
 		
-	4:
+	6:
 		// ブロブ検出パラメータをセット
 		stBlobParams.bFilterByArea := TRUE;
-		stBlobParams.fMinArea := 100;
-		stBlobParams.fMaxArea := 1000000;
+		stBlobParams.fMinArea := 30000;
+		stBlobParams.fMaxArea := 50000;
 		
 		// 円形度判別
 		stBlobParams.bFilterByCircularity := TRUE;
 		stBlobParams.fMinCircularity := 0.80;
 		
 		// 輝度閾値
-		stBlobParams.fMinThreshold	:= 30;
+		stBlobParams.fMinThreshold	:= 50;
 		stBlobParams.fMaxThreshold := 255;
-		stBlobParams.fThresholdStep := 0;
+		stBlobParams.fThresholdStep := 1;
 		
 		// Detect Blobs
 		hr := F_VN_DetectBlobs(ipImageProc, ipContourList, stBlobParams, hr);
@@ -122,9 +132,9 @@ TCVN_CS_ACQUIRING:
 		IF SUCCEEDED(hr) AND ipContourList <> 0 THEN
 			hr := ipContourList.GetElementNum(nDetectedNum);	// 検出したブロブ数を取得
 		END_IF
-		iStep:=5;
+		iStep:=7;
 
-	5:
+	7:
 		IF nDetectedNum > 0 THEN
 			// 検出したブロブの輪郭を描画
 			hr := F_VN_DrawContours(ipContourList, -1, ipImageRes,  P_Vision.aColorGreen, 3, hr);
@@ -173,9 +183,9 @@ TCVN_CS_ACQUIRING:
 		END_IF
 		FW_SafeRelease(ADR(ipContourList));
 							
-		istep:=6;
+		istep:=8;
 	
-	6:		
+	8:		
 		// 画面表示イメージを作成する
 		hr := F_VN_TransformIntoDisplayableImage(ipImageIn, ipImageInDisp, hr);
 		hr := F_VN_TransformIntoDisplayableImage(ipImageRes, ipImageResDisp, S_OK);
@@ -186,7 +196,23 @@ TCVN_CS_ACQUIRING:
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="P_Vision">
-      <LineId Id="1365" Count="133" />
+      <LineId Id="1365" Count="14" />
+      <LineId Id="1545" Count="0" />
+      <LineId Id="1564" Count="1" />
+      <LineId Id="1547" Count="0" />
+      <LineId Id="1550" Count="0" />
+      <LineId Id="1566" Count="0" />
+      <LineId Id="1548" Count="1" />
+      <LineId Id="1546" Count="0" />
+      <LineId Id="1380" Count="0" />
+      <LineId Id="1383" Count="6" />
+      <LineId Id="1391" Count="5" />
+      <LineId Id="1562" Count="0" />
+      <LineId Id="1555" Count="0" />
+      <LineId Id="1553" Count="0" />
+      <LineId Id="1556" Count="0" />
+      <LineId Id="1552" Count="0" />
+      <LineId Id="1398" Count="100" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
