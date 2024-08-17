@@ -25,7 +25,8 @@ VAR
 	bSoftWareTrigger	: BOOL;						// ソフトウェアトリガー
 	fbR_TRIG			: R_TRIG;					// ボタンスイッチの立ち上がりエッジを検出
 	stImageInfo			: TcVnImageInfo;			// 画像情報構造体
-	iStep				: int:=0;					// 画像処理のステップ進行用
+	iStep				: INT:=0;					// 画像処理のステップ進行用
+	iImageCount			: INT:=0;					// 画像の枚数をカウント用
 	
 	// ブロブ検出用
 	stBlobParams		: TcVnParamsBlobDetection;	// Blob params
@@ -33,9 +34,7 @@ VAR
 	ipContour			: ITcVnContainer;			// Blob個々の輪郭情報
 	ipIterator			: ITcVnForwardIterator;		// 個々のBlobが格納されたコンテナから各要素へアクセスする為のイテレータ （≒ポインタ）	
 
-	nDetectedNum		: ULINT;					// 検出したブログ数
 	fArea				: LREAL;					// 面積 [pixel]
-	aMassCenter			: TcVnPoint2_LREAL;			// ブロブの重心座標 (x, y)[pixel]
 
 	fbFormatString		: FB_FormatString;			// (need library : "Tc2_Utilities")
 	sText				: STRING;
@@ -124,36 +123,46 @@ TCVN_CS_ACQUIRING:
 		// 輝度閾値
 		stBlobParams.fMinThreshold	:= 50;
 		stBlobParams.fMaxThreshold := 255;
-		stBlobParams.fThresholdStep := 1;
+		stBlobParams.fThresholdStep := 0;
 		
 		// Detect Blobs
 		hr := F_VN_DetectBlobs(ipImageProc, ipContourList, stBlobParams, hr);
 		
 		IF SUCCEEDED(hr) AND ipContourList <> 0 THEN
-			hr := ipContourList.GetElementNum(nDetectedNum);	// 検出したブロブ数を取得
+			hr := ipContourList.GetElementNum(GVL_Vision.nDetectedNum);	// 検出したブロブ数を取得
 		END_IF
 		iStep:=7;
 
 	7:
-		IF nDetectedNum > 0 THEN
+		IF GVL_Vision.nDetectedNum > 0 THEN
 			// 検出したブロブの輪郭を描画
 			hr := F_VN_DrawContours(ipContourList, -1, ipImageRes,  P_Vision.aColorGreen, 3, hr);
 			
 			// 各ブロブ情報が格納されたコンテナ(ContourList)から、最初の要素へのイテレータを取得
 			hr := F_VN_GetForwardIterator(ipContourList, ipIterator, hr);
 			
+			//画像のカウンターをリセットする
+			iImageCOunt:=0;
+			
 			WHILE SUCCEEDED(hr) AND_THEN ipIterator.CheckIfEnd() <> S_OK DO
+				//画像のカウントをインクリメント
+				iImageCount:=iImageCount+1;	
+				//アレイの数が10までしか用意してないので、ブロブの検出数が多かった場合は、いったん0に巻き戻す
+				IF 10<iImageCount THEN
+					iImageCount:=0;
+				END_IF
+			
 				// イテレータが指し示しているContourを取り出す。その後イテレータが次のContourを指し示すよう進める
 				hr := F_VN_GetContainer(ipIterator, ipContour, hr);
 				hr := F_VN_IncrementIterator(ipIterator, hr);
 				
 				// Containerから欲しい結果を取得
 				hr := F_VN_ContourArea(ipContour, fArea, hr);
-				hr := F_VN_ContourCenterOfMass(ipContour, aMassCenter, hr);
+				hr := F_VN_ContourCenterOfMass(ipContour, GVL_Vision.aMassCenter[iImageCount], hr);
 				
 				// 個々の結果を描画
-				aDrawPos[0] := LREAL_TO_UDINT(aMassCenter[0]);
-				aDrawPos[1] := LREAL_TO_UDINT(aMassCenter[1]);
+				aDrawPos[0] := LREAL_TO_UDINT(GVL_Vision.aMassCenter[iImageCount][0]);
+				aDrawPos[1] := LREAL_TO_UDINT(GVL_Vision.aMassCenter[iImageCount][1]);
 				
 				// 重心位置をマーク
 				hrTemp := F_VN_DrawPointExp(aDrawPos[0], aDrawPos[1], 
@@ -171,7 +180,7 @@ TCVN_CS_ACQUIRING:
 				
 				// 座標情報を結果画像に対して出力
 				fbFormatString(	sFormat := '(X, Y) = (%0.3f, %0.3f)', 
-								arg1 := F_LREAL(aMassCenter[0]), arg2 := F_LREAL(aMassCenter[1]), sOut => sText);
+								arg1 := F_LREAL(GVL_Vision.aMassCenter[iImageCount][0]), arg2 := F_LREAL(GVL_Vision.aMassCenter[iImageCount][1]), sOut => sText);
 				hrTemp := F_VN_PutText(	sText, 
 										ipImageRes, 
 										aDrawPos[0] - 110, aDrawPos[1] + 80, 
@@ -212,7 +221,17 @@ END_CASE]]></ST>
       <LineId Id="1553" Count="0" />
       <LineId Id="1556" Count="0" />
       <LineId Id="1552" Count="0" />
-      <LineId Id="1398" Count="100" />
+      <LineId Id="1398" Count="48" />
+      <LineId Id="1614" Count="0" />
+      <LineId Id="1616" Count="0" />
+      <LineId Id="1615" Count="0" />
+      <LineId Id="1447" Count="1" />
+      <LineId Id="1617" Count="0" />
+      <LineId Id="1619" Count="4" />
+      <LineId Id="1618" Count="0" />
+      <LineId Id="1449" Count="6" />
+      <LineId Id="1627" Count="0" />
+      <LineId Id="1457" Count="41" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
