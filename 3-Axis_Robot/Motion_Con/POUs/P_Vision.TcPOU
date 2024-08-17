@@ -24,6 +24,7 @@ VAR
 	bNewImageArrived	: BOOL;						// 画像取得すると TRUE  (※TRUEの後、すぐにFALSEに戻す)
 	bSoftWareTrigger	: BOOL;						// ソフトウェアトリガー
 	fbR_TRIG			: R_TRIG;					// ボタンスイッチの立ち上がりエッジを検出
+	fbTon				: ton;						// LEDライト点灯安定待ち
 	stImageInfo			: TcVnImageInfo;			// 画像情報構造体
 	iStep				: INT:=0;					// 画像処理のステップ進行用
 	iImageCount			: INT:=0;					// 画像の枚数をカウント用
@@ -68,10 +69,15 @@ TCVN_CS_ACQUIRING:
 		
 		IF fbR_TRIG.Q=TRUE THEN
 			GVL_Vision.bLedLight:=TRUE;
+		END_IF
+
+		fbTon(IN:=GVL_Vision.bLedLight,PT:=T#500MS,Q=>,ET=>);	//LEDの照度安定待ち
+		
+		IF fbTon.Q=TRUE THEN
 			bSoftWareTrigger:=TRUE;
 			iStep := 1;
 		END_IF
-	
+		
 	1:
 		IF bSoftwareTrigger=TRUE THEN
 			hr := fbCamera.TriggerImage();
@@ -118,10 +124,10 @@ TCVN_CS_ACQUIRING:
 		
 		// 円形度判別
 		stBlobParams.bFilterByCircularity := TRUE;
-		stBlobParams.fMinCircularity := 0.80;
+		stBlobParams.fMinCircularity := 0.70;
 		
 		// 輝度閾値
-		stBlobParams.fMinThreshold	:= 50;
+		stBlobParams.fMinThreshold	:= 180;
 		stBlobParams.fMaxThreshold := 255;
 		stBlobParams.fThresholdStep := 0;
 		
@@ -207,12 +213,17 @@ END_CASE]]></ST>
     <LineIds Name="P_Vision">
       <LineId Id="1365" Count="14" />
       <LineId Id="1545" Count="0" />
-      <LineId Id="1564" Count="1" />
+      <LineId Id="1564" Count="0" />
+      <LineId Id="1674" Count="0" />
       <LineId Id="1547" Count="0" />
       <LineId Id="1550" Count="0" />
-      <LineId Id="1566" Count="0" />
-      <LineId Id="1548" Count="1" />
+      <LineId Id="1549" Count="0" />
+      <LineId Id="1680" Count="0" />
       <LineId Id="1546" Count="0" />
+      <LineId Id="1681" Count="0" />
+      <LineId Id="1675" Count="0" />
+      <LineId Id="1682" Count="0" />
+      <LineId Id="1676" Count="2" />
       <LineId Id="1380" Count="0" />
       <LineId Id="1383" Count="6" />
       <LineId Id="1391" Count="5" />
