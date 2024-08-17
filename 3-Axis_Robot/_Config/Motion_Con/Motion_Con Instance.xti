@@ -10785,7 +10785,7 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 	</DataTypes>
-	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{7F4C40E5-031F-1D27-D57C-C67AEA3886BC}">
+	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{B8FEDD86-A392-8BEA-309F-8467EC9FF955}">
 		<Name>__FILENAME__</Name>
 		<TmcDesc GUID="{3E578FBF-8593-4971-A049-A334D40A2DE2}" TcSmClass="TComPlcObjDef">
 			<Name>Motion_Con</Name>
@@ -11215,6 +11215,18 @@ External Setpoint Generation:
 						<BitOffs>3319112</BitOffs>
 					</Symbol>
 					<Symbol>
+						<Name>GVL.stAxis[0].PlcToNc</Name>
+						<BitSize>1024</BitSize>
+						<BaseType GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}">MC.PLCTONC_AXIS_REF</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcAddressType</Name>
+								<Value>Output</Value>
+							</Property>
+						</Properties>
+						<BitOffs>3687104</BitOffs>
+					</Symbol>
+					<Symbol>
 						<Name>GVL.stAxis[1].PlcToNc</Name>
 						<BitSize>1024</BitSize>
 						<BaseType GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}">MC.PLCTONC_AXIS_REF</BaseType>
@@ -11237,18 +11249,6 @@ External Setpoint Generation:
 							</Property>
 						</Properties>
 						<BitOffs>3714368</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL.stAxis[0].PlcToNc</Name>
-						<BitSize>1024</BitSize>
-						<BaseType GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}">MC.PLCTONC_AXIS_REF</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcAddressType</Name>
-								<Value>Output</Value>
-							</Property>
-						</Properties>
-						<BitOffs>3687104</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.stAxis[2].PlcToNc</Name>
@@ -11325,6 +11325,22 @@ External Setpoint Generation:
 							</Property>
 						</Properties>
 						<BitOffs>3736696</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Safety.bSafetyErrAck</Name>
+						<Comment><![CDATA[セーフティーのエラーリセット]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>TcAddressType</Name>
+								<Value>Output</Value>
+							</Property>
+						</Properties>
+						<BitOffs>3736712</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bFBEStopEDM</Name>
@@ -13008,22 +13024,6 @@ External Setpoint Generation:
 							</Property>
 						</Properties>
 						<BitOffs>3735968</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Safety.bSafetyErrAck</Name>
-						<Comment><![CDATA[セーフティーのエラーリセット]]></Comment>
-						<BitSize>8</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>TcAddressType</Name>
-								<Value>Output</Value>
-							</Property>
-						</Properties>
-						<BitOffs>3736712</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Vision.bLedLight</Name>
@@ -16962,7 +16962,7 @@ External Setpoint Generation:
 				</Property>
 				<Property>
 					<Name>ChangeDate</Name>
-					<Value>2024-08-17T15:54:30</Value>
+					<Value>2024-08-17T17:54:49</Value>
 				</Property>
 				<Property>
 					<Name>GeneratedCodeSize</Name>
@@ -16993,7 +16993,7 @@ External Setpoint Generation:
 				</Value>
 				<Value>
 					<Name>Application Timestamp</Name>
-					<Value>1723910070</Value>
+					<Value>1723917289</Value>
 				</Value>
 				<Value>
 					<Name>Symbolic Mapping</Name>
@@ -17230,8 +17230,8 @@ External Setpoint Generation:
 				<Link VarA="PlcTask Inputs^GVL_Safety.bSafetyInRun" VarB="StandardInputs^RobotSafety.bSafetyInRun_12" Size="1"/>
 				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopEDM" VarB="StandardOutputs^RobotSafety.bFBEStopEDM_7" Size="1"/>
 				<Link VarA="PlcTask Outputs^GVL_Safety.bFBEStopReset" VarB="StandardOutputs^RobotSafety.bFBEStopReset_5" Size="1"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.bSafetyErrAck" VarB="StandardOutputs^RobotSafety.bSafetyErrAck_1" Size="1"/>
 				<Link VarA="PlcTask Outputs^GVL_Safety.bSafetyRun_Stop" VarB="StandardOutputs^RobotSafety.bSafetyRun_Stop_2" Size="1"/>
-				<Link VarA="VisionTask Outputs^GVL_Safety.bSafetyErrAck" VarB="StandardOutputs^RobotSafety.bSafetyErrAck_1" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
 				<Link VarA="PlcTask Inputs^GVL.stAxis[3].NcToPlc" VarB="Outputs^ToPlc"/>
