@@ -41,6 +41,9 @@ END_VAR]]></Declaration>
 	
 	//---GOTからの非常停止リセットをセーフティーへ---
 	GVL_Safety.bFBEStopReset:=GVL_MitsubishiCom.bFromSafetyReset;
+	
+	//---GOTからの非常停止リセットでセフティーエラーもリセットする---
+	GVL_Safety.bSafetyErrAck:=GVL_MitsubishiCom.bFromSafetyReset;
 
 	//---各軸のステータスを読み込む---
 	GVL.stAxis[E_Axis.X_Axis].ReadStatus();
@@ -80,7 +83,11 @@ END_VAR]]></Declaration>
       <LineId Id="922" Count="3" />
       <LineId Id="919" Count="1" />
       <LineId Id="918" Count="0" />
-      <LineId Id="856" Count="21" />
+      <LineId Id="856" Count="13" />
+      <LineId Id="926" Count="0" />
+      <LineId Id="928" Count="0" />
+      <LineId Id="927" Count="0" />
+      <LineId Id="870" Count="7" />
       <LineId Id="915" Count="0" />
       <LineId Id="890" Count="20" />
       <LineId Id="678" Count="0" />
