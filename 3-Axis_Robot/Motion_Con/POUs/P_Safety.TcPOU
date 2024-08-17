@@ -18,6 +18,15 @@ END_VAR]]></Declaration>
 		GVL.stAlarm[E_AlarmList.SafetyNotRun].eMachineStateSet:=E_MachineState.Base;
 	END_IF;
 	
+	//---セーフティーのファンクションブロック動作確認---
+	IF GVL_Safety.bFBEstopError=TRUE OR GVL_Safety.bFBEdmError=TRUE THEN
+		GVL.stAlarm[E_AlarmList.SafetyFbError].bFlag:=TRUE;
+		GVL.stAlarm[E_AlarmList.SafetyFbError].eMachineStateSet:=E_MachineState.Emergency;
+	ELSE
+		GVL.stAlarm[E_AlarmList.SafetyFbError].bFlag:=FALSE;
+		GVL.stAlarm[E_AlarmList.SafetyFbError].eMachineStateSet:=E_MachineState.Base;
+	END_IF
+	
 	//---非常停止の電源ONを反転してセーフティーのEDMへ---
 	GVL_Safety.bFBEStopEDM:= NOT GVL_Safety.bFBEstopOutput;
 
@@ -65,7 +74,13 @@ END_VAR]]></Declaration>
 	]]></ST>
     </Implementation>
     <LineIds Name="P_Safety">
-      <LineId Id="845" Count="32" />
+      <LineId Id="845" Count="10" />
+      <LineId Id="921" Count="0" />
+      <LineId Id="917" Count="0" />
+      <LineId Id="922" Count="3" />
+      <LineId Id="919" Count="1" />
+      <LineId Id="918" Count="0" />
+      <LineId Id="856" Count="21" />
       <LineId Id="915" Count="0" />
       <LineId Id="890" Count="20" />
       <LineId Id="678" Count="0" />

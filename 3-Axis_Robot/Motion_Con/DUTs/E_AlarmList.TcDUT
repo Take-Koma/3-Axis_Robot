@@ -5,7 +5,8 @@
 {attribute 'strict'}
 TYPE E_AlarmList :
 (
-	SafetyNotRun,				//セーフティーが動いてない	
+	SafetyNotRun,				//セーフティーが動いてない
+	SafetyFbError,				//セーフティーのファンクションブロックエラー
 	EmergencyStop,				//非常停止ボタンON
 	GripSwichNotOn,				//動作中にグリップスイッチOFFでMcStop
 	MITSUBISHIAlarm,			//MITSUBISHIシーケンサーアラーム
