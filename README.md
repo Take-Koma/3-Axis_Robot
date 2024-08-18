@@ -1,5 +1,7 @@
 # 3-Axis_Robot
 
+画像処理のVisionのプログラムはBeckhoffのサンプルプログラムを元に作成してます。感謝。
+
 <!--
 BeckhoffのTwinCAT3.1、三菱電機のGX Works3、三菱電機のGT Designer3を使用してます。
 これはTwinCATのバックアップ用です。
