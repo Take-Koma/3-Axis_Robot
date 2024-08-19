@@ -1,0 +1,7 @@
+Severity:重大度
+
+Verbose:詳細
+Info:情報
+Warning:警告
+Error:エラー
+Critical:重大

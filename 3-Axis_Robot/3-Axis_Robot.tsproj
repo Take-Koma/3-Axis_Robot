@@ -1,5 +1,25 @@
 <?xml version="1.0"?>
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.56">
+	<Translations>
+		<Text TxtId="MachineAlarmEvent">
+			<Text LcId="1041"><![CDATA[装置アラームイベント]]></Text>
+		</Text>
+		<Text TxtId="SafetyNotRun">
+			<Text LcId="1041"><![CDATA[セフティー未起動]]></Text>
+		</Text>
+		<Text TxtId="SafetyFbError">
+			<Text LcId="1041"><![CDATA[セーフティーファンクションブロックエラー]]></Text>
+		</Text>
+		<Text TxtId="EmergencyStop">
+			<Text LcId="1041"><![CDATA[非常停止ボタンON]]></Text>
+		</Text>
+		<Text TxtId="GripSwichNotOn">
+			<Text LcId="1041"><![CDATA[起動時グリップスイッチOFF]]></Text>
+		</Text>
+		<Text TxtId="MITSUBISHIError">
+			<Text LcId="1041"><![CDATA[シーケンサーエラー]]></Text>
+		</Text>
+	</Translations>
 	<DataTypes>
 		<DataType>
 			<Name GUID="{DB6B59A0-4FB0-4B14-A83C-AC7A76AD688D}">JobTaskId</Name>
@@ -1312,6 +1332,38 @@
 				<Hide GUID="{D9AEB34B-B8C6-45FF-AB8E-264B76ACB690}"/>
 				<Hide GUID="{DD32210F-42B2-48F1-9078-C36AE938BB7C}"/>
 				<Hide GUID="{F2E286DA-631F-4DCF-841F-9F9AAC9197A0}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}" PersistentType="true">UserEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
+			<EventId>
+				<Name Id="1">SafetyNotRun</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyNotRun]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">SafetyFbError</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyFbError]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">EmergencyStop</Name>
+				<DisplayName TxtId=""><![CDATA[EmergencyStop]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">GripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[GripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">MITSUBISHIError</Name>
+				<DisplayName TxtId=""><![CDATA[MITSUBISHIError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
