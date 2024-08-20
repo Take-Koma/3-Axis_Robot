@@ -61,15 +61,6 @@ END_VAR]]></Declaration>
 		RETURN;
 	ELSIF GVL_MitsubishiCom.bMitsubishiModbusStart=FALSE THEN
 		RETURN;
-	ELSIF GVL_MitsubishiCom.bFromAlarmReset=TRUE THEN
-		GVL.stAlarm[E_AlarmList.MITSUBISHIError].bFlag:=FALSE;
-		GVL.stAlarm[E_AlarmList.MITSUBISHIError].eMachineStateSet:=E_MachineState.Base;
-	ELSIF GVL_MitsubishiCom.bFromSafetyReset=TRUE AND GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag=FALSE THEN
-		GVL.stAlarm[E_AlarmList.MITSUBISHIError].bFlag:=FALSE;
-		GVL.stAlarm[E_AlarmList.MITSUBISHIError].eMachineStateSet:=E_MachineState.Base;
-	ELSIF GVL_MitsubishiCom.bMitsubishiAlarm=FALSE THEN
-		GVL.stAlarm[E_AlarmList.MITSUBISHIError].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.MITSUBISHIError].eMachineStateSet:=E_MachineState.Warning;
 	END_IF
 
 //--スイッチ状態をアラームにセット---(GOTのスイッチ表示の変わり)
@@ -97,7 +88,6 @@ END_VAR]]></Declaration>
 	//マシーンステート切り替え
 	GVL_Alarm.fbMachineState.bStop:=GVL.bPower;
 	GVL_Alarm.fbMachineState.bStay:= NOT GVL.bPower;
-	
 	
 //-----ゼロポジション実行-----
 	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
@@ -158,14 +148,13 @@ END_VAR]]></Declaration>
 ]]></ST>
     </Implementation>
     <LineIds Name="P_MitsubishiCom">
-      <LineId Id="1539" Count="82" />
+      <LineId Id="1539" Count="50" />
+      <LineId Id="1599" Count="22" />
       <LineId Id="1684" Count="0" />
       <LineId Id="1622" Count="0" />
       <LineId Id="1682" Count="0" />
       <LineId Id="1680" Count="0" />
-      <LineId Id="1623" Count="0" />
-      <LineId Id="1681" Count="0" />
-      <LineId Id="1624" Count="55" />
+      <LineId Id="1623" Count="56" />
       <LineId Id="940" Count="0" />
     </LineIds>
   </POU>

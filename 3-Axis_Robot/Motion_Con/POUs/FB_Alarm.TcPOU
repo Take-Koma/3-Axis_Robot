@@ -3,15 +3,39 @@
   <POU Name="FB_Alarm" Id="{cac43bf8-bbc7-446e-97f6-665b76dbaa66}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Alarm EXTENDS FB_TcAlarm
 VAR_INPUT
-	
+	bRaise				:BOOL;				//アラーム発生
+	bClear				:BOOL;				//アラームクリア
+	bConfirm			:BOOL;				//アラーム確認
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	h					:HRESULT;
+	hError				:Hresult;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[IF bRaise=TRUE THEN
+	h:=SUPER^.Raise(0);
+	IF FAILED(h) THEN
+		hError := h;
+	END_IF
+END_IF
+
+IF bConfirm=TRUE THEN
+	h:=SUPER^.Confirm(0);
+	IF FAILED(h) THEN
+		hError := h;
+	END_IF
+END_IF
+
+
+IF bClear=TRUE THEN
+	h:=SUPER^.Clear(0 ,FALSE);
+	IF FAILED(h) THEN
+		hError := h;
+	END_IF
+END_IF]]></ST>
     </Implementation>
     <Method Name="FB_init" Id="{05f50f78-52f6-492f-bfa4-ef56e08f6d32}">
       <Declaration><![CDATA[METHOD FB_init : BOOL
@@ -19,16 +43,36 @@ VAR_INPUT
 	bInitRetains 	: BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
 	bInCopyCode 	: BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
 	evtEntry		:TcEventEntry;
+	calculator 		: REFERENCE TO FB_MachineState;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[super^.CreateEx(evtEntry, TRUE, 0);]]></ST>
+        <ST><![CDATA[calculator.reg_alarm(p_alarm := THIS);
+super^.CreateEx(evtEntry, TRUE, 0);]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Alarm">
       <LineId Id="9" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
     </LineIds>
     <LineIds Name="FB_Alarm.FB_init">
+      <LineId Id="10" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>
   </POU>

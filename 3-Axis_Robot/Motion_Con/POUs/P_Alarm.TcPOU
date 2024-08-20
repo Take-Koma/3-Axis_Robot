@@ -3,131 +3,69 @@
   <POU Name="P_Alarm" Id="{2ba418d6-d2ad-4644-981b-51152d6f50c8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Alarm
 VAR
-	i								:INT;
-	bMachineStateFlag				:ARRAY[E_MachineState.Base..E_MachineState.Moving] OF BOOL;
-	
-	
-	bInit							:BOOL;
-	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	//---テストアラーム作成---
-	IF bInit=FALSE THEN
-		bInit:=TRUE;
-		//GVL_Alarm.fbAlarmSafetyNotRun.CreateEx(TC_Events.UserEventClass.SafetyNotRun, TRUE, 0);
-		//GVL_Alarm.fbAlarmSafetyFbError.CreateEx(TC_Events.UserEventClass.SafetyFbError, TRUE, 0);
-	END_IF
-	
-(*
-	
-	//---フラグをリセット---
-	FOR i := E_AlarmList.SafetyNotRun TO E_AlarmList.LastAlarm DO
-		bMachineStateFlag[i]:=FALSE;
-	END_FOR
+      <ST><![CDATA[	//---マシンステートFB---
+	GVL_Alarm.fbMachineState(bStopMachine=>GVL.bStop);
 
-	//---発生しているアラームをチェック---
-	FOR i := E_AlarmList.SafetyNotRun TO E_AlarmList.LastAlarm DO
-		IF GVL.stAlarm[i].bFlag=TRUE THEN
-			
-			CASE GVL.stAlarm[i].eMachineStateSet OF
-				E_MachineState.Base:
-					bMachineStateFlag[E_MachineState.Base]:=TRUE;
-				
-				E_MachineState.Emergency:
-					bMachineStateFlag[E_MachineState.Emergency]:=TRUE;
-					
-				E_MachineState.Warning:
-					bMachineStateFlag[E_MachineState.Warning]:=TRUE;
-					
-				E_MachineState.Stay:
-					bMachineStateFlag[E_MachineState.Stay]:=TRUE;
-					
-				E_MachineState.Stop:
-					bMachineStateFlag[E_MachineState.Stop]:=TRUE;
-					
-				E_MachineState.Moving:
-					bMachineStateFlag[E_MachineState.Moving]:=TRUE;
-			END_CASE
-			
-		END_IF
-	END_FOR
+	//---アラーム制御---
+	GVL_Alarm.fbAlarmSafetyNotRun(
+		bRaise		:=GVL_Safety.bSafetyRun_Stop=TRUE AND GVL_Safety.bSafetyInRun=FALSE,
+		bConfirm	:=P_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromSafetyReset
+	);
 
-	//---発生アラームの重いほうからマシンステートに登録---
-	IF bMachineStateFlag[E_MachineState.Emergency]=TRUE THEN
-		GVL.eMachineState:=E_MachineState.Emergency;
-		
-	ELSIF bMachineStateFlag[E_MachineState.Warning]=TRUE THEN
-		GVL.eMachineState:=E_MachineState.Warning;
-		
-	ELSIF bMachineStateFlag[E_MachineState.Stay]=TRUE THEN
-		GVL.eMachineState:=E_MachineState.Stay;
-		
-	ELSIF bMachineStateFlag[E_MachineState.Stop]=TRUE THEN
-		GVL.eMachineState:=E_MachineState.Stop;
-		
-	ELSIF bMachineStateFlag[E_MachineState.Moving]=TRUE THEN
-		GVL.eMachineState:=E_MachineState.Moving;
+	GVL_Alarm.fbAlarmSafetyFbError(
+		bRaise		:=GVL_Safety.bFBEstopError=TRUE OR GVL_Safety.bFBEdmError=TRUE,
+		bConfirm	:=P_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromSafetyReset
+	);
 
-	ELSIF bMachineStateFlag[E_MachineState.Base]=TRUE THEN
-		GVL.eMachineState:=E_MachineState.Base;
+	GVL_Alarm.fbAlarmEmergencyStop(
+		bRaise		:=GVL_Safety.bFBEStopInput1=FALSE AND GVL_Safety.bFBEStopInput2=FALSE AND GVL_Safety.bFBEstopOutput=FALSE,
+		bConfirm	:=P_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromSafetyReset
+	);
 	
-	END_IF
-*)]]></ST>
+	GVL_Alarm.fbAlarmGripSwichNotOn(
+		bRaise		:=P_Safety.bAxisMove=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bConfirm	:=P_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+
+	GVL_Alarm.fbAlarmMITSUBISHIError(
+		bRaise		:=GVL_MitsubishiCom.bMitsubishiRun=FALSE OR GVL_MitsubishiCom.bMitsubishiModbusStart=FALSE OR GVL_MitsubishiCom.bMitsubishiAlarm=FALSE,
+		bConfirm	:=P_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);]]></ST>
     </Implementation>
     <LineIds Name="P_Alarm">
       <LineId Id="40" Count="0" />
-      <LineId Id="123" Count="1" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="126" Count="0" />
       <LineId Id="125" Count="0" />
-      <LineId Id="143" Count="0" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="99" Count="2" />
-      <LineId Id="98" Count="0" />
-      <LineId Id="97" Count="0" />
-      <LineId Id="29" Count="1" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="51" Count="1" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="57" Count="1" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="59" Count="1" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="61" Count="1" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="27" Count="1" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="91" Count="0" />
-      <LineId Id="70" Count="0" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="94" Count="1" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="96" Count="0" />
-      <LineId Id="66" Count="0" />
+      <LineId Id="184" Count="0" />
       <LineId Id="12" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="172" Count="2" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="175" Count="2" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="178" Count="2" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="181" Count="2" />
+      <LineId Id="165" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

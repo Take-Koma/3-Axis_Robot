@@ -4,42 +4,120 @@
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MachineState
 VAR_INPUT
 	bBase				:BOOL :=TRUE;		//何もなし
-	bEmergency			:BOOL;				//非常停止ボタンON,Safetyで不具合あり
-	bWarning			:BOOL;				//不具合発生中
+	bCritical			:BOOL;				//クリティカルの発生
+	bError				:BOOL;				//エラーの発生
+	bWarning			:BOOL;				//ワーニングの発生
 	bStay				:BOOL;				//McPowerがOFF
 	bStop				:BOOL;				//McPowerがON
 	bMoving				:BOOL;				//軸動作中
+
 END_VAR
 VAR_OUTPUT
 	eMachineState		:E_MachineState;	//マシーンステートを出力
+	bStopMachine		:BOOL;				//モーションファンクションブロック停止
 END_VAR
 VAR
+	i					:INT:=1;
+	al_index			:INT:=1;
+	p_alarms			: ARRAY [1..GVL_Alarm.iMaxAlarm] OF POINTER TO FB_Alarm;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	//---発生アラームの重いほうからマシンステートに登録---
-	IF bEmergency=TRUE THEN
-		eMachineState:=E_MachineState.Emergency;
+      <ST><![CDATA[//--発生中アラームを集計---
+	//アラームをリセット
+	THIS^.bCritical:=FALSE;
+	THIS^.bError:=FALSE;
+	
+	//アラーム集計
+	FOR i := 1	TO al_index -1  BY 1 DO
+		CASE p_alarms[i]^.eSeverity OF
+		TcEventSeverity.Critical:
+			IF p_alarms[i]^.bRaised=TRUE THEN
+				THIS^.bCritical:=TRUE;
+			END_IF
+			
+		TcEventSeverity.Error:
+			IF p_alarms[i]^.bRaised=TRUE THEN
+				THIS^.bError:=TRUE;
+			END_IF
+			
+		END_CASE
 		
-	ELSIF bWarning=TRUE THEN
-		eMachineState:=E_MachineState.Warning;
+	END_FOR
+
+
+//---発生アラームの重いほうからマシンステートに登録---
+	IF bCritical=TRUE THEN
+		eMachineState:=E_MachineState.Critical;
+		bStopMachine:=TRUE;
+		
+	ELSIF bError=TRUE THEN
+		eMachineState:=E_MachineState.Error;
+		bStopMachine:=TRUE;
 		
 	ELSIF bStay=TRUE THEN
 		eMachineState:=E_MachineState.Stay;
+		bStopMachine:=FALSE;
 		
 	ELSIF bStop=TRUE THEN
 		eMachineState:=E_MachineState.Stop;
+		bStopMachine:=FALSE;
 		
 	ELSIF bMoving=TRUE THEN
 		eMachineState:=E_MachineState.Moving;
+		bStopMachine:=FALSE;
 
 	ELSIF bBase=TRUE THEN
 		eMachineState:=E_MachineState.Base;
+		bStopMachine:=FALSE;
 	END_IF]]></ST>
     </Implementation>
+    <Method Name="reg_alarm" Id="{c7217401-5976-4e6a-8be4-b75e078b5d2f}">
+      <Declaration><![CDATA[METHOD reg_alarm : BOOL
+VAR_INPUT
+	p_alarm	:POINTER TO FB_Alarm;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF GVL_Alarm.iMaxAlarm < al_index THEN
+	reg_alarm:=FALSE;
+	RETURN;
+END_IF
+
+p_alarms[al_index] := p_alarm;
+al_index := al_index + 1;
+reg_alarm:=TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_MachineState">
-      <LineId Id="17" Count="17" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="153" Count="4" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="145" Count="2" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="98" Count="22" />
       <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MachineState.reg_alarm">
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="19" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

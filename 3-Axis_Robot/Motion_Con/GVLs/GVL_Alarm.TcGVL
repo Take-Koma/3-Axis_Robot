@@ -3,11 +3,17 @@
   <GVL Name="GVL_Alarm" Id="{5ecfb3fe-9522-4643-b591-85b9a0d86530}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
-
 	fbMachineState				:FB_MachineState;	
 
-	fbAlarmSafetyNotRun			:FB_Alarm(TC_Events.UserEventClass.SafetyNotRun);
-	fbAlarmSafetyFbError		:FB_Alarm(TC_Events.UserEventClass.SafetyFbError);
+	fbAlarmSafetyNotRun			:FB_Alarm(TC_Events.UserEventClass.SafetyNotRun ,fbMachineState);
+	fbAlarmSafetyFbError		:FB_Alarm(TC_Events.UserEventClass.SafetyFbError ,fbMachineState);
+	fbAlarmEmergencyStop		:FB_Alarm(TC_Events.UserEventClass.EmergencyStop ,fbMachineState);
+	fbAlarmGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.GripSwichNotOn ,fbMachineState);	
+	fbAlarmMITSUBISHIError		:FB_Alarm(TC_Events.UserEventClass.MITSUBISHIError ,fbMachineState);
+END_VAR
+
+VAR_GLOBAL CONSTANT
+	iMaxAlarm					:INT:=10;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

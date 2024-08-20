@@ -7,37 +7,11 @@ VAR
 	bAxisMove						:BOOL;												//いずれかの軸が動いていることの結果
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	//---セーフティーをランする,セフティーがランしたかもチェック---
+      <ST><![CDATA[	//---セーフティーをランする---
 	GVL_Safety.bSafetyRun_Stop:=TRUE;
-	
-	IF GVL_Safety.bSafetyRun_Stop=TRUE AND GVL_Safety.bSafetyInRun=FALSE THEN
-		GVL.stAlarm[E_AlarmList.SafetyNotRun].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.SafetyNotRun].eMachineStateSet:=E_MachineState.Emergency;
-	ELSE
-		GVL.stAlarm[E_AlarmList.SafetyNotRun].bFlag:=FALSE;
-		GVL.stAlarm[E_AlarmList.SafetyNotRun].eMachineStateSet:=E_MachineState.Base;
-	END_IF;
-	
-	//---セーフティーのファンクションブロック動作確認---
-	IF GVL_Safety.bFBEstopError=TRUE OR GVL_Safety.bFBEdmError=TRUE THEN
-		GVL.stAlarm[E_AlarmList.SafetyFbError].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.SafetyFbError].eMachineStateSet:=E_MachineState.Emergency;
-	ELSE
-		GVL.stAlarm[E_AlarmList.SafetyFbError].bFlag:=FALSE;
-		GVL.stAlarm[E_AlarmList.SafetyFbError].eMachineStateSet:=E_MachineState.Base;
-	END_IF
 	
 	//---非常停止の電源ONを反転してセーフティーのEDMへ---
 	GVL_Safety.bFBEStopEDM:= NOT GVL_Safety.bFBEstopOutput;
-
-	//---非常停止ボタンの制御---
-	IF GVL_Safety.bFBEStopInput1=FALSE AND GVL_Safety.bFBEStopInput2=FALSE AND GVL_Safety.bFBEstopOutput=FALSE THEN
-		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.Emergency;
-	ELSIF GVL_Safety.bFBEStopInput1=TRUE AND GVL_Safety.bFBEStopInput2=TRUE AND GVL_Safety.bFBEstopOutput=TRUE THEN
-		GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag:=FALSE;
-		GVL.stAlarm[E_AlarmList.EmergencyStop].eMachineStateSet:=E_MachineState.Base;
-	END_IF;
 	
 	//---GOTからの非常停止リセットをセーフティーへ---
 	GVL_Safety.bFBEStopReset:=GVL_MitsubishiCom.bFromSafetyReset;
@@ -56,27 +30,14 @@ END_VAR]]></Declaration>
 	
 	//各軸が動いていたら、マシンステートをムービングへ
 	GVL_Alarm.fbMachineState.bMoving:=bAxisMove;
-	
-	//---軸が動いているときにキースイッチ開でグリップスイッチが押されてなかったら、マシンステートをワーニングにしてブザーを鳴らす、また各軸停止---
-	IF bAxisMove=TRUE AND_THEN GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE THEN
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Warning;
-		GVL.bStop:=TRUE;
-	ELSIF GVL_MitsubishiCom.bFromAlarmReset=TRUE THEN
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].bFlag:=FALSE;
-		GVL.stAlarm[E_AlarmList.GripSwichNotOn].eMachineStateSet:=E_MachineState.Base;
-		GVL.bStop:=FALSE;
-	END_IF
+
 	]]></ST>
     </Implementation>
     <LineIds Name="P_Safety">
-      <LineId Id="845" Count="10" />
-      <LineId Id="921" Count="0" />
-      <LineId Id="917" Count="0" />
-      <LineId Id="922" Count="3" />
-      <LineId Id="919" Count="1" />
+      <LineId Id="845" Count="1" />
       <LineId Id="918" Count="0" />
-      <LineId Id="856" Count="13" />
+      <LineId Id="856" Count="1" />
+      <LineId Id="867" Count="2" />
       <LineId Id="926" Count="0" />
       <LineId Id="928" Count="0" />
       <LineId Id="927" Count="0" />
@@ -85,8 +46,7 @@ END_VAR]]></Declaration>
       <LineId Id="890" Count="0" />
       <LineId Id="937" Count="0" />
       <LineId Id="936" Count="0" />
-      <LineId Id="935" Count="0" />
-      <LineId Id="891" Count="9" />
+      <LineId Id="900" Count="0" />
       <LineId Id="942" Count="0" />
     </LineIds>
   </POU>

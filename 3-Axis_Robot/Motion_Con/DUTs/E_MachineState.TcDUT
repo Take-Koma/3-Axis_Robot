@@ -6,8 +6,9 @@
 TYPE E_MachineState :
 (
 	Base,					//何もなし
-	Emergency,				//非常停止ボタンON,Safetyで不具合あり
-	Warning,				//不具合発生中
+	Critical,				//クリティカルの発生
+	Error,					//エラーの発生
+	Warning,				//ワーニングの発生
 	Stay,					//McPowerがOFF
 	Stop,					//McPowerがON
 	Moving					//軸動作中

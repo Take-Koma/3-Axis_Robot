@@ -22,14 +22,14 @@ END_VAR
       <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
 CASE GVL_Alarm.fbMachineState.eMachineState OF
 	
-E_MachineState.Emergency:
+E_MachineState.Critical:
 	eLedColor:=E_LedColor.Red;
 	tBlinkTime:=T#100MS;
 	IF bBuzzerFlag=FALSE THEN
 		bBuzzerON:=TRUE;
 	END_IF
 
-E_MachineState.Warning:
+E_MachineState.Error:
 	eLedColor:=E_LedColor.Red;
 	tBlinkTime:=T#100MS;
 	IF bBuzzerFlag=FALSE THEN

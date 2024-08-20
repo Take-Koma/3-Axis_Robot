@@ -2,6 +2,8 @@
 
 画像処理のVisionのプログラムはBeckhoffのサンプルプログラムを元に作成してます。感謝。
 
+アラーム処理は日本のBeckhoffの「MachineAlarmManagement」のプログラムを参考にさせてもらってます。感謝。
+
 <!--
 BeckhoffのTwinCAT3.1、三菱電機のGX Works3、三菱電機のGT Designer3を使用してます。
 これはTwinCATのバックアップ用です。
