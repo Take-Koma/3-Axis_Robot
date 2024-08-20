@@ -27,6 +27,7 @@ END_VAR
 	//アラームをリセット
 	THIS^.bCritical:=FALSE;
 	THIS^.bError:=FALSE;
+	THIS^.bError:=FALSE;
 	
 	//アラーム集計
 	FOR i := 1	TO al_index -1  BY 1 DO
@@ -39,6 +40,11 @@ END_VAR
 		TcEventSeverity.Error:
 			IF p_alarms[i]^.bRaised=TRUE THEN
 				THIS^.bError:=TRUE;
+			END_IF
+		
+		TcEventSeverity.Warning:
+			IF p_alarms[i]^.bRaised=TRUE THEN
+				THIS^.bWarning:=TRUE;
 			END_IF
 			
 		END_CASE
@@ -95,7 +101,9 @@ reg_alarm:=TRUE;]]></ST>
     </Method>
     <LineIds Name="FB_MachineState">
       <LineId Id="97" Count="0" />
-      <LineId Id="153" Count="4" />
+      <LineId Id="153" Count="2" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="156" Count="1" />
       <LineId Id="130" Count="0" />
       <LineId Id="133" Count="0" />
       <LineId Id="135" Count="0" />
@@ -106,6 +114,10 @@ reg_alarm:=TRUE;]]></ST>
       <LineId Id="151" Count="0" />
       <LineId Id="149" Count="0" />
       <LineId Id="139" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="165" Count="1" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="167" Count="0" />
       <LineId Id="136" Count="0" />
       <LineId Id="152" Count="0" />
       <LineId Id="132" Count="0" />
