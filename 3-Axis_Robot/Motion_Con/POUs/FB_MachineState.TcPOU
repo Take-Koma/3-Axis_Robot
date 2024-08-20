@@ -54,6 +54,10 @@ END_VAR
 	ELSIF bError=TRUE THEN
 		eMachineState:=E_MachineState.Error;
 		bStopMachine:=TRUE;
+	
+	ELSIF bWarning=TRUE THEN
+		eMachineState:=E_MachineState.Warning;
+		bStopMachine:=FALSE;
 		
 	ELSIF bStay=TRUE THEN
 		eMachineState:=E_MachineState.Stay;
@@ -107,7 +111,11 @@ reg_alarm:=TRUE;]]></ST>
       <LineId Id="132" Count="0" />
       <LineId Id="128" Count="1" />
       <LineId Id="127" Count="0" />
-      <LineId Id="98" Count="22" />
+      <LineId Id="98" Count="7" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="106" Count="14" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_MachineState.reg_alarm">
