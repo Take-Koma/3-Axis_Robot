@@ -62,14 +62,14 @@ END_VAR]]></Declaration>
 	ELSIF GVL_MitsubishiCom.bMitsubishiModbusStart=FALSE THEN
 		RETURN;
 	ELSIF GVL_MitsubishiCom.bFromAlarmReset=TRUE THEN
-		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
-		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Base;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIError].bFlag:=FALSE;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIError].eMachineStateSet:=E_MachineState.Base;
 	ELSIF GVL_MitsubishiCom.bFromSafetyReset=TRUE AND GVL.stAlarm[E_AlarmList.EmergencyStop].bFlag=FALSE THEN
-		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=FALSE;
-		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Base;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIError].bFlag:=FALSE;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIError].eMachineStateSet:=E_MachineState.Base;
 	ELSIF GVL_MitsubishiCom.bMitsubishiAlarm=FALSE THEN
-		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].bFlag:=TRUE;
-		GVL.stAlarm[E_AlarmList.MITSUBISHIAlarm].eMachineStateSet:=E_MachineState.Warning;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIError].bFlag:=TRUE;
+		GVL.stAlarm[E_AlarmList.MITSUBISHIError].eMachineStateSet:=E_MachineState.Warning;
 	END_IF
 
 //--スイッチ状態をアラームにセット---(GOTのスイッチ表示の変わり)
@@ -154,10 +154,7 @@ END_VAR]]></Declaration>
 ]]></ST>
     </Implementation>
     <LineIds Name="P_MitsubishiCom">
-      <LineId Id="1364" Count="60" />
-      <LineId Id="1529" Count="2" />
-      <LineId Id="1526" Count="0" />
-      <LineId Id="1449" Count="75" />
+      <LineId Id="1539" Count="140" />
       <LineId Id="940" Count="0" />
     </LineIds>
   </POU>

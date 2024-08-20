@@ -5,11 +5,19 @@
 VAR
 	i								:INT;	
 	bMachineStateFlag				:ARRAY[E_MachineState.Base..E_MachineState.Moving] OF BOOL;
+	bInit							:BOOL;
 	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	//---フラグをリセット---
+      <ST><![CDATA[	//---テストアラーム作成---
+	IF bInit=FALSE THEN
+		bInit:=TRUE;
+		GVL_Alarm.fbAlarm[E_AlarmList.SafetyNotRun].CreateEx(Tc_Events.UserEventClass.EmergencyStop , TRUE, 0);	
+	END_IF
+	
+	
+	//---フラグをリセット---
 	FOR i := E_AlarmList.SafetyNotRun TO E_AlarmList.LastAlarm DO
 		bMachineStateFlag[i]:=FALSE;
 	END_FOR
@@ -65,6 +73,12 @@ END_VAR
     </Implementation>
     <LineIds Name="P_Alarm">
       <LineId Id="40" Count="0" />
+      <LineId Id="123" Count="1" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="115" Count="0" />
       <LineId Id="99" Count="2" />
       <LineId Id="98" Count="0" />
       <LineId Id="97" Count="0" />

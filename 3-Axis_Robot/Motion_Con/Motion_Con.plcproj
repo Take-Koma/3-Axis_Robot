@@ -51,6 +51,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="GVLs\GVL_Alarm.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="GVLs\GVL_MitsubishiCom.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>

@@ -9,7 +9,7 @@ TYPE E_AlarmList :
 	SafetyFbError,				//セーフティーのファンクションブロックエラー
 	EmergencyStop,				//非常停止ボタンON
 	GripSwichNotOn,				//動作中にグリップスイッチOFFでMcStop
-	MITSUBISHIAlarm,			//MITSUBISHIシーケンサーアラーム
+	MITSUBISHIError,			//MITSUBISHIシーケンサーアラーム
 	
 	
 	LastAlarm					//リストの最後
