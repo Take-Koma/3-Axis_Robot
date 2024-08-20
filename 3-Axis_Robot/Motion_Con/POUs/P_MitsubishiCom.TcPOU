@@ -50,7 +50,7 @@ END_VAR]]></Declaration>
 	GVL_MitsubishiCom.bTwinCATModbusStart:=TRUE;
 	GVL_MitsubishiCom.bTwinCATRun:=TRUE;
 	
-	IF GVL.eMachineState < E_MachineState.Stay THEN
+	IF GVL_Alarm.fbMachineState.eMachineState < E_MachineState.Stay THEN
 		GVL_MitsubishiCom.bTwinCATAlarm:=FALSE;
 	ELSE
 		GVL_MitsubishiCom.bTwinCATAlarm:=TRUE;
@@ -94,7 +94,11 @@ END_VAR]]></Declaration>
 		GVL_MitsubishiCom.bToMcPowerOn:=FALSE;
 	END_IF;
 
-
+	//マシーンステート切り替え
+	GVL_Alarm.fbMachineState.bStop:=GVL.bPower;
+	GVL_Alarm.fbMachineState.bStay:= NOT GVL.bPower;
+	
+	
 //-----ゼロポジション実行-----
 	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
 		GVL.bHome:=GVL_MitsubishiCom.bFromMcMoveHomeOn;
@@ -154,7 +158,14 @@ END_VAR]]></Declaration>
 ]]></ST>
     </Implementation>
     <LineIds Name="P_MitsubishiCom">
-      <LineId Id="1539" Count="140" />
+      <LineId Id="1539" Count="82" />
+      <LineId Id="1684" Count="0" />
+      <LineId Id="1622" Count="0" />
+      <LineId Id="1682" Count="0" />
+      <LineId Id="1680" Count="0" />
+      <LineId Id="1623" Count="0" />
+      <LineId Id="1681" Count="0" />
+      <LineId Id="1624" Count="55" />
       <LineId Id="940" Count="0" />
     </LineIds>
   </POU>

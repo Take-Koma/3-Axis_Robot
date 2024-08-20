@@ -20,7 +20,7 @@ VAR_GLOBAL
 	bCircleWriteFin				:BOOL;(*円の書き終わり*)
 	bEllipseWriteFin			:BOOL;(*楕円の書き終わり*)
 	
-	eMachineState				:E_MachineState:=E_MachineState.Base;	//マシーンステート
+	//eMachineState				:E_MachineState:=E_MachineState.Base;	//マシーンステート
 	stAlarm						:ARRAY[E_AlarmList.SafetyNotRun..E_AlarmList.LastAlarm] OF ST_Alarm;
 	
 //---Modbus TCPの変数---

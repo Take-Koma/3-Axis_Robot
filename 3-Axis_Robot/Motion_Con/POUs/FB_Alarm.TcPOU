@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Alarm" Id="{cac43bf8-bbc7-446e-97f6-665b76dbaa66}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Alarm EXTENDS FB_TcAlarm
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{05f50f78-52f6-492f-bfa4-ef56e08f6d32}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains 	: BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode 	: BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	evtEntry		:TcEventEntry;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[super^.CreateEx(evtEntry, TRUE, 0);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Alarm">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Alarm.FB_init">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

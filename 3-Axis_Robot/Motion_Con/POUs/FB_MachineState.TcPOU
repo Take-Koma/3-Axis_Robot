@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_MachineState" Id="{c973bc40-a96e-4db3-9daa-2f59595f3f57}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MachineState
+VAR_INPUT
+	bBase				:BOOL :=TRUE;		//何もなし
+	bEmergency			:BOOL;				//非常停止ボタンON,Safetyで不具合あり
+	bWarning			:BOOL;				//不具合発生中
+	bStay				:BOOL;				//McPowerがOFF
+	bStop				:BOOL;				//McPowerがON
+	bMoving				:BOOL;				//軸動作中
+END_VAR
+VAR_OUTPUT
+	eMachineState		:E_MachineState;	//マシーンステートを出力
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	//---発生アラームの重いほうからマシンステートに登録---
+	IF bEmergency=TRUE THEN
+		eMachineState:=E_MachineState.Emergency;
+		
+	ELSIF bWarning=TRUE THEN
+		eMachineState:=E_MachineState.Warning;
+		
+	ELSIF bStay=TRUE THEN
+		eMachineState:=E_MachineState.Stay;
+		
+	ELSIF bStop=TRUE THEN
+		eMachineState:=E_MachineState.Stop;
+		
+	ELSIF bMoving=TRUE THEN
+		eMachineState:=E_MachineState.Moving;
+
+	ELSIF bBase=TRUE THEN
+		eMachineState:=E_MachineState.Base;
+	END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_MachineState">
+      <LineId Id="17" Count="17" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

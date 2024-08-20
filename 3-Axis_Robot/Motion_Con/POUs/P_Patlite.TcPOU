@@ -20,7 +20,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
-CASE GVL.eMachineState OF
+CASE GVL_Alarm.fbMachineState.eMachineState OF
 	
 E_MachineState.Emergency:
 	eLedColor:=E_LedColor.Red;

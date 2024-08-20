@@ -3,8 +3,10 @@
   <POU Name="P_Alarm" Id="{2ba418d6-d2ad-4644-981b-51152d6f50c8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Alarm
 VAR
-	i								:INT;	
+	i								:INT;
 	bMachineStateFlag				:ARRAY[E_MachineState.Base..E_MachineState.Moving] OF BOOL;
+	
+	
 	bInit							:BOOL;
 	
 END_VAR
@@ -13,9 +15,11 @@ END_VAR
       <ST><![CDATA[	//---テストアラーム作成---
 	IF bInit=FALSE THEN
 		bInit:=TRUE;
-		GVL_Alarm.fbAlarm[E_AlarmList.SafetyNotRun].CreateEx(Tc_Events.UserEventClass.EmergencyStop , TRUE, 0);	
+		//GVL_Alarm.fbAlarmSafetyNotRun.CreateEx(TC_Events.UserEventClass.SafetyNotRun, TRUE, 0);
+		//GVL_Alarm.fbAlarmSafetyFbError.CreateEx(TC_Events.UserEventClass.SafetyFbError, TRUE, 0);
 	END_IF
 	
+(*
 	
 	//---フラグをリセット---
 	FOR i := E_AlarmList.SafetyNotRun TO E_AlarmList.LastAlarm DO
@@ -69,13 +73,15 @@ END_VAR
 		GVL.eMachineState:=E_MachineState.Base;
 	
 	END_IF
-]]></ST>
+*)]]></ST>
     </Implementation>
     <LineIds Name="P_Alarm">
       <LineId Id="40" Count="0" />
       <LineId Id="123" Count="1" />
+      <LineId Id="142" Count="0" />
       <LineId Id="126" Count="0" />
       <LineId Id="125" Count="0" />
+      <LineId Id="143" Count="0" />
       <LineId Id="117" Count="0" />
       <LineId Id="127" Count="0" />
       <LineId Id="115" Count="0" />
