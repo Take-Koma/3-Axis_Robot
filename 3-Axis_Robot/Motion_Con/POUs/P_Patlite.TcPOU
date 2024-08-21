@@ -22,37 +22,44 @@ END_VAR
       <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
 CASE GVL_Alarm.fbMachineState.eMachineState OF
 	
-E_MachineState.Critical:
-	eLedColor:=E_LedColor.Red;
-	tBlinkTime:=T#100MS;
-	IF bBuzzerFlag=FALSE THEN
-		bBuzzerON:=TRUE;
-	END_IF
-
-E_MachineState.Error:
-	eLedColor:=E_LedColor.Red;
-	tBlinkTime:=T#100MS;
-	IF bBuzzerFlag=FALSE THEN
-		bBuzzerON:=TRUE;
-	END_IF
-
-E_MachineState.Stop:
-	eLedColor:=E_LedColor.Yellow;
-	tBlinkTime:=T#0S;
-	bBuzzerON:=FALSE;
-	bBuzzerFlag:=FALSE;
+	E_MachineState.Critical:
+		eLedColor:=E_LedColor.Blue;
+		tBlinkTime:=T#100MS;
+		IF bBuzzerFlag=FALSE THEN
+			bBuzzerON:=TRUE;
+		END_IF
 	
-E_MachineState.Stay:
-	eLedColor:=E_LedColor.White;
-	tBlinkTime:=T#0S;
-	bBuzzerON:=FALSE;
-	bBuzzerFlag:=FALSE;
+	E_MachineState.Error:
+		eLedColor:=E_LedColor.Red;
+		tBlinkTime:=T#100MS;
+		IF bBuzzerFlag=FALSE THEN
+			bBuzzerON:=TRUE;
+		END_IF
 	
-E_MachineState.Moving:
-	eLedColor:=E_LedColor.Green;
-	tBlinkTime:=T#0S;
-	bBuzzerON:=FALSE;
-	bBuzzerFlag:=FALSE;
+	E_MachineState.Warning:
+		eLedColor:=E_LedColor.Yellow;
+		tBlinkTime:=T#100MS;
+		IF bBuzzerFlag=FALSE THEN
+			bBuzzerON:=TRUE;
+		END_IF
+		
+	E_MachineState.Stay:
+		eLedColor:=E_LedColor.Black;
+		tBlinkTime:=T#0S;
+		bBuzzerON:=FALSE;
+		bBuzzerFlag:=FALSE;
+	
+	E_MachineState.Stop:
+		eLedColor:=E_LedColor.White;
+		tBlinkTime:=T#0S;
+		bBuzzerON:=FALSE;
+		bBuzzerFlag:=FALSE;
+
+	E_MachineState.Moving:
+		eLedColor:=E_LedColor.Green;
+		tBlinkTime:=T#0S;
+		bBuzzerON:=FALSE;
+		bBuzzerFlag:=FALSE;
 	
 END_CASE;
 
@@ -128,17 +135,17 @@ END_IF;
       <LineId Id="163" Count="0" />
       <LineId Id="207" Count="1" />
       <LineId Id="178" Count="0" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="232" Count="4" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="237" Count="4" />
       <LineId Id="162" Count="0" />
+      <LineId Id="242" Count="0" />
       <LineId Id="109" Count="0" />
       <LineId Id="123" Count="0" />
       <LineId Id="122" Count="0" />
       <LineId Id="180" Count="0" />
       <LineId Id="210" Count="0" />
-      <LineId Id="110" Count="1" />
-      <LineId Id="129" Count="0" />
-      <LineId Id="128" Count="0" />
-      <LineId Id="181" Count="0" />
-      <LineId Id="211" Count="0" />
       <LineId Id="116" Count="0" />
       <LineId Id="115" Count="0" />
       <LineId Id="130" Count="0" />

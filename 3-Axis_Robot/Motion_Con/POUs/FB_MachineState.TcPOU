@@ -32,20 +32,20 @@ END_VAR
 	//アラーム集計
 	FOR i := 1	TO al_index -1  BY 1 DO
 		CASE p_alarms[i]^.eSeverity OF
-		TcEventSeverity.Critical:
-			IF p_alarms[i]^.bRaised=TRUE THEN
-				THIS^.bCritical:=TRUE;
-			END_IF
+			TcEventSeverity.Critical:
+				IF p_alarms[i]^.bRaised=TRUE THEN
+					THIS^.bCritical:=TRUE;
+				END_IF
+				
+			TcEventSeverity.Error:
+				IF p_alarms[i]^.bRaised=TRUE THEN
+					THIS^.bError:=TRUE;
+				END_IF
 			
-		TcEventSeverity.Error:
-			IF p_alarms[i]^.bRaised=TRUE THEN
-				THIS^.bError:=TRUE;
-			END_IF
-		
-		TcEventSeverity.Warning:
-			IF p_alarms[i]^.bRaised=TRUE THEN
-				THIS^.bWarning:=TRUE;
-			END_IF
+			TcEventSeverity.Warning:
+				IF p_alarms[i]^.bRaised=TRUE THEN
+					THIS^.bWarning:=TRUE;
+				END_IF
 			
 		END_CASE
 		
