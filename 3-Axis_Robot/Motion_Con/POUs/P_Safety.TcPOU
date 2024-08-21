@@ -3,8 +3,6 @@
   <POU Name="P_Safety" Id="{860b1fb0-7ebe-4c1e-b9e0-1f1cdd4578cc}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Safety
 VAR
-	i								:INT;	
-	bAxisMove						:BOOL;												//いずれかの軸が動いていることの結果
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[	//---セーフティーをランする---
@@ -17,21 +15,7 @@ END_VAR]]></Declaration>
 	GVL_Safety.bFBEStopReset:=GVL_MitsubishiCom.bFromSafetyReset;
 	
 	//---GOTからの非常停止リセットでセフティーエラーもリセットする---
-	GVL_Safety.bSafetyErrAck:=GVL_MitsubishiCom.bFromSafetyReset;
-
-	//---各軸のステータスを読み込む---
-	GVL.stAxis[E_Axis.X_Axis].ReadStatus();
-	GVL.stAxis[E_Axis.Y_Axis].ReadStatus();
-	GVL.stAxis[E_Axis.Z_Axis].ReadStatus();
-	GVL.stAxis[E_Axis.Gripper].ReadStatus();
-	
-	//---各軸が動いているかをまとめる---
-	bAxisMove:= GVL.stAxis[E_Axis.X_Axis].Status.Moving OR GVL.stAxis[E_Axis.Y_Axis].Status.Moving OR GVL.stAxis[E_Axis.Z_Axis].Status.Moving OR GVL.stAxis[E_Axis.Gripper].Status.Moving;
-	
-	//各軸が動いていたら、マシンステートをムービングへ
-	GVL_Alarm.fbMachineState.bMoving:=bAxisMove;
-
-	]]></ST>
+	GVL_Safety.bSafetyErrAck:=GVL_MitsubishiCom.bFromSafetyReset;]]></ST>
     </Implementation>
     <LineIds Name="P_Safety">
       <LineId Id="845" Count="1" />
@@ -41,13 +25,6 @@ END_VAR]]></Declaration>
       <LineId Id="926" Count="0" />
       <LineId Id="928" Count="0" />
       <LineId Id="927" Count="0" />
-      <LineId Id="870" Count="7" />
-      <LineId Id="915" Count="0" />
-      <LineId Id="890" Count="0" />
-      <LineId Id="937" Count="0" />
-      <LineId Id="936" Count="0" />
-      <LineId Id="900" Count="0" />
-      <LineId Id="942" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

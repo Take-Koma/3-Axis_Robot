@@ -29,7 +29,7 @@ END_VAR
 	);
 	
 	GVL_Alarm.fbAlarmGripSwichNotOn(
-		bRaise		:=P_Safety.bAxisMove=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=P_BasicMotion.bAxisMove=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=P_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);

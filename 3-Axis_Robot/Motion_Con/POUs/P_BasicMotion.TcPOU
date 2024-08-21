@@ -10,12 +10,32 @@ VAR
 	fbMcReset			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Reset;
 	fbMCStop			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Stop;
 	fbMCHalt			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Halt;
+	
+	bAxisMove			:BOOL;												//いずれかの軸が動いていることの結果
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[FOR eAxis:= E_Axis.X_Axis TO E_Axis.Gripper DO
-	aMotion();
-END_FOR;]]></ST>
+      <ST><![CDATA[	FOR eAxis:= E_Axis.X_Axis TO E_Axis.Gripper DO
+		aMotion();
+	END_FOR;
+
+	//---各軸のステータスを読み込む---
+	GVL.stAxis[E_Axis.X_Axis].ReadStatus();
+	GVL.stAxis[E_Axis.Y_Axis].ReadStatus();
+	GVL.stAxis[E_Axis.Z_Axis].ReadStatus();
+	GVL.stAxis[E_Axis.Gripper].ReadStatus();
+	
+	//---各軸が動いているかをまとめる---
+	bAxisMove:= GVL.stAxis[E_Axis.X_Axis].Status.Moving OR GVL.stAxis[E_Axis.Y_Axis].Status.Moving OR GVL.stAxis[E_Axis.Z_Axis].Status.Moving OR GVL.stAxis[E_Axis.Gripper].Status.Moving;
+	
+	//各軸が動いていたら、マシンステートをムービングへ
+	GVL_Alarm.fbMachineState.bMoving:=bAxisMove;
+	
+	//マシーンステート切り替え
+	GVL_Alarm.fbMachineState.bStop:= GVL.bPower AND NOT bAxisMove;
+	
+	//マシーンステート切り替え
+	GVL_Alarm.fbMachineState.bStay:= NOT GVL.bPower AND NOT bAxisMove;]]></ST>
     </Implementation>
     <Action Name="aMotion" Id="{7128f73f-11b3-4c17-add6-4b6df319662d}">
       <Implementation>
@@ -99,6 +119,12 @@ END_FOR;]]></ST>
     </Action>
     <LineIds Name="P_BasicMotion">
       <LineId Id="20" Count="2" />
+      <LineId Id="38" Count="10" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="33" Count="0" />
     </LineIds>
     <LineIds Name="P_BasicMotion.aMotion">
       <LineId Id="107" Count="74" />

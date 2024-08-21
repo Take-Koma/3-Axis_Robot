@@ -84,10 +84,6 @@ END_VAR]]></Declaration>
 	ELSE;
 		GVL_MitsubishiCom.bToMcPowerOn:=FALSE;
 	END_IF;
-
-	//マシーンステート切り替え
-	GVL_Alarm.fbMachineState.bStop:=GVL.bPower;
-	GVL_Alarm.fbMachineState.bStay:= NOT GVL.bPower;
 	
 //-----ゼロポジション実行-----
 	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
@@ -150,10 +146,6 @@ END_VAR]]></Declaration>
     <LineIds Name="P_MitsubishiCom">
       <LineId Id="1539" Count="50" />
       <LineId Id="1599" Count="22" />
-      <LineId Id="1684" Count="0" />
-      <LineId Id="1622" Count="0" />
-      <LineId Id="1682" Count="0" />
-      <LineId Id="1680" Count="0" />
       <LineId Id="1623" Count="56" />
       <LineId Id="940" Count="0" />
     </LineIds>
