@@ -25,26 +25,26 @@ END_VAR
     <Implementation>
       <ST><![CDATA[//--発生中アラームを集計---
 	//アラームをリセット
-	THIS^.bCritical:=FALSE;
-	THIS^.bError:=FALSE;
-	THIS^.bError:=FALSE;
+	bCritical:=FALSE;
+	bError:=FALSE;
+	bError:=FALSE;
 	
 	//アラーム集計
 	FOR i := 1	TO al_index -1  BY 1 DO
 		CASE p_alarms[i]^.eSeverity OF
 			TcEventSeverity.Critical:
 				IF p_alarms[i]^.bRaised=TRUE THEN
-					THIS^.bCritical:=TRUE;
+					bCritical:=TRUE;
 				END_IF
 				
 			TcEventSeverity.Error:
 				IF p_alarms[i]^.bRaised=TRUE THEN
-					THIS^.bError:=TRUE;
+					bError:=TRUE;
 				END_IF
 			
 			TcEventSeverity.Warning:
 				IF p_alarms[i]^.bRaised=TRUE THEN
-					THIS^.bWarning:=TRUE;
+					bWarning:=TRUE;
 				END_IF
 			
 		END_CASE
