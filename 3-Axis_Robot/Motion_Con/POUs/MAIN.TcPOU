@@ -9,12 +9,12 @@ END_VAR
       <ST><![CDATA[P_Safety();
 P_Alarm();
 P_Patlite();
-P_BasicMotion();
+P_Motion();
 P_WriteMotion();
 P_MitsubishiCom();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="16" Count="4" />
+      <LineId Id="24" Count="4" />
       <LineId Id="12" Count="0" />
     </LineIds>
   </POU>

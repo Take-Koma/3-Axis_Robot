@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="P_BasicMotion" Id="{f27a55a5-997f-454a-b871-3cb76ed937db}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM P_BasicMotion
+  <POU Name="P_Motion" Id="{f27a55a5-997f-454a-b871-3cb76ed937db}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_Motion
 VAR
 	eAxis				:E_Axis;
 	fbMcPower			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Power;
@@ -115,7 +115,7 @@ END_VAR
 	);]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="P_BasicMotion">
+    <LineIds Name="P_Motion">
       <LineId Id="20" Count="2" />
       <LineId Id="38" Count="10" />
       <LineId Id="35" Count="0" />
@@ -124,7 +124,7 @@ END_VAR
       <LineId Id="52" Count="1" />
       <LineId Id="33" Count="0" />
     </LineIds>
-    <LineIds Name="P_BasicMotion.aMotion">
+    <LineIds Name="P_Motion.aMotion">
       <LineId Id="107" Count="74" />
       <LineId Id="53" Count="0" />
     </LineIds>

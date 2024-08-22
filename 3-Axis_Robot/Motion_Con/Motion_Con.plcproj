@@ -90,7 +90,7 @@
     <Compile Include="POUs\P_Safety.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\P_BasicMotion.TcPOU">
+    <Compile Include="POUs\P_Motion.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\P_Ellipse.TcPOU">
