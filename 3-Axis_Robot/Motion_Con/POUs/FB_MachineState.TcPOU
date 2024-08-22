@@ -20,48 +20,51 @@ VAR
 	i					:INT:=1;
 	al_index			:INT:=1;
 	p_alarms			: ARRAY [1..GVL_Alarm.iMaxAlarm] OF POINTER TO FB_Alarm;
+		
+	bCriticalMem		: BOOL;				//クリティカル発生状況記憶
+	bErrorMem			: BOOL;				//エラー発生状況記憶
+	bWarningMem			: BOOL;				//ワーニング発生状況記憶
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//--発生中アラームを集計---
 	//アラームをリセット
-	bCritical:=FALSE;
-	bError:=FALSE;
-	bError:=FALSE;
+	bCriticalMem:=FALSE;
+	bErrorMem:=FALSE;
+	bWarningMem:=FALSE;
 	
 	//アラーム集計
 	FOR i := 1	TO al_index -1  BY 1 DO
 		CASE p_alarms[i]^.eSeverity OF
 			TcEventSeverity.Critical:
 				IF p_alarms[i]^.bRaised=TRUE THEN
-					bCritical:=TRUE;
+					bCriticalMem:=TRUE;
 				END_IF
 				
 			TcEventSeverity.Error:
 				IF p_alarms[i]^.bRaised=TRUE THEN
-					bError:=TRUE;
+					bErrorMem:=TRUE;
 				END_IF
 			
 			TcEventSeverity.Warning:
 				IF p_alarms[i]^.bRaised=TRUE THEN
-					bWarning:=TRUE;
+					bWarningMem:=TRUE;
 				END_IF
 			
 		END_CASE
 		
 	END_FOR
 
-
 //---発生アラームの重いほうからマシンステートに登録---
-	IF bCritical=TRUE THEN
+	IF bCritical=TRUE OR bCriticalMem=TRUE THEN
 		eMachineState:=E_MachineState.Critical;
 		bStopMachine:=TRUE;
 		
-	ELSIF bError=TRUE THEN
+	ELSIF bError=TRUE OR bErrorMem=TRUE THEN
 		eMachineState:=E_MachineState.Error;
 		bStopMachine:=TRUE;
 	
-	ELSIF bWarning=TRUE THEN
+	ELSIF bWarning=TRUE OR bWarningMem=TRUE THEN
 		eMachineState:=E_MachineState.Warning;
 		bStopMachine:=FALSE;
 		
@@ -121,7 +124,7 @@ reg_alarm:=TRUE;]]></ST>
       <LineId Id="136" Count="0" />
       <LineId Id="152" Count="0" />
       <LineId Id="132" Count="0" />
-      <LineId Id="128" Count="1" />
+      <LineId Id="129" Count="0" />
       <LineId Id="127" Count="0" />
       <LineId Id="98" Count="7" />
       <LineId Id="158" Count="0" />
