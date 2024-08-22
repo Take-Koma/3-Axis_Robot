@@ -13,7 +13,7 @@ VAR_GLOBAL
 END_VAR
 
 VAR_GLOBAL CONSTANT
-	iMaxAlarm					:INT:=10;
+	iMaxAlarm					:INT:=10;		//上のアラームのファンクションブロックより多い数字にすること！！！
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
