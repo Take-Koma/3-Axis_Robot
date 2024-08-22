@@ -18,6 +18,13 @@ END_VAR]]></Declaration>
 	GVL.mb_Input_Coils[8]										:=GVL_MitsubishiCom.bToAlarmReset;
 	GVL.mb_Input_Coils[9]										:=GVL_MitsubishiCom.bToSafetyReset;
 	
+	GVL.mb_Input_Coils[104]										:=GVL_Alarm.fbAlarmSafetyNotRun.bRaised;
+	GVL.mb_Input_Coils[105]										:=GVL_Alarm.fbAlarmSafetyFbError.bRaised;
+	GVL.mb_Input_Coils[106]										:=GVL_Alarm.fbAlarmEmergencyStop.bRaised;
+	GVL.mb_Input_Coils[107]										:=GVL_Alarm.fbAlarmGripSwichNotOn.bRaised;	
+	GVL.mb_Input_Coils[108]										:=GVL_Alarm.fbAlarmMITSUBISHIError.bRaised;
+	
+	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
 	GVL_MitsubishiCom.bFromEStop								:=GVL.mb_Output_Coils[1];
 	GVL_MitsubishiCom.bFromKeySwitchOpen						:=GVL.mb_Output_Coils[2];
@@ -142,7 +149,11 @@ END_VAR]]></Declaration>
 ]]></ST>
     </Implementation>
     <LineIds Name="P_MitsubishiCom">
-      <LineId Id="1539" Count="50" />
+      <LineId Id="1539" Count="8" />
+      <LineId Id="1687" Count="0" />
+      <LineId Id="1690" Count="3" />
+      <LineId Id="1688" Count="1" />
+      <LineId Id="1548" Count="41" />
       <LineId Id="1599" Count="22" />
       <LineId Id="1623" Count="56" />
       <LineId Id="940" Count="0" />

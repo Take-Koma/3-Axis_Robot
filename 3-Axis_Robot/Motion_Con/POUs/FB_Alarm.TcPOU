@@ -29,7 +29,6 @@ IF bConfirm=TRUE THEN
 	END_IF
 END_IF
 
-
 IF bClear=TRUE THEN
 	h:=SUPER^.Clear(0 ,FALSE);
 	IF FAILED(h) THEN
@@ -63,8 +62,7 @@ super^.CreateEx(evtEntry, TRUE, 0);]]></ST>
       <LineId Id="42" Count="1" />
       <LineId Id="41" Count="0" />
       <LineId Id="40" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="30" Count="0" />
+      <LineId Id="58" Count="0" />
       <LineId Id="29" Count="0" />
       <LineId Id="31" Count="0" />
       <LineId Id="34" Count="1" />
