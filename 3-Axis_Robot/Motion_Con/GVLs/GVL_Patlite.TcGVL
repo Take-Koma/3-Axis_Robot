@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_Patlite" Id="{f4e9bf02-34dd-45c7-a87c-3886014d9a9f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	bRedLed				AT %Q* :BOOL;				//パトライト赤LED ターミナル5(EL2088)チャンネル5
+	bGreenLed			AT %Q* :BOOL;				//パトライト緑LED ターミナル5(EL2088)チャンネル6
+	bBlueLed			AT %Q* :BOOL;				//パトライト青LED ターミナル5(EL2088)チャンネル7
+	bBuzzerON			AT %Q* :BOOL;				//パトライトブザー ターミナル5(EL2088)チャンネル8
+	
+	bSwitch				AT %I* :BOOL; 				//パトライトスイッチ ターミナル5(EL1088)チャンネル8
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

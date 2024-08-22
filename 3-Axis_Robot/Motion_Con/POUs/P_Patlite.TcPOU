@@ -3,13 +3,6 @@
   <POU Name="P_Patlite" Id="{a5bb9a40-855c-4dd1-9843-b749d06b4679}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Patlite
 VAR
-	bRedLed				AT %Q* :BOOL;				//パトライト赤LED ターミナル5(EL2088)チャンネル5
-	bGreenLed			AT %Q* :BOOL;				//パトライト緑LED ターミナル5(EL2088)チャンネル6
-	bBlueLed			AT %Q* :BOOL;				//パトライト青LED ターミナル5(EL2088)チャンネル7
-	bBuzzerON			AT %Q* :BOOL;				//パトライトブザー ターミナル5(EL2088)チャンネル8
-	
-	bSwitch				AT %I* :BOOL; 				//パトライトスイッチ ターミナル5(EL1088)チャンネル8
-
 	eLedColor			:E_LedColor;
 	fbREdge				:R_TRIG;
 	bBuzzerFlag			:BOOL;
@@ -26,46 +19,46 @@ CASE GVL_Alarm.fbMachineState.eMachineState OF
 		eLedColor:=E_LedColor.Blue;
 		tBlinkTime:=T#100MS;
 		IF bBuzzerFlag=FALSE THEN
-			bBuzzerON:=TRUE;
+			GVL_Patlite.bBuzzerON:=TRUE;
 		END_IF
 	
 	E_MachineState.Error:
 		eLedColor:=E_LedColor.Red;
 		tBlinkTime:=T#100MS;
 		IF bBuzzerFlag=FALSE THEN
-			bBuzzerON:=TRUE;
+			GVL_Patlite.bBuzzerON:=TRUE;
 		END_IF
 	
 	E_MachineState.Warning:
 		eLedColor:=E_LedColor.Yellow;
 		tBlinkTime:=T#100MS;
 		IF bBuzzerFlag=FALSE THEN
-			bBuzzerON:=TRUE;
+			GVL_Patlite.bBuzzerON:=TRUE;
 		END_IF
 		
 	E_MachineState.Stay:
-		eLedColor:=E_LedColor.Black;
+		eLedColor:=E_LedColor.Cyan;
 		tBlinkTime:=T#0S;
-		bBuzzerON:=FALSE;
+		GVL_Patlite.bBuzzerON:=FALSE;
 		bBuzzerFlag:=FALSE;
 	
 	E_MachineState.Stop:
 		eLedColor:=E_LedColor.White;
 		tBlinkTime:=T#0S;
-		bBuzzerON:=FALSE;
+		GVL_Patlite.bBuzzerON:=FALSE;
 		bBuzzerFlag:=FALSE;
 
 	E_MachineState.Moving:
 		eLedColor:=E_LedColor.Green;
 		tBlinkTime:=T#0S;
-		bBuzzerON:=FALSE;
+		GVL_Patlite.bBuzzerON:=FALSE;
 		bBuzzerFlag:=FALSE;
 	
 END_CASE;
 
 //---スイッチが押されたらブザー停止---
-IF bSwitch=TRUE THEN
-	bBuzzerON:=FALSE;
+IF GVL_Patlite.bSwitch=TRUE THEN
+	GVL_Patlite.bBuzzerON:=FALSE;
 	bBuzzerFlag:=TRUE;
 END_IF
 
@@ -78,49 +71,49 @@ fbTonBlink2(IN:=,PT:=tBlinkTime,Q=>,ET=>);
 IF fbTonBlink1.Q=FALSE OR tBlinkTime=T#0S  THEN;
 	CASE eLedColor OF
 	E_LedColor.Red:
-		bRedLed:=TRUE;
-		bGreenLed:=FALSE;
-		bBlueLed:=FALSE;
+		GVL_Patlite.bRedLed:=TRUE;
+		GVL_Patlite.bGreenLed:=FALSE;
+		GVL_Patlite.bBlueLed:=FALSE;
 	
 	E_LedColor.Green:
-		bRedLed:=FALSE;
-		bGreenLed:=TRUE;
-		bBlueLed:=FALSE;	
+		GVL_Patlite.bRedLed:=FALSE;
+		GVL_Patlite.bGreenLed:=TRUE;
+		GVL_Patlite.bBlueLed:=FALSE;	
 	
 	E_LedColor.Blue:
-		bRedLed:=FALSE;
-		bGreenLed:=FALSE;
-		bBlueLed:=TRUE;
+		GVL_Patlite.bRedLed:=FALSE;
+		GVL_Patlite.bGreenLed:=FALSE;
+		GVL_Patlite.bBlueLed:=TRUE;
 		
 	E_LedColor.Yellow:
-		bRedLed:=TRUE;
-		bGreenLed:=TRUE;
-		bBlueLed:=FALSE;
+		GVL_Patlite.bRedLed:=TRUE;
+		GVL_Patlite.bGreenLed:=TRUE;
+		GVL_Patlite.bBlueLed:=FALSE;
 	
 	E_LedColor.Cyan:
-		bRedLed:=FALSE;
-		bGreenLed:=TRUE;
-		bBlueLed:=TRUE;
+		GVL_Patlite.bRedLed:=FALSE;
+		GVL_Patlite.bGreenLed:=TRUE;
+		GVL_Patlite.bBlueLed:=TRUE;
 	
 	E_LedColor.Purple:
-		bRedLed:=TRUE;
-		bGreenLed:=FALSE;
-		bBlueLed:=TRUE;
+		GVL_Patlite.bRedLed:=TRUE;
+		GVL_Patlite.bGreenLed:=FALSE;
+		GVL_Patlite.bBlueLed:=TRUE;
 	
 	E_LedColor.White:
-		bRedLed:=TRUE;
-		bGreenLed:=TRUE;
-		bBlueLed:=TRUE;
+		GVL_Patlite.bRedLed:=TRUE;
+		GVL_Patlite.bGreenLed:=TRUE;
+		GVL_Patlite.bBlueLed:=TRUE;
 	
 	E_LedColor.Black:
-		bRedLed:=FALSE;
-		bGreenLed:=FALSE;
-		bBlueLed:=FALSE;
+		GVL_Patlite.bRedLed:=FALSE;
+		GVL_Patlite.bGreenLed:=FALSE;
+		GVL_Patlite.bBlueLed:=FALSE;
 	END_CASE
 ELSE;
-	bRedLed:=FALSE;
-	bGreenLed:=FALSE;
-	bBlueLed:=FALSE;
+	GVL_Patlite.bRedLed:=FALSE;
+	GVL_Patlite.bGreenLed:=FALSE;
+	GVL_Patlite.bBlueLed:=FALSE;
 END_IF;
 ]]></ST>
     </Implementation>

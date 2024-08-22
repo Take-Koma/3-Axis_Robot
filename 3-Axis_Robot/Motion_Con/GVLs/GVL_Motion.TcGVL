@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_Motion" Id="{9d2fcb99-ce48-477a-bd80-3346c3c5c5d6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	bAxisMove			:BOOL;												//いずれかの軸が動いていることの結果
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

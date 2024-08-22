@@ -3,8 +3,6 @@
   <POU Name="P_MitsubishiCom" Id="{7551431c-0546-4892-8591-c118fe27ff05}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_MitsubishiCom
 VAR
-	i								:INT;
-	
 	fbMcPowerTon					:ton;
 	fbMcPowerREdge					:R_TRIG;
 	fbMcPowerFEdge					:F_TRIG;
