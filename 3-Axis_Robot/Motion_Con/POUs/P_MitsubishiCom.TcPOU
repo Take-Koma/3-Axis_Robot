@@ -6,6 +6,7 @@ VAR
 	fbMcPowerTon					:ton;
 	fbMcPowerREdge					:R_TRIG;
 	fbMcPowerFEdge					:F_TRIG;
+	bQX004: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//---GVLのModbus TCPの変数をGVL_Mitsubishiの変数に書き込み---
@@ -57,6 +58,8 @@ END_VAR]]></Declaration>
 //-----三菱へ出力-----
 	GVL_MitsubishiCom.bTwinCATModbusStart:=TRUE;
 	GVL_MitsubishiCom.bTwinCATRun:=TRUE;
+	
+	GVL_MitsubishiCom.bQX004:=TRUE;	//未使用だけどONしないとアラーム発報してしまうからTRUE
 	
 	IF GVL_Alarm.fbMachineState.eMachineState < E_MachineState.Stay THEN
 		GVL_MitsubishiCom.bTwinCATAlarm:=FALSE;
@@ -149,7 +152,9 @@ END_VAR]]></Declaration>
       <LineId Id="1690" Count="3" />
       <LineId Id="1699" Count="2" />
       <LineId Id="1688" Count="1" />
-      <LineId Id="1548" Count="41" />
+      <LineId Id="1548" Count="29" />
+      <LineId Id="1707" Count="1" />
+      <LineId Id="1578" Count="11" />
       <LineId Id="1599" Count="22" />
       <LineId Id="1623" Count="39" />
       <LineId Id="1671" Count="8" />
