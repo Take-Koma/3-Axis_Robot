@@ -28,8 +28,26 @@ END_VAR
 		bClear		:=GVL_MitsubishiCom.bFromSafetyReset
 	);
 	
-	GVL_Alarm.fbAlarmGripSwichNotOn(
-		bRaise		:=GVL_Motion.bAxisMove=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+	GVL_Alarm.fbAlarmXAxisMovingGripSwichNotOn(
+		bRaise		:=GVL.stAxis[E_Axis.X_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bConfirm	:=GVL_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	GVL_Alarm.fbAlarmYAxisMovingGripSwichNotOn(
+		bRaise		:=GVL.stAxis[E_Axis.Y_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bConfirm	:=GVL_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	GVL_Alarm.fbAlarmZAxisMovingGripSwichNotOn(
+		bRaise		:=GVL.stAxis[E_Axis.Z_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bConfirm	:=GVL_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	GVL_Alarm.fbAlarmGripperMovingGripSwichNotOn(
+		bRaise		:=GVL.stAxis[E_Axis.Gripper].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
@@ -62,6 +80,7 @@ END_VAR
       <LineId Id="149" Count="0" />
       <LineId Id="178" Count="2" />
       <LineId Id="163" Count="0" />
+      <LineId Id="188" Count="17" />
       <LineId Id="153" Count="0" />
       <LineId Id="145" Count="0" />
       <LineId Id="181" Count="2" />

@@ -13,9 +13,6 @@
 		<Text TxtId="EmergencyStop">
 			<Text LcId="1041"><![CDATA[非常停止ボタンON]]></Text>
 		</Text>
-		<Text TxtId="GripSwichNotOn">
-			<Text LcId="1041"><![CDATA[起動時グリップスイッチOFF]]></Text>
-		</Text>
 		<Text TxtId="MITSUBISHIError">
 			<Text LcId="1041"><![CDATA[シーケンサーエラー]]></Text>
 		</Text>
@@ -30,38 +27,6 @@
 					<Name>TcJobTaskOID</Name>
 				</Property>
 			</Properties>
-		</DataType>
-		<DataType>
-			<Name GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}" PersistentType="true">UserEventClass</Name>
-			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
-			<EventId>
-				<Name Id="1">SafetyNotRun</Name>
-				<DisplayName TxtId=""><![CDATA[SafetyNotRun]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="2">SafetyFbError</Name>
-				<DisplayName TxtId=""><![CDATA[SafetyFbError]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="3">EmergencyStop</Name>
-				<DisplayName TxtId=""><![CDATA[EmergencyStop]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="4">GripSwichNotOn</Name>
-				<DisplayName TxtId=""><![CDATA[GripSwichNotOn]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="5">MITSUBISHIError</Name>
-				<DisplayName TxtId=""><![CDATA[MITSUBISHIError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<Hides>
-				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
-			</Hides>
 		</DataType>
 		<DataType>
 			<Name GUID="{AC23D64B-CDFA-4D43-AE8B-364A856EB3E2}">ITcVnMlModel</Name>
@@ -1364,6 +1329,54 @@
 				<Hide GUID="{D9AEB34B-B8C6-45FF-AB8E-264B76ACB690}"/>
 				<Hide GUID="{DD32210F-42B2-48F1-9078-C36AE938BB7C}"/>
 				<Hide GUID="{F2E286DA-631F-4DCF-841F-9F9AAC9197A0}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}" PersistentType="true">UserEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
+			<EventId>
+				<Name Id="1">SafetyNotRun</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyNotRun]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">SafetyFbError</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyFbError]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">EmergencyStop</Name>
+				<DisplayName TxtId=""><![CDATA[EmergencyStop]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">XAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[XAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">YAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[YAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">ZAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[ZAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">GripperMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[GripperMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">MITSUBISHIError</Name>
+				<DisplayName TxtId=""><![CDATA[MITSUBISHIError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
+				<Hide GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
