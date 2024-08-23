@@ -13,6 +13,18 @@
 		<Text TxtId="EmergencyStop">
 			<Text LcId="1041"><![CDATA[非常停止ボタンON]]></Text>
 		</Text>
+		<Text TxtId="XAxisMovingGripSwichNotOn">
+			<Text LcId="1041"><![CDATA[X軸起動時グリップスイッチOFF]]></Text>
+		</Text>
+		<Text TxtId="YAxisMovingGripSwichNotOn">
+			<Text LcId="1041"><![CDATA[Y軸起動時グリップスイッチOFF]]></Text>
+		</Text>
+		<Text TxtId="ZAxisMovingGripSwichNotOn">
+			<Text LcId="1041"><![CDATA[Z軸起動時グリップスイッチOFF]]></Text>
+		</Text>
+		<Text TxtId="GripperMovingGripSwichNotOn">
+			<Text LcId="1041"><![CDATA[グリッパー起動時グリップスイッチOFF]]></Text>
+		</Text>
 		<Text TxtId="MITSUBISHIError">
 			<Text LcId="1041"><![CDATA[シーケンサーエラー]]></Text>
 		</Text>
@@ -14919,7 +14931,7 @@ External Setpoint Generation:
 			</Properties>
 		</DataType>
 		<DataType>
-			<Name GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}" PersistentType="true">UserEventClass</Name>
+			<Name GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}" PersistentType="true">UserEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
 			<EventId>
 				<Name Id="1">SafetyNotRun</Name>
@@ -14964,10 +14976,11 @@ External Setpoint Generation:
 			<Hides>
 				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
 				<Hide GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}"/>
+				<Hide GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
-	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{D57C4EA7-B14C-A143-097B-F4447DF986A0}">
+	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{7CF49FE6-20CD-2653-867B-03F28B3726C9}">
 		<Name>__FILENAME__</Name>
 		<TmcDesc GUID="{3E578FBF-8593-4971-A049-A334D40A2DE2}" TcSmClass="TComPlcObjDef">
 			<Name>Motion_Con</Name>
@@ -21449,7 +21462,7 @@ External Setpoint Generation:
 			</Deployment>
 			<EventClasses>
 				<EventClass>
-					<Type GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}">UserEventClass</Type>
+					<Type GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}">UserEventClass</Type>
 				</EventClass>
 			</EventClasses>
 			<Properties>
@@ -21459,7 +21472,7 @@ External Setpoint Generation:
 				</Property>
 				<Property>
 					<Name>ChangeDate</Name>
-					<Value>2024-08-23T14:12:23</Value>
+					<Value>2024-08-23T15:13:46</Value>
 				</Property>
 				<Property>
 					<Name>GeneratedCodeSize</Name>
@@ -21490,7 +21503,7 @@ External Setpoint Generation:
 				</Value>
 				<Value>
 					<Name>Application Timestamp</Name>
-					<Value>1724422343</Value>
+					<Value>1724426026</Value>
 				</Value>
 				<Value>
 					<Name>Symbolic Mapping</Name>

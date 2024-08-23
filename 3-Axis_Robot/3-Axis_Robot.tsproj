@@ -13,6 +13,18 @@
 		<Text TxtId="EmergencyStop">
 			<Text LcId="1041"><![CDATA[非常停止ボタンON]]></Text>
 		</Text>
+		<Text TxtId="XAxisMovingGripSwichNotOn">
+			<Text LcId="1041"><![CDATA[X軸起動時グリップスイッチOFF]]></Text>
+		</Text>
+		<Text TxtId="YAxisMovingGripSwichNotOn">
+			<Text LcId="1041"><![CDATA[Y軸起動時グリップスイッチOFF]]></Text>
+		</Text>
+		<Text TxtId="ZAxisMovingGripSwichNotOn">
+			<Text LcId="1041"><![CDATA[Z軸起動時グリップスイッチOFF]]></Text>
+		</Text>
+		<Text TxtId="GripperMovingGripSwichNotOn">
+			<Text LcId="1041"><![CDATA[グリッパー起動時グリップスイッチOFF]]></Text>
+		</Text>
 		<Text TxtId="MITSUBISHIError">
 			<Text LcId="1041"><![CDATA[シーケンサーエラー]]></Text>
 		</Text>
@@ -1332,7 +1344,7 @@
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}" PersistentType="true">UserEventClass</Name>
+			<Name GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}" PersistentType="true">UserEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
 			<EventId>
 				<Name Id="1">SafetyNotRun</Name>
@@ -1377,6 +1389,7 @@
 			<Hides>
 				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
 				<Hide GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}"/>
+				<Hide GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

@@ -133,14 +133,6 @@ END_VAR]]></Declaration>
 		GVL.bHalt:=GVL_MitsubishiCom.bFromMcHaltOn;
 	END_IF
 
-	
-
-//-----非常停止ボタン-----
-	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
-		GVL.bStop:=NOT GVL_MitsubishiCom.bFromEStop;
-	END_IF
-
-
 //-----カメラシャッター応答-----
 	GVL_MitsubishiCom.bToCameraSoftWareTrigger:=GVL_MitsubishiCom.bFromCameraTrigger;
 
@@ -159,7 +151,8 @@ END_VAR]]></Declaration>
       <LineId Id="1688" Count="1" />
       <LineId Id="1548" Count="41" />
       <LineId Id="1599" Count="22" />
-      <LineId Id="1623" Count="56" />
+      <LineId Id="1623" Count="39" />
+      <LineId Id="1671" Count="8" />
       <LineId Id="940" Count="0" />
     </LineIds>
   </POU>
