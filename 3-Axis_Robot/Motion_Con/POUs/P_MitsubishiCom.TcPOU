@@ -17,13 +17,13 @@ END_VAR]]></Declaration>
 	GVL.mb_Input_Coils[7]										:=GVL_MitsubishiCom.bToCameraSoftWareTrigger;
 	GVL.mb_Input_Coils[8]										:=GVL_MitsubishiCom.bToAlarmReset;
 	GVL.mb_Input_Coils[9]										:=GVL_MitsubishiCom.bToSafetyReset;
-	
+	//---アラームここから---
 	GVL.mb_Input_Coils[104]										:=GVL_Alarm.fbAlarmSafetyNotRun.bRaised;
 	GVL.mb_Input_Coils[105]										:=GVL_Alarm.fbAlarmSafetyFbError.bRaised;
 	GVL.mb_Input_Coils[106]										:=GVL_Alarm.fbAlarmEmergencyStop.bRaised;
 	GVL.mb_Input_Coils[107]										:=GVL_Alarm.fbAlarmGripSwichNotOn.bRaised;	
 	GVL.mb_Input_Coils[108]										:=GVL_Alarm.fbAlarmMITSUBISHIError.bRaised;
-	
+	//---アラームここまで---
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
 	GVL_MitsubishiCom.bFromEStop								:=GVL.mb_Output_Coils[1];
