@@ -7,7 +7,12 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[	//---マシンステートFB---
-	GVL_Alarm.fbMachineState(bStopMachine=>GVL.bStop);
+	GVL_Alarm.fbMachineState(
+		bStay:= NOT GVL.bPower AND NOT GVL_Motion.bAxisMove,
+		bStop:= GVL.bPower AND NOT GVL_Motion.bAxisMove,
+		bMoving:=GVL_Motion.bAxisMove,
+		bStopMachine=>GVL.bStop
+	);
 
 	//---アラーム制御---
 	GVL_Alarm.fbAlarmSafetyNotRun(
@@ -61,6 +66,8 @@ END_VAR
     <LineIds Name="P_Alarm">
       <LineId Id="40" Count="0" />
       <LineId Id="125" Count="0" />
+      <LineId Id="211" Count="2" />
+      <LineId Id="209" Count="1" />
       <LineId Id="184" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="146" Count="0" />

@@ -5,7 +5,6 @@
 {attribute 'strict'}
 TYPE E_MachineState :
 (
-	Base,					//何もなし
 	Critical,				//クリティカルの発生
 	Error,					//エラーの発生
 	Warning,				//ワーニングの発生

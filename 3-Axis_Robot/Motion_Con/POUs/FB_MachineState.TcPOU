@@ -3,14 +3,12 @@
   <POU Name="FB_MachineState" Id="{c973bc40-a96e-4db3-9daa-2f59595f3f57}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MachineState
 VAR_INPUT
-	bBase				:BOOL :=TRUE;		//何もなし
 	bCritical			:BOOL;				//クリティカルの発生
 	bError				:BOOL;				//エラーの発生
 	bWarning			:BOOL;				//ワーニングの発生
 	bStay				:BOOL;				//McPowerがOFF
 	bStop				:BOOL;				//McPowerがON
-	bMoving				:BOOL;				//軸動作中
-
+	bMoving				:BOOL;				//軸動作中または、（自動動作実行中（まだない））
 END_VAR
 VAR_OUTPUT
 	eMachineState		:E_MachineState;	//マシーンステートを出力
@@ -79,10 +77,6 @@ END_VAR
 	ELSIF bMoving=TRUE THEN
 		eMachineState:=E_MachineState.Moving;
 		bStopMachine:=FALSE;
-
-	ELSIF bBase=TRUE THEN
-		eMachineState:=E_MachineState.Base;
-		bStopMachine:=FALSE;
 	END_IF]]></ST>
     </Implementation>
     <Method Name="reg_alarm" Id="{c7217401-5976-4e6a-8be4-b75e078b5d2f}">
@@ -130,7 +124,7 @@ reg_alarm:=TRUE;]]></ST>
       <LineId Id="158" Count="0" />
       <LineId Id="160" Count="1" />
       <LineId Id="159" Count="0" />
-      <LineId Id="106" Count="14" />
+      <LineId Id="106" Count="10" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_MachineState.reg_alarm">
