@@ -11,16 +11,16 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[	//---各軸のステータスを読み込む---
-	GVL.stAxis[E_Axis.X_Axis].ReadStatus();
-	GVL.stAxis[E_Axis.Y_Axis].ReadStatus();
-	GVL.stAxis[E_Axis.Z_Axis].ReadStatus();
-	GVL.stAxis[E_Axis.Gripper].ReadStatus();
+	GVL_Axis.stAxis[E_Axis.X_Axis].ReadStatus();
+	GVL_Axis.stAxis[E_Axis.Y_Axis].ReadStatus();
+	GVL_Axis.stAxis[E_Axis.Z_Axis].ReadStatus();
+	GVL_Axis.stAxis[E_Axis.Gripper].ReadStatus();
 	
 	//---各軸が動いているかをまとめる---
-	GVL_Motion.bAxisMove:= GVL.stAxis[E_Axis.X_Axis].Status.Moving 
-						OR GVL.stAxis[E_Axis.Y_Axis].Status.Moving
-						OR GVL.stAxis[E_Axis.Z_Axis].Status.Moving 
-						OR GVL.stAxis[E_Axis.Gripper].Status.Moving;
+	GVL_Motion.bAxisMove:= GVL_Axis.stAxis[E_Axis.X_Axis].Status.Moving 
+						OR GVL_Axis.stAxis[E_Axis.Y_Axis].Status.Moving
+						OR GVL_Axis.stAxis[E_Axis.Z_Axis].Status.Moving 
+						OR GVL_Axis.stAxis[E_Axis.Gripper].Status.Moving;
 	
 	//---マシンステートのファンクションブロックが停止出力していたら停止---
 	GVL_Motion.bStop:=GVL_Alarm.fbMachineState.bStopMachine;
@@ -88,7 +88,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//パワーON
 	GVL_Motion.fbMcPower[eAxis](
-		Axis			:=GVL.stAxis[eAxis],
+		Axis			:=GVL_Axis.stAxis[eAxis],
 		Enable			:=GVL_Motion.bPower,
 		Enable_Positive	:=GVL_Motion.bPower,
 		Enable_Negative	:=GVL_Motion.bPower,
@@ -102,7 +102,7 @@ END_VAR]]></Declaration>
 	
 //ホーミング
 	GVL_Motion.fbMcMoveHome[eAxis](
-		Axis			:=GVL.stAxis[eAxis],
+		Axis			:=GVL_Axis.stAxis[eAxis],
 		Execute			:=GVL_Motion.bHome,
 		Position		:=0,
 		Velocity		:=50,
@@ -116,7 +116,7 @@ END_VAR]]></Declaration>
 
 //ジョグ
 	GVL_Motion.fbMcMoveJog[eAxis](
-		Axis			:=GVL.stAxis[eAxis],
+		Axis			:=GVL_Axis.stAxis[eAxis],
 		Execute			:=GVL_Motion.bJog[eAxis],
 		Position		:=GVL_Motion.lrJogPosition[eAxis],
 		Velocity		:=50,
@@ -130,7 +130,7 @@ END_VAR]]></Declaration>
 	
 //全軸一時停止
 	GVL_Motion.fbMCHalt[eAxis](
-		Axis			:=GVL.stAxis[eAxis],
+		Axis			:=GVL_Axis.stAxis[eAxis],
 		Execute			:=GVL_Motion.bHalt,
 		Done			=>,
 		Busy			=>,
@@ -142,7 +142,7 @@ END_VAR]]></Declaration>
 
 //全軸ストップ
 	GVL_Motion.fbMCStop[eAxis](
-		Axis			:=GVL.stAxis[eAxis],
+		Axis			:=GVL_Axis.stAxis[eAxis],
 		Execute			:=GVL_Motion.bStop,
 		Done			=>,
 		Busy			=>,
@@ -154,7 +154,7 @@ END_VAR]]></Declaration>
 	
 //全軸リセット
 	GVL_Motion.fbMcReset[eAxis](
-		Axis			:=GVL.stAxis[eAxis],
+		Axis			:=GVL_Axis.stAxis[eAxis],
 		Execute			:=GVL_Motion.bReset,
 		Done			=>,
 		Busy			=>,

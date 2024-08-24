@@ -34,25 +34,25 @@ END_VAR
 	);
 	
 	GVL_Alarm.fbAlarmXAxisMovingGripSwichNotOn(
-		bRaise		:=GVL.stAxis[E_Axis.X_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL_Axis.stAxis[E_Axis.X_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
 	GVL_Alarm.fbAlarmYAxisMovingGripSwichNotOn(
-		bRaise		:=GVL.stAxis[E_Axis.Y_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL_Axis.stAxis[E_Axis.Y_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
 	GVL_Alarm.fbAlarmZAxisMovingGripSwichNotOn(
-		bRaise		:=GVL.stAxis[E_Axis.Z_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL_Axis.stAxis[E_Axis.Z_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
 	GVL_Alarm.fbAlarmGripperMovingGripSwichNotOn(
-		bRaise		:=GVL.stAxis[E_Axis.Gripper].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL_Axis.stAxis[E_Axis.Gripper].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
@@ -61,7 +61,35 @@ END_VAR
 		bRaise		:=GVL_MitsubishiCom.bMitsubishiRun=FALSE OR GVL_MitsubishiCom.bMitsubishiModbusStart=FALSE OR GVL_MitsubishiCom.bMitsubishiAlarm=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
-	);]]></ST>
+	);
+		
+	GVL_Alarm.fbAlarmXAxisError(
+		bRaise		:=GVL_Axis.stAxis[E_Axis.X_Axis].Status.Error,
+		bConfirm	:=GVL_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	GVL_Alarm.fbAlarmYAxisError(
+		bRaise		:=GVL_Axis.stAxis[E_Axis.Y_Axis].Status.Error,
+		bConfirm	:=GVL_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	GVL_Alarm.fbAlarmZAxisError(
+		bRaise		:=GVL_Axis.stAxis[E_Axis.Z_Axis].Status.Error,
+		bConfirm	:=GVL_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	GVL_Alarm.fbAlarmGripperError(
+		bRaise		:=GVL_Axis.stAxis[E_Axis.Gripper].Status.Error,
+		bConfirm	:=GVL_Patlite.bSwitch,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	
+	
+	]]></ST>
     </Implementation>
     <LineIds Name="P_Alarm">
       <LineId Id="40" Count="0" />
@@ -92,6 +120,23 @@ END_VAR
       <LineId Id="145" Count="0" />
       <LineId Id="181" Count="2" />
       <LineId Id="165" Count="0" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="226" Count="0" />
+      <LineId Id="238" Count="1" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="240" Count="2" />
+      <LineId Id="230" Count="1" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="243" Count="2" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="246" Count="2" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="219" Count="3" />
     </LineIds>
   </POU>
 </TcPlcObject>

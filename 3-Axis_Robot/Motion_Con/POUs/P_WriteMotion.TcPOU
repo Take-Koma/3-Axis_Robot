@@ -198,7 +198,7 @@ END_CASE;
       <Implementation>
         <ST><![CDATA[//各軸とグリッパーの駆動用
 	fbMCMoveAbsolute[E_Axis.X_Axis](
-		Axis			:=GVL.stAxis[E_Axis.X_Axis],
+		Axis			:=GVL_Axis.stAxis[E_Axis.X_Axis],
 		Execute			:=fbMCMoveAbsolute[E_Axis.X_Axis].Execute,
 		Position		:=fbMCMoveAbsolute[E_Axis.X_Axis].Position,
 		Velocity		:=fbMCMoveAbsolute[E_Axis.X_Axis].Velocity,
@@ -212,7 +212,7 @@ END_CASE;
 	);
 
 	fbMCMoveAbsolute[E_Axis.Y_Axis](
-		Axis			:=GVL.stAxis[E_Axis.Y_Axis],
+		Axis			:=GVL_Axis.stAxis[E_Axis.Y_Axis],
 		Execute			:=fbMCMoveAbsolute[E_Axis.Y_Axis].Execute,
 		Position		:=fbMCMoveAbsolute[E_Axis.Y_Axis].Position,
 		Velocity		:=fbMCMoveAbsolute[E_Axis.Y_Axis].Velocity,
@@ -226,7 +226,7 @@ END_CASE;
 	);
 
 	fbMCMoveAbsolute[E_Axis.Z_Axis](
-		Axis			:=GVL.stAxis[E_Axis.Z_Axis],
+		Axis			:=GVL_Axis.stAxis[E_Axis.Z_Axis],
 		Execute			:=fbMCMoveAbsolute[E_Axis.Z_Axis].Execute,
 		Position		:=fbMCMoveAbsolute[E_Axis.Z_Axis].Position,
 		Velocity		:=fbMCMoveAbsolute[E_Axis.Z_Axis].Velocity,
@@ -240,7 +240,7 @@ END_CASE;
 	);
 	
 	fbMCMoveAbsolute[E_Axis.Gripper](
-		Axis			:=GVL.stAxis[E_Axis.Gripper],
+		Axis			:=GVL_Axis.stAxis[E_Axis.Gripper],
 		Execute			:=fbMCMoveAbsolute[E_Axis.Gripper].Execute,
 		Position		:=fbMCMoveAbsolute[E_Axis.Gripper].Position,
 		Velocity		:=fbMCMoveAbsolute[E_Axis.Gripper].Velocity,

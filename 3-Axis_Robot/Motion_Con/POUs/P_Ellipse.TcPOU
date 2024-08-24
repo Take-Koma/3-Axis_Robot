@@ -196,7 +196,7 @@ aMotion();]]></ST>
     <Action Name="aMotion" Id="{8cd58c59-596c-443b-9f09-59156bf02c33}">
       <Implementation>
         <ST><![CDATA[	fbMCMoveAbsolute0[E_Axis.X_Axis](
-		Axis			:=GVL.stAxis[E_Axis.X_Axis],
+		Axis			:=GVL_Axis.stAxis[E_Axis.X_Axis],
 		Execute			:=fbMCMoveAbsolute0[E_Axis.X_Axis].Execute,
 		Position		:=fbMCMoveAbsolute0[E_Axis.X_Axis].Position,
 		Velocity		:=fbMCMoveAbsolute0[E_Axis.X_Axis].Velocity,
@@ -210,7 +210,7 @@ aMotion();]]></ST>
 	);
 		
 	fbMCMoveAbsolute1[E_Axis.X_Axis](
-		Axis			:=GVL.stAxis[E_Axis.X_Axis],
+		Axis			:=GVL_Axis.stAxis[E_Axis.X_Axis],
 		Execute			:=fbMCMoveAbsolute1[E_Axis.X_Axis].Execute,
 		Position		:=fbMCMoveAbsolute1[E_Axis.X_Axis].Position,
 		Velocity		:=fbMCMoveAbsolute1[E_Axis.X_Axis].Velocity,
@@ -224,7 +224,7 @@ aMotion();]]></ST>
 	);
 
 	fbMCMoveAbsolute0[E_Axis.Y_Axis](
-		Axis			:=GVL.stAxis[E_Axis.Y_Axis],
+		Axis			:=GVL_Axis.stAxis[E_Axis.Y_Axis],
 		Execute			:=fbMCMoveAbsolute0[E_Axis.Y_Axis].Execute,
 		Position		:=fbMCMoveAbsolute0[E_Axis.Y_Axis].Position,
 		Velocity		:=fbMCMoveAbsolute0[E_Axis.Y_Axis].Velocity,
@@ -238,7 +238,7 @@ aMotion();]]></ST>
 	);
 
 	fbMCMoveAbsolute1[E_Axis.Y_Axis](
-		Axis			:=GVL.stAxis[E_Axis.Y_Axis],
+		Axis			:=GVL_Axis.stAxis[E_Axis.Y_Axis],
 		Execute			:=fbMCMoveAbsolute1[E_Axis.Y_Axis].Execute,
 		Position		:=fbMCMoveAbsolute1[E_Axis.Y_Axis].Position,
 		Velocity		:=fbMCMoveAbsolute1[E_Axis.Y_Axis].Velocity,
@@ -252,7 +252,7 @@ aMotion();]]></ST>
 	);
 
 	fbMCMoveAbsolute0[E_Axis.Z_Axis](
-		Axis			:=GVL.stAxis[E_Axis.Z_Axis],
+		Axis			:=GVL_Axis.stAxis[E_Axis.Z_Axis],
 		Execute			:=fbMCMoveAbsolute0[E_Axis.Z_Axis].Execute,
 		Position		:=fbMCMoveAbsolute0[E_Axis.Z_Axis].Position,
 		Velocity		:=fbMCMoveAbsolute0[E_Axis.Z_Axis].Velocity,
@@ -266,7 +266,7 @@ aMotion();]]></ST>
 	);
 	
 	fbMCMoveAbsolute1[E_Axis.Z_Axis](
-		Axis			:=GVL.stAxis[E_Axis.Z_Axis],
+		Axis			:=GVL_Axis.stAxis[E_Axis.Z_Axis],
 		Execute			:=fbMCMoveAbsolute1[E_Axis.Z_Axis].Execute,
 		Position		:=fbMCMoveAbsolute1[E_Axis.Z_Axis].Position,
 		Velocity		:=fbMCMoveAbsolute1[E_Axis.Z_Axis].Velocity,

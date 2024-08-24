@@ -13,6 +13,12 @@ VAR_GLOBAL
 	fbAlarmZAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.ZAxisMovingGripSwichNotOn ,fbMachineState);	
 	fbAlarmGripperMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.GripperMovingGripSwichNotOn ,fbMachineState);	
 	fbAlarmMITSUBISHIError					:FB_Alarm(TC_Events.UserEventClass.MITSUBISHIError ,fbMachineState);
+	fbAlarmXAxisError						:FB_Alarm(TC_Events.UserEventClass.XAxisError ,fbMachineState);
+	fbAlarmYAxisError						:FB_Alarm(TC_Events.UserEventClass.YAxisError ,fbMachineState);
+	fbAlarmZAxisError						:FB_Alarm(TC_Events.UserEventClass.ZAxisError ,fbMachineState);
+	fbAlarmGripperError						:FB_Alarm(TC_Events.UserEventClass.GripperError ,fbMachineState);
+
+	
 END_VAR
 
 VAR_GLOBAL CONSTANT
