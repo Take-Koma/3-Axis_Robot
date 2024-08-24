@@ -23,7 +23,6 @@ VAR_GLOBAL
 	lrJogPosition   			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF LREAL;
 
 	bAxisMove					:BOOL;														//いずれかの軸が動いていることの結果
-	fbMcMoveAbs					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
 	
 END_VAR]]></Declaration>
   </GVL>

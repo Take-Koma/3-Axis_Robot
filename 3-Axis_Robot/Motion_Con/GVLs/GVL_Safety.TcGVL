@@ -5,22 +5,22 @@
 VAR_GLOBAL
 
 	//---EL2911のinternal I/Oの実入出力とのリンク---
-	bFBEStopInput1					AT %I* :BOOL;												//EL2911 input CH.1 非常停止ボタン1
-	bFBEStopInput2					AT %I* :BOOL;												//EL2911 input CH.2 非常停止ボタン2
+	bFbEStopInput1					AT %I* :BOOL;												//EL2911 input CH.1 非常停止ボタン1
+	bFbEStopInput2					AT %I* :BOOL;												//EL2911 input CH.2 非常停止ボタン2
 	bGripSwich						AT %I* :BOOL;												//EL2911 input CH.3 グリップスイッチ
-	bFBEstopOutput					AT %I* :BOOL;												//EL2911 output 非常停止の電源ON
+	bFbEstopOutput					AT %I* :BOOL;												//EL2911 output 非常停止の電源ON
 
 	//---Sefrtyのエイリアスデバイスとのリンク---
 	bSafetyRun_Stop					AT %Q* :BOOL;												//セーフティーラン
 	bSafetyInRun					AT %I* :BOOL;												//セーフティーランの確認
 	bSafetyErrAck 					AT %Q* :BOOL;												//セーフティーのエラーリセット
 	
-	bFBEStopEDM						AT %Q* :BOOL;												//非常停止の電源OFFの結果をセーフティーへ	
+	bFbEStopEDM						AT %Q* :BOOL;												//非常停止の電源OFFの結果をセーフティーへ	
 
-	bFBEStopReset					AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
+	bFbEStopReset					AT %Q* :BOOL;												//GOTからの非常停止リセットをセーフティーへ
 
-	bFBEstopError					AT %I* :BOOL;												//セーフティーの非常停止ファンクションブロックエラー
-	bFBEdmError						AT %I* :BOOL;												//セーフティーのEDMファンクションブロックのエラー
+	bFbEstopError					AT %I* :BOOL;												//セーフティーの非常停止ファンクションブロックエラー
+	bFbEdmError						AT %I* :BOOL;												//セーフティーのEDMファンクションブロックのエラー
 
 END_VAR]]></Declaration>
   </GVL>

@@ -9,10 +9,10 @@ END_VAR]]></Declaration>
 	GVL_Safety.bSafetyRun_Stop:=TRUE;
 	
 	//---非常停止の電源ONを反転してセーフティーのEDMへ---
-	GVL_Safety.bFBEStopEDM:= NOT GVL_Safety.bFBEstopOutput;
+	GVL_Safety.bFbEStopEDM:= NOT GVL_Safety.bFbEstopOutput;
 	
 	//---GOTからの非常停止リセットをセーフティーへ---
-	GVL_Safety.bFBEStopReset:=GVL_MitsubishiCom.bFromSafetyReset;
+	GVL_Safety.bFbEStopReset:=GVL_MitsubishiCom.bFromSafetyReset;
 	
 	//---GOTからの非常停止リセットでセフティーエラーもリセットする---
 	GVL_Safety.bSafetyErrAck:=GVL_MitsubishiCom.bFromSafetyReset;]]></ST>
