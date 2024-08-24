@@ -23,6 +23,10 @@ END_VAR]]></Declaration>
 	GVL.mb_Input_Coils[109]										:=GVL_Alarm.fbAlarmZAxisMovingGripSwichNotOn.bRaised;
 	GVL.mb_Input_Coils[110]										:=GVL_Alarm.fbAlarmGripperMovingGripSwichNotOn.bRaised;
 	GVL.mb_Input_Coils[111]										:=GVL_Alarm.fbAlarmMITSUBISHIError.bRaised;
+	GVL.mb_Input_Coils[112]										:=GVL_Alarm.fbAlarmXAxisError.bRaised;
+	GVL.mb_Input_Coils[113]										:=GVL_Alarm.fbAlarmYAxisError.bRaised;
+	GVL.mb_Input_Coils[114]										:=GVL_Alarm.fbAlarmZAxisError.bRaised;
+	GVL.mb_Input_Coils[115]										:=GVL_Alarm.fbAlarmGripperError.bRaised;
 	//---アラームここまで---
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
@@ -85,7 +89,9 @@ END_VAR]]></Declaration>
       <LineId Id="1687" Count="0" />
       <LineId Id="1690" Count="3" />
       <LineId Id="1699" Count="2" />
-      <LineId Id="1688" Count="1" />
+      <LineId Id="1688" Count="0" />
+      <LineId Id="1711" Count="3" />
+      <LineId Id="1689" Count="0" />
       <LineId Id="1548" Count="29" />
       <LineId Id="1707" Count="1" />
       <LineId Id="1578" Count="11" />
