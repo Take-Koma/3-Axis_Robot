@@ -3,20 +3,9 @@
   <GVL Name="GVL" Id="{c4a012fd-1931-4ffe-914c-5d1b04b3e29f}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
-	bPower						:BOOL;
-	bMcPowerStatus				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
-	bHome						:BOOL;
-	stMoveHomingOut				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF ST_McOutputs;
-	bReset						:BOOL;
-	bStop						:BOOL;
-	stStopOut					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF ST_McOutputs;
-	bHalt						:BOOL;
-	stHaltOut					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF ST_McOutputs;
-	bJog   						:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
-	lrJogPosition   			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF LREAL;
-	stMoveJogOut				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF ST_McOutputs;
-	bMove						:BOOL;
 	stAxis						:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF AXIS_ref;
+	
+	bWriteMoveStart				:BOOL;
 	bCircleWriteFin				:BOOL;(*円の書き終わり*)
 	bEllipseWriteFin			:BOOL;(*楕円の書き終わり*)
 	

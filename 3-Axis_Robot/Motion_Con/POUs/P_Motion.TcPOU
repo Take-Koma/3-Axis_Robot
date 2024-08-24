@@ -3,115 +3,193 @@
   <POU Name="P_Motion" Id="{f27a55a5-997f-454a-b871-3cb76ed937db}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Motion
 VAR
-	eAxis				:E_Axis;
-	fbMcPower			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Power;
-	fbMCMoveHome		:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
-	fbMcMoveJog			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
-	fbMcReset			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Reset;
-	fbMCStop			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Stop;
-	fbMCHalt			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Halt;
-END_VAR
-]]></Declaration>
+	eAxis							:E_Axis;
+	
+	fbMcPowerTon					:ton;
+	fbMcPowerREdge					:R_TRIG;
+	fbMcPowerFEdge					:F_TRIG;
+END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	FOR eAxis:= E_Axis.X_Axis TO E_Axis.Gripper DO
-		aMotion();
-	END_FOR;
-
-	//---各軸のステータスを読み込む---
+      <ST><![CDATA[	//---各軸のステータスを読み込む---
 	GVL.stAxis[E_Axis.X_Axis].ReadStatus();
 	GVL.stAxis[E_Axis.Y_Axis].ReadStatus();
 	GVL.stAxis[E_Axis.Z_Axis].ReadStatus();
 	GVL.stAxis[E_Axis.Gripper].ReadStatus();
 	
 	//---各軸が動いているかをまとめる---
-	GVL_Motion.bAxisMove:= GVL.stAxis[E_Axis.X_Axis].Status.Moving OR GVL.stAxis[E_Axis.Y_Axis].Status.Moving OR GVL.stAxis[E_Axis.Z_Axis].Status.Moving OR GVL.stAxis[E_Axis.Gripper].Status.Moving;]]></ST>
+	GVL_Motion.bAxisMove:= GVL.stAxis[E_Axis.X_Axis].Status.Moving 
+						OR GVL.stAxis[E_Axis.Y_Axis].Status.Moving
+						OR GVL.stAxis[E_Axis.Z_Axis].Status.Moving 
+						OR GVL.stAxis[E_Axis.Gripper].Status.Moving;
+	
+	//---マシンステートのファンクションブロックが停止出力していたら停止---
+	GVL_Motion.bStop:=GVL_Alarm.fbMachineState.bStopMachine;
+
+	//-----停止ボタン----
+	GVL_Motion.bHalt:=GVL_MitsubishiCom.bFromMcHaltOn;
+	
+	//-----McPoerのOnとOff------
+	fbMcPowerREdge(CLK:=GVL_MitsubishiCom.bFromMcPowerOn,Q=>);
+	fbMcPowerFEdge(CLK:=GVL_MitsubishiCom.bToMcPowerOn,Q=>);
+	fbMcPowerTon(IN:=GVL_MitsubishiCom.bFromMcPowerOn,PT:=T#3S,Q=>,ET=>);
+
+	IF GVL_Motion.bPower=FALSE AND fbMcPowerREdge.Q=TRUE THEN;
+		GVL_Motion.bPower:=TRUE;
+	ELSIF GVL_Motion.bPower=TRUE AND fbMcPowerTon.Q=TRUE THEN ;
+		GVL_Motion.bPower:=FALSE;
+	ELSIF fbMcPowerFEdge.Q=TRUE THEN;
+		GVL_Motion.bPower:=FALSE;
+	END_IF;
+	
+	GVL_MitsubishiCom.bToMcPowerOn:= GVL_Motion.fbMcPower[E_Axis.X_Axis].Status
+									AND GVL_Motion.fbMcPower[E_Axis.Y_Axis].Status 
+									AND GVL_Motion.fbMcPower[E_Axis.Z_Axis].Status 
+									AND GVL_Motion.fbMcPower[E_Axis.Gripper].Status;
+
+	
+	//-----ゼロポジション実行-----
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL_Motion.bHome:=GVL_MitsubishiCom.bFromMcMoveHomeOn;
+	END_IF
+	
+	GVL_MitsubishiCom.bToMcMoveHomeOn:=GVL_Motion.fbMcMoveHome[E_Axis.X_Axis].Busy
+									OR GVL_Motion.fbMcMoveHome[E_Axis.Y_Axis].Busy
+									OR GVL_Motion.fbMcMoveHome[E_Axis.Z_Axis].Busy
+									OR GVL_Motion.fbMcMoveHome[E_Axis.Gripper].Busy;
+
+	//-----Jog実行-----
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		//X軸
+		GVL_Motion.bJog[E_Axis.X_Axis]:=GVL_MitsubishiCom.bFromXAxisJogStart;
+		GVL_Motion.lrJogPosition[E_Axis.X_Axis]:=GVL_MitsubishiCom.wFromXAxisJogTarget;
+		
+		//Y軸
+		GVL_Motion.bJog[E_Axis.Y_Axis]:=GVL_MitsubishiCom.bFromYAxisJogStart;
+		GVL_Motion.lrJogPosition[E_Axis.Y_Axis]:=GVL_MitsubishiCom.wFromYAxisJogTarget;
+		
+		//Z軸 ステージにグリッパーがあたるのでZ軸は300無しで
+		GVL_Motion.bJog[E_Axis.Z_Axis]:=GVL_MitsubishiCom.bFromZAxisJogStart;
+		GVL_Motion.lrJogPosition[E_Axis.Z_Axis]:=GVL_MitsubishiCom.wFromZAxisJogTarget;
+		IF GVL_Motion.lrJogPosition[E_Axis.Z_Axis]>230 THEN;
+			GVL_Motion.lrJogPosition[E_Axis.Z_Axis]:=225;
+		END_IF
+
+		//グリッパー
+		GVL_Motion.bJog[E_Axis.Gripper]:=GVL_MitsubishiCom.bFromGripperJogStart;
+		GVL_Motion.lrJogPosition[E_Axis.Gripper]:=WORD_TO_INT(GVL_MitsubishiCom.wFromGripperJogTarget);
+	END_IF
+	
+	//---アクションをコールして軸を起動---
+	FOR eAxis:= E_Axis.X_Axis TO E_Axis.Gripper DO
+		aMotion();
+	END_FOR;]]></ST>
     </Implementation>
     <Action Name="aMotion" Id="{7128f73f-11b3-4c17-add6-4b6df319662d}">
       <Implementation>
         <ST><![CDATA[//パワーON
-	fbMcPower[eAxis](
+	GVL_Motion.fbMcPower[eAxis](
 		Axis			:=GVL.stAxis[eAxis],
-		Enable			:=GVL.bPower,
-		Enable_Positive	:=GVL.bPower,
-		Enable_Negative	:=GVL.bPower,
+		Enable			:=GVL_Motion.bPower,
+		Enable_Positive	:=GVL_Motion.bPower,
+		Enable_Negative	:=GVL_Motion.bPower,
 		Override		:=100,
-		Status			=>GVL.bMcPowerStatus[eAxis],
+		Status			=>,
 		Busy			=>,
 		Active			=>,
 		Error			=>,
 		ErrorID			=>
 	);
-
-//ゼロポジションへ
-	fbMCMoveHome[eAxis](
+	
+//ホーミング
+	GVL_Motion.fbMcMoveHome[eAxis](
 		Axis			:=GVL.stAxis[eAxis],
-		Execute			:=GVL.bHome,
+		Execute			:=GVL_Motion.bHome,
 		Position		:=0,
 		Velocity		:=50,
-		Done			=>GVL.stMoveHomingOut[eAxis].Done,
-		Busy			=>GVL.stMoveHomingOut[eAxis].Busy,
-		Active			=>GVL.stMoveHomingOut[eAxis].Active,
-		CommandAborted	=>GVL.stMoveHomingOut[eAxis].CommandAborted,
-		Error			=>GVL.stMoveHomingOut[eAxis].Error,
-		ErrorID			=>GVL.stMoveHomingOut[eAxis].ErrorID
+		Done			=>,
+		Busy			=>,
+		Active			=>,
+		CommandAborted	=>,
+		Error			=>,
+		ErrorID			=>
 	);	
 
-//Jog駆動
-	fbMcMoveJog[eAxis](
+//ジョグ
+	GVL_Motion.fbMcMoveJog[eAxis](
 		Axis			:=GVL.stAxis[eAxis],
-		Execute   		:=GVL.bJog[eAxis],
-		Position    	:=GVL.lrJogPosition[eAxis],
-		Velocity       	:=50,
-		Acceleration   	:=,
-		Deceleration    :=,
-		Jerk            :=,
-		BufferMode		:=MC_BlendingNext,
-		Done			=>GVL.stMoveJogOut[eAxis].Done,
-		Busy			=>GVL.stMoveJogOut[eAxis].Busy,
-		Active			=>GVL.stMoveJogOut[eAxis].Active,
-		CommandAborted	=>GVL.stMoveJogOut[eAxis].CommandAborted,
-		Error			=>GVL.stMoveJogOut[eAxis].Error,
-		ErrorID			=>GVL.stMoveJogOut[eAxis].ErrorID
-	);
-
-
+		Execute			:=GVL_Motion.bJog[eAxis],
+		Position		:=GVL_Motion.lrJogPosition[eAxis],
+		Velocity		:=50,
+		Done			=>,
+		Busy			=>,
+		Active			=>,
+		CommandAborted	=>,
+		Error			=>,
+		ErrorID			=>
+	);	
+	
 //全軸一時停止
-	fbMCHalt[eAxis](
+	GVL_Motion.fbMCHalt[eAxis](
 		Axis			:=GVL.stAxis[eAxis],
-		Execute			:=GVL.bHalt,
-		Done			=>GVL.stHaltOut[eAxis].Done,
-		Busy			=>GVL.stHaltOut[eAxis].Busy,
-		Active			=>GVL.stHaltOut[eAxis].Active,
-		CommandAborted	=>GVL.stHaltOut[eAxis].CommandAborted,
-		Error			=>GVL.stHaltOut[eAxis].Error,
-		ErrorID			=>GVL.stHaltOut[eAxis].ErrorID
+		Execute			:=GVL_Motion.bHalt,
+		Done			=>,
+		Busy			=>,
+		Active			=>,
+		CommandAborted	=>,
+		Error			=>,
+		ErrorID			=>
 	);
 
 //全軸ストップ
-	fbMCStop[eAxis](
+	GVL_Motion.fbMCStop[eAxis](
 		Axis			:=GVL.stAxis[eAxis],
-		Execute			:=GVL.bStop,
-		Done			=>GVL.stStopOut[eAxis].Done,
-		Busy			=>GVL.stStopOut[eAxis].Busy,
-		Active			=>GVL.stStopOut[eAxis].Active,
-		CommandAborted	=>GVL.stStopOut[eAxis].CommandAborted,
-		Error			=>GVL.stStopOut[eAxis].Error,
-		ErrorID			=>GVL.stStopOut[eAxis].ErrorID
+		Execute			:=GVL_Motion.bStop,
+		Done			=>,
+		Busy			=>,
+		Active			=>,
+		CommandAborted	=>,
+		Error			=>,
+		ErrorID			=>
 	);
 	
 //全軸リセット
-	fbMcReset[eAxis](
-		Axis:=GVL.stAxis[eAxis],
-		Execute:=GVL.bReset
+	GVL_Motion.fbMcReset[eAxis](
+		Axis			:=GVL.stAxis[eAxis],
+		Execute			:=GVL_Motion.bReset,
+		Done			=>,
+		Busy			=>,
+		Error			=>,
+		ErrorID			=>
 	);]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="P_Motion">
-      <LineId Id="20" Count="2" />
-      <LineId Id="38" Count="8" />
+      <LineId Id="39" Count="7" />
+      <LineId Id="150" Count="2" />
+      <LineId Id="64" Count="2" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="81" Count="13" />
+      <LineId Id="153" Count="2" />
+      <LineId Id="98" Count="6" />
+      <LineId Id="160" Count="3" />
+      <LineId Id="111" Count="21" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="69" Count="0" />
     </LineIds>
     <LineIds Name="P_Motion.aMotion">
-      <LineId Id="107" Count="74" />
+      <LineId Id="107" Count="12" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="121" Count="12" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="204" Count="11" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="154" Count="31" />
       <LineId Id="53" Count="0" />
     </LineIds>
   </POU>

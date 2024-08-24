@@ -8,10 +8,10 @@ END_VAR
     <Implementation>
       <ST><![CDATA[	//---マシンステートFB---
 	GVL_Alarm.fbMachineState(
-		bStay:= NOT GVL.bPower AND NOT GVL_Motion.bAxisMove,
-		bStop:= GVL.bPower AND NOT GVL_Motion.bAxisMove,
-		bMoving:=GVL_Motion.bAxisMove,
-		bStopMachine=>GVL.bStop
+		bStay			:= NOT GVL_Motion.bPower AND NOT GVL_Motion.bAxisMove,
+		bStop			:= GVL_Motion.bPower AND NOT GVL_Motion.bAxisMove,
+		bMoving			:=GVL_Motion.bAxisMove,
+		bStopMachine	=>
 	);
 
 	//---アラーム制御---
@@ -34,25 +34,25 @@ END_VAR
 	);
 	
 	GVL_Alarm.fbAlarmXAxisMovingGripSwichNotOn(
-		bRaise		:=GVL.stAxis[E_Axis.X_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL.stAxis[E_Axis.X_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
 	GVL_Alarm.fbAlarmYAxisMovingGripSwichNotOn(
-		bRaise		:=GVL.stAxis[E_Axis.Y_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL.stAxis[E_Axis.Y_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
 	GVL_Alarm.fbAlarmZAxisMovingGripSwichNotOn(
-		bRaise		:=GVL.stAxis[E_Axis.Z_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL.stAxis[E_Axis.Z_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
 	GVL_Alarm.fbAlarmGripperMovingGripSwichNotOn(
-		bRaise		:=GVL.stAxis[E_Axis.Gripper].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL.stAxis[E_Axis.Gripper].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Patlite.bSwitch,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);

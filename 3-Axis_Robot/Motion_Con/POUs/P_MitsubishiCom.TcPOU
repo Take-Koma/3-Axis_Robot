@@ -3,10 +3,6 @@
   <POU Name="P_MitsubishiCom" Id="{7551431c-0546-4892-8591-c118fe27ff05}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_MitsubishiCom
 VAR
-	fbMcPowerTon					:ton;
-	fbMcPowerREdge					:R_TRIG;
-	fbMcPowerFEdge					:F_TRIG;
-	bQX004: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//---GVLのModbus TCPの変数をGVL_Mitsubishiの変数に書き込み---
@@ -74,68 +70,6 @@ END_VAR]]></Declaration>
 		RETURN;
 	END_IF
 
-//--スイッチ状態をアラームにセット---(GOTのスイッチ表示の変わり)
-
-
-//-----McPoerのOnとOff------
-	fbMcPowerREdge(CLK:=GVL_MitsubishiCom.bFromMcPowerOn,Q=>);
-	fbMcPowerFEdge(CLK:=GVL_MitsubishiCom.bToMcPowerOn,Q=>);
-	fbMcPowerTon(IN:=GVL_MitsubishiCom.bFromMcPowerOn,PT:=T#3S,Q=>,ET=>);
-
-	IF GVL.bPower=FALSE AND fbMcPowerREdge.Q=TRUE THEN;
-		GVL.bPower:=TRUE;
-	ELSIF GVL.bPower=TRUE AND fbMcPowerTon.Q=TRUE THEN ;
-		GVL.bPower:=FALSE;
-	ELSIF fbMcPowerFEdge.Q=TRUE THEN;
-		GVL.bPower:=FALSE;
-	END_IF;
-	
-	IF GVL.bMcPowerStatus[E_Axis.X_Axis]=TRUE AND GVL.bMcPowerStatus[E_Axis.Y_Axis]=TRUE AND GVL.bMcPowerStatus[E_Axis.Z_Axis]=TRUE AND GVL.bMcPowerStatus[E_Axis.Gripper]=TRUE THEN;
-		GVL_MitsubishiCom.bToMcPowerOn:=TRUE;
-	ELSE;
-		GVL_MitsubishiCom.bToMcPowerOn:=FALSE;
-	END_IF;
-	
-//-----ゼロポジション実行-----
-	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
-		GVL.bHome:=GVL_MitsubishiCom.bFromMcMoveHomeOn;
-	END_IF
-
-	IF GVL.stMoveHomingOut[E_Axis.X_Axis].Busy=TRUE OR GVL.stMoveHomingOut[E_Axis.Y_Axis].Busy=TRUE OR GVL.stMoveHomingOut[E_Axis.Z_Axis].Busy=TRUE OR GVL.stMoveHomingOut[E_Axis.Gripper].Busy=TRUE THEN;
-		GVL_MitsubishiCom.bToMcMoveHomeOn:=TRUE;
-	ELSE;
-		GVL_MitsubishiCom.bToMcMoveHomeOn:=FALSE;
-	END_IF;
-
-
-//-----Jog実行-----
-	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
-		//X軸
-		GVL.bJog[E_Axis.X_Axis]:=GVL_MitsubishiCom.bFromXAxisJogStart;
-		GVL.lrJogPosition[E_Axis.X_Axis]:=GVL_MitsubishiCom.wFromXAxisJogTarget;
-		
-		//Y軸
-		GVL.bJog[E_Axis.Y_Axis]:=GVL_MitsubishiCom.bFromYAxisJogStart;
-		GVL.lrJogPosition[E_Axis.Y_Axis]:=GVL_MitsubishiCom.wFromYAxisJogTarget;
-		
-		//Z軸 ステージにグリッパーがあたるのでZ軸は300無しで
-		GVL.bJog[E_Axis.Z_Axis]:=GVL_MitsubishiCom.bFromZAxisJogStart;
-		GVL.lrJogPosition[E_Axis.Z_Axis]:=GVL_MitsubishiCom.wFromZAxisJogTarget;
-		IF GVL.lrJogPosition[E_Axis.Z_Axis]>230 THEN;
-			GVL.lrJogPosition[E_Axis.Z_Axis]:=225;
-		END_IF
-
-		//グリッパー
-		GVL.bJog[E_Axis.Gripper]:=GVL_MitsubishiCom.bFromGripperJogStart;
-		GVL.lrJogPosition[E_Axis.Gripper]:=WORD_TO_INT(GVL_MitsubishiCom.wFromGripperJogTarget);
-	END_IF
-
-
-//-----停止ボタン----
-	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
-		GVL.bHalt:=GVL_MitsubishiCom.bFromMcHaltOn;
-	END_IF
-
 //-----カメラシャッター応答-----
 	GVL_MitsubishiCom.bToCameraSoftWareTrigger:=GVL_MitsubishiCom.bFromCameraTrigger;
 
@@ -155,8 +89,7 @@ END_VAR]]></Declaration>
       <LineId Id="1548" Count="29" />
       <LineId Id="1707" Count="1" />
       <LineId Id="1578" Count="11" />
-      <LineId Id="1599" Count="22" />
-      <LineId Id="1623" Count="39" />
+      <LineId Id="1599" Count="0" />
       <LineId Id="1671" Count="8" />
       <LineId Id="940" Count="0" />
     </LineIds>

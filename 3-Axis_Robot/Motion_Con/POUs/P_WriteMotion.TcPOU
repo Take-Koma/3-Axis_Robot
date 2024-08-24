@@ -14,7 +14,7 @@ END_VAR]]></Declaration>
 
 E_WriteStep.Stay:(*初期値、bMoveがTrueになったらステップを進める*)
 
-	IF GVL.bMove=TRUE THEN
+	IF GVL.bWriteMoveStart=TRUE THEN
 		GVL.bCircleWriteFin:=FALSE;
 		GVL.bEllipseWriteFin:=FALSE;
 		eStep:=E_WriteStep.GripperOpen;
@@ -255,7 +255,7 @@ END_CASE;
       </Implementation>
     </Action>
     <LineIds Name="P_WriteMotion">
-      <LineId Id="1820" Count="181" />
+      <LineId Id="2009" Count="181" />
       <LineId Id="861" Count="0" />
     </LineIds>
     <LineIds Name="P_WriteMotion.aMotion">
