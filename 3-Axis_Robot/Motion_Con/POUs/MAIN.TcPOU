@@ -10,11 +10,11 @@ END_VAR
 P_Alarm();
 P_Patlite();
 P_Motion();
-P_WriteMotion();
+P_MotionWrite();
 P_MitsubishiCom();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="24" Count="4" />
+      <LineId Id="32" Count="4" />
       <LineId Id="12" Count="0" />
     </LineIds>
   </POU>

@@ -109,7 +109,7 @@
     <Compile Include="POUs\P_Patlite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\P_WriteMotion.TcPOU">
+    <Compile Include="POUs\P_MotionWrite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\P_MitsubishiCom.TcPOU">

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="P_WriteMotion" Id="{a13c4fb8-4faa-4e1e-970b-514f68ab2a7e}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM P_WriteMotion
+  <POU Name="P_MotionWrite" Id="{a13c4fb8-4faa-4e1e-970b-514f68ab2a7e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_MotionWrite
 VAR
 	eStep				:E_WriteStep:=E_WriteStep.Stay;
 	iStep				:INT:=0;
@@ -254,11 +254,11 @@ END_CASE;
 	);]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="P_WriteMotion">
+    <LineIds Name="P_MotionWrite">
       <LineId Id="2009" Count="181" />
       <LineId Id="861" Count="0" />
     </LineIds>
-    <LineIds Name="P_WriteMotion.aMotion">
+    <LineIds Name="P_MotionWrite.aMotion">
       <LineId Id="3" Count="54" />
       <LineId Id="1" Count="0" />
     </LineIds>
