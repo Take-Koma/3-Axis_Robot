@@ -53,6 +53,79 @@
 			</Properties>
 		</DataType>
 		<DataType>
+			<Name GUID="{EDB6C057-C1BE-4DFC-8F44-C0D3BE174E7E}" PersistentType="true">UserEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
+			<EventId>
+				<Name Id="1">SafetyNotRun</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyNotRun]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">SafetyFbError</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyFbError]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">EmergencyStop</Name>
+				<DisplayName TxtId=""><![CDATA[EmergencyStop]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">XAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[XAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">YAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[YAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">ZAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[ZAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">GripperMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[GripperMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">MITSUBISHIError</Name>
+				<DisplayName TxtId=""><![CDATA[MITSUBISHIError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">XAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[XAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">YAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[YAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">ZAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[ZAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">GripperError</Name>
+				<DisplayName TxtId=""><![CDATA[GripperError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
+				<Hide GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}"/>
+				<Hide GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}"/>
+				<Hide GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}"/>
+				<Hide GUID="{85F10369-3066-470C-9109-6B8A334012B3}"/>
+				<Hide GUID="{60B74FB8-927E-462A-9AED-AFB161A35527}"/>
+				<Hide GUID="{BF0E44CE-E43F-44BC-88E3-57225BA59005}"/>
+			</Hides>
+		</DataType>
+		<DataType>
 			<Name GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}" PersistentType="true">UserEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
 			<EventId>
@@ -1402,79 +1475,6 @@
 				<Hide GUID="{D9AEB34B-B8C6-45FF-AB8E-264B76ACB690}"/>
 				<Hide GUID="{DD32210F-42B2-48F1-9078-C36AE938BB7C}"/>
 				<Hide GUID="{F2E286DA-631F-4DCF-841F-9F9AAC9197A0}"/>
-			</Hides>
-		</DataType>
-		<DataType>
-			<Name GUID="{EDB6C057-C1BE-4DFC-8F44-C0D3BE174E7E}" PersistentType="true">UserEventClass</Name>
-			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
-			<EventId>
-				<Name Id="1">SafetyNotRun</Name>
-				<DisplayName TxtId=""><![CDATA[SafetyNotRun]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="2">SafetyFbError</Name>
-				<DisplayName TxtId=""><![CDATA[SafetyFbError]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="3">EmergencyStop</Name>
-				<DisplayName TxtId=""><![CDATA[EmergencyStop]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="4">XAxisMovingGripSwichNotOn</Name>
-				<DisplayName TxtId=""><![CDATA[XAxisMovingGripSwichNotOn]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="5">YAxisMovingGripSwichNotOn</Name>
-				<DisplayName TxtId=""><![CDATA[YAxisMovingGripSwichNotOn]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="6">ZAxisMovingGripSwichNotOn</Name>
-				<DisplayName TxtId=""><![CDATA[ZAxisMovingGripSwichNotOn]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="7">GripperMovingGripSwichNotOn</Name>
-				<DisplayName TxtId=""><![CDATA[GripperMovingGripSwichNotOn]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="8">MITSUBISHIError</Name>
-				<DisplayName TxtId=""><![CDATA[MITSUBISHIError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="9">XAxisError</Name>
-				<DisplayName TxtId=""><![CDATA[XAxisError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="10">YAxisError</Name>
-				<DisplayName TxtId=""><![CDATA[YAxisError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="11">ZAxisError</Name>
-				<DisplayName TxtId=""><![CDATA[ZAxisError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="12">GripperError</Name>
-				<DisplayName TxtId=""><![CDATA[GripperError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<Hides>
-				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
-				<Hide GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}"/>
-				<Hide GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}"/>
-				<Hide GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}"/>
-				<Hide GUID="{85F10369-3066-470C-9109-6B8A334012B3}"/>
-				<Hide GUID="{60B74FB8-927E-462A-9AED-AFB161A35527}"/>
-				<Hide GUID="{BF0E44CE-E43F-44BC-88E3-57225BA59005}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

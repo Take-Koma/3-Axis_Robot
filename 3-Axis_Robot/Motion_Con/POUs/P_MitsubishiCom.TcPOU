@@ -8,12 +8,20 @@ END_VAR]]></Declaration>
       <ST><![CDATA[//---GVLのModbus TCPの変数をGVL_Mitsubishiの変数に書き込み---
 
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
+	GVL.mb_Input_Coils[0]										:=GVL_MitsubishiCom.bToXAxisError;
+	GVL.mb_Input_Coils[1]										:=GVL_MitsubishiCom.bToYAxisError;
+	GVL.mb_Input_Coils[2]										:=GVL_MitsubishiCom.bToZAxisError;
+	GVL.mb_Input_Coils[3]										:=GVL_MitsubishiCom.bToGripperError;
 	GVL.mb_Input_Coils[4]										:=GVL_MitsubishiCom.bToMcPowerOn;
 	GVL.mb_Input_Coils[5]										:=GVL_MitsubishiCom.bToMcMoveHomeOn;
 	GVL.mb_Input_Coils[6]										:=GVL_MitsubishiCom.bToMcHaltOn;
 	GVL.mb_Input_Coils[7]										:=GVL_MitsubishiCom.bToCameraSoftWareTrigger;
 	GVL.mb_Input_Coils[8]										:=GVL_MitsubishiCom.bToAlarmReset;
 	GVL.mb_Input_Coils[9]										:=GVL_MitsubishiCom.bToSafetyReset;
+	GVL.mb_Input_Coils[10]										:=GVL_MitsubishiCom.bToXAsisMoving;
+	GVL.mb_Input_Coils[11]										:=GVL_MitsubishiCom.bToYAsisMoving;
+	GVL.mb_Input_Coils[12]										:=GVL_MitsubishiCom.bToZAsisMoving;
+	GVL.mb_Input_Coils[13]										:=GVL_MitsubishiCom.bToGripperMoving;
 	//---アラームここから---
 	GVL.mb_Input_Coils[104]										:=GVL_Alarm.fbAlarmSafetyNotRun.bRaised;
 	GVL.mb_Input_Coils[105]										:=GVL_Alarm.fbAlarmSafetyFbError.bRaised;
@@ -30,6 +38,7 @@ END_VAR]]></Declaration>
 	//---アラームここまで---
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
+	GVL_MitsubishiCom.bFromAxisErrorReset						:=GVL.mb_Output_Coils[0];
 	GVL_MitsubishiCom.bFromEStop								:=GVL.mb_Output_Coils[1];
 	GVL_MitsubishiCom.bFromKeySwitchOpen						:=GVL.mb_Output_Coils[2];
 	GVL_MitsubishiCom.bFromKeySwitchClose						:=GVL.mb_Output_Coils[3];
@@ -46,7 +55,10 @@ END_VAR]]></Declaration>
 	GVL_MitsubishiCom.bFromGripperJogStart						:=GVL.mb_Output_Coils[19];
 
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
-	//変数なし
+	GVL.mb_Input_Registers[0]									:=GVL_MitsubishiCom.wToXAxisActPos;
+	GVL.mb_Input_Registers[1]									:=GVL_MitsubishiCom.wToYAxisActPos;
+	GVL.mb_Input_Registers[2]									:=GVL_MitsubishiCom.wToZAxisActPos;
+	GVL.mb_Input_Registers[3]									:=GVL_MitsubishiCom.wToGripperActPos;
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
 	GVL_MitsubishiCom.wFromXAxisJogTarget						:=GVL.mb_Output_Registers[16];
@@ -85,14 +97,22 @@ END_VAR]]></Declaration>
 ]]></ST>
     </Implementation>
     <LineIds Name="P_MitsubishiCom">
-      <LineId Id="1539" Count="8" />
+      <LineId Id="1539" Count="2" />
+      <LineId Id="1718" Count="3" />
+      <LineId Id="1542" Count="5" />
+      <LineId Id="1726" Count="2" />
+      <LineId Id="1725" Count="0" />
       <LineId Id="1687" Count="0" />
       <LineId Id="1690" Count="3" />
       <LineId Id="1699" Count="2" />
       <LineId Id="1688" Count="0" />
       <LineId Id="1711" Count="3" />
       <LineId Id="1689" Count="0" />
-      <LineId Id="1548" Count="29" />
+      <LineId Id="1548" Count="1" />
+      <LineId Id="1717" Count="0" />
+      <LineId Id="1550" Count="15" />
+      <LineId Id="1729" Count="2" />
+      <LineId Id="1566" Count="11" />
       <LineId Id="1707" Count="1" />
       <LineId Id="1578" Count="11" />
       <LineId Id="1599" Count="0" />

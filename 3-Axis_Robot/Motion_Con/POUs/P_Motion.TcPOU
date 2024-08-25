@@ -16,6 +16,23 @@ END_VAR]]></Declaration>
 	GVL_Axis.stAxis[E_Axis.Z_Axis].ReadStatus();
 	GVL_Axis.stAxis[E_Axis.Gripper].ReadStatus();
 	
+	//---各軸のステータスを三菱へ出力---
+	//Error
+	GVL_MitsubishiCom.bToXAxisError:=GVL_Axis.stAxis[E_Axis.X_Axis].Status.Error;
+	GVL_MitsubishiCom.bToYAxisError:=GVL_Axis.stAxis[E_Axis.Y_Axis].Status.Error;
+	GVL_MitsubishiCom.bToZAxisError:=GVL_Axis.stAxis[E_Axis.Z_Axis].Status.Error;
+	GVL_MitsubishiCom.bToGripperError:=GVL_Axis.stAxis[E_Axis.Gripper].Status.Error;
+	//Moving
+	GVL_MitsubishiCom.bToXAsisMoving:=GVL_Axis.stAxis[E_Axis.X_Axis].Status.Moving;
+	GVL_MitsubishiCom.bToYAsisMoving:=GVL_Axis.stAxis[E_Axis.Y_Axis].Status.Moving;
+	GVL_MitsubishiCom.bToZAsisMoving:=GVL_Axis.stAxis[E_Axis.Z_Axis].Status.Moving;
+	GVL_MitsubishiCom.bToGripperMoving:=GVL_Axis.stAxis[E_Axis.Gripper].Status.Moving;
+	//ActPos
+	GVL_MitsubishiCom.wToXAxisActPos:=LREAL_TO_WORD(GVL_Axis.stAxis[E_Axis.X_Axis].NcToPlc.ActPos);
+	GVL_MitsubishiCom.wToYAxisActPos:=LREAL_TO_WORD(GVL_Axis.stAxis[E_Axis.Y_Axis].NcToPlc.ActPos);
+	GVL_MitsubishiCom.wToZAxisActPos:=LREAL_TO_WORD(GVL_Axis.stAxis[E_Axis.Z_Axis].NcToPlc.ActPos);
+	GVL_MitsubishiCom.wToGripperActPos:=LREAL_TO_WORD(GVL_Axis.stAxis[E_Axis.Gripper].NcToPlc.ActPos);
+	
 	//---各軸が動いているかをまとめる---
 	GVL_Motion.bAxisMove:= GVL_Axis.stAxis[E_Axis.X_Axis].Status.Moving 
 						OR GVL_Axis.stAxis[E_Axis.Y_Axis].Status.Moving
@@ -25,8 +42,16 @@ END_VAR]]></Declaration>
 	//---マシンステートのファンクションブロックが停止出力していたら停止---
 	GVL_Motion.bStop:=GVL_Alarm.fbMachineState.bStopMachine;
 
-	//-----停止ボタン----
+	//---一時停止ボタン---
 	GVL_Motion.bHalt:=GVL_MitsubishiCom.bFromMcHaltOn;
+	
+	GVL_MitsubishiCom.bToMcHaltOn:=GVL_Motion.fbMcHalt[E_Axis.X_Axis].Done
+								AND GVL_Motion.fbMcHalt[E_Axis.Y_Axis].Done
+								AND GVL_Motion.fbMcHalt[E_Axis.Z_Axis].Done
+								AND GVL_Motion.fbMcHalt[E_Axis.Gripper].Done;
+	
+	//---軸エラーのリセットボタン---
+	GVL_Motion.bReset:=GVL_MitsubishiCom.bFromAxisErrorReset;
 	
 	//-----McPoerのOnとOff------
 	fbMcPowerREdge(CLK:=GVL_MitsubishiCom.bFromMcPowerOn,Q=>);
@@ -164,12 +189,25 @@ END_VAR]]></Declaration>
       </Implementation>
     </Action>
     <LineIds Name="P_Motion">
-      <LineId Id="39" Count="7" />
+      <LineId Id="39" Count="4" />
+      <LineId Id="171" Count="1" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="174" Count="2" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="185" Count="2" />
+      <LineId Id="183" Count="1" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="188" Count="2" />
+      <LineId Id="44" Count="2" />
       <LineId Id="150" Count="2" />
       <LineId Id="64" Count="2" />
       <LineId Id="140" Count="0" />
       <LineId Id="156" Count="0" />
       <LineId Id="158" Count="0" />
+      <LineId Id="191" Count="1" />
+      <LineId Id="194" Count="2" />
+      <LineId Id="178" Count="2" />
       <LineId Id="141" Count="0" />
       <LineId Id="81" Count="13" />
       <LineId Id="153" Count="2" />

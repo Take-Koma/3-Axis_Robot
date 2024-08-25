@@ -14,14 +14,23 @@ VAR_GLOBAL
 	bYI004									AT %I* :BOOL;				//三菱のY7より出力 ターミナル4(EL1088)チャンネル4
 	
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
+	bToXAxisError									:BOOL;				//0:X軸エラー発生中
+	bToYAxisError									:BOOL;				//1:Y軸エラー発生中
+	bToZAxisError									:BOOL;				//2:Z軸エラー発生中
+	bToGripperError									:BOOL;				//3:グリッパーエラー発生中
 	bToMcPowerOn									:BOOL;				//4:McPower On
 	bToMcMoveHomeOn									:BOOL;				//5:McMoveHome On
 	bToMcHaltOn										:BOOL;				//6:McHalt On
 	bToCameraSoftWareTrigger						:BOOL;				//7:カメラのトリガー
 	bToAlarmReset									:BOOL;				//8:アラームリセット
 	bToSafetyReset									:BOOL;				//9:セフティーリセット
+	bToXAsisMoving									:BOOL;				//10:X軸起動中
+	bToYAsisMoving									:BOOL;				//11:Y軸起動中
+	bToZAsisMoving									:BOOL;				//12:Z軸起動中
+	bToGripperMoving								:BOOL;				//13:グリッパー起動中
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
+	bFromAxisErrorReset								:BOOL;				//0:軸エラーのリセット
 	bFromEStop										:BOOL;				//1:非常停止ボタン（通常ON）
 	bFromKeySwitchOpen								:BOOL;				//2:キースイッチ(開)
 	bFromKeySwitchClose								:BOOL;				//3:キースイッチ(閉)
@@ -38,7 +47,10 @@ VAR_GLOBAL
 	bFromGripperJogStart							:BOOL;				//19:グリッパーJog起動
 	
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
-	//変数なし
+	wToXAxisActPos									:WORD;				//0:X軸ポジション
+	wToYAxisActPos									:WORD;				//1:Y軸ポジション
+	wToZAxisActPos									:WORD;				//2:Z軸ポジション
+	wToGripperActPos								:WORD;				//3:グリッパーポジション
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
 	wFromXAxisJogTarget								:WORD;				//16:X軸Jogターゲットポジション

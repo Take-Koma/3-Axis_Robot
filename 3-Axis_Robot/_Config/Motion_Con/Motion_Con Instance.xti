@@ -15235,7 +15235,7 @@ External Setpoint Generation:
 			</Hides>
 		</DataType>
 	</DataTypes>
-	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{F55D3376-A4C6-B9FC-CDE7-9D99A4242F36}">
+	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{66FD511B-9823-4688-E8C8-36202B7D45EA}">
 		<Name>__FILENAME__</Name>
 		<TmcDesc GUID="{3E578FBF-8593-4971-A049-A334D40A2DE2}" TcSmClass="TComPlcObjDef">
 			<Name>Motion_Con</Name>
@@ -15384,7 +15384,7 @@ External Setpoint Generation:
 					<AreaNo AreaType="InputDst" CreateSymbols="true">0</AreaNo>
 					<Name>PlcTask Inputs</Name>
 					<ContextId>0</ContextId>
-					<ByteSize>851968</ByteSize>
+					<ByteSize>786432</ByteSize>
 					<Symbol>
 						<Name>GVL_Axis.stAxis[0].NcToPlc</Name>
 						<BitSize>2048</BitSize>
@@ -15495,7 +15495,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807760</BitOffs>
+						<BitOffs>3807896</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bFbEStopInput1</Name>
@@ -15511,7 +15511,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807768</BitOffs>
+						<BitOffs>3807904</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bFbEStopInput2</Name>
@@ -15527,7 +15527,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807776</BitOffs>
+						<BitOffs>3807912</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bGripSwich</Name>
@@ -15543,7 +15543,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807784</BitOffs>
+						<BitOffs>3807920</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bFbEstopOutput</Name>
@@ -15559,7 +15559,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807792</BitOffs>
+						<BitOffs>3807928</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bSafetyInRun</Name>
@@ -15575,7 +15575,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807808</BitOffs>
+						<BitOffs>3807944</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bFbEstopError</Name>
@@ -15591,7 +15591,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807840</BitOffs>
+						<BitOffs>3807976</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bFbEdmError</Name>
@@ -15607,14 +15607,14 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807848</BitOffs>
+						<BitOffs>3807984</BitOffs>
 					</Symbol>
 				</DataArea>
 				<DataArea>
 					<AreaNo AreaType="OutputSrc" CreateSymbols="true">1</AreaNo>
 					<Name>PlcTask Outputs</Name>
 					<ContextId>0</ContextId>
-					<ByteSize>851968</ByteSize>
+					<ByteSize>786432</ByteSize>
 					<Symbol>
 						<Name>GVL_Axis.stAxis[0].PlcToNc</Name>
 						<BitSize>1024</BitSize>
@@ -15741,7 +15741,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3729648</BitOffs>
+						<BitOffs>3691640</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Patlite.bGreenLed</Name>
@@ -15757,7 +15757,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3729656</BitOffs>
+						<BitOffs>3807872</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Patlite.bBlueLed</Name>
@@ -15773,7 +15773,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807744</BitOffs>
+						<BitOffs>3807880</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Patlite.bBuzzerON</Name>
@@ -15789,7 +15789,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807752</BitOffs>
+						<BitOffs>3807888</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bSafetyRun_Stop</Name>
@@ -15805,7 +15805,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807800</BitOffs>
+						<BitOffs>3807936</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bSafetyErrAck</Name>
@@ -15821,7 +15821,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807816</BitOffs>
+						<BitOffs>3807952</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bFbEStopEDM</Name>
@@ -15837,7 +15837,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807824</BitOffs>
+						<BitOffs>3807960</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Safety.bFbEStopReset</Name>
@@ -15853,14 +15853,14 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807832</BitOffs>
+						<BitOffs>3807968</BitOffs>
 					</Symbol>
 				</DataArea>
 				<DataArea>
 					<AreaNo AreaType="Internal" CreateSymbols="true">3</AreaNo>
 					<Name>PlcTask Internal</Name>
 					<ContextId>0</ContextId>
-					<ByteSize>851968</ByteSize>
+					<ByteSize>786432</ByteSize>
 					<Symbol>
 						<Name>Global_Variables.AMSPORT_R0_NCSAF</Name>
 						<BitSize>16</BitSize>
@@ -16540,6 +16540,21 @@ External Setpoint Generation:
 						<BitOffs>3526320</BitOffs>
 					</Symbol>
 					<Symbol>
+						<Name>GVL.mb_Input_Registers</Name>
+						<BitSize>4096</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements>256</Elements>
+						</ArrayInfo>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3528368</BitOffs>
+					</Symbol>
+					<Symbol>
 						<Name>GVL.mb_Output_Registers</Name>
 						<BitSize>4096</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
@@ -16854,6 +16869,54 @@ External Setpoint Generation:
 						<BitOffs>3595904</BitOffs>
 					</Symbol>
 					<Symbol>
+						<Name>GVL_MitsubishiCom.bToXAxisError</Name>
+						<Comment><![CDATA[0:X軸エラー発生中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632320</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bToYAxisError</Name>
+						<Comment><![CDATA[1:Y軸エラー発生中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632328</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bToZAxisError</Name>
+						<Comment><![CDATA[2:Z軸エラー発生中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632336</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bToGripperError</Name>
+						<Comment><![CDATA[3:グリッパーエラー発生中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632344</BitOffs>
+					</Symbol>
+					<Symbol>
 						<Name>GVL_MitsubishiCom.bToMcPowerOn</Name>
 						<Comment><![CDATA[4:McPower On]]></Comment>
 						<BitSize>8</BitSize>
@@ -16863,7 +16926,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632320</BitOffs>
+						<BitOffs>3632352</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bToMcMoveHomeOn</Name>
@@ -16875,7 +16938,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632328</BitOffs>
+						<BitOffs>3632360</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bToMcHaltOn</Name>
@@ -16887,7 +16950,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632336</BitOffs>
+						<BitOffs>3632368</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bToCameraSoftWareTrigger</Name>
@@ -16899,7 +16962,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632344</BitOffs>
+						<BitOffs>3632376</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bToAlarmReset</Name>
@@ -16911,7 +16974,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632352</BitOffs>
+						<BitOffs>3632384</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bToSafetyReset</Name>
@@ -16923,7 +16986,67 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632360</BitOffs>
+						<BitOffs>3632392</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bToXAsisMoving</Name>
+						<Comment><![CDATA[10:X軸起動中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632400</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bToYAsisMoving</Name>
+						<Comment><![CDATA[11:Y軸起動中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632408</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bToZAsisMoving</Name>
+						<Comment><![CDATA[12:Z軸起動中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632416</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bToGripperMoving</Name>
+						<Comment><![CDATA[13:グリッパー起動中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632424</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bFromAxisErrorReset</Name>
+						<Comment><![CDATA[0:軸エラーのリセット]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632432</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromEStop</Name>
@@ -16935,7 +17058,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632368</BitOffs>
+						<BitOffs>3632440</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromKeySwitchOpen</Name>
@@ -16947,7 +17070,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632376</BitOffs>
+						<BitOffs>3632448</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromKeySwitchClose</Name>
@@ -16959,7 +17082,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632384</BitOffs>
+						<BitOffs>3632456</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromMcPowerOn</Name>
@@ -16971,7 +17094,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632392</BitOffs>
+						<BitOffs>3632464</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromMcMoveHomeOn</Name>
@@ -16983,7 +17106,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632400</BitOffs>
+						<BitOffs>3632472</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromMcHaltOn</Name>
@@ -16995,7 +17118,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632408</BitOffs>
+						<BitOffs>3632480</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromCameraTrigger</Name>
@@ -17007,7 +17130,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632416</BitOffs>
+						<BitOffs>3632488</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromAlarmReset</Name>
@@ -17019,7 +17142,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632424</BitOffs>
+						<BitOffs>3632496</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromSafetyReset</Name>
@@ -17031,7 +17154,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632432</BitOffs>
+						<BitOffs>3632504</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromGripSwich</Name>
@@ -17043,7 +17166,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632440</BitOffs>
+						<BitOffs>3632512</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromXAxisJogStart</Name>
@@ -17055,7 +17178,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632448</BitOffs>
+						<BitOffs>3632520</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromYAxisJogStart</Name>
@@ -17067,7 +17190,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632456</BitOffs>
+						<BitOffs>3632528</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromZAxisJogStart</Name>
@@ -17079,7 +17202,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632464</BitOffs>
+						<BitOffs>3632536</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromGripperJogStart</Name>
@@ -17091,55 +17214,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632472</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_MitsubishiCom.wFromXAxisJogTarget</Name>
-						<Comment><![CDATA[16:X軸Jogターゲットポジション]]></Comment>
-						<BitSize>16</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3632480</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_MitsubishiCom.wFromYAxisJogTarget</Name>
-						<Comment><![CDATA[17:Y軸Jogターゲットポジション]]></Comment>
-						<BitSize>16</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3632496</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_MitsubishiCom.wFromZAxisJogTarget</Name>
-						<Comment><![CDATA[18:Z軸Jogターゲットポジション]]></Comment>
-						<BitSize>16</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3632512</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_MitsubishiCom.wFromGripperJogTarget</Name>
-						<Comment><![CDATA[19:グリッパーJogターゲットポジション]]></Comment>
-						<BitSize>16</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3632528</BitOffs>
+						<BitOffs>3632544</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.bPower</Name>
@@ -17151,7 +17226,103 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632544</BitOffs>
+						<BitOffs>3632552</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.wToXAxisActPos</Name>
+						<Comment><![CDATA[0:X軸ポジション]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632560</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.wToYAxisActPos</Name>
+						<Comment><![CDATA[1:Y軸ポジション]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632576</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.wToZAxisActPos</Name>
+						<Comment><![CDATA[2:Z軸ポジション]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632592</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.wToGripperActPos</Name>
+						<Comment><![CDATA[3:グリッパーポジション]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632608</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.wFromXAxisJogTarget</Name>
+						<Comment><![CDATA[16:X軸Jogターゲットポジション]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632624</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.wFromYAxisJogTarget</Name>
+						<Comment><![CDATA[17:Y軸Jogターゲットポジション]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632640</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.wFromZAxisJogTarget</Name>
+						<Comment><![CDATA[18:Z軸Jogターゲットポジション]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632656</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.wFromGripperJogTarget</Name>
+						<Comment><![CDATA[19:グリッパーJogターゲットポジション]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632672</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.bReset</Name>
@@ -17162,7 +17333,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632552</BitOffs>
+						<BitOffs>3632688</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.bStop</Name>
@@ -17174,18 +17345,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632560</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Motion.bHalt</Name>
-						<BitSize>8</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3632568</BitOffs>
+						<BitOffs>3632696</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.fbMcPower</Name>
@@ -17200,7 +17360,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3632576</BitOffs>
+						<BitOffs>3632704</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.fbMcReset</Name>
@@ -17215,7 +17375,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3636416</BitOffs>
+						<BitOffs>3636544</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.fbMcStop</Name>
@@ -17230,22 +17390,18 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3646400</BitOffs>
+						<BitOffs>3646528</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>GVL_Motion.fbMcHalt</Name>
-						<BitSize>38144</BitSize>
-						<BaseType GUID="{07C37427-B8CE-437F-08D2-1FBCA2055B53}" Namespace="Tc2_MC2">MC_Halt</BaseType>
-						<ArrayInfo>
-							<LBound>0</LBound>
-							<Elements>4</Elements>
-						</ArrayInfo>
+						<Name>GVL_Motion.bHalt</Name>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3691456</BitOffs>
+						<BitOffs>3691584</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.bHome</Name>
@@ -17257,7 +17413,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3729600</BitOffs>
+						<BitOffs>3691592</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.bJog</Name>
@@ -17272,7 +17428,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3729608</BitOffs>
+						<BitOffs>3691600</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.bAxisMove</Name>
@@ -17284,7 +17440,22 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3729640</BitOffs>
+						<BitOffs>3691632</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Motion.fbMcHalt</Name>
+						<BitSize>38144</BitSize>
+						<BaseType GUID="{07C37427-B8CE-437F-08D2-1FBCA2055B53}" Namespace="Tc2_MC2">MC_Halt</BaseType>
+						<ArrayInfo>
+							<LBound>0</LBound>
+							<Elements>4</Elements>
+						</ArrayInfo>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3691648</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.fbMcMoveHome</Name>
@@ -17299,7 +17470,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3729664</BitOffs>
+						<BitOffs>3729792</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.fbMcMoveJog</Name>
@@ -17314,7 +17485,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3768576</BitOffs>
+						<BitOffs>3768704</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.lrJogPosition</Name>
@@ -17329,7 +17500,21 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3807488</BitOffs>
+						<BitOffs>3807616</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>TwinCAT_SystemInfoVarList._TaskPouOid_PlcTask</Name>
+						<BitSize>32</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>no_init</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3810784</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>TwinCAT_SystemInfoVarList._AppInfo</Name>
@@ -17343,7 +17528,7 @@ External Setpoint Generation:
 								<Name>no_init</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3810624</BitOffs>
+						<BitOffs>3810816</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>TwinCAT_SystemInfoVarList._TaskInfo</Name>
@@ -17361,21 +17546,7 @@ External Setpoint Generation:
 								<Name>no_init</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3812672</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>TwinCAT_SystemInfoVarList._TaskPouOid_PlcTask</Name>
-						<BitSize>32</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>no_init</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3814720</BitOffs>
+						<BitOffs>3812864</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>TwinCAT_SystemInfoVarList._TaskOid_PlcTask</Name>
@@ -17389,7 +17560,7 @@ External Setpoint Generation:
 								<Name>no_init</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3814752</BitOffs>
+						<BitOffs>3814912</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>TwinCAT_SystemInfoVarList.__PlcTask</Name>
@@ -17410,14 +17581,14 @@ External Setpoint Generation:
 								<Value>PlcTask</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3814848</BitOffs>
+						<BitOffs>3815040</BitOffs>
 					</Symbol>
 				</DataArea>
 				<DataArea>
 					<AreaNo AreaType="InputDst" CreateSymbols="true">16</AreaNo>
 					<Name>VisionTask Inputs</Name>
 					<ContextId>1</ContextId>
-					<ByteSize>851968</ByteSize>
+					<ByteSize>786432</ByteSize>
 					<Symbol>
 						<Name>GVL.bEL1004Channel1</Name>
 						<Comment><![CDATA[ターミナル2(EL1004)チャンネル1]]></Comment>
@@ -17551,7 +17722,7 @@ External Setpoint Generation:
 					<AreaNo AreaType="OutputSrc" CreateSymbols="true">17</AreaNo>
 					<Name>VisionTask Outputs</Name>
 					<ContextId>1</ContextId>
-					<ByteSize>851968</ByteSize>
+					<ByteSize>786432</ByteSize>
 					<Symbol>
 						<Name>GVL.bEL2004Channel2</Name>
 						<Comment><![CDATA[ターミナル3(EL2004)チャンネル2]]></Comment>
@@ -17614,14 +17785,14 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3807856</BitOffs>
+						<BitOffs>3807992</BitOffs>
 					</Symbol>
 				</DataArea>
 				<DataArea>
 					<AreaNo AreaType="Internal" CreateSymbols="true">19</AreaNo>
 					<Name>VisionTask Internal</Name>
 					<ContextId>1</ContextId>
-					<ByteSize>851968</ByteSize>
+					<ByteSize>786432</ByteSize>
 					<Symbol>
 						<Name>Global_Version.stLibVersion_Tc2_EtherCAT</Name>
 						<BitSize>288</BitSize>
@@ -21591,21 +21762,6 @@ External Setpoint Generation:
 						<BitOffs>3345536</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>GVL.mb_Input_Registers</Name>
-						<BitSize>4096</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
-						<ArrayInfo>
-							<LBound>0</LBound>
-							<Elements>256</Elements>
-						</ArrayInfo>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3528368</BitOffs>
-					</Symbol>
-					<Symbol>
 						<Name>GVL_Vision.nDetectedNum</Name>
 						<Comment><![CDATA[ 検出したブログ数]]></Comment>
 						<BitSize>64</BitSize>
@@ -21615,7 +21771,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3807872</BitOffs>
+						<BitOffs>3808000</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Vision.aMassCenter</Name>
@@ -21630,7 +21786,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3807936</BitOffs>
+						<BitOffs>3808064</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>TwinCAT_LicenseInfoVarList._LicenseInfo</Name>
@@ -21645,7 +21801,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3809600</BitOffs>
+						<BitOffs>3809760</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>TwinCAT_SystemInfoVarList._TaskPouOid_VisionTask</Name>
@@ -21659,7 +21815,7 @@ External Setpoint Generation:
 								<Name>no_init</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3814784</BitOffs>
+						<BitOffs>3814944</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>TwinCAT_SystemInfoVarList._TaskOid_VisionTask</Name>
@@ -21673,7 +21829,7 @@ External Setpoint Generation:
 								<Name>no_init</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3814816</BitOffs>
+						<BitOffs>3814976</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>TwinCAT_SystemInfoVarList.__VisionTask</Name>
@@ -21694,7 +21850,7 @@ External Setpoint Generation:
 								<Value>VisionTask</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3815744</BitOffs>
+						<BitOffs>3815936</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>TC_EVENTS.UserEventClass</Name>
@@ -21720,7 +21876,7 @@ External Setpoint Generation:
 								<Value>C0228</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3886656</BitOffs>
+						<BitOffs>3886848</BitOffs>
 					</Symbol>
 				</DataArea>
 			</DataAreas>
@@ -21741,11 +21897,11 @@ External Setpoint Generation:
 				</Property>
 				<Property>
 					<Name>ChangeDate</Name>
-					<Value>2024-08-25T13:11:24</Value>
+					<Value>2024-08-26T08:09:09</Value>
 				</Property>
 				<Property>
 					<Name>GeneratedCodeSize</Name>
-					<Value>266240</Value>
+					<Value>249856</Value>
 				</Property>
 				<Property>
 					<Name>GlobalDataSize</Name>
@@ -21772,7 +21928,7 @@ External Setpoint Generation:
 				</Value>
 				<Value>
 					<Name>Application Timestamp</Name>
-					<Value>1724591484</Value>
+					<Value>1724659749</Value>
 				</Value>
 				<Value>
 					<Name>Symbolic Mapping</Name>
@@ -21943,11 +22099,8 @@ External Setpoint Generation:
 		<UnrestoredVarLinks ImportTime="2024-08-25T13:11:25">
 			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
 				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 7 (EL2911)">
-					<Link VarA="GVL_Safety.bFBEStopInput1" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input" Size="1" RestoreInfo="ANotFound"/>
-					<Link VarA="GVL_Safety.bFBEStopInput2" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input" Size="1" RestoreInfo="ANotFound"/>
-					<Link VarA="GVL_Safety.bFBEdmError" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^RobotSafety.bFBEdmError_22" Size="1" RestoreInfo="ANotFound"/>
-					<Link VarA="GVL_Safety.bFBEstopError" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^RobotSafety.bFBEstopError_21" Size="1" RestoreInfo="ANotFound"/>
-					<Link VarA="GVL_Safety.bFBEstopOutput" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bFBEdmError" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^RobotSafety.bFBEdmError_22" Size="1" RestoreInfo="BNotFound"/>
+					<Link VarA="GVL_Safety.bFBEstopError" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^RobotSafety.bFBEstopError_21" Size="1" RestoreInfo="BNotFound"/>
 				</OwnerB>
 				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
 					<Link VarA="GVL.stAxis[3].NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
@@ -21964,8 +22117,8 @@ External Setpoint Generation:
 			</OwnerA>
 			<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
 				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 7 (EL2911)">
-					<Link VarA="GVL_Safety.bFBEStopEDM" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^RobotSafety.bFBEStopEDM_7" Size="1" RestoreInfo="ANotFound"/>
-					<Link VarA="GVL_Safety.bFBEStopReset" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^RobotSafety.bFBEStopReset_5" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bFBEStopEDM" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^RobotSafety.bFBEStopEDM_7" Size="1" RestoreInfo="BNotFound"/>
+					<Link VarA="GVL_Safety.bFBEStopReset" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^RobotSafety.bFBEStopReset_5" Size="1" RestoreInfo="BNotFound"/>
 				</OwnerB>
 				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
 					<Link VarA="GVL.stAxis[3].PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
