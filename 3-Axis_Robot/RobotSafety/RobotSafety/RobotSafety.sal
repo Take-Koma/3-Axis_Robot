@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplication Crc="203582259" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+<safetyApplication Crc="2748514045" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="8a5e7921-06d0-42a2-84c1-3783c5f8a8f8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
   <networks>
     <safetyApplicationHasNetworks Id="2dfc7f51-388f-4443-b6ee-d734239cbc30">
       <Network Id="f769d51b-efc3-40dc-b34a-941dc0c52773" name="Network1" networkName="EStopEdm" intId="1" networkOrderId="0">
         <functionBlocks>
           <networkHasFunctionBlocks Id="0179fc97-78ed-4d2a-a910-c1483cc34877">
-            <fBEstop Id="eb1cb791-94a9-4d90-b268-a7e486f70c3f" name="FBEstop1" instanceName="FBEstop" orderOfExecution="1" mapState="true" mapDiag="true" functionName="safeEstop" safeInputsAfterDiscError="true">
+            <fBEstop Id="eb1cb791-94a9-4d90-b268-a7e486f70c3f" name="FBEstop1" instanceName="fbEstop" orderOfExecution="1" mapState="true" mapDiag="true" functionName="safeEstop" safeInputsAfterDiscError="true">
               <inPorts>
                 <functioBlockHasInPorts Id="ec7199b9-7f2f-40ad-950c-e721a393fad4">
                   <inPort Id="c405d33f-a0aa-4ec2-891e-a572bbf97436" name="Restart" portName="Restart" portNum="2" objectIndex="0" varId="1" filter="3" portDataType="1" maxDeviation="0" resetTime="0" />
@@ -66,7 +66,7 @@
             </fBEstop>
           </networkHasFunctionBlocks>
           <networkHasFunctionBlocks Id="84a5f5a1-ee76-4ef9-b52e-8860ff44747d">
-            <fBEdm Id="65e4c03a-98dc-4364-9724-950f38edd4be" name="FBEdm1" instanceName="FBEdm" orderOfExecution="2" mapState="true" mapDiag="true" functionName="safeEdm">
+            <fBEdm Id="65e4c03a-98dc-4364-9724-950f38edd4be" name="FBEdm1" instanceName="fbEdm" orderOfExecution="2" mapState="true" mapDiag="true" functionName="safeEdm">
               <inPorts>
                 <functioBlockHasInPorts Id="adf2024b-c660-4d06-adc2-7dea4e8b9a4b">
                   <inPort Id="77ecbafd-dcf9-4a58-97ea-1b0becc4847a" name="Mon1" portName="Mon1" portNum="5" objectIndex="8" varId="1" filter="3" portDataType="1" channelInterface="Single-Channel Both Activated" deactivate1="Break Contact (NC)" deactivate2="Break Contact (NC)" maxDeviation="0" resetTime="0" />
@@ -396,7 +396,7 @@
       </variable>
     </safetyApplicationHasVariables>
     <safetyApplicationHasVariables Id="159d0429-8a06-4838-859c-01f714c29071">
-      <variable Id="53643e8c-f935-4abb-9960-db49d045e222" name="FBEstopError" isLocal="false">
+      <variable Id="53643e8c-f935-4abb-9960-db49d045e222" name="FbEstopError" isLocal="false">
         <sourceUsages>
           <variableHasSourceUsages Id="ac964faf-0b57-4690-8667-c13f32add92e">
             <variableUsages Id="28befaf0-41e5-4eee-8ba9-5f1ce4a6bc81">
@@ -428,7 +428,7 @@
       </variable>
     </safetyApplicationHasVariables>
     <safetyApplicationHasVariables Id="a0e6fcca-c2ae-4c96-9ab5-e376fd6c814e">
-      <variable Id="de5cfe00-12b3-421c-890b-e4981a6a5bd2" name="FBEdmError" isLocal="false">
+      <variable Id="de5cfe00-12b3-421c-890b-e4981a6a5bd2" name="FbEdmError" isLocal="false">
         <sourceUsages>
           <variableHasSourceUsages Id="b1421abe-c84d-4b5c-ab54-3a9c6c3012e6">
             <variableUsages Id="66d25f48-ce58-4da0-a8e7-4e87d1aee118">

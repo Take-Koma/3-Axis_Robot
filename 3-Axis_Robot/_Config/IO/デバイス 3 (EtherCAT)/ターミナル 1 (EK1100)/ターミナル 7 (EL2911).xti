@@ -11,7 +11,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
 			<BitSize>4</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -110,7 +110,7 @@
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
 			<BitSize>7</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -171,10 +171,10 @@
 				<Entry Name="RobotSafety.bSafetyInRun_12" Index="#x7000" Sub="#x01">
 					<Type>BIT</Type>
 				</Entry>
-				<Entry Name="RobotSafety.bFBEstopError_21" Index="#x7000" Sub="#x02">
+				<Entry Name="RobotSafety.bFbEstopError_21" Index="#x7000" Sub="#x02">
 					<Type>BIT</Type>
 				</Entry>
-				<Entry Name="RobotSafety.bFBEdmError_22" Index="#x7000" Sub="#x03">
+				<Entry Name="RobotSafety.bFbEdmError_22" Index="#x7000" Sub="#x03">
 					<Type>BIT</Type>
 				</Entry>
 				<Entry>
@@ -188,10 +188,10 @@
 				<Entry Name="RobotSafety.bSafetyRun_Stop_2" Index="#x6000" Sub="#x02">
 					<Type>BIT</Type>
 				</Entry>
-				<Entry Name="RobotSafety.bFBEStopReset_5" Index="#x6000" Sub="#x03">
+				<Entry Name="RobotSafety.bFbEStopReset_5" Index="#x6000" Sub="#x03">
 					<Type>BIT</Type>
 				</Entry>
-				<Entry Name="RobotSafety.bFBEStopEDM_7" Index="#x6000" Sub="#x04">
+				<Entry Name="RobotSafety.bFbEStopEDM_7" Index="#x6000" Sub="#x04">
 					<Type>BIT</Type>
 				</Entry>
 				<Entry>
@@ -199,10 +199,10 @@
 				</Entry>
 			</Pdo>
 			<Pdo Name="Function Block Info Data" Index="#x1bf8" Flags="#x2011" SyncMan="3">
-				<Entry Name="RobotSafety.EStopEdm.FBEstop Info Data" Index="#x7000" Sub="#x01">
+				<Entry Name="RobotSafety.EStopEdm.fbEstop Info Data" Index="#x7000" Sub="#x01">
 					<Type GUID="{2B008623-51EE-EF6A-ACDE-0017707F5BB8}">INFODATA_FB_3</Type>
 				</Entry>
-				<Entry Name="RobotSafety.EStopEdm.FBEdm Info Data" Index="#x7000" Sub="#x02">
+				<Entry Name="RobotSafety.EStopEdm.fbEdm Info Data" Index="#x7000" Sub="#x02">
 					<Type GUID="{91BA7A38-806B-5E06-59E6-F04F15D6B8FF}">INFODATA_FB_5</Type>
 				</Entry>
 			</Pdo>
