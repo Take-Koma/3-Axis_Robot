@@ -22,7 +22,13 @@ VAR_GLOBAL
 	fbMcMoveJog					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
 	lrJogPosition   			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF LREAL;
 
-	bAxisMove					:BOOL;														//いずれかの軸が動いていることの結果
+	bAxisMove					:BOOL;																//いずれかの軸が動いていることの結果
+
+
+	//P_MotionWrite用
+	bWriteMoveStart				:BOOL;																//ライティング動作開始
+	bCircleWriteFin				:BOOL;																//円の書き終わり
+	bEllipseWriteFin			:BOOL;																//楕円の書き終わり
 	
 END_VAR]]></Declaration>
   </GVL>

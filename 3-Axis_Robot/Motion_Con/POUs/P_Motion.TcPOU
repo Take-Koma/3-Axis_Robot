@@ -104,6 +104,11 @@ END_VAR]]></Declaration>
 		GVL_Motion.lrJogPosition[E_Axis.Gripper]:=WORD_TO_INT(GVL_MitsubishiCom.wFromGripperJogTarget);
 	END_IF
 	
+	//---図形描画実行---
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL_Motion.bWriteMoveStart:=GVL_MitsubishiCom.bFromWriteStart;
+	END_IF
+	
 	//---アクションをコールして軸を起動---
 	FOR eAxis:= E_Axis.X_Axis TO E_Axis.Gripper DO
 		aMotion();
@@ -215,6 +220,9 @@ END_VAR]]></Declaration>
       <LineId Id="160" Count="3" />
       <LineId Id="111" Count="21" />
       <LineId Id="75" Count="0" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="206" Count="2" />
+      <LineId Id="205" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="70" Count="1" />
       <LineId Id="69" Count="0" />

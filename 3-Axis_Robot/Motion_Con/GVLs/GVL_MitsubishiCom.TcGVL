@@ -28,6 +28,8 @@ VAR_GLOBAL
 	bToYAsisMoving									:BOOL;				//11:Y軸起動中
 	bToZAsisMoving									:BOOL;				//12:Z軸起動中
 	bToGripperMoving								:BOOL;				//13:グリッパー起動中
+	bToWriteMoving									:BOOL;				//20:図形描画中
+	bToPickAndPlaceMoving							:BOOL;				//21:ピック＆プレース実行中
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
 	bFromAxisErrorReset								:BOOL;				//0:軸エラーのリセット
@@ -45,6 +47,8 @@ VAR_GLOBAL
 	bFromYAxisJogStart								:BOOL;				//17:Y軸Jog起動
 	bFromZAxisJogStart								:BOOL;				//18:Z軸Jog起動
 	bFromGripperJogStart							:BOOL;				//19:グリッパーJog起動
+	bFromWriteStart									:BOOL;				//20:図形描画スタート
+	bFromPickAndPlaceStart							:BOOL;				//21:ピック＆プレーススタート
 	
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
 	wToXAxisActPos									:WORD;				//0:X軸ポジション

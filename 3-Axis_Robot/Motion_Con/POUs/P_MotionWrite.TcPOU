@@ -14,9 +14,10 @@ END_VAR]]></Declaration>
 
 E_WriteStep.Stay:(*初期値、bMoveがTrueになったらステップを進める*)
 
-	IF GVL.bWriteMoveStart=TRUE THEN
-		GVL.bCircleWriteFin:=FALSE;
-		GVL.bEllipseWriteFin:=FALSE;
+	IF GVL_Motion.bWriteMoveStart=TRUE THEN
+		GVL_Motion.bCircleWriteFin:=FALSE;
+		GVL_Motion.bEllipseWriteFin:=FALSE;
+		GVL_MitsubishiCom.bToWriteMoving:=TRUE;
 		eStep:=E_WriteStep.GripperOpen;
 	ELSE
 		eStep:=E_WriteStep.Stay;
@@ -111,14 +112,14 @@ E_WriteStep.Write:(*図形を書いていく*)
 	1:
 		P_Circle();
 	
-		IF GVL.bCircleWriteFin=TRUE THEN;
+		IF GVL_Motion.bCircleWriteFin=TRUE THEN;
 			iStep:=2;
 		END_IF;
 		
 	2:
 		P_Ellipse();
 		
-		IF GVL.bEllipseWriteFin=TRUE THEN;
+		IF GVL_Motion.bEllipseWriteFin=TRUE THEN;
 			iStep:=3;
 		END_IF;
 	
@@ -186,6 +187,7 @@ E_WriteStep.PenRelease:(*ペンをリリースする*)
 			eStep:=E_WriteStep.Stay;
 			fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
 			iStep:=0;
+			GVL_MitsubishiCom.bToWriteMoving:=FALSE;
 		END_IF;
 	
 	END_CASE;
@@ -255,7 +257,11 @@ END_CASE;
       </Implementation>
     </Action>
     <LineIds Name="P_MotionWrite">
-      <LineId Id="2009" Count="181" />
+      <LineId Id="2009" Count="6" />
+      <LineId Id="2198" Count="0" />
+      <LineId Id="2016" Count="168" />
+      <LineId Id="2199" Count="0" />
+      <LineId Id="2185" Count="5" />
       <LineId Id="861" Count="0" />
     </LineIds>
     <LineIds Name="P_MotionWrite.aMotion">

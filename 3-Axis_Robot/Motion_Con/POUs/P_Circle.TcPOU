@@ -38,7 +38,7 @@ E_CircleWriteStep.Check:(*まず書く円を確認*)
 	END_FOR
 
 	IF iWrittingCircle=0 THEN
-		GVL.bCircleWriteFin:=TRUE;
+		GVL_Motion.bCircleWriteFin:=TRUE;
 	END_IF
 
 E_CircleWriteStep.First_Potision_Move:(*円の書き始め位置へ移動*)

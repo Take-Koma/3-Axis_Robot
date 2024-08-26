@@ -40,7 +40,7 @@ E_EllipseWriteStep.Check:(*まず書く楕円を確認*)
 	END_FOR
 
 	IF iWrittingEllipse=0 THEN
-		GVL.bEllipseWriteFin:=TRUE;
+		GVL_Motion.bEllipseWriteFin:=TRUE;
 	END_IF
 	
 E_EllipseWriteStep.FirstPotisionMove:(*楕円の書き始め位置へ移動*)
