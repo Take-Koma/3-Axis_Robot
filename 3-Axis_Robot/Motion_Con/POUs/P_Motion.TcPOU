@@ -108,6 +108,11 @@ END_VAR]]></Declaration>
 	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
 		GVL_Motion.bWriteMoveStart:=GVL_MitsubishiCom.bFromWriteStart;
 	END_IF
+
+	//---ピック＆プレース実行 まだプログラムが無いからスイッチ応答のみ
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL_MitsubishiCom.bToPickAndPlaceMoving:=GVL_MitsubishiCom.bFromPickAndPlaceStart;
+	END_IF
 	
 	//---アクションをコールして軸を起動---
 	FOR eAxis:= E_Axis.X_Axis TO E_Axis.Gripper DO
@@ -222,6 +227,9 @@ END_VAR]]></Declaration>
       <LineId Id="75" Count="0" />
       <LineId Id="204" Count="0" />
       <LineId Id="206" Count="2" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="218" Count="2" />
+      <LineId Id="217" Count="0" />
       <LineId Id="205" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="70" Count="1" />

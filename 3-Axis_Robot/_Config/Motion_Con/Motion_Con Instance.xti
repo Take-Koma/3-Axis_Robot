@@ -15235,7 +15235,7 @@ External Setpoint Generation:
 			</Hides>
 		</DataType>
 	</DataTypes>
-	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{231B28F3-93FC-AD3F-DD09-19B8DCF0C1F5}">
+	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{6596375B-A7DD-8DF5-0B20-92C22246188D}">
 		<Name>__FILENAME__</Name>
 		<TmcDesc GUID="{3E578FBF-8593-4971-A049-A334D40A2DE2}" TcSmClass="TComPlcObjDef">
 			<Name>Motion_Con</Name>
@@ -17014,6 +17014,18 @@ External Setpoint Generation:
 						<BitOffs>3632408</BitOffs>
 					</Symbol>
 					<Symbol>
+						<Name>GVL_MitsubishiCom.bToPickAndPlaceMoving</Name>
+						<Comment><![CDATA[21:ピック＆プレース実行中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632416</BitOffs>
+					</Symbol>
+					<Symbol>
 						<Name>GVL_MitsubishiCom.bFromAxisErrorReset</Name>
 						<Comment><![CDATA[0:軸エラーのリセット]]></Comment>
 						<BitSize>8</BitSize>
@@ -17204,6 +17216,18 @@ External Setpoint Generation:
 							</Property>
 						</Properties>
 						<BitOffs>3632544</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bFromPickAndPlaceStart</Name>
+						<Comment><![CDATA[21:ピック＆プレーススタート]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3632552</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.wToXAxisActPos</Name>
@@ -17493,7 +17517,7 @@ External Setpoint Generation:
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Motion.bWriteMoveStart</Name>
-						<Comment><![CDATA[P_MotionWrite用]]></Comment>
+						<Comment><![CDATA[ライティング動作開始]]></Comment>
 						<BitSize>8</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
 						<Properties>
@@ -21787,30 +21811,6 @@ External Setpoint Generation:
 						<BitOffs>3345536</BitOffs>
 					</Symbol>
 					<Symbol>
-						<Name>GVL_MitsubishiCom.bToPickAndPlaceMoving</Name>
-						<Comment><![CDATA[21:ピック＆プレース実行中]]></Comment>
-						<BitSize>8</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3632416</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_MitsubishiCom.bFromPickAndPlaceStart</Name>
-						<Comment><![CDATA[21:ピック＆プレーススタート]]></Comment>
-						<BitSize>8</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3632552</BitOffs>
-					</Symbol>
-					<Symbol>
 						<Name>GVL_Vision.nDetectedNum</Name>
 						<Comment><![CDATA[ 検出したブログ数]]></Comment>
 						<BitSize>64</BitSize>
@@ -21946,7 +21946,7 @@ External Setpoint Generation:
 				</Property>
 				<Property>
 					<Name>ChangeDate</Name>
-					<Value>2024-08-26T09:14:48</Value>
+					<Value>2024-08-27T21:14:56</Value>
 				</Property>
 				<Property>
 					<Name>GeneratedCodeSize</Name>
@@ -21977,7 +21977,7 @@ External Setpoint Generation:
 				</Value>
 				<Value>
 					<Name>Application Timestamp</Name>
-					<Value>1724663688</Value>
+					<Value>1724793296</Value>
 				</Value>
 				<Value>
 					<Name>Symbolic Mapping</Name>

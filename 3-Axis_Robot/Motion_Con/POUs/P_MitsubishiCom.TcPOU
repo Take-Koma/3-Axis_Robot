@@ -23,6 +23,7 @@ END_VAR]]></Declaration>
 	GVL.mb_Input_Coils[12]										:=GVL_MitsubishiCom.bToZAsisMoving;
 	GVL.mb_Input_Coils[13]										:=GVL_MitsubishiCom.bToGripperMoving;
 	GVL.mb_Input_Coils[20]										:=GVL_MitsubishiCom.bToWriteMoving;
+	GVL.mb_Input_Coils[21]										:=GVL_MitsubishiCom.bToPickAndPlaceMoving;
 	//---アラームここから---
 	GVL.mb_Input_Coils[104]										:=GVL_Alarm.fbAlarmSafetyNotRun.bRaised;
 	GVL.mb_Input_Coils[105]										:=GVL_Alarm.fbAlarmSafetyFbError.bRaised;
@@ -55,6 +56,7 @@ END_VAR]]></Declaration>
 	GVL_MitsubishiCom.bFromZAxisJogStart						:=GVL.mb_Output_Coils[18];
 	GVL_MitsubishiCom.bFromGripperJogStart						:=GVL.mb_Output_Coils[19];
 	GVL_MitsubishiCom.bFromWriteStart							:=GVL.mb_Output_Coils[20];
+	GVL_MitsubishiCom.bFromPickAndPlaceStart					:=GVL.mb_Output_Coils[21];
 
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
 	GVL.mb_Input_Registers[0]									:=GVL_MitsubishiCom.wToXAxisActPos;
@@ -105,6 +107,7 @@ END_VAR]]></Declaration>
       <LineId Id="1726" Count="2" />
       <LineId Id="1725" Count="0" />
       <LineId Id="1734" Count="0" />
+      <LineId Id="1738" Count="0" />
       <LineId Id="1687" Count="0" />
       <LineId Id="1690" Count="3" />
       <LineId Id="1699" Count="2" />
@@ -115,6 +118,7 @@ END_VAR]]></Declaration>
       <LineId Id="1717" Count="0" />
       <LineId Id="1550" Count="13" />
       <LineId Id="1735" Count="0" />
+      <LineId Id="1739" Count="0" />
       <LineId Id="1564" Count="1" />
       <LineId Id="1729" Count="2" />
       <LineId Id="1566" Count="11" />

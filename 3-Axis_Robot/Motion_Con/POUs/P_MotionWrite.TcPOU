@@ -24,7 +24,7 @@ E_WriteStep.Stay:(*初期値、bMoveがTrueになったらステップを進め�
 	END_IF;
 
 E_WriteStep.GripperOpen:(*グリッパーを開ける*)
-
+	
 	fbMCMoveAbsolute[E_Axis.Gripper].Execute:=TRUE;
 	fbMCMoveAbsolute[E_Axis.Gripper].Position:=0;
 	fbMCMoveAbsolute[E_Axis.Gripper].Velocity:=150;
