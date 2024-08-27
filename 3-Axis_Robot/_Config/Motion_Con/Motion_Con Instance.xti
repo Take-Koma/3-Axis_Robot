@@ -3217,7 +3217,7 @@ External Setpoint Generation:
 			</Properties>
 		</DataType>
 		<DataType>
-			<Name GUID="{D17514DE-2035-A044-4050-80A49E911563}" AutoDeleteType="true">E_WriteStep</Name>
+			<Name GUID="{01DFC93B-9606-551A-718F-9EBB6D370DDE}" AutoDeleteType="true">E_WriteStep</Name>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000006}">INT</BaseType>
 			<EnumInfo>
@@ -3255,6 +3255,19 @@ External Setpoint Generation:
 			<EnumInfo>
 				<Text><![CDATA[PenRelease]]></Text>
 				<Enum>8</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[CommandAborted]]></Text>
+				<Enum>9</Enum>
+				<Comment><![CDATA[McFb停止時用]]></Comment>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[Error]]></Text>
+				<Enum>10</Enum>
+			</EnumInfo>
+			<EnumInfo>
+				<Text><![CDATA[Reset]]></Text>
+				<Enum>11</Enum>
 			</EnumInfo>
 			<Properties>
 				<Property>
@@ -6921,7 +6934,7 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{4F77ABB2-2778-9BFB-9334-9224AD496EAC}" Namespace="Tc3_EventLogger" AutoDeleteType="true">FB_SourceInfoData</Name>
+			<Name GUID="{0EB9E83B-D2B0-7B81-E697-133D57541F9A}" Namespace="Tc3_EventLogger" AutoDeleteType="true">FB_SourceInfoData</Name>
 			<BitSize>2944</BitSize>
 			<Implements GUID="{F7BF6767-548B-493C-899B-06A477976F11}">true</Implements>
 			<SubItem>
@@ -7034,15 +7047,15 @@ External Setpoint Generation:
 				<Name>nSourceId</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
 				<BitSize>32</BitSize>
-				<GetCodeOffs>489960</GetCodeOffs>
-				<SetCodeOffs>490112</SetCodeOffs>
+				<GetCodeOffs>494792</GetCodeOffs>
+				<SetCodeOffs>494944</SetCodeOffs>
 			</PropertyItem>
 			<PropertyItem>
 				<Name>sSourceName</Name>
 				<Type GUID="{18071995-0000-0000-0000-0001000000FF}">STRING(255)</Type>
 				<BitSize>2048</BitSize>
-				<GetCodeOffs>490088</GetCodeOffs>
-				<SetCodeOffs>490048</SetCodeOffs>
+				<GetCodeOffs>494920</GetCodeOffs>
+				<SetCodeOffs>494880</SetCodeOffs>
 				<Properties>
 					<Property>
 						<Name>TcEncoding</Name>
@@ -7161,6 +7174,32 @@ External Setpoint Generation:
 				</Properties>
 			</Method>
 			<Method>
+				<Name>GetData</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000019}">HRESULT</ReturnType>
+				<ReturnBitSize>32</ReturnBitSize>
+				<Parameter>
+					<Name>ppData</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000018}" PointerTo="1">PVOID</Type>
+					<BitSize>64</BitSize>
+				</Parameter>
+				<Properties>
+					<Property>
+						<Name>c++_compatible</Name>
+					</Property>
+					<Property>
+						<Name>pack_mode</Name>
+						<Value>4</Value>
+					</Property>
+					<Property>
+						<Name>show</Name>
+					</Property>
+					<Property>
+						<Name>minimal_input_size</Name>
+						<Value>4</Value>
+					</Property>
+				</Properties>
+			</Method>
+			<Method>
 				<Name>ExtendName</Name>
 				<Comment><![CDATA[ extends the source name on the right side of the string by the given extension.
  If the source name string size is exceeded nothing more is extended.
@@ -7178,6 +7217,26 @@ External Setpoint Generation:
 						</Property>
 					</Properties>
 				</Parameter>
+			</Method>
+			<Method>
+				<Name RpcEnable="plc">__setnSourceId</Name>
+				<ReturnBitSize X64="64">32</ReturnBitSize>
+				<Parameter>
+					<Name>nSourceId</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000008}" RpcDirection="in">UDINT</Type>
+					<BitSize>32</BitSize>
+					<Properties>
+						<Property>
+							<Name>monitoring</Name>
+							<Value>call</Value>
+						</Property>
+					</Properties>
+				</Parameter>
+				<Properties>
+					<Property>
+						<Name>property</Name>
+					</Property>
+				</Properties>
 			</Method>
 			<Method>
 				<Name>ResetToDefault</Name>
@@ -7275,32 +7334,6 @@ External Setpoint Generation:
 				</Properties>
 			</Method>
 			<Method>
-				<Name>GetData</Name>
-				<ReturnType GUID="{18071995-0000-0000-0000-000000000019}">HRESULT</ReturnType>
-				<ReturnBitSize>32</ReturnBitSize>
-				<Parameter>
-					<Name>ppData</Name>
-					<Type GUID="{18071995-0000-0000-0000-000000000018}" PointerTo="1">PVOID</Type>
-					<BitSize>64</BitSize>
-				</Parameter>
-				<Properties>
-					<Property>
-						<Name>c++_compatible</Name>
-					</Property>
-					<Property>
-						<Name>pack_mode</Name>
-						<Value>4</Value>
-					</Property>
-					<Property>
-						<Name>show</Name>
-					</Property>
-					<Property>
-						<Name>minimal_input_size</Name>
-						<Value>4</Value>
-					</Property>
-				</Properties>
-			</Method>
-			<Method>
 				<Name>__getsourceGuid</Name>
 				<ReturnType GUID="{18071995-0000-0000-0000-000000000021}">GUID</ReturnType>
 				<ReturnBitSize>128</ReturnBitSize>
@@ -7387,26 +7420,6 @@ External Setpoint Generation:
 				</Properties>
 			</Method>
 			<Method>
-				<Name RpcEnable="plc">__setnSourceId</Name>
-				<ReturnBitSize X64="64">32</ReturnBitSize>
-				<Parameter>
-					<Name>nSourceId</Name>
-					<Type GUID="{18071995-0000-0000-0000-000000000008}" RpcDirection="in">UDINT</Type>
-					<BitSize>32</BitSize>
-					<Properties>
-						<Property>
-							<Name>monitoring</Name>
-							<Value>call</Value>
-						</Property>
-					</Properties>
-				</Parameter>
-				<Properties>
-					<Property>
-						<Name>property</Name>
-					</Property>
-				</Properties>
-			</Method>
-			<Method>
 				<Name>__setsourceGuid</Name>
 				<ReturnBitSize X64="64">32</ReturnBitSize>
 				<Parameter>
@@ -7466,12 +7479,12 @@ External Setpoint Generation:
 			</Properties>
 		</DataType>
 		<DataType>
-			<Name GUID="{81AADD98-C17C-FB52-B1A7-D7158E9F4382}" Namespace="Tc3_EventLogger" AutoDeleteType="true">FB_TcSourceInfo</Name>
+			<Name GUID="{94C06B42-C566-46E5-1BF6-380C574616D9}" Namespace="Tc3_EventLogger" AutoDeleteType="true">FB_TcSourceInfo</Name>
 			<BitSize>3072</BitSize>
 			<Implements GUID="{E5A12E04-9A4E-F1E2-6559-EC4063CF94AB}" Namespace="Tc3_EventLogger">true</Implements>
 			<SubItem>
 				<Name>fbSrcData</Name>
-				<Type GUID="{4F77ABB2-2778-9BFB-9334-9224AD496EAC}" Namespace="Tc3_EventLogger">FB_SourceInfoData</Type>
+				<Type GUID="{0EB9E83B-D2B0-7B81-E697-133D57541F9A}" Namespace="Tc3_EventLogger">FB_SourceInfoData</Type>
 				<BitSize>2944</BitSize>
 				<BitOffs>128</BitOffs>
 				<Properties>
@@ -7484,15 +7497,15 @@ External Setpoint Generation:
 				<Name>nId</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
 				<BitSize>32</BitSize>
-				<GetCodeOffs>490184</GetCodeOffs>
-				<SetCodeOffs>490232</SetCodeOffs>
+				<GetCodeOffs>495016</GetCodeOffs>
+				<SetCodeOffs>495064</SetCodeOffs>
 			</PropertyItem>
 			<PropertyItem>
 				<Name>sName</Name>
 				<Type GUID="{18071995-0000-0000-0000-0001000000FF}">STRING(255)</Type>
 				<BitSize>2048</BitSize>
-				<GetCodeOffs>490256</GetCodeOffs>
-				<SetCodeOffs>490280</SetCodeOffs>
+				<GetCodeOffs>495088</GetCodeOffs>
+				<SetCodeOffs>495112</SetCodeOffs>
 				<Properties>
 					<Property>
 						<Name>TcEncoding</Name>
@@ -7522,10 +7535,6 @@ External Setpoint Generation:
 					<Type GUID="{E5A12E04-9A4E-F1E2-6559-EC4063CF94AB}" Namespace="Tc3_EventLogger">I_TcSourceInfo</Type>
 					<BitSize>64</BitSize>
 				</Parameter>
-			</Method>
-			<Method>
-				<Name>Clear</Name>
-				<ReturnBitSize X64="64">32</ReturnBitSize>
 			</Method>
 			<Method>
 				<Name>ExtendName</Name>
@@ -7580,19 +7589,8 @@ External Setpoint Generation:
 				<ReturnBitSize>32</ReturnBitSize>
 			</Method>
 			<Method>
-				<Name>__getguid</Name>
-				<ReturnType GUID="{18071995-0000-0000-0000-000000000021}">GUID</ReturnType>
-				<ReturnBitSize>128</ReturnBitSize>
-				<Local>
-					<Name>guid</Name>
-					<Type GUID="{18071995-0000-0000-0000-000000000021}">GUID</Type>
-					<BitSize>128</BitSize>
-				</Local>
-				<Properties>
-					<Property>
-						<Name>property</Name>
-					</Property>
-				</Properties>
+				<Name>Clear</Name>
+				<ReturnBitSize X64="64">32</ReturnBitSize>
 			</Method>
 			<Method>
 				<Name RpcEnable="plc" VTableIndex="11">__setnId</Name>
@@ -7638,6 +7636,21 @@ External Setpoint Generation:
 					<Type GUID="{E5A12E04-9A4E-F1E2-6559-EC4063CF94AB}" Namespace="Tc3_EventLogger">I_TcSourceInfo</Type>
 					<BitSize>64</BitSize>
 				</Parameter>
+			</Method>
+			<Method>
+				<Name>__getguid</Name>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000021}">GUID</ReturnType>
+				<ReturnBitSize>128</ReturnBitSize>
+				<Local>
+					<Name>guid</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000021}">GUID</Type>
+					<BitSize>128</BitSize>
+				</Local>
+				<Properties>
+					<Property>
+						<Name>property</Name>
+					</Property>
+				</Properties>
 			</Method>
 			<Method>
 				<Name RpcEnable="plc" VTableIndex="4">__getsName</Name>
@@ -8789,12 +8802,12 @@ External Setpoint Generation:
 			</Method>
 		</DataType>
 		<DataType>
-			<Name GUID="{D6CF3A11-06A2-6A1F-4170-2E77F9861B48}" Namespace="Tc3_EventLogger" AutoDeleteType="true">FB_TcEventBase</Name>
+			<Name GUID="{31A74E66-C6A7-0E2B-ADA7-A6BEAC1CCEE6}" Namespace="Tc3_EventLogger" AutoDeleteType="true">FB_TcEventBase</Name>
 			<BitSize>4160</BitSize>
 			<Implements GUID="{DD64E701-1306-D033-C766-D77E684AFE71}" Namespace="Tc3_EventLogger">true</Implements>
 			<SubItem>
 				<Name>fbSourceInfo</Name>
-				<Type GUID="{81AADD98-C17C-FB52-B1A7-D7158E9F4382}" Namespace="Tc3_EventLogger">FB_TcSourceInfo</Type>
+				<Type GUID="{94C06B42-C566-46E5-1BF6-380C574616D9}" Namespace="Tc3_EventLogger">FB_TcSourceInfo</Type>
 				<BitSize>3072</BitSize>
 				<BitOffs>512</BitOffs>
 				<Default>
@@ -8857,31 +8870,31 @@ External Setpoint Generation:
 				<Name>eSeverity</Name>
 				<Type GUID="{B57D3F4A-0836-49B0-81C3-BED5F4817EC9}">TcEventSeverity</Type>
 				<BitSize>16</BitSize>
-				<GetCodeOffs>490488</GetCodeOffs>
+				<GetCodeOffs>495320</GetCodeOffs>
 			</PropertyItem>
 			<PropertyItem>
 				<Name>ipSourceInfo</Name>
 				<Type GUID="{E5A12E04-9A4E-F1E2-6559-EC4063CF94AB}" Namespace="Tc3_EventLogger">I_TcSourceInfo</Type>
 				<BitSize>64</BitSize>
-				<GetCodeOffs>490448</GetCodeOffs>
+				<GetCodeOffs>495280</GetCodeOffs>
 			</PropertyItem>
 			<PropertyItem>
 				<Name>nEventId</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
 				<BitSize>32</BitSize>
-				<GetCodeOffs>490624</GetCodeOffs>
+				<GetCodeOffs>495456</GetCodeOffs>
 			</PropertyItem>
 			<PropertyItem>
 				<Name>nUniqueId</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
 				<BitSize>32</BitSize>
-				<GetCodeOffs>490632</GetCodeOffs>
+				<GetCodeOffs>495464</GetCodeOffs>
 			</PropertyItem>
 			<PropertyItem>
 				<Name>sEventClassName</Name>
 				<Type GUID="{18071995-0000-0000-0000-0001000000FF}">STRING(255)</Type>
 				<BitSize>2048</BitSize>
-				<GetCodeOffs>490544</GetCodeOffs>
+				<GetCodeOffs>495376</GetCodeOffs>
 				<Properties>
 					<Property>
 						<Name>TcEncoding</Name>
@@ -8893,7 +8906,7 @@ External Setpoint Generation:
 				<Name>sEventText</Name>
 				<Type GUID="{18071995-0000-0000-0000-0001000000FF}">STRING(255)</Type>
 				<BitSize>2048</BitSize>
-				<GetCodeOffs>490640</GetCodeOffs>
+				<GetCodeOffs>495472</GetCodeOffs>
 				<Properties>
 					<Property>
 						<Name>TcEncoding</Name>
@@ -8960,7 +8973,7 @@ External Setpoint Generation:
 				<ReturnBitSize>32</ReturnBitSize>
 			</Method>
 			<Method>
-				<Name>UpdateLangId</Name>
+				<Name>OnArgumentsChanged</Name>
 				<ReturnBitSize X64="64">32</ReturnBitSize>
 			</Method>
 			<Method>
@@ -9160,10 +9173,6 @@ External Setpoint Generation:
 				</Local>
 			</Method>
 			<Method>
-				<Name>OnArgumentsChanged</Name>
-				<ReturnBitSize X64="64">32</ReturnBitSize>
-			</Method>
-			<Method>
 				<Name RpcEnable="plc" VTableIndex="11">__getsEventClassName</Name>
 				<ReturnType GUID="{18071995-0000-0000-0000-0001000000FF}" RpcDirection="out">STRING(255)</ReturnType>
 				<ReturnBitSize>2048</ReturnBitSize>
@@ -9324,6 +9333,10 @@ External Setpoint Generation:
 						</Property>
 					</Properties>
 				</Local>
+			</Method>
+			<Method>
+				<Name>UpdateLangId</Name>
+				<ReturnBitSize X64="64">32</ReturnBitSize>
 			</Method>
 			<Method>
 				<Name>EqualsToEventEntryEx</Name>
@@ -9566,32 +9579,32 @@ External Setpoint Generation:
 			</Method>
 		</DataType>
 		<DataType>
-			<Name GUID="{8F8E9E44-5787-6F22-6D22-D6E50943308E}" Namespace="Tc3_EventLogger" AutoDeleteType="true">FB_TcAlarm</Name>
+			<Name GUID="{F7F24A2F-3C5A-BC6F-8EB5-BE5E46003086}" Namespace="Tc3_EventLogger" AutoDeleteType="true">FB_TcAlarm</Name>
 			<BitSize>4224</BitSize>
-			<ExtendsType GUID="{D6CF3A11-06A2-6A1F-4170-2E77F9861B48}" Namespace="Tc3_EventLogger">FB_TcEventBase</ExtendsType>
+			<ExtendsType GUID="{31A74E66-C6A7-0E2B-ADA7-A6BEAC1CCEE6}" Namespace="Tc3_EventLogger">FB_TcEventBase</ExtendsType>
 			<PropertyItem>
 				<Name>bActive</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<GetCodeOffs>490696</GetCodeOffs>
+				<GetCodeOffs>495528</GetCodeOffs>
 			</PropertyItem>
 			<PropertyItem>
 				<Name>bRaised</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<GetCodeOffs>490824</GetCodeOffs>
+				<GetCodeOffs>495656</GetCodeOffs>
 			</PropertyItem>
 			<PropertyItem>
 				<Name>eConfirmationState</Name>
 				<Type GUID="{944726B1-A958-40A6-B97D-51A67664C20E}">TcEventConfirmationState</Type>
 				<BitSize>16</BitSize>
-				<GetCodeOffs>490768</GetCodeOffs>
+				<GetCodeOffs>495600</GetCodeOffs>
 			</PropertyItem>
 			<PropertyItem>
 				<Name>nTimeCleared</Name>
 				<Type GUID="{18071995-0000-0000-0000-00000000000B}">ULINT</Type>
 				<BitSize>64</BitSize>
-				<GetCodeOffs>490704</GetCodeOffs>
+				<GetCodeOffs>495536</GetCodeOffs>
 				<Properties>
 					<Property>
 						<Name>TcDisplayTypeGUID</Name>
@@ -9603,7 +9616,7 @@ External Setpoint Generation:
 				<Name>nTimeConfirmed</Name>
 				<Type GUID="{18071995-0000-0000-0000-00000000000B}">ULINT</Type>
 				<BitSize>64</BitSize>
-				<GetCodeOffs>490832</GetCodeOffs>
+				<GetCodeOffs>495664</GetCodeOffs>
 				<Properties>
 					<Property>
 						<Name>TcDisplayTypeGUID</Name>
@@ -9615,7 +9628,7 @@ External Setpoint Generation:
 				<Name>nTimeRaised</Name>
 				<Type GUID="{18071995-0000-0000-0000-00000000000B}">ULINT</Type>
 				<BitSize>64</BitSize>
-				<GetCodeOffs>490800</GetCodeOffs>
+				<GetCodeOffs>495632</GetCodeOffs>
 				<Properties>
 					<Property>
 						<Name>TcDisplayTypeGUID</Name>
@@ -9736,27 +9749,20 @@ External Setpoint Generation:
 				</Properties>
 			</Method>
 			<Method>
-				<Name>CreateEx2</Name>
-				<Comment><![CDATA[ creates a TcCOM event object
- The created alarm event is uniquely identified via event class, event ID and source info.]]></Comment>
+				<Name>Clear</Name>
 				<ReturnType GUID="{18071995-0000-0000-0000-000000000019}">HRESULT</ReturnType>
 				<ReturnBitSize>32</ReturnBitSize>
 				<Parameter>
-					<Name>stEventEntry</Name>
-					<Type GUID="{6925E8D1-EDCA-47DD-B80C-A6329A85D63D}">TcEventEntry</Type>
-					<BitSize>192</BitSize>
-				</Parameter>
-				<Parameter>
-					<Name>ipSourceInfo</Name>
-					<Comment><![CDATA[ optional (otherwise a default source info is taken)]]></Comment>
-					<Type GUID="{E5A12E04-9A4E-F1E2-6559-EC4063CF94AB}" Namespace="Tc3_EventLogger">I_TcSourceInfo</Type>
+					<Name>nTimeStamp</Name>
+					<Comment><![CDATA[ set 0 to get the current time automatically]]></Comment>
+					<Type GUID="{18071995-0000-0000-0000-00000000000B}">ULINT</Type>
 					<BitSize>64</BitSize>
 				</Parameter>
-				<Local>
-					<Name>bWithConfirmation</Name>
+				<Parameter>
+					<Name>bResetConfirmation</Name>
 					<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 					<BitSize>8</BitSize>
-				</Local>
+				</Parameter>
 			</Method>
 			<Method>
 				<Name>Create</Name>
@@ -9820,22 +9826,6 @@ External Setpoint Generation:
 					<Comment><![CDATA[ set 0 to get the current time automatically]]></Comment>
 					<Type GUID="{18071995-0000-0000-0000-00000000000B}">ULINT</Type>
 					<BitSize>64</BitSize>
-				</Parameter>
-			</Method>
-			<Method>
-				<Name>Clear</Name>
-				<ReturnType GUID="{18071995-0000-0000-0000-000000000019}">HRESULT</ReturnType>
-				<ReturnBitSize>32</ReturnBitSize>
-				<Parameter>
-					<Name>nTimeStamp</Name>
-					<Comment><![CDATA[ set 0 to get the current time automatically]]></Comment>
-					<Type GUID="{18071995-0000-0000-0000-00000000000B}">ULINT</Type>
-					<BitSize>64</BitSize>
-				</Parameter>
-				<Parameter>
-					<Name>bResetConfirmation</Name>
-					<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
-					<BitSize>8</BitSize>
 				</Parameter>
 			</Method>
 			<Method>
@@ -9912,6 +9902,29 @@ External Setpoint Generation:
 				</Properties>
 			</Method>
 			<Method>
+				<Name>CreateEx2</Name>
+				<Comment><![CDATA[ creates a TcCOM event object
+ The created alarm event is uniquely identified via event class, event ID and source info.]]></Comment>
+				<ReturnType GUID="{18071995-0000-0000-0000-000000000019}">HRESULT</ReturnType>
+				<ReturnBitSize>32</ReturnBitSize>
+				<Parameter>
+					<Name>stEventEntry</Name>
+					<Type GUID="{6925E8D1-EDCA-47DD-B80C-A6329A85D63D}">TcEventEntry</Type>
+					<BitSize>192</BitSize>
+				</Parameter>
+				<Parameter>
+					<Name>ipSourceInfo</Name>
+					<Comment><![CDATA[ optional (otherwise a default source info is taken)]]></Comment>
+					<Type GUID="{E5A12E04-9A4E-F1E2-6559-EC4063CF94AB}" Namespace="Tc3_EventLogger">I_TcSourceInfo</Type>
+					<BitSize>64</BitSize>
+				</Parameter>
+				<Local>
+					<Name>bWithConfirmation</Name>
+					<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+					<BitSize>8</BitSize>
+				</Local>
+			</Method>
+			<Method>
 				<Name>Release</Name>
 				<Comment><![CDATA[ releases the TcCOM object]]></Comment>
 				<ReturnType GUID="{18071995-0000-0000-0000-000000000019}">HRESULT</ReturnType>
@@ -9984,9 +9997,9 @@ External Setpoint Generation:
 			</Properties>
 		</DataType>
 		<DataType>
-			<Name GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}" AutoDeleteType="true">FB_Alarm</Name>
+			<Name GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}" AutoDeleteType="true">FB_Alarm</Name>
 			<BitSize>4352</BitSize>
-			<ExtendsType GUID="{8F8E9E44-5787-6F22-6D22-D6E50943308E}" Namespace="Tc3_EventLogger">FB_TcAlarm</ExtendsType>
+			<ExtendsType GUID="{F7F24A2F-3C5A-BC6F-8EB5-BE5E46003086}" Namespace="Tc3_EventLogger">FB_TcAlarm</ExtendsType>
 			<SubItem>
 				<Name>bRaise</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
@@ -10046,7 +10059,7 @@ External Setpoint Generation:
 			</Properties>
 		</DataType>
 		<DataType>
-			<Name GUID="{9C83E7D1-7FA5-3467-ACC0-16F31AA58C38}" AutoDeleteType="true">FB_MachineState</Name>
+			<Name GUID="{57E71525-D5EF-B5B0-9705-29163EE93079}" AutoDeleteType="true">FB_MachineState</Name>
 			<BitSize>6656</BitSize>
 			<SubItem>
 				<Name>bCritical</Name>
@@ -10172,7 +10185,7 @@ External Setpoint Generation:
 			</SubItem>
 			<SubItem>
 				<Name>p_alarms</Name>
-				<Type GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}" PointerTo="1">FB_Alarm</Type>
+				<Type GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}" PointerTo="1">FB_Alarm</Type>
 				<ArrayInfo>
 					<LBound>1</LBound>
 					<Elements>100</Elements>
@@ -10207,7 +10220,7 @@ External Setpoint Generation:
 				<ReturnBitSize>8</ReturnBitSize>
 				<Parameter>
 					<Name>p_alarm</Name>
-					<Type GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}" PointerTo="1">FB_Alarm</Type>
+					<Type GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}" PointerTo="1">FB_Alarm</Type>
 					<BitSize>64</BitSize>
 				</Parameter>
 			</Method>
@@ -15235,7 +15248,7 @@ External Setpoint Generation:
 			</Hides>
 		</DataType>
 	</DataTypes>
-	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{6596375B-A7DD-8DF5-0B20-92C22246188D}">
+	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{C84556AB-EE36-EA45-11A6-502EF23AEB2E}">
 		<Name>__FILENAME__</Name>
 		<TmcDesc GUID="{3E578FBF-8593-4971-A049-A334D40A2DE2}" TcSmClass="TComPlcObjDef">
 			<Name>Motion_Con</Name>
@@ -16119,7 +16132,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>P_MotionWrite.eStep</Name>
 						<BitSize>16</BitSize>
-						<BaseType GUID="{D17514DE-2035-A044-4050-80A49E911563}">E_WriteStep</BaseType>
+						<BaseType GUID="{01DFC93B-9606-551A-718F-9EBB6D370DDE}">E_WriteStep</BaseType>
 						<Default>
 							<EnumText>E_WriteStep.Stay</EnumText>
 						</Default>
@@ -16642,7 +16655,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbMachineState</Name>
 						<BitSize>6656</BitSize>
-						<BaseType GUID="{9C83E7D1-7FA5-3467-ACC0-16F31AA58C38}">FB_MachineState</BaseType>
+						<BaseType GUID="{57E71525-D5EF-B5B0-9705-29163EE93079}">FB_MachineState</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16653,7 +16666,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmSafetyNotRun</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16667,7 +16680,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmSafetyFbError</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16681,7 +16694,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmEmergencyStop</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16695,7 +16708,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmXAxisMovingGripSwichNotOn</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16709,7 +16722,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmYAxisMovingGripSwichNotOn</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16723,7 +16736,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmZAxisMovingGripSwichNotOn</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16737,7 +16750,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmGripperMovingGripSwichNotOn</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16751,7 +16764,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmMITSUBISHIError</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16765,7 +16778,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmXAxisError</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16779,7 +16792,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmYAxisError</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16793,7 +16806,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmZAxisError</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -16807,7 +16820,7 @@ External Setpoint Generation:
 					<Symbol>
 						<Name>GVL_Alarm.fbAlarmGripperError</Name>
 						<BitSize>4352</BitSize>
-						<BaseType GUID="{A85C80EA-5D0D-761D-B9E9-CB85135FF67C}">FB_Alarm</BaseType>
+						<BaseType GUID="{683440DE-0CAA-21ED-CE4B-6B5AEADB5F60}">FB_Alarm</BaseType>
 						<Properties>
 							<Property>
 								<Name>TcVarGlobal</Name>
@@ -17552,6 +17565,18 @@ External Setpoint Generation:
 						<BitOffs>3807888</BitOffs>
 					</Symbol>
 					<Symbol>
+						<Name>GVL_MitsubishiCom.bToAutoMoveResetting</Name>
+						<Comment><![CDATA[22:オート動作のリセット中]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3809768</BitOffs>
+					</Symbol>
+					<Symbol>
 						<Name>TwinCAT_SystemInfoVarList._AppInfo</Name>
 						<BitSize>2048</BitSize>
 						<BaseType GUID="{941FDF6E-37CE-4C30-AA23-3236AFA461E2}">PLC.PlcAppSystemInfo</BaseType>
@@ -17631,6 +17656,18 @@ External Setpoint Generation:
 							</Property>
 						</Properties>
 						<BitOffs>3815040</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_MitsubishiCom.bFromAutoMoveReset</Name>
+						<Comment><![CDATA[22:オート動作のリセット]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3893472</BitOffs>
 					</Symbol>
 				</DataArea>
 				<DataArea>
@@ -21946,11 +21983,11 @@ External Setpoint Generation:
 				</Property>
 				<Property>
 					<Name>ChangeDate</Name>
-					<Value>2024-08-27T21:14:56</Value>
+					<Value>2024-08-27T23:04:37</Value>
 				</Property>
 				<Property>
 					<Name>GeneratedCodeSize</Name>
-					<Value>266240</Value>
+					<Value>258048</Value>
 				</Property>
 				<Property>
 					<Name>GlobalDataSize</Name>
@@ -21977,7 +22014,7 @@ External Setpoint Generation:
 				</Value>
 				<Value>
 					<Name>Application Timestamp</Name>
-					<Value>1724793296</Value>
+					<Value>1724799877</Value>
 				</Value>
 				<Value>
 					<Name>Symbolic Mapping</Name>

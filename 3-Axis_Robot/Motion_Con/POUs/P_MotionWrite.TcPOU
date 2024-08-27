@@ -10,7 +10,24 @@ VAR
 	fbGripperGripAngle	:FB_Gripper_GripAngle;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[CASE eStep OF
+      <ST><![CDATA[//McMoveのコマンドアボートをチェック
+IF fbMCMoveAbsolute[E_Axis.X_Axis].CommandAborted=TRUE
+	OR fbMCMoveAbsolute[E_Axis.Y_Axis].CommandAborted=TRUE
+	OR fbMCMoveAbsolute[E_Axis.Z_Axis].CommandAborted=TRUE
+	OR fbMCMoveAbsolute[E_Axis.Gripper].CommandAborted=TRUE THEN
+		eStep:=E_WriteStep.CommandAborted;
+END_IF
+
+//McMoveのエラーをチェック
+IF fbMCMoveAbsolute[E_Axis.X_Axis].Error=TRUE
+	OR fbMCMoveAbsolute[E_Axis.Y_Axis].Error=TRUE
+	OR fbMCMoveAbsolute[E_Axis.Z_Axis].Error=TRUE
+	OR fbMCMoveAbsolute[E_Axis.Gripper].Error=TRUE THEN
+		eStep:=E_WriteStep.Error;
+END_IF
+
+
+CASE eStep OF
 
 E_WriteStep.Stay:(*初期値、bMoveがTrueになったらステップを進める*)
 
@@ -191,7 +208,92 @@ E_WriteStep.PenRelease:(*ペンをリリースする*)
 		END_IF;
 	
 	END_CASE;
+	
+E_WriteStep.CommandAborted://McMoveコマンドアボート時の処理	
 
+	iStep:=0;
+	fbMCMoveAbsolute[E_Axis.X_Axis].Execute:=FALSE;
+	fbMCMoveAbsolute[E_Axis.Y_Axis].Execute:=FALSE;
+	fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
+	fbMCMoveAbsolute[E_Axis.Gripper].Execute:=FALSE;
+	
+	GVL_MitsubishiCom.bToWriteMoving:=FALSE;
+	GVL_MitsubishiCom.bToAutoMoveResetting:=FALSE;
+
+	IF fbMCMoveAbsolute[E_Axis.X_Axis].CommandAborted=FALSE
+		AND fbMCMoveAbsolute[E_Axis.Y_Axis].CommandAborted=FALSE
+		AND fbMCMoveAbsolute[E_Axis.Z_Axis].CommandAborted=FALSE
+		AND fbMCMoveAbsolute[E_Axis.Gripper].CommandAborted=FALSE THEN
+			eStep:=E_WriteStep.Reset;
+	END_IF
+
+E_WriteStep.Error://McMoveエラー時の処理	
+
+	iStep:=0;
+	fbMCMoveAbsolute[E_Axis.X_Axis].Execute:=FALSE;
+	fbMCMoveAbsolute[E_Axis.Y_Axis].Execute:=FALSE;
+	fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
+	fbMCMoveAbsolute[E_Axis.Gripper].Execute:=FALSE;
+	
+	GVL_MitsubishiCom.bToWriteMoving:=FALSE;
+	GVL_MitsubishiCom.bToAutoMoveResetting:=FALSE;
+
+	if fbMCMoveAbsolute[E_Axis.X_Axis].Error=FALSE
+		AND fbMCMoveAbsolute[E_Axis.Y_Axis].Error=FALSE
+		AND fbMCMoveAbsolute[E_Axis.Z_Axis].Error=FALSE
+		AND fbMCMoveAbsolute[E_Axis.Gripper].Error=FALSE THEN
+			eStep:=E_WriteStep.Reset;
+	END_IF	
+	
+E_WriteStep.Reset://McMoveのコマンドアボートorエラー後のリセット動作
+
+	CASE iStep OF
+
+	0:
+		IF GVL_MitsubishiCom.bFromAutoMoveReset=TRUE AND GVL_Alarm.fbMachineState.bStopMachine=FALSE THEN
+			GVL_MitsubishiCom.bToAutoMoveResetting:=TRUE;
+			iStep:=1;
+		END_IF
+
+	1:
+		fbMCMoveAbsolute[E_Axis.Gripper].Execute:=TRUE;
+		fbMCMoveAbsolute[E_Axis.Gripper].Position:=0;
+		fbMCMoveAbsolute[E_Axis.Gripper].Velocity:=150;
+
+		IF MoveAbsoluteOut[E_Axis.Gripper].Done=TRUE THEN
+			iStep:=2;
+			fbMCMoveAbsolute[E_Axis.Gripper].Execute:=FALSE;
+		END_IF;
+
+	2:
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Position:=0;
+		fbMCMoveAbsolute[E_Axis.Z_Axis].Velocity:=150;
+
+		IF MoveAbsoluteOut[E_Axis.Z_Axis].Done=TRUE THEN
+			iStep:=3;
+			fbMCMoveAbsolute[E_Axis.Z_Axis].Execute:=FALSE;
+		END_IF;
+
+	3:
+		fbMCMoveAbsolute[E_Axis.X_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute[E_Axis.Y_Axis].Execute:=TRUE;
+		fbMCMoveAbsolute[E_Axis.X_Axis].Position:=0;
+		fbMCMoveAbsolute[E_Axis.Y_Axis].Position:=0;
+		fbMCMoveAbsolute[E_Axis.X_Axis].Velocity:=150;
+		fbMCMoveAbsolute[E_Axis.Y_Axis].Velocity:=150;
+
+		IF MoveAbsoluteOut[E_Axis.X_Axis].Done=TRUE AND MoveAbsoluteOut[E_Axis.Y_Axis].Done=TRUE THEN
+			fbMCMoveAbsolute[E_Axis.X_Axis].Execute:=FALSE;
+			fbMCMoveAbsolute[E_Axis.Y_Axis].Execute:=FALSE;
+			iStep:=0;
+			eStep:=E_WriteStep.Stay;
+
+			GVL_MitsubishiCom.bToAutoMoveResetting:=FALSE;
+		END_IF;
+
+	END_CASE
+	
 END_CASE;
 
 	aMotion();]]></ST>
@@ -257,11 +359,96 @@ END_CASE;
       </Implementation>
     </Action>
     <LineIds Name="P_MotionWrite">
+      <LineId Id="2245" Count="0" />
+      <LineId Id="2211" Count="0" />
+      <LineId Id="2213" Count="0" />
+      <LineId Id="2215" Count="0" />
+      <LineId Id="2217" Count="0" />
+      <LineId Id="2221" Count="0" />
+      <LineId Id="2225" Count="2" />
+      <LineId Id="2231" Count="0" />
+      <LineId Id="2233" Count="0" />
+      <LineId Id="2235" Count="0" />
+      <LineId Id="2237" Count="0" />
+      <LineId Id="2241" Count="0" />
+      <LineId Id="2207" Count="1" />
+      <LineId Id="2210" Count="0" />
       <LineId Id="2009" Count="6" />
       <LineId Id="2198" Count="0" />
       <LineId Id="2016" Count="168" />
       <LineId Id="2199" Count="0" />
-      <LineId Id="2185" Count="5" />
+      <LineId Id="2185" Count="2" />
+      <LineId Id="2246" Count="0" />
+      <LineId Id="2249" Count="0" />
+      <LineId Id="2252" Count="1" />
+      <LineId Id="2255" Count="0" />
+      <LineId Id="2257" Count="0" />
+      <LineId Id="2259" Count="0" />
+      <LineId Id="2261" Count="0" />
+      <LineId Id="2415" Count="1" />
+      <LineId Id="2420" Count="0" />
+      <LineId Id="2264" Count="1" />
+      <LineId Id="2267" Count="0" />
+      <LineId Id="2269" Count="0" />
+      <LineId Id="2271" Count="0" />
+      <LineId Id="2275" Count="0" />
+      <LineId Id="2279" Count="0" />
+      <LineId Id="2286" Count="1" />
+      <LineId Id="2290" Count="1" />
+      <LineId Id="2293" Count="0" />
+      <LineId Id="2295" Count="0" />
+      <LineId Id="2297" Count="0" />
+      <LineId Id="2299" Count="0" />
+      <LineId Id="2417" Count="2" />
+      <LineId Id="2302" Count="1" />
+      <LineId Id="2305" Count="0" />
+      <LineId Id="2307" Count="0" />
+      <LineId Id="2309" Count="0" />
+      <LineId Id="2313" Count="0" />
+      <LineId Id="2317" Count="0" />
+      <LineId Id="2247" Count="0" />
+      <LineId Id="2324" Count="0" />
+      <LineId Id="2326" Count="0" />
+      <LineId Id="2328" Count="2" />
+      <LineId Id="2332" Count="0" />
+      <LineId Id="2334" Count="0" />
+      <LineId Id="2408" Count="0" />
+      <LineId Id="2336" Count="0" />
+      <LineId Id="2339" Count="1" />
+      <LineId Id="2342" Count="0" />
+      <LineId Id="2344" Count="0" />
+      <LineId Id="2346" Count="1" />
+      <LineId Id="2350" Count="0" />
+      <LineId Id="2352" Count="0" />
+      <LineId Id="2354" Count="0" />
+      <LineId Id="2356" Count="0" />
+      <LineId Id="2359" Count="1" />
+      <LineId Id="2362" Count="0" />
+      <LineId Id="2364" Count="0" />
+      <LineId Id="2366" Count="0" />
+      <LineId Id="2369" Count="1" />
+      <LineId Id="2372" Count="0" />
+      <LineId Id="2374" Count="0" />
+      <LineId Id="2376" Count="0" />
+      <LineId Id="2379" Count="1" />
+      <LineId Id="2382" Count="0" />
+      <LineId Id="2384" Count="0" />
+      <LineId Id="2386" Count="0" />
+      <LineId Id="2388" Count="0" />
+      <LineId Id="2390" Count="0" />
+      <LineId Id="2392" Count="0" />
+      <LineId Id="2394" Count="0" />
+      <LineId Id="2396" Count="0" />
+      <LineId Id="2400" Count="0" />
+      <LineId Id="2402" Count="0" />
+      <LineId Id="2412" Count="0" />
+      <LineId Id="2411" Count="0" />
+      <LineId Id="2413" Count="1" />
+      <LineId Id="2404" Count="0" />
+      <LineId Id="2407" Count="0" />
+      <LineId Id="2322" Count="0" />
+      <LineId Id="2248" Count="0" />
+      <LineId Id="2189" Count="1" />
       <LineId Id="861" Count="0" />
     </LineIds>
     <LineIds Name="P_MotionWrite.aMotion">

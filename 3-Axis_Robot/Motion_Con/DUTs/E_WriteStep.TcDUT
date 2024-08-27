@@ -13,7 +13,12 @@ TYPE E_WriteStep :
 	Write,
 	ZAxixZeroPotision2,
 	XYAxixZeroPotision2,
-	PenRelease
+	PenRelease,
+	
+	//McFb停止時用
+	CommandAborted,
+	Error,
+	Reset
 );
 END_TYPE
 ]]></Declaration>

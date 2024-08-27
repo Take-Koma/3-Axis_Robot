@@ -30,6 +30,7 @@ VAR_GLOBAL
 	bToGripperMoving								:BOOL;				//13:グリッパー起動中
 	bToWriteMoving									:BOOL;				//20:図形描画中
 	bToPickAndPlaceMoving							:BOOL;				//21:ピック＆プレース実行中
+	bToAutoMoveResetting							:BOOL;				//22:オート動作のリセット中
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
 	bFromAxisErrorReset								:BOOL;				//0:軸エラーのリセット
@@ -49,6 +50,7 @@ VAR_GLOBAL
 	bFromGripperJogStart							:BOOL;				//19:グリッパーJog起動
 	bFromWriteStart									:BOOL;				//20:図形描画スタート
 	bFromPickAndPlaceStart							:BOOL;				//21:ピック＆プレーススタート
+	bFromAutoMoveReset								:BOOL;				//22:オート動作のリセット
 	
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
 	wToXAxisActPos									:WORD;				//0:X軸ポジション
