@@ -2,10 +2,6 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_MotionShapeWrite" Id="{eab47f10-d6a7-4976-bdc3-52a9edae3f78}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionShapeWrite
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
 	bStart				:BOOL;
 	bEnd				:BOOL;
