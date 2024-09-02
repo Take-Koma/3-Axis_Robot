@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Patlite" Id="{64d6703e-381b-4b78-a0a1-7f429646ef42}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Patlite IMPLEMENTS I_Patlite
+VAR
+	bRedLed				AT %Q* :BOOL;				//パトライト赤LED ターミナル5(EL2088)チャンネル5
+	bGreenLed			AT %Q* :BOOL;				//パトライト緑LED ターミナル5(EL2088)チャンネル6
+	bBlueLed			AT %Q* :BOOL;				//パトライト青LED ターミナル5(EL2088)チャンネル7
+	bBuzzerON			AT %Q* :BOOL;				//パトライトブザー ターミナル5(EL2088)チャンネル8
+	
+	bSwitch				AT %I* :BOOL; 				//パトライトスイッチ ターミナル5(EL1088)チャンネル8
+	
+	//ブザー制御用
+	bBuzzerFlag					:BOOL;
+	
+	//LED制御用
+	eLedColor					:E_LedColor;
+	tBlinkTime					:TIME;
+	fbTonBlink1					:ton;
+	fbTonBlink2					:ton;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bBuzzer(eMachineState:=GVL_Alarm.fbMachineState.eMachineState);
+bLED(eMachineState:=GVL_Alarm.fbMachineState.eMachineState);]]></ST>
+    </Implementation>
+    <Method Name="bBuzzer" Id="{c7e865c0-fd52-4449-91af-8ccd99b09f2d}">
+      <Declaration><![CDATA[{warning 'メソッド実装を追加'}
+METHOD bBuzzer : BOOL
+VAR_INPUT
+	eMachineState	:E_MachineState;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
+CASE eMachineState OF
+	
+	E_MachineState.Critical:
+		IF bBuzzerFlag=FALSE THEN
+			bBuzzerON:=TRUE;
+		END_IF
+	
+	E_MachineState.Error:
+		IF bBuzzerFlag=FALSE THEN
+			bBuzzerON:=TRUE;
+		END_IF
+	
+	E_MachineState.Warning:
+		IF bBuzzerFlag=FALSE THEN
+			bBuzzerON:=TRUE;
+		END_IF
+		
+	E_MachineState.Stay:
+		bBuzzerON:=FALSE;
+		bBuzzerFlag:=FALSE;
+	
+	E_MachineState.Stop:
+		bBuzzerON:=FALSE;
+		bBuzzerFlag:=FALSE;
+
+	E_MachineState.Moving:
+		bBuzzerON:=FALSE;
+		bBuzzerFlag:=FALSE;
+	
+END_CASE;
+
+//---スイッチが押されたらブザー停止---
+IF bSwitch=TRUE THEN
+	bBuzzerON:=FALSE;
+	bBuzzerFlag:=TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="bLED" Id="{b6deb205-6f8f-48a1-84ac-fb6f5e15b6b7}">
+      <Declaration><![CDATA[{warning 'メソッド実装を追加'}
+METHOD bLED : BOOL
+VAR_INPUT
+	eMachineState	: E_MachineState;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
+CASE eMachineState OF
+	
+	E_MachineState.Critical:
+		eLedColor:=E_LedColor.Blue;
+		tBlinkTime:=T#100MS;
+	
+	E_MachineState.Error:
+		eLedColor:=E_LedColor.Red;
+		tBlinkTime:=T#100MS;
+	
+	E_MachineState.Warning:
+		eLedColor:=E_LedColor.Yellow;
+		tBlinkTime:=T#100MS;
+		
+	E_MachineState.Stay:
+		eLedColor:=E_LedColor.Cyan;
+		tBlinkTime:=T#0S;
+	
+	E_MachineState.Stop:
+		eLedColor:=E_LedColor.White;
+		tBlinkTime:=T#0S;
+
+	E_MachineState.Moving:
+		eLedColor:=E_LedColor.Green;
+		tBlinkTime:=T#0S;
+
+END_CASE;
+
+//---ブリンク用のタイマー---
+fbTonBlink1(IN:=NOT fbTonBlink2.Q,PT:=tBlinkTime,Q=>fbTonBlink2.IN,ET=>);
+fbTonBlink2(IN:=,PT:=tBlinkTime,Q=>,ET=>);
+
+//---LEDを点灯制御---
+IF fbTonBlink1.Q=FALSE OR tBlinkTime=T#0S  THEN;
+	CASE eLedColor OF
+	E_LedColor.Red:
+		bRedLed:=TRUE;
+		bGreenLed:=FALSE;
+		bBlueLed:=FALSE;
+	
+	E_LedColor.Green:
+		bRedLed:=FALSE;
+		bGreenLed:=TRUE;
+		bBlueLed:=FALSE;	
+	
+	E_LedColor.Blue:
+		bRedLed:=FALSE;
+		bGreenLed:=FALSE;
+		bBlueLed:=TRUE;
+		
+	E_LedColor.Yellow:
+		bRedLed:=TRUE;
+		bGreenLed:=TRUE;
+		bBlueLed:=FALSE;
+	
+	E_LedColor.Cyan:
+		bRedLed:=FALSE;
+		bGreenLed:=TRUE;
+		bBlueLed:=TRUE;
+	
+	E_LedColor.Purple:
+		bRedLed:=TRUE;
+		bGreenLed:=FALSE;
+		bBlueLed:=TRUE;
+	
+	E_LedColor.White:
+		bRedLed:=TRUE;
+		bGreenLed:=TRUE;
+		bBlueLed:=TRUE;
+	
+	E_LedColor.Black:
+		bRedLed:=FALSE;
+		bGreenLed:=FALSE;
+		bBlueLed:=FALSE;
+	END_CASE
+ELSE;
+	bRedLed:=FALSE;
+	bGreenLed:=FALSE;
+	bBlueLed:=FALSE;
+END_IF;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="bSwitchProp" Id="{7a6ac67c-81a8-4660-b834-e4324f3fadd7}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY bSwitchProp : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{7b057052-63f2-4837-b765-68e3dfe16a2a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bSwitchProp:=bSwitch;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="FB_Patlite">
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Patlite.bBuzzer">
+      <LineId Id="57" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="13" Count="4" />
+      <LineId Id="20" Count="4" />
+      <LineId Id="27" Count="4" />
+      <LineId Id="34" Count="3" />
+      <LineId Id="40" Count="3" />
+      <LineId Id="46" Count="8" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Patlite.bLED">
+      <LineId Id="66" Count="5" />
+      <LineId Id="75" Count="3" />
+      <LineId Id="82" Count="3" />
+      <LineId Id="89" Count="3" />
+      <LineId Id="95" Count="3" />
+      <LineId Id="101" Count="3" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="108" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="13" Count="46" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Patlite.bSwitchProp.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

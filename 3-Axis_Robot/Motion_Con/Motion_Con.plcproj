@@ -58,10 +58,6 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\GVL_Patlite.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="GVLs\GVL_Safety.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -85,7 +81,13 @@
     <Compile Include="POUs\FB_MachineState.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_Patlite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FB_Z_Axis_TargetPositionConvert.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\I_Patlite.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\P_Alarm.TcPOU">
@@ -98,9 +100,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\P_Patlite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\P_MotionWrite.TcPOU">
