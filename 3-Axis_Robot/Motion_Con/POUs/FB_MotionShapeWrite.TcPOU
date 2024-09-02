@@ -1,0 +1,566 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_MotionShapeWrite" Id="{eab47f10-d6a7-4976-bdc3-52a9edae3f78}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MotionShapeWrite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	bStart				:BOOL;
+	bEnd				:BOOL;
+	
+	pMcMoveAbs			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF POINTER TO MC_MoveAbsolute;
+	pMcMoveAbsSub		:ARRAY[E_Axis.X_Axis..E_Axis.Z_Axis] OF POINTER TO MC_MoveAbsolute;
+	
+	i					:INT;
+	iNext				:INT:=0;
+	eStep				:E_CircleEllipseWriteStep:=E_CircleEllipseWriteStep.Check;
+	iStep				:INT:=0;
+	lrDeg				:LREAL :=0;
+
+	fbZAxisTPCon0		:FB_Z_Axis_TargetPositionConvert;
+	fbZAxisTPCon1		:FB_Z_Axis_TargetPositionConvert;
+	bCheck0				:ARRAY[E_Axis.X_Axis..E_Axis.Z_Axis] OF BOOL;
+	bCheck1				:ARRAY[E_Axis.X_Axis..E_Axis.Z_Axis] OF BOOL;
+	
+	//円用の変数
+	iEndNumberCircle	:INT;(*書き終わった円の個数*)
+	iWrittingCircle		:INT;(*今から何個目の円を書くのか*)
+	stCircleSettings	:ARRAY[1..32] OF ST_CircleSettings;
+	
+	//楕円用の変数
+	iEndNumberEllipse	:INT;(*書き終わった楕円の個数*)
+	iWrittingEllipse	:INT;(*今から何個目の楕円を書くのか*)
+	stEllipseSettings	:ARRAY[1..32] OF ST_EllipseSetting;
+	lrBase0				:ARRAY[E_Axis.X_Axis..E_Axis.Y_Axis] OF LREAL;
+	lrBase1				:ARRAY[E_Axis.X_Axis..E_Axis.Y_Axis] OF LREAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bStart<>TRUE THEN
+	RETURN;
+END_IF
+
+CASE iNext OF
+	0:
+		eStep:=E_CircleEllipseWriteStep.Check;
+		iStep:=0;
+		i:=0;
+		iEndNumberCircle:=0;
+		iWrittingCircle:=0;
+		iEndNumberEllipse:=0;
+		iWrittingEllipse:=0;
+		iNext:=2;
+
+	2:
+		CircleMeth();
+	
+	3:
+		EllipseMeth();
+	
+	4:
+		bEnd:=TRUE;
+		iNext:=0;
+		
+END_CASE
+
+
+]]></ST>
+    </Implementation>
+    <Property Name="bEndProp" Id="{9c488976-b807-4841-9768-fe54b68c4dc0}">
+      <Declaration><![CDATA[PROPERTY bEndProp : BOOL]]></Declaration>
+      <Get Name="Get" Id="{1cc1e5bf-e55a-4f7e-8da9-1461613481ba}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bEndprop:=bEnd;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0310de0a-72e5-419d-941f-2a447fe515ae}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bEnd:=bEndProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="bStartProp" Id="{e8622204-3d6e-457e-a33c-63e56d0bdd96}">
+      <Declaration><![CDATA[PROPERTY bStartProp : BOOL]]></Declaration>
+      <Get Name="Get" Id="{27907ef4-e500-4cec-932c-4bc13edcf1cc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStartprop:=bStart;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{05a159a1-3310-48ac-b331-55f04d5cb3ab}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStart:=bStartProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="CircleMeth" Id="{77267ba7-464a-468a-82d0-78c39cd6d8b6}">
+      <Declaration><![CDATA[METHOD CircleMeth : BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eStep OF
+
+E_CircleEllipseWriteStep.Check:(*まず書く円を確認*)
+
+	iEndNumberCircle:=iWrittingCircle;
+	iWrittingCircle:=0;
+
+	FOR i :=  iEndNumberCircle + 1 TO 32 BY 1 DO
+		IF stCircleSettings[i].bWrite=TRUE THEN
+			iWrittingCircle:=i;
+			eStep:=E_CircleEllipseWriteStep.FirstPotisionMove;
+			EXIT;
+		END_IF
+	END_FOR
+
+	IF iWrittingCircle=0 THEN
+		iNext:=3;
+	END_IF
+
+E_CircleEllipseWriteStep.FirstPotisionMove:(*円の書き始め位置へ移動*)
+
+	CASE iStep OF
+	0:
+		iStep:=1;
+		lrDeg:=stCircleSettings[iWrittingCircle].lrStartDeg;
+		
+	1:
+		pMcMoveAbs[E_Axis.X_Axis]^.Execute:=TRUE;
+		pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=TRUE;
+		pMcMoveAbs[E_Axis.X_Axis]^.Position:=stCircleSettings[iWrittingCircle].uiXCenter + stCircleSettings[iWrittingCircle].uiRadius * COS(lrDeg*PI/180);
+		pMcMoveAbs[E_Axis.Y_Axis]^.Position:=stCircleSettings[iWrittingCircle].uiYCenter + stCircleSettings[iWrittingCircle].uiRadius * SIN(lrDeg*PI/180);
+		pMcMoveAbs[E_Axis.X_Axis]^.Velocity:=150;
+		pMcMoveAbs[E_Axis.Y_Axis]^.Velocity:=150;
+
+		IF pMcMoveAbs[E_Axis.X_Axis]^.Done=TRUE AND pMcMoveAbs[E_Axis.Y_Axis]^.Done=TRUE THEN
+			iStep:=2;
+			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=FALSE;
+		END_IF;
+		
+	2:
+		pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=TRUE;
+		pMcMoveAbs[E_Axis.Z_Axis]^.Velocity:=150;
+		
+		fbZAxisTPCon0(
+			lrX_AxisTP		:=pMcMoveAbs[E_Axis.X_Axis]^.Position,
+			lrY_AxisTP		:=pMcMoveAbs[E_Axis.Y_Axis]^.Position,
+			lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
+			lrZ_AxisCorTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
+			);
+				
+		IF pMcMoveAbs[E_Axis.Z_Axis]^.Done=TRUE THEN
+			eStep:=E_CircleEllipseWriteStep.Write;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=FALSE;
+			iStep:=0;
+		END_IF;
+	
+	END_CASE;
+
+E_CircleEllipseWriteStep.Write:(*円を書いていく*)
+
+	CASE iStep OF
+	0:
+		bCheck0[E_Axis.X_Axis]:=TRUE;
+		bCheck1[E_Axis.X_Axis]:=TRUE;
+		bCheck0[E_Axis.Y_Axis]:=TRUE;
+		bCheck1[E_Axis.Y_Axis]:=TRUE;
+		bCheck0[E_Axis.Z_Axis]:=TRUE;
+		bCheck1[E_Axis.Z_Axis]:=TRUE;
+		lrDeg:=stCircleSettings[iWrittingCircle].lrStartDeg;
+		iStep:=1;
+
+	1:	
+		IF pMcMoveAbs[E_Axis.X_Axis]^.Done=TRUE THEN bCheck0[E_Axis.X_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbsSub[E_Axis.X_Axis]^.Done=TRUE THEN bCheck1[E_Axis.X_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbs[E_Axis.Y_Axis]^.Done=TRUE THEN bCheck0[E_Axis.Y_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbsSub[E_Axis.Y_Axis]^.Done=TRUE THEN bCheck1[E_Axis.Y_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbs[E_Axis.Z_Axis]^.Done=TRUE THEN bCheck0[E_Axis.Z_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbsSub[E_Axis.Z_Axis]^.Done=TRUE THEN bCheck1[E_Axis.Z_Axis]:=TRUE; END_IF;
+	
+		IF bCheck0[E_Axis.X_Axis]=TRUE AND bCheck0[E_Axis.Y_Axis]=TRUE AND bCheck0[E_Axis.Z_Axis]=TRUE THEN
+			bCheck0[E_Axis.X_Axis]:=FALSE;	
+			bCheck0[E_Axis.Y_Axis]:=FALSE;
+			bCheck0[E_Axis.Z_Axis]:=FALSE;
+			lrDeg:=lrDeg + 1;
+			pMcMoveAbs[E_Axis.X_Axis]^.Position:=stCircleSettings[iWrittingCircle].uiXCenter + stCircleSettings[iWrittingCircle].uiRadius * COS(lrDeg*PI/180);
+			pMcMoveAbs[E_Axis.Y_Axis]^.Position:=stCircleSettings[iWrittingCircle].uiYCenter + stCircleSettings[iWrittingCircle].uiRadius * SIN(lrDeg*PI/180);
+			
+			fbZAxisTPCon0(
+				lrX_AxisTP		:=pMcMoveAbs[E_Axis.X_Axis]^.Position,
+				lrY_AxisTP		:=pMcMoveAbs[E_Axis.Y_Axis]^.Position,
+				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
+				lrZ_AxisCorTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
+				);
+
+			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=TRUE;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=TRUE;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=TRUE;
+			pMcMoveAbs[E_Axis.X_Axis]^.Velocity:=150;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Velocity:=150;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Velocity:=150;
+		ELSE
+			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=FALSE;
+		END_IF;
+		
+		IF bCheck1[E_Axis.X_Axis]=TRUE AND bCheck1[E_Axis.Y_Axis]=TRUE AND bCheck1[E_Axis.Z_Axis]=TRUE THEN
+			bCheck1[E_Axis.X_Axis]:=FALSE;	
+			bCheck1[E_Axis.Y_Axis]:=FALSE;
+			bCheck1[E_Axis.Z_Axis]:=FALSE;
+			lrDeg:=lrDeg + 1;
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Position:=stCircleSettings[iWrittingCircle].uiXCenter + stCircleSettings[iWrittingCircle].uiRadius * COS(lrDeg*PI/180);
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Position:=stCircleSettings[iWrittingCircle].uiYCenter + stCircleSettings[iWrittingCircle].uiRadius * SIN(lrDeg*PI/180);
+			
+			fbZAxisTPCon1(
+				lrX_AxisTP		:=pMcMoveAbsSub[E_Axis.X_Axis]^.Position,
+				lrY_AxisTP		:=pMcMoveAbsSub[E_Axis.Y_Axis]^.Position,
+				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
+				lrZ_AxisCorTP	=>pMcMoveAbsSub[E_Axis.Z_Axis]^.Position
+				);
+
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Execute:=TRUE;
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Execute:=TRUE;
+			pMcMoveAbsSub[E_Axis.Z_Axis]^.Execute:=TRUE;
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Velocity:=150;
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Velocity:=150;
+			pMcMoveAbsSub[E_Axis.Z_Axis]^.Velocity:=150;
+		ELSE
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.Z_Axis]^.Execute:=FALSE;
+		END_IF;
+	
+		IF stCircleSettings[iWrittingCircle].lrEndDeg < lrDeg THEN
+			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.Z_Axis]^.Execute:=FALSE;
+			eStep:=E_CircleEllipseWriteStep.ZAxisUpPotision;
+			iStep:=0;
+			lrDeg:=0;
+		END_IF;
+	
+	END_CASE;
+
+E_CircleEllipseWriteStep.ZAxisUpPotision:(*Z軸を持ち上げる、ペンが紙に当たらないように*)
+
+	pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=TRUE;
+	pMcMoveAbs[E_Axis.Z_Axis]^.Position:=273-GVL.lrPenFullLength+GVL.lrPenGripLength-50;
+	pMcMoveAbs[E_Axis.Z_Axis]^.Velocity:=150;
+
+	IF pMcMoveAbs[E_Axis.Z_Axis]^.Done=TRUE THEN
+		eStep:=E_CircleEllipseWriteStep.Check;
+		pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=FALSE;
+	END_IF;
+	
+END_CASE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EllipseMeth" Id="{3b57a8ea-f018-47aa-8cc6-89cbc8fb1982}">
+      <Declaration><![CDATA[METHOD EllipseMeth : BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eStep OF
+	
+E_CircleEllipseWriteStep.Check:(*まず書く楕円を確認*)
+	
+	iEndNumberEllipse:=iWrittingEllipse;
+	iWrittingEllipse:=0;
+
+	FOR i :=  iEndNumberEllipse + 1 TO 32 BY 1 DO
+		IF stEllipseSettings[i].bWrite=TRUE THEN
+			iWrittingEllipse:=i;
+			eStep:=E_CircleEllipseWriteStep.FirstPotisionMove;
+			EXIT;
+		END_IF
+	END_FOR
+
+	IF iWrittingEllipse=0 THEN
+		iNext:=4;
+	END_IF
+	
+E_CircleEllipseWriteStep.FirstPotisionMove:(*楕円の書き始め位置へ移動*)
+	
+	CASE iStep OF
+	0:
+		iStep:=1;
+		lrDeg:=stEllipseSettings[iWrittingEllipse].lrStartDeg;
+	
+	1:
+		lrBase0[E_Axis.X_Axis]:= stEllipseSettings[iWrittingEllipse].uiVertex * COS(lrDeg*PI/180);
+		lrBase0[E_Axis.Y_Axis]:= stEllipseSettings[iWrittingEllipse].uiCoVertex * SIN(lrDeg*PI/180);
+		pMcMoveAbs[E_Axis.X_Axis]^.Execute:=TRUE;
+		pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=TRUE;
+		pMcMoveAbs[E_Axis.X_Axis]^.Position:=stEllipseSettings[iWrittingEllipse].uiXCenter + lrBase0[E_Axis.X_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) - lrBase0[E_Axis.Y_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+		pMcMoveAbs[E_Axis.Y_Axis]^.Position:=stEllipseSettings[iWrittingEllipse].uiYCenter + lrBase0[E_Axis.X_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) + lrBase0[E_Axis.Y_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+		pMcMoveAbs[E_Axis.X_Axis]^.Velocity:=150;
+		pMcMoveAbs[E_Axis.Y_Axis]^.Velocity:=150;
+
+		IF pMcMoveAbs[E_Axis.X_Axis]^.Done=TRUE AND pMcMoveAbs[E_Axis.Y_Axis]^.Done=TRUE THEN
+			iStep:=2;
+			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=FALSE;
+		END_IF;
+		
+	2:
+		pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=TRUE;
+		pMcMoveAbs[E_Axis.Z_Axis]^.Velocity:=150;
+		
+		fbZAxisTPCon0(
+			lrX_AxisTP		:=pMcMoveAbs[E_Axis.X_Axis]^.Position,
+			lrY_AxisTP		:=pMcMoveAbs[E_Axis.Y_Axis]^.Position,
+			lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
+			lrZ_AxisCorTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
+			);
+				
+		IF pMcMoveAbs[E_Axis.Z_Axis]^.Done=TRUE THEN
+			eStep:=E_CircleEllipseWriteStep.Write;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=FALSE;
+			iStep:=0;
+		END_IF;
+		
+	END_CASE
+	
+E_CircleEllipseWriteStep.Write:(*楕円を書いていく*)
+
+	CASE iStep OF
+	0:
+		bCheck0[E_Axis.X_Axis]:=TRUE;
+		bCheck1[E_Axis.X_Axis]:=TRUE;
+		bCheck0[E_Axis.Y_Axis]:=TRUE;
+		bCheck1[E_Axis.Y_Axis]:=TRUE;
+		bCheck0[E_Axis.Z_Axis]:=TRUE;
+		bCheck1[E_Axis.Z_Axis]:=TRUE;
+		lrDeg:=stEllipseSettings[iWrittingEllipse].lrStartDeg;
+		iStep:=1;
+
+	1:	
+		IF pMcMoveAbs[E_Axis.X_Axis]^.Done=TRUE THEN bCheck0[E_Axis.X_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbsSub[E_Axis.X_Axis]^.Done=TRUE THEN bCheck1[E_Axis.X_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbs[E_Axis.Y_Axis]^.Done=TRUE THEN bCheck0[E_Axis.Y_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbsSub[E_Axis.Y_Axis]^.Done=TRUE THEN bCheck1[E_Axis.Y_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbs[E_Axis.Z_Axis]^.Done=TRUE THEN bCheck0[E_Axis.Z_Axis]:=TRUE; END_IF;
+		IF pMcMoveAbsSub[E_Axis.Z_Axis]^.Done=TRUE THEN bCheck1[E_Axis.Z_Axis]:=TRUE; END_IF;
+
+		IF bCheck0[E_Axis.X_Axis]=TRUE AND bCheck0[E_Axis.Y_Axis]=TRUE AND bCheck0[E_Axis.Z_Axis]=TRUE THEN
+			bCheck0[E_Axis.X_Axis]:=FALSE;	
+			bCheck0[E_Axis.Y_Axis]:=FALSE;
+			bCheck0[E_Axis.Z_Axis]:=FALSE;
+			lrDeg:=lrDeg + 1;
+			lrBase0[E_Axis.X_Axis]:= stEllipseSettings[iWrittingEllipse].uiVertex * COS(lrDeg*PI/180);
+			lrBase0[E_Axis.Y_Axis]:= stEllipseSettings[iWrittingEllipse].uiCoVertex * SIN(lrDeg*PI/180);
+			pMcMoveAbs[E_Axis.X_Axis]^.Position:=stEllipseSettings[iWrittingEllipse].uiXCenter + lrBase0[E_Axis.X_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) - lrBase0[E_Axis.Y_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+			pMcMoveAbs[E_Axis.Y_Axis]^.Position:=stEllipseSettings[iWrittingEllipse].uiYCenter + lrBase0[E_Axis.X_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) + lrBase0[E_Axis.Y_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+			
+			fbZAxisTPCon0(
+				lrX_AxisTP		:=pMcMoveAbs[E_Axis.X_Axis]^.Position,
+				lrY_AxisTP		:=pMcMoveAbs[E_Axis.Y_Axis]^.Position,
+				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
+				lrZ_AxisCorTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
+				);
+
+			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=TRUE;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=TRUE;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=TRUE;
+			pMcMoveAbs[E_Axis.X_Axis]^.Velocity:=150;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Velocity:=150;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Velocity:=150;
+		ELSE
+			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=FALSE;
+		END_IF;
+
+		IF bCheck1[E_Axis.X_Axis]=TRUE AND bCheck1[E_Axis.Y_Axis]=TRUE AND bCheck1[E_Axis.Z_Axis]=TRUE THEN
+			bCheck1[E_Axis.X_Axis]:=FALSE;	
+			bCheck1[E_Axis.Y_Axis]:=FALSE;
+			bCheck1[E_Axis.Z_Axis]:=FALSE;
+			lrDeg:=lrDeg + 1;
+			lrBase1[E_Axis.X_Axis]:= stEllipseSettings[iWrittingEllipse].uiVertex * COS(lrDeg*PI/180);
+			lrBase1[E_Axis.Y_Axis]:= stEllipseSettings[iWrittingEllipse].uiCoVertex * SIN(lrDeg*PI/180);
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Position:=stEllipseSettings[iWrittingEllipse].uiXCenter + lrBase1[E_Axis.X_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) - lrBase1[E_Axis.Y_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Position:=stEllipseSettings[iWrittingEllipse].uiYCenter + lrBase1[E_Axis.X_Axis] * SIN(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180) + lrBase1[E_Axis.Y_Axis] * COS(stEllipseSettings[iWrittingEllipse].lrSlopeDeg*PI/180);
+			
+			fbZAxisTPCon1(
+				lrX_AxisTP		:=pMcMoveAbsSub[E_Axis.X_Axis]^.Position,
+				lrY_AxisTP		:=pMcMoveAbsSub[E_Axis.Y_Axis]^.Position,
+				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
+				lrZ_AxisCorTP	=>pMcMoveAbsSub[E_Axis.Z_Axis]^.Position
+				);
+
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Execute:=TRUE;
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Execute:=TRUE;
+			pMcMoveAbsSub[E_Axis.Z_Axis]^.Execute:=TRUE;
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Velocity:=150;
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Velocity:=150;
+			pMcMoveAbsSub[E_Axis.Z_Axis]^.Velocity:=150;
+		ELSE
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.Z_Axis]^.Execute:=FALSE;
+		END_IF;
+	
+		IF stEllipseSettings[iWrittingEllipse].lrEndDeg < lrDeg THEN
+			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Y_Axis]^.Execute:=FALSE;
+			pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.X_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.Y_Axis]^.Execute:=FALSE;
+			pMcMoveAbsSub[E_Axis.Z_Axis]^.Execute:=FALSE;
+			eStep:=E_CircleEllipseWriteStep.ZAxisUpPotision;
+			iStep:=0;
+			lrDeg:=0;
+		END_IF;
+	
+	END_CASE;
+
+E_CircleEllipseWriteStep.ZAxisUpPotision:(*Z軸を持ち上げる、ペンが紙に当たらないように*)
+
+	pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=TRUE;
+	pMcMoveAbs[E_Axis.Z_Axis]^.Position:=273-GVL.lrPenFullLength+GVL.lrPenGripLength-50;
+	pMcMoveAbs[E_Axis.Z_Axis]^.Velocity:=150;
+
+	IF pMcMoveAbs[E_Axis.Z_Axis]^.Done=TRUE THEN
+		eStep:=E_CircleEllipseWriteStep.Check;
+		pMcMoveAbs[E_Axis.Z_Axis]^.Execute:=FALSE;
+	END_IF;
+	
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{cdb4bfb6-c8ad-42c1-991b-9f517a1eb362}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	rXAxisMcMoveAbs				:REFERENCE TO MC_MoveAbsolute;
+	rYAxisMcMoveAbs				:REFERENCE TO MC_MoveAbsolute;
+	rZAxisMcMoveAbs				:REFERENCE TO MC_MoveAbsolute;	
+	rGripperMcMoveAbs			:REFERENCE TO MC_MoveAbsolute;
+	
+	rXAxisMcMoveAbsSub			:REFERENCE TO MC_MoveAbsolute;
+	rYAxisMcMoveAbsSub			:REFERENCE TO MC_MoveAbsolute;
+	rZAxisMcMoveAbsSub			:REFERENCE TO MC_MoveAbsolute;
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[pMcMoveAbs[E_Axis.X_Axis]:=ADR(rXAxisMcMoveAbs);
+pMcMoveAbs[E_Axis.Y_Axis]:=ADR(rYAxisMcMoveAbs);
+pMcMoveAbs[E_Axis.Z_Axis]:=ADR(rZAxisMcMoveAbs);
+pMcMoveAbs[E_Axis.Gripper]:=ADR(rGripperMcMoveAbs);
+
+pMcMoveAbsSub[E_Axis.X_Axis]:=ADR(rXAxisMcMoveAbsSub);
+pMcMoveAbsSub[E_Axis.Y_Axis]:=ADR(rYAxisMcMoveAbsSub);
+pMcMoveAbsSub[E_Axis.Z_Axis]:=ADR(rZAxisMcMoveAbsSub);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="iNextProp" Id="{ede788ae-d426-42a1-b0ab-240e937881fd}">
+      <Declaration><![CDATA[PROPERTY iNextProp : INT]]></Declaration>
+      <Set Name="Set" Id="{a7ab3abf-902f-4f21-8506-0d6712aafcd7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[iNext:=iNextProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="stCircleSettingsProp" Id="{fae83511-cef2-4441-a159-290c3e77bd82}">
+      <Declaration><![CDATA[PROPERTY stCircleSettingsProp :ARRAY[1..32] OF  ST_CircleSettings]]></Declaration>
+      <Set Name="Set" Id="{dd7566e9-68ae-488b-af42-b4c9c2727635}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stCircleSettings:=stCircleSettingsProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="stEllipseSettingsProp" Id="{b1f0f623-56d2-41f6-8e49-1bf3800e0851}">
+      <Declaration><![CDATA[PROPERTY stEllipseSettingsProp :ARRAY[1..32] OF ST_EllipseSetting]]></Declaration>
+      <Set Name="Set" Id="{0cb78b41-3a4c-40fe-91d7-9457e9836eca}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stEllipseSettings:=stEllipseSettingsProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="FB_MotionShapeWrite">
+      <LineId Id="224" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="264" Count="2" />
+      <LineId Id="281" Count="1" />
+      <LineId Id="284" Count="1" />
+      <LineId Id="287" Count="0" />
+      <LineId Id="286" Count="0" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="268" Count="6" />
+      <LineId Id="278" Count="0" />
+      <LineId Id="277" Count="0" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="279" Count="1" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.bEndProp.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.bEndProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.bStartProp.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.bStartProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.CircleMeth">
+      <LineId Id="6" Count="156" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="163" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.EllipseMeth">
+      <LineId Id="6" Count="164" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.FB_init">
+      <LineId Id="20" Count="0" />
+      <LineId Id="37" Count="2" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="40" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.iNextProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.stCircleSettingsProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MotionShapeWrite.stEllipseSettingsProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

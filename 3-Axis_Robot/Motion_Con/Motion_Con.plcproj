@@ -20,10 +20,7 @@
     <Compile Include="DUTs\E_Axis.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\E_CircleWriteStep.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\E_EllipseWriteStep.TcDUT">
+    <Compile Include="DUTs\E_CircleEllipseWriteStep.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\E_LedColor.TcDUT">
@@ -79,6 +76,9 @@
     <Compile Include="POUs\FB_Alarm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FB_MotionShapeWrite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FB_Gripper_GripAngle.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -97,13 +97,7 @@
     <Compile Include="POUs\P_Motion.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\P_Ellipse.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\P_Circle.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\P_Patlite.TcPOU">
