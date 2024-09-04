@@ -3,23 +3,27 @@
   <Itf Name="I_Patlite" Id="{14c97931-95fa-40c6-b082-3bd22a2a5f82}">
     <Declaration><![CDATA[INTERFACE I_Patlite
 ]]></Declaration>
-    <Method Name="bBuzzer" Id="{23f2bed4-27e7-4078-b5ce-6129bab22e71}">
-      <Declaration><![CDATA[METHOD bBuzzer : BOOL
-VAR_INPUT
-	eMachineState		:E_MachineState;
-END_VAR]]></Declaration>
-    </Method>
-    <Method Name="bLED" Id="{48fbf73f-125a-4d59-b845-3102cbd4b216}">
-      <Declaration><![CDATA[METHOD bLED :BOOL
-VAR_INPUT
-	eMachineState		:E_MachineState;
-END_VAR]]></Declaration>
-    </Method>
     <Property Name="bSwitchProp" Id="{9da53c8a-8b53-4b14-8a56-c55a59ce11be}">
       <Declaration><![CDATA[PROPERTY bSwitchProp : BOOL]]></Declaration>
       <Get Name="Get" Id="{ca6211ca-c152-4ad4-b15c-1775093ed080}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
+    <Method Name="Buzzer" Id="{23f2bed4-27e7-4078-b5ce-6129bab22e71}">
+      <Declaration><![CDATA[METHOD Buzzer : BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+    </Method>
+    <Property Name="eMachineStateProp" Id="{2c69fe04-fb6b-4907-ad45-1c5badbc4be0}">
+      <Declaration><![CDATA[PROPERTY eMachineStateProp : E_MachineState]]></Declaration>
+      <Set Name="Set" Id="{61f7c06e-b1ad-45a1-8194-7f50bd673af5}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="LED" Id="{48fbf73f-125a-4d59-b845-3102cbd4b216}">
+      <Declaration><![CDATA[METHOD LED :BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+    </Method>
   </Itf>
 </TcPlcObject>

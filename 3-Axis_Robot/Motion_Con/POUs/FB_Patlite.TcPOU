@@ -3,12 +3,14 @@
   <POU Name="FB_Patlite" Id="{64d6703e-381b-4b78-a0a1-7f429646ef42}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Patlite IMPLEMENTS I_Patlite
 VAR
-	bRedLed				AT %Q* :BOOL;				//パトライト赤LED ターミナル5(EL2088)チャンネル5
-	bGreenLed			AT %Q* :BOOL;				//パトライト緑LED ターミナル5(EL2088)チャンネル6
-	bBlueLed			AT %Q* :BOOL;				//パトライト青LED ターミナル5(EL2088)チャンネル7
-	bBuzzerON			AT %Q* :BOOL;				//パトライトブザー ターミナル5(EL2088)チャンネル8
+	rbRedLed					:REFERENCE TO BOOL;					//パトライト赤LED
+	rbGreenLed					:REFERENCE TO BOOL;					//パトライト緑LED
+	rbBlueLed					:REFERENCE TO BOOL;					//パトライト青LED
+	rbBuzzerON					:REFERENCE TO BOOL;					//パトライトブザー
 	
-	bSwitch				AT %I* :BOOL; 				//パトライトスイッチ ターミナル5(EL1088)チャンネル8
+	rbSwitch					:REFERENCE TO BOOL; 				//パトライトスイッチ
+	
+	eMachineState				:E_MachineState;
 	
 	//ブザー制御用
 	bBuzzerFlag					:BOOL;
@@ -21,14 +23,26 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[bBuzzer(eMachineState:=GVL_Alarm.fbMachineState.eMachineState);
-bLED(eMachineState:=GVL_Alarm.fbMachineState.eMachineState);]]></ST>
+      <ST><![CDATA[Buzzer();
+LED();]]></ST>
     </Implementation>
-    <Method Name="bBuzzer" Id="{c7e865c0-fd52-4449-91af-8ccd99b09f2d}">
+    <Property Name="bSwitchProp" Id="{7a6ac67c-81a8-4660-b834-e4324f3fadd7}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY bSwitchProp : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{7b057052-63f2-4837-b765-68e3dfe16a2a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bSwitchProp:=rbSwitch;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Buzzer" Id="{c7e865c0-fd52-4449-91af-8ccd99b09f2d}">
       <Declaration><![CDATA[{warning 'メソッド実装を追加'}
-METHOD bBuzzer : BOOL
+METHOD Buzzer : BOOL
 VAR_INPUT
-	eMachineState	:E_MachineState;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
@@ -36,45 +50,79 @@ CASE eMachineState OF
 	
 	E_MachineState.Critical:
 		IF bBuzzerFlag=FALSE THEN
-			bBuzzerON:=TRUE;
+			rbBuzzerON:=TRUE;
 		END_IF
 	
 	E_MachineState.Error:
 		IF bBuzzerFlag=FALSE THEN
-			bBuzzerON:=TRUE;
+			rbBuzzerON:=TRUE;
 		END_IF
 	
 	E_MachineState.Warning:
 		IF bBuzzerFlag=FALSE THEN
-			bBuzzerON:=TRUE;
+			rbBuzzerON:=TRUE;
 		END_IF
 		
 	E_MachineState.Stay:
-		bBuzzerON:=FALSE;
+		rbBuzzerON:=FALSE;
 		bBuzzerFlag:=FALSE;
 	
 	E_MachineState.Stop:
-		bBuzzerON:=FALSE;
+		rbBuzzerON:=FALSE;
 		bBuzzerFlag:=FALSE;
 
 	E_MachineState.Moving:
-		bBuzzerON:=FALSE;
+		rbBuzzerON:=FALSE;
 		bBuzzerFlag:=FALSE;
 	
 END_CASE;
 
 //---スイッチが押されたらブザー停止---
-IF bSwitch=TRUE THEN
-	bBuzzerON:=FALSE;
+IF rbSwitch=TRUE THEN
+	rbBuzzerON:=FALSE;
 	bBuzzerFlag:=TRUE;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="bLED" Id="{b6deb205-6f8f-48a1-84ac-fb6f5e15b6b7}">
-      <Declaration><![CDATA[{warning 'メソッド実装を追加'}
-METHOD bLED : BOOL
+    <Property Name="eMachineStateProp" Id="{8aa7813b-e06a-4067-99c1-d15a2b1eea8b}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY eMachineStateProp : E_MachineState
+]]></Declaration>
+      <Set Name="Set" Id="{8612fcd8-9150-43fb-a4e5-d0a8ba6e659a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eMachineState:=eMachineStateProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_init" Id="{92561c8a-1212-40df-8cc5-0f26136804c1}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
 VAR_INPUT
-	eMachineState	: E_MachineState;
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	
+	rbRedLed					:REFERENCE TO BOOL;					//パトライト赤LED
+	rbGreenLed					:REFERENCE TO BOOL;					//パトライト緑LED
+	rbBlueLed					:REFERENCE TO BOOL;					//パトライト青LED
+	rbBuzzerON					:REFERENCE TO BOOL;					//パトライトブザー
+	
+	rbSwitch					:REFERENCE TO BOOL; 				//パトライトスイッチ
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.rbRedLed REF=rbRedLed;
+THIS^.rbGreenLed REF=rbGreenLed;
+THIS^.rbBlueLed REF=rbBlueLed;
+THIS^.rbBuzzerON REF=rbBuzzerON;
+THIS^.rbSwitch REF=rbSwitch;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LED" Id="{b6deb205-6f8f-48a1-84ac-fb6f5e15b6b7}">
+      <Declaration><![CDATA[{warning 'メソッド実装を追加'}
+METHOD LED : BOOL
+VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
@@ -114,70 +162,60 @@ fbTonBlink2(IN:=,PT:=tBlinkTime,Q=>,ET=>);
 IF fbTonBlink1.Q=FALSE OR tBlinkTime=T#0S  THEN;
 	CASE eLedColor OF
 	E_LedColor.Red:
-		bRedLed:=TRUE;
-		bGreenLed:=FALSE;
-		bBlueLed:=FALSE;
+		rbRedLed:=TRUE;
+		rbGreenLed:=FALSE;
+		rbBlueLed:=FALSE;
 	
 	E_LedColor.Green:
-		bRedLed:=FALSE;
-		bGreenLed:=TRUE;
-		bBlueLed:=FALSE;	
+		rbRedLed:=FALSE;
+		rbGreenLed:=TRUE;
+		rbBlueLed:=FALSE;	
 	
 	E_LedColor.Blue:
-		bRedLed:=FALSE;
-		bGreenLed:=FALSE;
-		bBlueLed:=TRUE;
+		rbRedLed:=FALSE;
+		rbGreenLed:=FALSE;
+		rbBlueLed:=TRUE;
 		
 	E_LedColor.Yellow:
-		bRedLed:=TRUE;
-		bGreenLed:=TRUE;
-		bBlueLed:=FALSE;
+		rbRedLed:=TRUE;
+		rbGreenLed:=TRUE;
+		rbBlueLed:=FALSE;
 	
 	E_LedColor.Cyan:
-		bRedLed:=FALSE;
-		bGreenLed:=TRUE;
-		bBlueLed:=TRUE;
+		rbRedLed:=FALSE;
+		rbGreenLed:=TRUE;
+		rbBlueLed:=TRUE;
 	
 	E_LedColor.Purple:
-		bRedLed:=TRUE;
-		bGreenLed:=FALSE;
-		bBlueLed:=TRUE;
+		rbRedLed:=TRUE;
+		rbGreenLed:=FALSE;
+		rbBlueLed:=TRUE;
 	
 	E_LedColor.White:
-		bRedLed:=TRUE;
-		bGreenLed:=TRUE;
-		bBlueLed:=TRUE;
+		rbRedLed:=TRUE;
+		rbGreenLed:=TRUE;
+		rbBlueLed:=TRUE;
 	
 	E_LedColor.Black:
-		bRedLed:=FALSE;
-		bGreenLed:=FALSE;
-		bBlueLed:=FALSE;
+		rbRedLed:=FALSE;
+		rbGreenLed:=FALSE;
+		rbBlueLed:=FALSE;
 	END_CASE
 ELSE;
-	bRedLed:=FALSE;
-	bGreenLed:=FALSE;
-	bBlueLed:=FALSE;
+	rbRedLed:=FALSE;
+	rbGreenLed:=FALSE;
+	rbBlueLed:=FALSE;
 END_IF;]]></ST>
       </Implementation>
     </Method>
-    <Property Name="bSwitchProp" Id="{7a6ac67c-81a8-4660-b834-e4324f3fadd7}">
-      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
-PROPERTY bSwitchProp : BOOL
-]]></Declaration>
-      <Get Name="Get" Id="{7b057052-63f2-4837-b765-68e3dfe16a2a}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bSwitchProp:=bSwitch;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <LineIds Name="FB_Patlite">
-      <LineId Id="9" Count="0" />
+      <LineId Id="139" Count="0" />
       <LineId Id="17" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Patlite.bBuzzer">
+    <LineIds Name="FB_Patlite.bSwitchProp.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Patlite.Buzzer">
       <LineId Id="57" Count="0" />
       <LineId Id="8" Count="2" />
       <LineId Id="13" Count="4" />
@@ -188,7 +226,17 @@ END_VAR
       <LineId Id="46" Count="8" />
       <LineId Id="7" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Patlite.bLED">
+    <LineIds Name="FB_Patlite.eMachineStateProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Patlite.FB_init">
+      <LineId Id="7" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Patlite.LED">
       <LineId Id="66" Count="5" />
       <LineId Id="75" Count="3" />
       <LineId Id="82" Count="3" />
@@ -203,9 +251,6 @@ END_VAR
       <LineId Id="110" Count="0" />
       <LineId Id="13" Count="46" />
       <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Patlite.bSwitchProp.Get">
-      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

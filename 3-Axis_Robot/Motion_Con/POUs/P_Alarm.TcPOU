@@ -15,6 +15,7 @@ END_VAR
 	);
 
 	//---パトライト制御---
+	GVL_Alarm.fbPatlite.eMachineStateProp:=GVL_Alarm.fbMachineState.eMachineState;
 	GVL_Alarm.fbPatlite();
 	
 	//---アラーム制御---
@@ -101,6 +102,7 @@ END_VAR
       <LineId Id="209" Count="1" />
       <LineId Id="254" Count="0" />
       <LineId Id="253" Count="0" />
+      <LineId Id="258" Count="0" />
       <LineId Id="252" Count="0" />
       <LineId Id="184" Count="0" />
       <LineId Id="12" Count="0" />
