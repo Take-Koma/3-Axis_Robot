@@ -22138,11 +22138,19 @@ External Setpoint Generation:
 					<EnumText>TRUE</EnumText>
 				</Value>
 				<Value>
-					<Name>Task Module OIDs</Name>
-					<Value>599013947836735489</Value>
+					<Name>Task Module OIDs[0]</Name>
+					<Value>139468801</Value>
 				</Value>
 				<Value>
-					<Name>Task Module SortOrders</Name>
+					<Name>Task Module OIDs[1]</Name>
+					<Value>139468803</Value>
+				</Value>
+				<Value>
+					<Name>Task Module SortOrders[0]</Name>
+					<Value>0</Value>
+				</Value>
+				<Value>
+					<Name>Task Module SortOrders[1]</Name>
 					<Value>0</Value>
 				</Value>
 				<Value>
@@ -22150,16 +22158,44 @@ External Setpoint Generation:
 					<Data>506c635461736b00566973696f6e5461736b0000</Data>
 				</Value>
 				<Value>
-					<Name>Task Caller OIDs</Name>
-					<Value>144397212842000448</Value>
+					<Name>Task Caller OIDs[0]</Name>
+					<Value>33620032</Value>
 				</Value>
 				<Value>
-					<Name>Task Module ADI Indices</Name>
-					<Value>4785143323623424</Value>
+					<Name>Task Caller OIDs[1]</Name>
+					<Value>33620096</Value>
 				</Value>
 				<Value>
-					<Name>Mapping OIDs</Name>
-					<Data>50000302400003023000030220000302</Data>
+					<Name>Task Module ADI Indices[0]</Name>
+					<Value>0</Value>
+				</Value>
+				<Value>
+					<Name>Task Module ADI Indices[1]</Name>
+					<Value>1</Value>
+				</Value>
+				<Value>
+					<Name>Task Module ADI Indices[2]</Name>
+					<Value>16</Value>
+				</Value>
+				<Value>
+					<Name>Task Module ADI Indices[3]</Name>
+					<Value>17</Value>
+				</Value>
+				<Value>
+					<Name>Mapping OIDs[0]</Name>
+					<Value>33751120</Value>
+				</Value>
+				<Value>
+					<Name>Mapping OIDs[1]</Name>
+					<Value>33751104</Value>
+				</Value>
+				<Value>
+					<Name>Mapping OIDs[2]</Name>
+					<Value>33751088</Value>
+				</Value>
+				<Value>
+					<Name>Mapping OIDs[3]</Name>
+					<Value>33751072</Value>
 				</Value>
 			</ParameterValues>
 			<InitSymbolValues>
