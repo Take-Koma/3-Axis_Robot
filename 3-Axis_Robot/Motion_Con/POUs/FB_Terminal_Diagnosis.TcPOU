@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Terminal_Diagnosis" Id="{91eeac0d-8ecb-4fac-ba62-a6a0c4d5b6a5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Terminal_Diagnosis
+VAR
+	//input
+	bWorkingCounter: BOOL;
+	uiInfoDataState: UINT;
+	
+	//output
+	bTerminalOK: BOOL;
+	
+	bTerminalStateOK:BOOL;
+	bTerminalWcStateOK:BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Terminal_State();
+Terminal_WcState();
+
+IF bTerminalStateOK= TRUE AND bTerminalWcStateOK=TRUE THEN
+	bTerminalOK:= TRUE;
+ELSE
+	bTerminalOK:= FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="Terminal_State" Id="{efd7d053-6627-49c9-8500-27a3f7aecfef}">
+      <Declaration><![CDATA[METHOD Terminal_State : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	sTerminalState: STRING;
+	sStateStatusAll: STRING(255);	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//ターミナルのステータスをbitから診断
+IF uiInfoDataState.0 AND NOT uiInfoDataState.1 THEN
+	sTerminalState:= 'Slave in INIT state';
+END_IF
+IF uiInfoDataState.1 AND NOT uiInfoDataState.0 THEN
+	sTerminalState:= 'Slave in PREOP state';
+END_IF
+IF uiInfoDataState.0 AND uiInfoDataState.1 THEN
+	sTerminalState:= 'Slave in BOOTSTRAP state';
+END_IF
+IF uiInfoDataState.2 THEN
+	sTerminalState:= 'Slave in SAFEOP state';
+END_IF
+IF uiInfoDataState.3 THEN
+	sTerminalState:= 'Slave in OP state';
+END_IF
+
+//ターミナルのエラーは複数発生する可能性があるので全bitチェック
+IF uiInfoDataState.4 THEN
+	sStateStatusAll:= 'Slave signals error. ';
+ELSE
+	sStateStatusAll:= '';
+END_IF
+IF uiInfoDataState.5 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Invalid vendorID. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.6 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Initialization error occurred. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.7 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave disabled. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.8 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave not present. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.9 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave signals link error. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.10 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave signals missing link. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.11 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave signals unexpected link. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.12 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll,  'Communication port A. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.13 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Communication port B. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.14 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll, 'Communication port C. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+IF uiInfoDataState.15 THEN
+	sStateStatusAll:= CONCAT( sStateStatusAll,  'Communication port D. ');
+ELSE
+	sStateStatusAll:= CONCAT( sStateStatusAll, '');
+END_IF
+
+//チェック結果を返す
+IF sTerminalState= 'Slave in OP state'  and  sStateStatusAll= '' THEN
+	bTerminalStateOK:= TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Terminal_WcState" Id="{a838fd89-d69b-4bd9-87d8-a4f23c3eb44e}">
+      <Declaration><![CDATA[METHOD Terminal_WcState : BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//ワーキングカウンターチェック
+IF bWorkingCounter = 0 THEN
+	bTerminalWcStateOK:=TRUE;
+ELSE
+	bTerminalWcStateOK:=FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Terminal_Diagnosis">
+      <LineId Id="273" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="423" Count="2" />
+      <LineId Id="427" Count="1" />
+      <LineId Id="430" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Terminal_Diagnosis.Terminal_State">
+      <LineId Id="102" Count="0" />
+      <LineId Id="6" Count="13" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="24" Count="60" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="86" Count="3" />
+    </LineIds>
+    <LineIds Name="FB_Terminal_Diagnosis.Terminal_WcState">
+      <LineId Id="11" Count="0" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

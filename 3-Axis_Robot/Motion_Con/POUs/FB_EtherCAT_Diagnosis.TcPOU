@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_EtherCAT_Diagnosis" Id="{b8907ee3-9195-401a-912e-0db507685ea1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EtherCAT_Diagnosis
+VAR
+	//input
+	uiFrmState AT%I*: UINT;
+	uiFrmWcState AT%I*: UINT;
+	uiSlaveCount AT%I*: UINT;
+	uiDevState AT%I*: UINT;
+
+	//output
+	bFieldbusOK: BOOL;
+	
+	
+	bDevStateOk: BOOL;
+	bFrmStateOK: BOOL;
+	bFrmWcStateOK: BOOL;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FrmState_Diagnosis();
+FrmWcState_Diagnosis();
+DevState_Diagnosis();
+
+IF bDevStateOk= TRUE AND bFrmStateOK= TRUE AND bFrmWcStateOK= TRUE THEN
+	bFieldbusOK:= TRUE;
+ELSE
+	bFieldbusOK:= FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="DevState_Diagnosis" Id="{d48f95e0-bc48-4892-b613-49ac9d9c774d}">
+      <Declaration><![CDATA[METHOD DevState_Diagnosis : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	sDevStateStatus: STRING(255);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//デバイスの状態チェック、エラーは複数発生する可能性があるので全bitチェック
+IF uiDevState.0 THEN
+	sDevStateStatus:= 'Link error. ';
+ELSE
+	sDevStateStatus:= '';
+END_IF
+IF uiDevState.1 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'I/O locked after link error (I/O reset required). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.2 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Link error (redundancy adapter). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.3 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Missing one frame (redundancy mode). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.4 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Out of send resources (I/O reset required). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.5 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Watchdog triggered. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.6 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Ethernet driver (miniport not found). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.7 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'I/O reset active. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.8 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in INIT state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.9 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in PRE-OP state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.10 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in SAFE-OP state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.11 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least on device indicates an error state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.12 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'DC not in sync. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+
+
+IF sDevStateStatus= '' THEN
+	bDevStateOK:= TRUE;
+ELSE
+	bDevStateOk:= FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FrmState_Diagnosis" Id="{4e71e6c9-1f7f-42e3-ba00-14a104a9af40}">
+      <Declaration><![CDATA[METHOD FrmState_Diagnosis : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	sFrmStateStatus: STRING(255);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//フレームの状態チェック、エラーは複数発生する可能性があるので全bitチェック
+IF (uiFrmState < 32768 AND uiFrmState <>0) OR uiFrmState > 32768 THEN
+
+	IF uiFrmState.0 THEN
+		sFrmStateStatus:= '1. ';
+	ELSE
+		sFrmStateStatus:= '';
+	END_IF
+	IF uiFrmState.1 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '2. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.2 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '3. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.3 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '4. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.4 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '5. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.5 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '6. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.6 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '7. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.7 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '8. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.8 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '9. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.9 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '10. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.10 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '11. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.11 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '12. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.12 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '13. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.13 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '14. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+	IF uiFrmState.14 THEN
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '15. ');
+	ELSE
+		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+	END_IF
+
+	sFrmStateStatus:=CONCAT(sFrmStateStatus, 'EtherCAT command not sent (NOP requested). ');
+
+ELSIF uiFrmState= 0 THEN
+	sFrmStateStatus:= '';
+END_IF
+
+IF uiFrmState.15 THEN
+	sFrmStateStatus:=  'Complete frame not sent. ';
+ELSE
+	sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
+END_IF
+
+
+IF sFrmStateStatus= '' THEN
+	bFrmStateOK:= TRUE;
+ELSE
+	bFrmStateOK:= FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FrmWcState_Diagnosis" Id="{995b0ce3-70ea-47b8-9c05-26b0614015ab}">
+      <Declaration><![CDATA[METHOD FrmWcState_Diagnosis : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	sFrmWcStateStatus: STRING(255);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//サイクリックフレームごとのワーキングカウンターチェック、エラーは複数発生する可能性があるので全bitチェック
+IF (uiFrmWcState < 32768 AND uiFrmWcState<>0) OR uiFrmWcState>32768  THEN
+	sFrmWcStateStatus:= 'Wrong working counter of ';
+
+	IF uiFrmWcState.0 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '1. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.1 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '2. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.2 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '3. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.3 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '4. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.4 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '5. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.5 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '6. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.6 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '7. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.7 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '8. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.8 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '9. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.9 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '10. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.10 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '11. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.11 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '12. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.12 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '13. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.13 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '14. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+	IF uiFrmWcState.14 THEN
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '15. ');
+	ELSE
+		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+	END_IF
+
+	sFrmWcStateStatus:= CONCAT(sFrmWcStateStatus, 'EtherCAT command received. ' );
+
+ELSIF uiFrmWcState= 0 THEN
+	sFrmWcStateStatus:= '';
+END_IF
+
+IF uiFrmWcState.15 THEN
+	sFrmWcStateStatus:=  'Complete frame missing! ';
+ELSE
+	sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
+END_IF
+
+
+IF sFrmWcStateStatus= '' THEN
+	bFrmWcStateOK:= TRUE;
+ELSE
+	bFrmWcStateOK:= FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_EtherCAT_Diagnosis">
+      <LineId Id="145" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EtherCAT_Diagnosis.DevState_Diagnosis">
+      <LineId Id="85" Count="0" />
+      <LineId Id="8" Count="67" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="82" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EtherCAT_Diagnosis.FrmState_Diagnosis">
+      <LineId Id="8" Count="92" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="107" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EtherCAT_Diagnosis.FrmWcState_Diagnosis">
+      <LineId Id="8" Count="91" />
+      <LineId Id="101" Count="1" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="109" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
