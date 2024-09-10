@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_DiagnosisDevEtherCAT" Id="{4955699a-80e1-4183-9118-d4482766b1fa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisDevEtherCAT
+VAR
+	//input
+	uiSlaveCount AT%I*: UINT;
+	uiDevState AT%I*: UINT;
+
+	//output
+	bFieldbusOK: BOOL;
+	
+	bDevStateOk: BOOL;
+	bSlaveCountOK: BOOL;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[DevState_Diagnosis();
+
+IF bDevStateOk= TRUE AND bSlaveCountOK=TRUE THEN
+	bFieldbusOK:= TRUE;
+ELSE
+	bFieldbusOK:= FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="DevState_Diagnosis" Id="{330696a7-8fa8-4563-84ea-3d201043d0ec}">
+      <Declaration><![CDATA[METHOD DevState_Diagnosis : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	sDevStateStatus: STRING(255);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//デバイスの状態チェック、エラーは複数発生する可能性があるので全bitチェック
+IF uiDevState.0 THEN
+	sDevStateStatus:= 'Link error. ';
+ELSE
+	sDevStateStatus:= '';
+END_IF
+IF uiDevState.1 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'I/O locked after link error (I/O reset required). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.2 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Link error (redundancy adapter). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.3 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Missing one frame (redundancy mode). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.4 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Out of send resources (I/O reset required). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.5 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Watchdog triggered. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.6 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Ethernet driver (miniport not found). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.7 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'I/O reset active. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.8 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in INIT state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.9 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in PRE-OP state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.10 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in SAFE-OP state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.11 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least on device indicates an error state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.12 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'DC not in sync. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+
+
+IF sDevStateStatus= '' THEN
+	bDevStateOK:= TRUE;
+ELSE
+	bDevStateOk:= FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SlaveCount_Diagnosis" Id="{2aac9aab-8071-444c-b37a-81886fecb958}">
+      <Declaration><![CDATA[METHOD SlaveCount_Diagnosis : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF uiSlaveCount=8 THEN //スレーブ数が変わったら変更が必要になるから、定数に出す
+	bSlaveCountOK:=TRUE;
+ELSE
+	bSlaveCountOK:=FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_DiagnosisDevEtherCAT">
+      <LineId Id="147" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DiagnosisDevEtherCAT.DevState_Diagnosis">
+      <LineId Id="85" Count="0" />
+      <LineId Id="8" Count="67" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="82" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DiagnosisDevEtherCAT.SlaveCount_Diagnosis">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

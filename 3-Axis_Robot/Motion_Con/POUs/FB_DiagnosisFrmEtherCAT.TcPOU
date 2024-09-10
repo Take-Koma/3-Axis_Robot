@@ -1,19 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="FB_EtherCAT_Diagnosis" Id="{b8907ee3-9195-401a-912e-0db507685ea1}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_EtherCAT_Diagnosis
+  <POU Name="FB_DiagnosisFrmEtherCAT" Id="{b8907ee3-9195-401a-912e-0db507685ea1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisFrmEtherCAT
 VAR
 	//input
 	uiFrmState AT%I*: UINT;
 	uiFrmWcState AT%I*: UINT;
-	uiSlaveCount AT%I*: UINT;
-	uiDevState AT%I*: UINT;
 
 	//output
 	bFieldbusOK: BOOL;
 	
-	
-	bDevStateOk: BOOL;
 	bFrmStateOK: BOOL;
 	bFrmWcStateOK: BOOL;
 
@@ -21,97 +17,13 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[FrmState_Diagnosis();
 FrmWcState_Diagnosis();
-DevState_Diagnosis();
 
-IF bDevStateOk= TRUE AND bFrmStateOK= TRUE AND bFrmWcStateOK= TRUE THEN
+IF bFrmStateOK= TRUE AND bFrmWcStateOK= TRUE THEN
 	bFieldbusOK:= TRUE;
 ELSE
 	bFieldbusOK:= FALSE;
 END_IF]]></ST>
     </Implementation>
-    <Method Name="DevState_Diagnosis" Id="{d48f95e0-bc48-4892-b613-49ac9d9c774d}">
-      <Declaration><![CDATA[METHOD DevState_Diagnosis : BOOL
-VAR_INPUT
-END_VAR
-VAR
-	sDevStateStatus: STRING(255);
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[//デバイスの状態チェック、エラーは複数発生する可能性があるので全bitチェック
-IF uiDevState.0 THEN
-	sDevStateStatus:= 'Link error. ';
-ELSE
-	sDevStateStatus:= '';
-END_IF
-IF uiDevState.1 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'I/O locked after link error (I/O reset required). ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.2 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'Link error (redundancy adapter). ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.3 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'Missing one frame (redundancy mode). ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.4 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'Out of send resources (I/O reset required). ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.5 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'Watchdog triggered. ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.6 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'Ethernet driver (miniport not found). ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.7 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'I/O reset active. ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.8 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in INIT state. ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.9 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in PRE-OP state. ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.10 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in SAFE-OP state. ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.11 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least on device indicates an error state. ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-IF uiDevState.12 THEN
-	sDevStateStatus:= CONCAT( sDevStateStatus, 'DC not in sync. ');
-ELSE
-	sDevStateStatus:= CONCAT( sDevStateStatus, '');
-END_IF
-
-
-IF sDevStateStatus= '' THEN
-	bDevStateOK:= TRUE;
-ELSE
-	bDevStateOk:= FALSE;
-END_IF]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="FrmState_Diagnosis" Id="{4e71e6c9-1f7f-42e3-ba00-14a104a9af40}">
       <Declaration><![CDATA[METHOD FrmState_Diagnosis : BOOL
 VAR_INPUT
@@ -327,24 +239,18 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_EtherCAT_Diagnosis">
-      <LineId Id="145" Count="7" />
+    <LineIds Name="FB_DiagnosisFrmEtherCAT">
+      <LineId Id="145" Count="1" />
+      <LineId Id="148" Count="4" />
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="FB_EtherCAT_Diagnosis.DevState_Diagnosis">
-      <LineId Id="85" Count="0" />
-      <LineId Id="8" Count="67" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="79" Count="1" />
-      <LineId Id="82" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_EtherCAT_Diagnosis.FrmState_Diagnosis">
+    <LineIds Name="FB_DiagnosisFrmEtherCAT.FrmState_Diagnosis">
       <LineId Id="8" Count="92" />
       <LineId Id="102" Count="0" />
       <LineId Id="104" Count="1" />
       <LineId Id="107" Count="0" />
     </LineIds>
-    <LineIds Name="FB_EtherCAT_Diagnosis.FrmWcState_Diagnosis">
+    <LineIds Name="FB_DiagnosisFrmEtherCAT.FrmWcState_Diagnosis">
       <LineId Id="8" Count="91" />
       <LineId Id="101" Count="1" />
       <LineId Id="104" Count="0" />

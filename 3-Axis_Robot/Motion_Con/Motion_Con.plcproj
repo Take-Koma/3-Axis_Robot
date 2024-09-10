@@ -72,7 +72,10 @@
     <Compile Include="POUs\FB_Alarm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_EtherCAT_Diagnosis.TcPOU">
+    <Compile Include="POUs\FB_DiagnosisFrmEtherCAT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FB_DiagnosisDevEtherCAT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FB_MotionShapeWrite.TcPOU">
@@ -87,7 +90,7 @@
     <Compile Include="POUs\FB_Patlite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_Terminal_Diagnosis.TcPOU">
+    <Compile Include="POUs\FB_DiagnosisTerminal.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FB_Z_Axis_TargetPositionConvert.TcPOU">
