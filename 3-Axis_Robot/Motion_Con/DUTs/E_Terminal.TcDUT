@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_Terminal" Id="{d97ef109-7975-4d55-a9e6-fdbd62c14a32}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_Terminal :
+(
+	
+	EK1100:=1,
+	EL1004:=2,
+	EL2004:=3,
+	EL1088:=4,
+	EL2088:=5,
+	EL3551:=6,
+	EL2911:=7,
+	AZD4A_KED:=8
+	
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

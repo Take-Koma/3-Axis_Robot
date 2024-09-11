@@ -1,35 +1,150 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="FB_DiagnosisFrmEtherCAT" Id="{b8907ee3-9195-401a-912e-0db507685ea1}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisFrmEtherCAT
+  <POU Name="FB_DiagnosisEtherCAT" Id="{4955699a-80e1-4183-9118-d4482766b1fa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisEtherCAT
+VAR_INPUT
+	uiDevState 				:REFERENCE TO UINT;
+	uiFrmState 				:REFERENCE TO UINT;
+	uiFrmWcState 			:REFERENCE TO UINT;
+	uiSlaveCount 			:REFERENCE TO UINT;
+	uiCfgSlaveCount 		:REFERENCE TO UINT;
+END_VAR
+VAR_OUTPUT
+	bDiagnosisOK			:BOOL;
+END_VAR
 VAR
-	//input
-	uiFrmState AT%I*: UINT;
-	uiFrmWcState AT%I*: UINT;
+	bDevStateOK				:BOOL;
+	bFrmStateOK				:BOOL;
+	bFrmWcStateOk			:BOOL;
+	bSlaveCountOK			:BOOL;
 
-	//output
-	bFieldbusOK: BOOL;
-	
-	bFrmStateOK: BOOL;
-	bFrmWcStateOK: BOOL;
-
+	sDevStateStatus			: STRING(255);	
+	sFrmStateStatus			: STRING(255);
+	sFrmWcStateStatus		: STRING(255);
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[FrmState_Diagnosis();
-FrmWcState_Diagnosis();
+      <ST><![CDATA[//出力する変数リセット
+bDiagnosisOK:=FALSE;
+bDevStateOK:=FALSE;
+bFrmStateOK:=FALSE;
+bFrmWcStateOk:=FALSE;
+bSlaveCountOK:=FALSE;
 
-IF bFrmStateOK= TRUE AND bFrmWcStateOK= TRUE THEN
-	bFieldbusOK:= TRUE;
-ELSE
-	bFieldbusOK:= FALSE;
+IF __ISVALIDREF(uiDevState)=TRUE THEN
+	DevState_Diagnosis();
+	
+	IF bDevStateOK=TRUE THEN
+		bDiagnosisOK:=TRUE;
+	END_IF
+END_IF
+
+IF __ISVALIDREF(uiFrmState)=TRUE THEN
+	FrmState_Diagnosis();
+	
+	IF bFrmStateOK=TRUE THEN
+		bDiagnosisOK:=TRUE;
+	END_IF
+END_IF
+
+IF __ISVALIDREF(uiFrmWcState)=TRUE THEN
+	FrmWcState_Diagnosis();
+	
+	IF bFrmWcStateOk=TRUE THEN
+		bDiagnosisOK:=TRUE;
+	END_IF
+END_IF
+
+IF __ISVALIDREF(uiSlaveCount)=TRUE AND __ISVALIDREF(uiCfgSlaveCount)=TRUE THEN
+	SlaveCount_Diagnosis();
+	
+	IF bSlaveCountOK=TRUE THEN
+		bDiagnosisOK:=TRUE;
+	END_IF
 END_IF]]></ST>
     </Implementation>
+    <Method Name="DevState_Diagnosis" Id="{330696a7-8fa8-4563-84ea-3d201043d0ec}">
+      <Declaration><![CDATA[METHOD DevState_Diagnosis : BOOL
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//デバイスの状態チェック、エラーは複数発生する可能性があるので全bitチェック
+IF uiDevState.0 THEN
+	sDevStateStatus:= 'Link error. ';
+ELSE
+	sDevStateStatus:= '';
+END_IF
+IF uiDevState.1 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'I/O locked after link error (I/O reset required). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.2 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Link error (redundancy adapter). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.3 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Missing one frame (redundancy mode). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.4 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Out of send resources (I/O reset required). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.5 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Watchdog triggered. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.6 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'Ethernet driver (miniport not found). ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.7 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'I/O reset active. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.8 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in INIT state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.9 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in PRE-OP state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.10 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least one device in SAFE-OP state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.11 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'At least on device indicates an error state. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+IF uiDevState.12 THEN
+	sDevStateStatus:= CONCAT( sDevStateStatus, 'DC not in sync. ');
+ELSE
+	sDevStateStatus:= CONCAT( sDevStateStatus, '');
+END_IF
+
+
+IF sDevStateStatus= '' THEN
+	bDevStateOK:= TRUE;
+ELSE
+	bDevStateOK:= FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="FrmState_Diagnosis" Id="{4e71e6c9-1f7f-42e3-ba00-14a104a9af40}">
       <Declaration><![CDATA[METHOD FrmState_Diagnosis : BOOL
 VAR_INPUT
-END_VAR
-VAR
-	sFrmStateStatus: STRING(255);
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//フレームの状態チェック、エラーは複数発生する可能性があるので全bitチェック
@@ -134,9 +249,6 @@ END_IF]]></ST>
     <Method Name="FrmWcState_Diagnosis" Id="{995b0ce3-70ea-47b8-9c05-26b0614015ab}">
       <Declaration><![CDATA[METHOD FrmWcState_Diagnosis : BOOL
 VAR_INPUT
-END_VAR
-VAR
-	sFrmWcStateStatus: STRING(255);
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//サイクリックフレームごとのワーキングカウンターチェック、エラーは複数発生する可能性があるので全bitチェック
@@ -233,29 +345,67 @@ END_IF
 
 
 IF sFrmWcStateStatus= '' THEN
-	bFrmWcStateOK:= TRUE;
+	bFrmWcStateOk:= TRUE;
 ELSE
-	bFrmWcStateOK:= FALSE;
+	bFrmWcStateOk:= FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_DiagnosisFrmEtherCAT">
-      <LineId Id="145" Count="1" />
-      <LineId Id="148" Count="4" />
-      <LineId Id="2" Count="0" />
+    <Method Name="SlaveCount_Diagnosis" Id="{2aac9aab-8071-444c-b37a-81886fecb958}">
+      <Declaration><![CDATA[METHOD SlaveCount_Diagnosis : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF uiSlaveCount=uiCfgSlaveCount THEN
+	bSlaveCountOK:=TRUE;
+ELSE
+	bSlaveCountOK:=FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_DiagnosisEtherCAT">
+      <LineId Id="270" Count="0" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="275" Count="2" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="253" Count="1" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="266" Count="2" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="284" Count="5" />
+      <LineId Id="281" Count="1" />
+      <LineId Id="290" Count="5" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="296" Count="6" />
+      <LineId Id="278" Count="0" />
     </LineIds>
-    <LineIds Name="FB_DiagnosisFrmEtherCAT.FrmState_Diagnosis">
+    <LineIds Name="FB_DiagnosisEtherCAT.DevState_Diagnosis">
+      <LineId Id="85" Count="0" />
+      <LineId Id="8" Count="67" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="82" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DiagnosisEtherCAT.FrmState_Diagnosis">
       <LineId Id="8" Count="92" />
       <LineId Id="102" Count="0" />
       <LineId Id="104" Count="1" />
       <LineId Id="107" Count="0" />
     </LineIds>
-    <LineIds Name="FB_DiagnosisFrmEtherCAT.FrmWcState_Diagnosis">
+    <LineIds Name="FB_DiagnosisEtherCAT.FrmWcState_Diagnosis">
       <LineId Id="8" Count="91" />
       <LineId Id="101" Count="1" />
       <LineId Id="104" Count="0" />
       <LineId Id="106" Count="1" />
       <LineId Id="109" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DiagnosisEtherCAT.SlaveCount_Diagnosis">
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="7" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

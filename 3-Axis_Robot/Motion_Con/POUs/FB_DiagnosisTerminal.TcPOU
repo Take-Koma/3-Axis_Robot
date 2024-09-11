@@ -2,35 +2,26 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_DiagnosisTerminal" Id="{91eeac0d-8ecb-4fac-ba62-a6a0c4d5b6a5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisTerminal
-VAR
-	//input
-	bWorkingCounter: BOOL;
-	uiInfoDataState: UINT;
-	
-	//output
-	bTerminalOK: BOOL;
-	
-	bTerminalStateOK:BOOL;
-	bTerminalWcStateOK:BOOL;
-END_VAR]]></Declaration>
-    <Implementation>
-      <ST><![CDATA[Terminal_State();
-Terminal_WcState();
-
-IF bTerminalStateOK= TRUE AND bTerminalWcStateOK=TRUE THEN
-	bTerminalOK:= TRUE;
-ELSE
-	bTerminalOK:= FALSE;
-END_IF]]></ST>
-    </Implementation>
-    <Method Name="Terminal_State" Id="{efd7d053-6627-49c9-8500-27a3f7aecfef}">
-      <Declaration><![CDATA[METHOD Terminal_State : BOOL
 VAR_INPUT
+	uiInfoDataState		: UINT;
+	bWcState			: BOOL;
+END_VAR
+VAR_OUTPUT
+	bStateOK			:BOOL;
+	bWcStateOK			:BOOL;	
 END_VAR
 VAR
-	sTerminalState: STRING;
-	sStateStatusAll: STRING(255);	
+	sTerminalState		: STRING;
+	sStateStatusAll		: STRING(255);	
 END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="State_Diagnosis" Id="{efd7d053-6627-49c9-8500-27a3f7aecfef}">
+      <Declaration><![CDATA[METHOD State_Diagnosis : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[//ターミナルのステータスをbitから診断
 IF uiInfoDataState.0 AND NOT uiInfoDataState.1 THEN
@@ -113,43 +104,34 @@ END_IF
 
 //チェック結果を返す
 IF sTerminalState= 'Slave in OP state' AND  sStateStatusAll= '' THEN
-	bTerminalStateOK:= TRUE;
+	bStateOK:= TRUE;
+ELSE
+	bStateOK:=FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Terminal_WcState" Id="{a838fd89-d69b-4bd9-87d8-a4f23c3eb44e}">
-      <Declaration><![CDATA[METHOD Terminal_WcState : BOOL
+    <Method Name="WcState_Diagnosis" Id="{a838fd89-d69b-4bd9-87d8-a4f23c3eb44e}">
+      <Declaration><![CDATA[METHOD WcState_Diagnosis : BOOL
 VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//ワーキングカウンターチェック
-IF bWorkingCounter = 0 THEN
-	bTerminalWcStateOK:=TRUE;
+IF bWcState = 0 THEN
+	bWcStateOK:=TRUE;
 ELSE
-	bTerminalWcStateOK:=FALSE;
+	bWcStateOK:=FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_DiagnosisTerminal">
-      <LineId Id="273" Count="0" />
-      <LineId Id="438" Count="0" />
-      <LineId Id="423" Count="2" />
-      <LineId Id="427" Count="1" />
       <LineId Id="430" Count="0" />
     </LineIds>
-    <LineIds Name="FB_DiagnosisTerminal.Terminal_State">
-      <LineId Id="102" Count="0" />
-      <LineId Id="6" Count="13" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="96" Count="0" />
-      <LineId Id="24" Count="60" />
-      <LineId Id="98" Count="0" />
-      <LineId Id="86" Count="3" />
+    <LineIds Name="FB_DiagnosisTerminal.State_Diagnosis">
+      <LineId Id="109" Count="83" />
+      <LineId Id="89" Count="0" />
     </LineIds>
-    <LineIds Name="FB_DiagnosisTerminal.Terminal_WcState">
-      <LineId Id="11" Count="0" />
-      <LineId Id="6" Count="1" />
-      <LineId Id="9" Count="1" />
+    <LineIds Name="FB_DiagnosisTerminal.WcState_Diagnosis">
+      <LineId Id="25" Count="4" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

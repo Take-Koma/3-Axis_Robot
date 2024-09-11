@@ -29,6 +29,9 @@
     <Compile Include="DUTs\E_MachineState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\E_Terminal.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\E_WriteStep.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -47,6 +50,10 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="GVLs\GVL_Axis.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="GVLs\GVL_Diagnosis.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -72,10 +79,7 @@
     <Compile Include="POUs\FB_Alarm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_DiagnosisFrmEtherCAT.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_DiagnosisDevEtherCAT.TcPOU">
+    <Compile Include="POUs\FB_DiagnosisEtherCAT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FB_MotionShapeWrite.TcPOU">
@@ -100,6 +104,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\P_Alarm.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\P_Diagnosis.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\P_Safety.TcPOU">

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_Diagnosis" Id="{0f3e0376-5be3-4fba-b8b2-c80f4f30a46b}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	//EtherCATマスター
+	uiFrmState 				AT%I*	:ARRAY[0..CuiMaxFrmNumber] OF UINT;
+	uiFrmWcState 			AT%I*	:ARRAY[0..CuiMaxFrmNumber] OF UINT;
+	
+	uiSlaveCount			AT%I*	:UINT;
+	uiDevState 				AT%I*	:UINT;
+	
+	uiCfgSlaveCount			AT%I*	:UINT;
+
+	
+	//EtherCATスレーブ
+	bWcState				AT%I*	:ARRAY[E_Terminal.EK1100..E_Terminal.AZD4A_KED] OF BOOL;
+	bWcState1EL2911			AT%I*	:BOOL;
+	uiState					AT%I*	:ARRAY[E_Terminal.EK1100..E_Terminal.AZD4A_KED] OF UINT;
+	
+	//診断結果
+	bEtherCATOK		:BOOL;
+	bTerminalOK		:BOOL;
+
+END_VAR
+
+VAR_GLOBAL CONSTANT
+	CuiMaxFrmNumber					:UINT :=2 ;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
