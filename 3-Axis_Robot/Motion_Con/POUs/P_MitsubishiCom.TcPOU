@@ -38,6 +38,8 @@ END_VAR]]></Declaration>
 	GVL.mb_Input_Coils[113]										:=GVL_Alarm.fbAlarmYAxisError.bRaised;
 	GVL.mb_Input_Coils[114]										:=GVL_Alarm.fbAlarmZAxisError.bRaised;
 	GVL.mb_Input_Coils[115]										:=GVL_Alarm.fbAlarmGripperError.bRaised;
+	GVL.mb_Input_Coils[116]										:=GVL_Alarm.fbAlarmEtherCATError.bRaised;
+	GVL.mb_Input_Coils[117]										:=GVL_Alarm.fbAlarmTerminalError.bRaised;
 	//---アラームここまで---
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
@@ -116,6 +118,7 @@ END_VAR]]></Declaration>
       <LineId Id="1699" Count="2" />
       <LineId Id="1688" Count="0" />
       <LineId Id="1711" Count="3" />
+      <LineId Id="1747" Count="1" />
       <LineId Id="1689" Count="0" />
       <LineId Id="1548" Count="1" />
       <LineId Id="1717" Count="0" />

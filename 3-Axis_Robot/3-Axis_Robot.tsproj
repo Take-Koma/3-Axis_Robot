@@ -40,6 +40,12 @@
 		<Text TxtId="GripperError">
 			<Text LcId="1041"><![CDATA[グリッパーエラー]]></Text>
 		</Text>
+		<Text TxtId="EtherCATError">
+			<Text LcId="1041"><![CDATA[イーサキャットエラー]]></Text>
+		</Text>
+		<Text TxtId="TerminalError">
+			<Text LcId="1041"><![CDATA[ターミナルエラー]]></Text>
+		</Text>
 	</Translations>
 	<DataTypes>
 		<DataType>
@@ -1477,6 +1483,90 @@
 				<Hide GUID="{F2E286DA-631F-4DCF-841F-9F9AAC9197A0}"/>
 			</Hides>
 		</DataType>
+		<DataType>
+			<Name GUID="{9FD1487A-DA6D-47D6-854C-F532D872FEF3}" PersistentType="true">UserEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
+			<EventId>
+				<Name Id="1">SafetyNotRun</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyNotRun]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">SafetyFbError</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyFbError]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">EmergencyStop</Name>
+				<DisplayName TxtId=""><![CDATA[EmergencyStop]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">XAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[XAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">YAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[YAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">ZAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[ZAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">GripperMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[GripperMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">MITSUBISHIError</Name>
+				<DisplayName TxtId=""><![CDATA[MITSUBISHIError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">XAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[XAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">YAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[YAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">ZAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[ZAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">GripperError</Name>
+				<DisplayName TxtId=""><![CDATA[GripperError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="13">EtherCATError</Name>
+				<DisplayName TxtId=""><![CDATA[EtherCATError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="14">TerminalError</Name>
+				<DisplayName TxtId=""><![CDATA[TerminalError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
+				<Hide GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}"/>
+				<Hide GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}"/>
+				<Hide GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}"/>
+				<Hide GUID="{85F10369-3066-470C-9109-6B8A334012B3}"/>
+				<Hide GUID="{60B74FB8-927E-462A-9AED-AFB161A35527}"/>
+				<Hide GUID="{BF0E44CE-E43F-44BC-88E3-57225BA59005}"/>
+				<Hide GUID="{EDB6C057-C1BE-4DFC-8F44-C0D3BE174E7E}"/>
+			</Hides>
+		</DataType>
 	</DataTypes>
 	<Project ProjectGUID="{532687BD-A483-4709-A8ED-A4C60FBD9671}" TargetNetId="192.168.15.2.1.1" Target64Bit="true" AutoPrioManagement="true" ShowHideConfigurations="#x6">
 		<System>
@@ -1612,8 +1702,9 @@
 		<MappingInfo Identifier="{00000000-2003-0850-0120-500852000403}" Id="#x02030040"/>
 		<MappingInfo Identifier="{00000000-0020-0304-1000-040320000403}" Id="#x02030010"/>
 		<MappingInfo Identifier="{00000000-0030-0304-1000-040333000403}" Id="#x02030060"/>
-		<MappingInfo Identifier="{08502003-0020-0304-0020-500820000403}" Id="#x02030070" Watchdog="00000000000000000000000000000000"/>
-		<MappingInfo Identifier="{08502003-0030-0304-0020-500830000403}" Id="#x02030080" Watchdog="00000000000000000000000000000000"/>
+		<MappingInfo Identifier="{08502001-0020-0304-0020-500820000403}" Id="#x02030070" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{08502001-0030-0304-0020-500830000403}" Id="#x02030080" Watchdog="00000000000000000000000000000000"/>
+		<MappingInfo Identifier="{08502001-0050-0304-0020-500850000403}" Id="#x02030090" Watchdog="00000000000000000000000000000000"/>
 		<MappingInfo Identifier="{08502003-0040-0304-0020-500840000403}" Id="#x02030050" Watchdog="00000000000000000000000000000000"/>
 		<MappingInfo Identifier="{05000010-2001-0850-1000-040300205008}" Id="#x02030030" Watchdog="04000000040000000400000004000000"/>
 	</Mappings>

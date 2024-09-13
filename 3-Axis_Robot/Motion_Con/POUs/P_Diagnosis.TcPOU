@@ -3,7 +3,9 @@
   <POU Name="P_Diagnosis" Id="{395414b2-5624-4395-bc73-a84b809d7d48}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Diagnosis
 VAR
-	i								:INT;
+	i								:UINT;
+	
+	eTerminal						:E_Terminal;
 	
 	//診断用FB
 	fbDiagnosisEtherCAT				:ARRAY[0..GVL_Diagnosis.CuiMaxFrmNumber] OF FB_DiagnosisEtherCAT;
@@ -13,17 +15,89 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//診断用変数リセット
-	GVL_Diagnosis.bEtherCATOK:=FALSE;
-	GVL_Diagnosis.bTerminalOK:=FALSE;
+	GVL_Diagnosis.bEtherCATOK:=TRUE;
+	GVL_Diagnosis.bTerminalOK:=TRUE;
 
 //EtherCATマスター診断
+	//0は全項目チェック
 	fbDiagnosisEtherCAT[0]( uiDevState			:=GVL_Diagnosis.uiDevState,
-							uiFrmState			:=,
-							uiFrmWcState		:=,
-							uiSlaveCount		:=,
-							uiCfgSlaveCount		:=,
+							uiFrmState			:=GVL_Diagnosis.uiFrmState[0],
+							uiFrmWcState		:=GVL_Diagnosis.uiFrmWcState[0],
+							uiSlaveCount		:=GVL_Diagnosis.uiSlaveCount,
+							uiCfgSlaveCount		:=GVL_Diagnosis.uiCfgSlaveCount,
 							bDiagnosisOK		=>
-							);]]></ST>
+							);
+
+	IF fbDiagnosisEtherCAT[0].bDiagnosisOK=FALSE THEN
+		GVL_Diagnosis.bEtherCATOK:=FALSE;
+	END_IF
+	
+	//1からは存在するフレーム分をチェック
+	FOR i := 1 TO GVL_Diagnosis.CuiMaxFrmNumber DO
+		
+		fbDiagnosisEtherCAT[i]( uiDevState			:=,
+								uiFrmState			:=GVL_Diagnosis.uiFrmState[i],
+								uiFrmWcState		:=GVL_Diagnosis.uiFrmWcState[i],
+								uiSlaveCount		:=,
+								uiCfgSlaveCount		:=,
+								bDiagnosisOK		=>
+								);		
+		
+		IF fbDiagnosisEtherCAT[i].bDiagnosisOK=FALSE THEN
+			GVL_Diagnosis.bEtherCATOK:=FALSE;
+		END_IF
+
+	END_FOR
+
+							
+//ターミナル診断
+	//通常ターミナルは全項目チェック
+	FOR eTerminal:= E_Terminal.EL1004 TO E_Terminal.EL2911 DO
+		
+		fbDiagnosisTerminal[eTerminal](	uiState			:=GVL_Diagnosis.uiState[eTerminal],
+										bWcState		:=GVL_Diagnosis.bWcState[eTerminal],
+										bDiagnosisOK	=>
+										);
+		
+		IF fbDiagnosisTerminal[eTerminal].bDiagnosisOK=FALSE THEN
+			GVL_Diagnosis.bTerminalOK:=FALSE;
+		END_IF
+		
+	END_FOR
+	
+	
+	//EK1100はステータスしかないので、ステータスのみチェック
+	fbDiagnosisTerminal[E_Terminal.EK1100](	uiState			:=GVL_Diagnosis.uiState[E_Terminal.EK1100],
+											bWcState		:=,
+											bDiagnosisOK	=>
+											);
+	
+	IF fbDiagnosisTerminal[E_Terminal.EK1100].bDiagnosisOK=FALSE THEN
+		GVL_Diagnosis.bTerminalOK:=FALSE;
+	END_IF
+
+	
+	//AZD4A-KEDはステータスしかないので、ステータスのみをチェック
+	fbDiagnosisTerminal[E_Terminal.AZD4A_KED](	uiState			:=GVL_Diagnosis.uiState[E_Terminal.AZD4A_KED],
+												bWcState		:=,
+												bDiagnosisOK	=>
+												);
+	
+	IF fbDiagnosisTerminal[E_Terminal.AZD4A_KED].bDiagnosisOK=FALSE THEN
+		GVL_Diagnosis.bTerminalOK:=FALSE;
+	END_IF	
+
+	
+	//EL2911はふたつWcStateがあるので、二個目の診断
+	fbDiagnosisTerminal1EL2911(	uiState			:=,
+								bWcState		:=GVL_Diagnosis.bWcState1EL2911	,
+								bDiagnosisOK	=>
+								);
+
+	IF fbDiagnosisTerminal1EL2911.bDiagnosisOK=FALSE THEN
+		GVL_Diagnosis.bTerminalOK:=FALSE;
+	END_IF
+]]></ST>
     </Implementation>
     <LineIds Name="P_Diagnosis">
       <LineId Id="19" Count="0" />
@@ -31,9 +105,53 @@ END_VAR]]></Declaration>
       <LineId Id="24" Count="0" />
       <LineId Id="20" Count="0" />
       <LineId Id="5" Count="0" />
+      <LineId Id="149" Count="0" />
       <LineId Id="32" Count="4" />
       <LineId Id="44" Count="0" />
       <LineId Id="43" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="111" Count="5" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="121" Count="2" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="93" Count="1" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="101" Count="1" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="142" Count="6" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="157" Count="7" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="84" Count="2" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="103" Count="1" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="105" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

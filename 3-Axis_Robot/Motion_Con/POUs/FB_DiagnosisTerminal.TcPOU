@@ -3,19 +3,40 @@
   <POU Name="FB_DiagnosisTerminal" Id="{91eeac0d-8ecb-4fac-ba62-a6a0c4d5b6a5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisTerminal
 VAR_INPUT
-	uiInfoDataState		: UINT;
-	bWcState			: BOOL;
+	uiState				:REFERENCE TO UINT;
+	bWcState			:REFERENCE TO BOOL;
 END_VAR
 VAR_OUTPUT
-	bStateOK			:BOOL;
-	bWcStateOK			:BOOL;	
+	bDiagnosisOK		:BOOL;
 END_VAR
 VAR
+	bStateOK			:BOOL;
+	bWcStateOK			:BOOL;		
+
 	sTerminalState		: STRING;
 	sStateStatusAll		: STRING(255);	
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[//出力する変数リセット
+bDiagnosisOK:=TRUE;
+bStateOK:=TRUE;
+bWcStateOK:=TRUE;
+
+IF __ISVALIDREF(uiState)=TRUE THEN
+	State_Diagnosis();
+	
+	IF bStateOK=FALSE THEN
+		bDiagnosisOK:=FALSE;
+	END_IF
+END_IF
+
+IF __ISVALIDREF(bWcState)=TRUE THEN
+	WcState_Diagnosis();
+	
+	IF bWcStateOK=FALSE THEN
+		bDiagnosisOK:=FALSE;
+	END_IF
+END_IF]]></ST>
     </Implementation>
     <Method Name="State_Diagnosis" Id="{efd7d053-6627-49c9-8500-27a3f7aecfef}">
       <Declaration><![CDATA[METHOD State_Diagnosis : BOOL
@@ -24,79 +45,79 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[//ターミナルのステータスをbitから診断
-IF uiInfoDataState.0 AND NOT uiInfoDataState.1 THEN
+IF uiState.0 AND NOT uiState.1 THEN
 	sTerminalState:= 'Slave in INIT state';
 END_IF
-IF uiInfoDataState.1 AND NOT uiInfoDataState.0 THEN
+IF uiState.1 AND NOT uiState.0 THEN
 	sTerminalState:= 'Slave in PREOP state';
 END_IF
-IF uiInfoDataState.0 AND uiInfoDataState.1 THEN
+IF uiState.0 AND uiState.1 THEN
 	sTerminalState:= 'Slave in BOOTSTRAP state';
 END_IF
-IF uiInfoDataState.2 THEN
+IF uiState.2 THEN
 	sTerminalState:= 'Slave in SAFEOP state';
 END_IF
-IF uiInfoDataState.3 THEN
+IF uiState.3 THEN
 	sTerminalState:= 'Slave in OP state';
 END_IF
 
 //ターミナルのエラーは複数発生する可能性があるので全bitチェック
-IF uiInfoDataState.4 THEN
+IF uiState.4 THEN
 	sStateStatusAll:= 'Slave signals error. ';
 ELSE
 	sStateStatusAll:= '';
 END_IF
-IF uiInfoDataState.5 THEN
+IF uiState.5 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll, 'Invalid vendorID. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.6 THEN
+IF uiState.6 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll, 'Initialization error occurred. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.7 THEN
+IF uiState.7 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave disabled. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.8 THEN
+IF uiState.8 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave not present. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.9 THEN
+IF uiState.9 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave signals link error. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.10 THEN
+IF uiState.10 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave signals missing link. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.11 THEN
+IF uiState.11 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll, 'Slave signals unexpected link. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.12 THEN
+IF uiState.12 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll,  'Communication port A. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.13 THEN
+IF uiState.13 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll, 'Communication port B. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.14 THEN
+IF uiState.14 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll, 'Communication port C. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
 END_IF
-IF uiInfoDataState.15 THEN
+IF uiState.15 THEN
 	sStateStatusAll:= CONCAT( sStateStatusAll,  'Communication port D. ');
 ELSE
 	sStateStatusAll:= CONCAT( sStateStatusAll, '');
@@ -124,7 +145,14 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_DiagnosisTerminal">
+      <LineId Id="446" Count="0" />
       <LineId Id="430" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="447" Count="0" />
+      <LineId Id="450" Count="6" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="472" Count="6" />
+      <LineId Id="471" Count="0" />
     </LineIds>
     <LineIds Name="FB_DiagnosisTerminal.State_Diagnosis">
       <LineId Id="109" Count="83" />

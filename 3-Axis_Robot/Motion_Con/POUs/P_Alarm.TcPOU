@@ -91,8 +91,17 @@ END_VAR
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
+	GVL_Alarm.fbAlarmEtherCATError(
+		bRaise		:=NOT GVL_Diagnosis.bEtherCATOK,
+		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
 	
-	
+	GVL_Alarm.fbAlarmTerminalError(
+		bRaise		:=NOT GVL_Diagnosis.bTerminalOK,
+		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
 	]]></ST>
     </Implementation>
     <LineIds Name="P_Alarm">
@@ -144,7 +153,11 @@ END_VAR
       <LineId Id="235" Count="0" />
       <LineId Id="246" Count="2" />
       <LineId Id="236" Count="0" />
-      <LineId Id="219" Count="3" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="262" Count="3" />
+      <LineId Id="220" Count="1" />
+      <LineId Id="266" Count="4" />
+      <LineId Id="222" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

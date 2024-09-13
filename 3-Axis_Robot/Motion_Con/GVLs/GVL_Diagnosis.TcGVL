@@ -19,8 +19,8 @@ VAR_GLOBAL
 	uiState					AT%I*	:ARRAY[E_Terminal.EK1100..E_Terminal.AZD4A_KED] OF UINT;
 	
 	//診断結果
-	bEtherCATOK		:BOOL;
-	bTerminalOK		:BOOL;
+	bEtherCATOK						:BOOL;
+	bTerminalOK						:BOOL;
 
 END_VAR
 

@@ -31,6 +31,8 @@ VAR_GLOBAL
 	fbAlarmYAxisError						:FB_Alarm(TC_Events.UserEventClass.YAxisError ,fbMachineState);
 	fbAlarmZAxisError						:FB_Alarm(TC_Events.UserEventClass.ZAxisError ,fbMachineState);
 	fbAlarmGripperError						:FB_Alarm(TC_Events.UserEventClass.GripperError ,fbMachineState);
+	fbAlarmEtherCATError					:FB_Alarm(TC_Events.UserEventClass.EtherCATError ,fbMachineState);
+	fbAlarmTerminalError					:FB_Alarm(TC_Events.UserEventClass.TerminalError ,fbMachineState);
 
 END_VAR
 
