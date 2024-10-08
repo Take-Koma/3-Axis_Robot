@@ -16043,7 +16043,7 @@ External Setpoint Generation:
 			</Hides>
 		</DataType>
 	</DataTypes>
-	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{168E2EAA-99ED-2752-090C-F6CD72EFA64A}">
+	<Instance Id="#x08502000" KeepUnrestoredLinks="2" TmcPath="Motion_Con\Motion_Con.tmc" TmcHash="{1F8DED16-F01C-B36E-97D2-6BBF3BB01C58}">
 		<Name>__FILENAME__</Name>
 		<TmcDesc GUID="{3E578FBF-8593-4971-A049-A334D40A2DE2}" TcSmClass="TComPlcObjDef">
 			<Name>Motion_Con</Name>
@@ -16206,7 +16206,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3512360</BitOffs>
+						<BitOffs>3580664</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Axis.stAxis[0].NcToPlc</Name>
@@ -17101,6 +17101,242 @@ External Setpoint Generation:
 						<BitOffs>3481152</BitOffs>
 					</Symbol>
 					<Symbol>
+						<Name>GVL_Alarm.iMaxAlarm</Name>
+						<Comment><![CDATA[上のアラームのファンクションブロックより多い数字にすること！！！]]></Comment>
+						<BitSize>16</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000006}">INT</BaseType>
+						<Default>
+							<Value>100</Value>
+						</Default>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3499616</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbMachineState</Name>
+						<BitSize>6656</BitSize>
+						<BaseType GUID="{86EDA8F5-CB59-E8E0-EE21-D863AD013CD0}">FB_MachineState</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3499648</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbPatlite</Name>
+						<BitSize>1088</BitSize>
+						<BaseType GUID="{574AAAA8-09E6-B892-CFB4-3BE5C6171A06}">FB_Patlite</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3506304</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmSafetyNotRun</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3507392</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmSafetyFbError</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3511744</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmEmergencyStop</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3516096</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmXAxisMovingGripSwichNotOn</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3520448</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmYAxisMovingGripSwichNotOn</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3524800</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmZAxisMovingGripSwichNotOn</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3529152</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmGripperMovingGripSwichNotOn</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3533504</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmMITSUBISHIError</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3537856</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmXAxisError</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3542208</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmYAxisError</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3546560</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmZAxisError</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3550912</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmGripperError</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3555264</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmEtherCATError</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3559616</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL_Alarm.fbAlarmTerminalError</Name>
+						<BitSize>4352</BitSize>
+						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>old_input_assignments</Name>
+							</Property>
+						</Properties>
+						<BitOffs>3563968</BitOffs>
+					</Symbol>
+					<Symbol>
 						<Name>GVL.mb_Input_Coils</Name>
 						<BitSize>2048</BitSize>
 						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
@@ -17113,7 +17349,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3499584</BitOffs>
+						<BitOffs>3568320</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.mb_Output_Coils</Name>
@@ -17128,7 +17364,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3501632</BitOffs>
+						<BitOffs>3570368</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.mb_Input_Registers</Name>
@@ -17143,7 +17379,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3503680</BitOffs>
+						<BitOffs>3572416</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.mb_Output_Registers</Name>
@@ -17158,7 +17394,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3507776</BitOffs>
+						<BitOffs>3576512</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.lrXZ_Slope</Name>
@@ -17173,7 +17409,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3511936</BitOffs>
+						<BitOffs>3580672</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.lrYZ_Slope</Name>
@@ -17188,7 +17424,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3512000</BitOffs>
+						<BitOffs>3580736</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.lrPenFullLength</Name>
@@ -17203,7 +17439,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3512064</BitOffs>
+						<BitOffs>3580800</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.lrPenDiameter</Name>
@@ -17218,7 +17454,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3512128</BitOffs>
+						<BitOffs>3580864</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.lrPenHalfLength</Name>
@@ -17233,7 +17469,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3512192</BitOffs>
+						<BitOffs>3580928</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.lrPenGripLength</Name>
@@ -17248,243 +17484,7 @@ External Setpoint Generation:
 								<Name>TcVarGlobal</Name>
 							</Property>
 						</Properties>
-						<BitOffs>3512256</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.iMaxAlarm</Name>
-						<Comment><![CDATA[上のアラームのファンクションブロックより多い数字にすること！！！]]></Comment>
-						<BitSize>16</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000006}">INT</BaseType>
-						<Default>
-							<Value>100</Value>
-						</Default>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3512368</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbMachineState</Name>
-						<BitSize>6656</BitSize>
-						<BaseType GUID="{86EDA8F5-CB59-E8E0-EE21-D863AD013CD0}">FB_MachineState</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3512384</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbPatlite</Name>
-						<BitSize>1088</BitSize>
-						<BaseType GUID="{574AAAA8-09E6-B892-CFB4-3BE5C6171A06}">FB_Patlite</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3519040</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmSafetyNotRun</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3520128</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmSafetyFbError</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3524480</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmEmergencyStop</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3528832</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmXAxisMovingGripSwichNotOn</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3533184</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmYAxisMovingGripSwichNotOn</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3537536</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmZAxisMovingGripSwichNotOn</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3541888</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmGripperMovingGripSwichNotOn</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3546240</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmMITSUBISHIError</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3550592</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmXAxisError</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3554944</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmYAxisError</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3559296</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmZAxisError</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3563648</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmGripperError</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3568000</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmEtherCATError</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3572352</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.fbAlarmTerminalError</Name>
-						<BitSize>4352</BitSize>
-						<BaseType GUID="{2454978A-774D-54D6-1A21-DFF12C558162}">FB_Alarm</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>old_input_assignments</Name>
-							</Property>
-						</Properties>
-						<BitOffs>3576704</BitOffs>
+						<BitOffs>3580992</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Axis.stAxis</Name>
@@ -18368,6 +18368,22 @@ External Setpoint Generation:
 					<ContextId>1</ContextId>
 					<ByteSize>851968</ByteSize>
 					<Symbol>
+						<Name>GVL_Alarm.bSwitch</Name>
+						<Comment><![CDATA[パトライトスイッチ ターミナル5(EL1088)チャンネル8	]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>TcAddressType</Name>
+								<Value>Input</Value>
+							</Property>
+						</Properties>
+						<BitOffs>3499600</BitOffs>
+					</Symbol>
+					<Symbol>
 						<Name>GVL.bEL1004Channel1</Name>
 						<Comment><![CDATA[ターミナル2(EL1004)チャンネル1]]></Comment>
 						<BitSize>8</BitSize>
@@ -18381,7 +18397,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3329688</BitOffs>
+						<BitOffs>3499608</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.bEL1004Channel2</Name>
@@ -18397,7 +18413,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3340488</BitOffs>
+						<BitOffs>3499632</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.bEL1004Channel3</Name>
@@ -18413,7 +18429,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3511872</BitOffs>
+						<BitOffs>3499640</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.bEL1004Channel4</Name>
@@ -18429,7 +18445,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3511880</BitOffs>
+						<BitOffs>3580608</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.bEL1088Channel5</Name>
@@ -18445,7 +18461,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3511912</BitOffs>
+						<BitOffs>3580640</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.bEL1088Channel6</Name>
@@ -18461,7 +18477,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3511920</BitOffs>
+						<BitOffs>3580648</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL.bEL1088Channel7</Name>
@@ -18477,23 +18493,7 @@ External Setpoint Generation:
 								<Value>Input</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3511928</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL_Alarm.bSwitch</Name>
-						<Comment><![CDATA[パトライトスイッチ ターミナル5(EL1088)チャンネル8	]]></Comment>
-						<BitSize>8</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>TcAddressType</Name>
-								<Value>Input</Value>
-							</Property>
-						</Properties>
-						<BitOffs>3512352</BitOffs>
+						<BitOffs>3580656</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_MitsubishiCom.bYI004</Name>
@@ -18518,54 +18518,6 @@ External Setpoint Generation:
 					<ContextId>1</ContextId>
 					<ByteSize>851968</ByteSize>
 					<Symbol>
-						<Name>GVL.bEL2004Channel2</Name>
-						<Comment><![CDATA[ターミナル3(EL2004)チャンネル2]]></Comment>
-						<BitSize>8</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>TcAddressType</Name>
-								<Value>Output</Value>
-							</Property>
-						</Properties>
-						<BitOffs>3511888</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL.bEL2004Channel3</Name>
-						<Comment><![CDATA[ターミナル3(EL2004)チャンネル3]]></Comment>
-						<BitSize>8</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>TcAddressType</Name>
-								<Value>Output</Value>
-							</Property>
-						</Properties>
-						<BitOffs>3511896</BitOffs>
-					</Symbol>
-					<Symbol>
-						<Name>GVL.bEL2004Channel4</Name>
-						<Comment><![CDATA[ターミナル3(EL2004)チャンネル4]]></Comment>
-						<BitSize>8</BitSize>
-						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-						<Properties>
-							<Property>
-								<Name>TcVarGlobal</Name>
-							</Property>
-							<Property>
-								<Name>TcAddressType</Name>
-								<Value>Output</Value>
-							</Property>
-						</Properties>
-						<BitOffs>3511904</BitOffs>
-					</Symbol>
-					<Symbol>
 						<Name>GVL_Alarm.bRedLed</Name>
 						<Comment><![CDATA[パトライト赤LED ターミナル5(EL2088)チャンネル5]]></Comment>
 						<BitSize>8</BitSize>
@@ -18579,7 +18531,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3512320</BitOffs>
+						<BitOffs>3329688</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Alarm.bGreenLed</Name>
@@ -18595,7 +18547,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3512328</BitOffs>
+						<BitOffs>3340488</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Alarm.bBlueLed</Name>
@@ -18611,7 +18563,7 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3512336</BitOffs>
+						<BitOffs>3499584</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Alarm.bBuzzerON</Name>
@@ -18627,7 +18579,55 @@ External Setpoint Generation:
 								<Value>Output</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3512344</BitOffs>
+						<BitOffs>3499592</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL.bEL2004Channel2</Name>
+						<Comment><![CDATA[ターミナル3(EL2004)チャンネル2]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>TcAddressType</Name>
+								<Value>Output</Value>
+							</Property>
+						</Properties>
+						<BitOffs>3580616</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL.bEL2004Channel3</Name>
+						<Comment><![CDATA[ターミナル3(EL2004)チャンネル3]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>TcAddressType</Name>
+								<Value>Output</Value>
+							</Property>
+						</Properties>
+						<BitOffs>3580624</BitOffs>
+					</Symbol>
+					<Symbol>
+						<Name>GVL.bEL2004Channel4</Name>
+						<Comment><![CDATA[ターミナル3(EL2004)チャンネル4]]></Comment>
+						<BitSize>8</BitSize>
+						<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+						<Properties>
+							<Property>
+								<Name>TcVarGlobal</Name>
+							</Property>
+							<Property>
+								<Name>TcAddressType</Name>
+								<Value>Output</Value>
+							</Property>
+						</Properties>
+						<BitOffs>3580632</BitOffs>
 					</Symbol>
 					<Symbol>
 						<Name>GVL_Vision.bLedLight</Name>
@@ -22728,7 +22728,7 @@ External Setpoint Generation:
 								<Value>C0228</Value>
 							</Property>
 						</Properties>
-						<BitOffs>3872384</BitOffs>
+						<BitOffs>3836800</BitOffs>
 					</Symbol>
 				</DataArea>
 			</DataAreas>
@@ -22749,7 +22749,7 @@ External Setpoint Generation:
 				</Property>
 				<Property>
 					<Name>ChangeDate</Name>
-					<Value>2024-09-14T06:30:21</Value>
+					<Value>2024-10-08T13:30:36</Value>
 				</Property>
 				<Property>
 					<Name>GeneratedCodeSize</Name>
@@ -22780,7 +22780,7 @@ External Setpoint Generation:
 				</Value>
 				<Value>
 					<Name>Application Timestamp</Name>
-					<Value>1726295421</Value>
+					<Value>1728394236</Value>
 				</Value>
 				<Value>
 					<Name>Symbolic Mapping</Name>
