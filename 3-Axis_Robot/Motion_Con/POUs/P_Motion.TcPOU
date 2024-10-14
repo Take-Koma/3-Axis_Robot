@@ -109,9 +109,9 @@ END_VAR]]></Declaration>
 		GVL_Motion.bWriteMoveStart:=GVL_MitsubishiCom.bFromWriteStart;
 	END_IF
 
-	//---ピック＆プレース実行 まだプログラムが無いからスイッチ応答のみ
+	//---ピック＆プレース実行---
 	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
-		GVL_MitsubishiCom.bToPickAndPlaceMoving:=GVL_MitsubishiCom.bFromPickAndPlaceStart;
+		GVL_Motion.bPickAndPlaceStart:=GVL_MitsubishiCom.bFromPickAndPlaceStart;
 	END_IF
 	
 	//---アクションをコールして軸を起動---

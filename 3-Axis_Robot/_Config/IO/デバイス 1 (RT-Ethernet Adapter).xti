@@ -738,7 +738,7 @@
 					</Interface>
 				</Interfaces>
 				<Parameters>
-					<Parameter>
+					<Parameter ShowSubItems="true">
 						<Name>TcIoIpSettings</Name>
 						<BitSize>128</BitSize>
 						<SubItem>
@@ -970,7 +970,7 @@
 						</Default>
 						<PTCID>#x03011131</PTCID>
 					</Parameter>
-					<Parameter OnlineParameter="true">
+					<Parameter OnlineParameter="true" ShowSubItems="true">
 						<Name>IpStackDiagnosis</Name>
 						<BitSize>768</BitSize>
 						<BaseType GUID="{38621CD5-4239-4327-97F7-35F1414B7265}">IpStackDiagnosis</BaseType>

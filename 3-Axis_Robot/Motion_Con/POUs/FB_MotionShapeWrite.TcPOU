@@ -154,7 +154,7 @@ E_CircleEllipseWriteStep.FirstPotisionMove:(*円の書き始め位置へ移動*)
 			lrX_AxisTP		:=pMcMoveAbs[E_Axis.X_Axis]^.Position,
 			lrY_AxisTP		:=pMcMoveAbs[E_Axis.Y_Axis]^.Position,
 			lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
-			lrZ_AxisCorTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
+			lrZ_AxisConTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
 			);
 				
 		IF pMcMoveAbs[E_Axis.Z_Axis]^.Done=TRUE THEN
@@ -198,7 +198,7 @@ E_CircleEllipseWriteStep.Write:(*円を書いていく*)
 				lrX_AxisTP		:=pMcMoveAbs[E_Axis.X_Axis]^.Position,
 				lrY_AxisTP		:=pMcMoveAbs[E_Axis.Y_Axis]^.Position,
 				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
-				lrZ_AxisCorTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
+				lrZ_AxisConTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
 				);
 
 			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=TRUE;
@@ -225,7 +225,7 @@ E_CircleEllipseWriteStep.Write:(*円を書いていく*)
 				lrX_AxisTP		:=pMcMoveAbsSub[E_Axis.X_Axis]^.Position,
 				lrY_AxisTP		:=pMcMoveAbsSub[E_Axis.Y_Axis]^.Position,
 				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
-				lrZ_AxisCorTP	=>pMcMoveAbsSub[E_Axis.Z_Axis]^.Position
+				lrZ_AxisConTP	=>pMcMoveAbsSub[E_Axis.Z_Axis]^.Position
 				);
 
 			pMcMoveAbsSub[E_Axis.X_Axis]^.Execute:=TRUE;
@@ -323,7 +323,7 @@ E_CircleEllipseWriteStep.FirstPotisionMove:(*楕円の書き始め位置へ移�
 			lrX_AxisTP		:=pMcMoveAbs[E_Axis.X_Axis]^.Position,
 			lrY_AxisTP		:=pMcMoveAbs[E_Axis.Y_Axis]^.Position,
 			lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
-			lrZ_AxisCorTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
+			lrZ_AxisConTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
 			);
 				
 		IF pMcMoveAbs[E_Axis.Z_Axis]^.Done=TRUE THEN
@@ -369,7 +369,7 @@ E_CircleEllipseWriteStep.Write:(*楕円を書いていく*)
 				lrX_AxisTP		:=pMcMoveAbs[E_Axis.X_Axis]^.Position,
 				lrY_AxisTP		:=pMcMoveAbs[E_Axis.Y_Axis]^.Position,
 				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
-				lrZ_AxisCorTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
+				lrZ_AxisConTP	=>pMcMoveAbs[E_Axis.Z_Axis]^.Position
 				);
 
 			pMcMoveAbs[E_Axis.X_Axis]^.Execute:=TRUE;
@@ -398,7 +398,7 @@ E_CircleEllipseWriteStep.Write:(*楕円を書いていく*)
 				lrX_AxisTP		:=pMcMoveAbsSub[E_Axis.X_Axis]^.Position,
 				lrY_AxisTP		:=pMcMoveAbsSub[E_Axis.Y_Axis]^.Position,
 				lrZ_AxisTP		:=273-GVL.lrPenFullLength+GVL.lrPenGripLength,
-				lrZ_AxisCorTP	=>pMcMoveAbsSub[E_Axis.Z_Axis]^.Position
+				lrZ_AxisConTP	=>pMcMoveAbsSub[E_Axis.Z_Axis]^.Position
 				);
 
 			pMcMoveAbsSub[E_Axis.X_Axis]^.Execute:=TRUE;
@@ -534,9 +534,8 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_MotionShapeWrite.CircleMeth">
-      <LineId Id="6" Count="156" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="163" Count="1" />
+      <LineId Id="167" Count="158" />
+      <LineId Id="164" Count="0" />
     </LineIds>
     <LineIds Name="FB_MotionShapeWrite.EllipseMeth">
       <LineId Id="6" Count="164" />

@@ -65,7 +65,7 @@ TCVN_CS_ACQUIRING:
 
 	CASE iStep OF
 	0:
-		fbR_TRIG(CLK := GVL_MitsubishiCom.bFromCameraTrigger, Q => );	// ボタンスイッチを押すとソフトウェアトリガーを発行する
+		fbR_TRIG(CLK := GVL_MitsubishiCom.bFromCameraTrigger OR GVL_Motion.bAutoCameraTriger, Q => );	// ボタンスイッチを押すとソフトウェアトリガーを発行する
 		
 		IF fbR_TRIG.Q=TRUE THEN
 			GVL_Vision.bLedLight:=TRUE;
@@ -207,6 +207,8 @@ TCVN_CS_ACQUIRING:
 		hr := F_VN_TransformIntoDisplayableImage(ipImageProc, ipImageProcDisp, S_OK);
 		
 		istep:=0;
+		
+		GVL_Motion.bGetImageEnd:=TRUE;
 	END_CASE
 END_CASE]]></ST>
     </Implementation>
@@ -242,7 +244,9 @@ END_CASE]]></ST>
       <LineId Id="1618" Count="0" />
       <LineId Id="1449" Count="6" />
       <LineId Id="1627" Count="0" />
-      <LineId Id="1457" Count="41" />
+      <LineId Id="1457" Count="40" />
+      <LineId Id="1729" Count="1" />
+      <LineId Id="1498" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

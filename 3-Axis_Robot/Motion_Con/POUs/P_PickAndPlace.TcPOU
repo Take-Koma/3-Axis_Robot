@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="P_PickAndPlace" Id="{9b896662-1234-4b14-8f60-68f9ebf6e542}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_PickAndPlace
+VAR
+	eStep				:E_PickAndPlaceStep:=E_PickAndPlaceStep.Stay;
+	iStep				:INT:=0;
+	fbMcMoveAbs			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
+	fbZAxisTargetPosCon	:FB_Z_Axis_TargetPositionConvert;
+	
+	XAxisTarget			:LREAL;
+	YAxisTarget			:LREAL;
+	ZAxisTarget			:LREAL:=270;
+	GripperTarget		:LREAL:=70;
+	
+	ZAxisUpTarget		:LREAL:=200;
+	ZAxisMidTarget		:LREAL:=235;
+	
+	AllAxisVelo			:LREAL;
+	ZAxisTargetVelo		:LREAL;
+	GripperVelo			:LREAL;
+	
+	i					:INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//WriteMotin実行中か確認
+IF eStep<>E_PickAndPlaceStep.Stay THEN
+	
+	//McMoveのコマンドアボートをチェック
+	IF fbMcMoveAbs[E_Axis.X_Axis].CommandAborted=TRUE
+		OR fbMcMoveAbs[E_Axis.Y_Axis].CommandAborted=TRUE
+		OR fbMcMoveAbs[E_Axis.Z_Axis].CommandAborted=TRUE
+		OR fbMcMoveAbs[E_Axis.Gripper].CommandAborted=TRUE THEN
+			eStep:=E_PickAndPlaceStep.CommandAborted;
+	END_IF
+	
+	//McMoveのエラーをチェック
+	IF fbMcMoveAbs[E_Axis.X_Axis].Error=TRUE
+		OR fbMcMoveAbs[E_Axis.Y_Axis].Error=TRUE
+		OR fbMcMoveAbs[E_Axis.Z_Axis].Error=TRUE
+		OR fbMcMoveAbs[E_Axis.Gripper].Error=TRUE THEN
+			eStep:=E_PickAndPlaceStep.Error;
+	END_IF
+
+END_IF
+	
+CASE eStep OF
+
+E_PickAndPlaceStep.Stay:(*初期値、bMoveがTrueになったらステップを進める*)
+
+	IF GVL_Motion.bPickAndPlaceStart=TRUE THEN
+		GVL_Motion.bAutoCameraTriger:=FALSE;
+		GVL_Motion.bGetImageEnd:=FALSE;
+		GVL_MitsubishiCom.bToPickAndPlaceMoving:=TRUE;
+		eStep:=E_PickAndPlaceStep.GripperOpen;
+	ELSE
+		eStep:=E_PickAndPlaceStep.Stay;
+	END_IF;
+
+E_PickAndPlaceStep.GripperOpen:(*グリッパーを開ける*)
+	
+	fbMcMoveAbs[E_Axis.Gripper].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Gripper].Position:=0;
+	fbMcMoveAbs[E_Axis.Gripper].Velocity:=7200;
+
+	IF fbMcMoveAbs[E_Axis.Gripper].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.ZAxixZeroPos;
+		fbMcMoveAbs[E_Axis.Gripper].Execute:=FALSE;
+	END_IF;
+
+E_PickAndPlaceStep.ZAxixZeroPos:(*Z軸をゼロポジションへ、衝突回避のためにまずZ軸を移動*)
+
+	fbMcMoveAbs[E_Axis.Z_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Z_Axis].Position:=0;
+	fbMcMoveAbs[E_Axis.Z_Axis].Velocity:=300;
+
+	IF fbMcMoveAbs[E_Axis.Z_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.XYAxixShootingPos;
+		fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+	END_IF;
+
+E_PickAndPlaceStep.XYAxixShootingPos:(*Z軸移動後に、X,Y軸を撮影ポジションへ移動*)
+
+	fbMcMoveAbs[E_Axis.X_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Y_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.X_Axis].Position:=0;
+	fbMcMoveAbs[E_Axis.Y_Axis].Position:=300;
+	fbMcMoveAbs[E_Axis.X_Axis].Velocity:=300;
+	fbMcMoveAbs[E_Axis.Y_Axis].Velocity:=300;
+	
+	IF fbMcMoveAbs[E_Axis.X_Axis].Done=TRUE AND fbMcMoveAbs[E_Axis.Y_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.Shooting;
+		fbMcMoveAbs[E_Axis.X_Axis].Execute:=FALSE;
+		fbMcMoveAbs[E_Axis.Y_Axis].Execute:=FALSE;
+	END_IF;
+
+E_PickAndPlaceStep.Shooting:(*カメラで画像を撮影*)
+	
+	GVL_Motion.bAutoCameraTriger:=TRUE;
+
+	IF GVL_Motion.bGetImageEnd=TRUE THEN
+		GVL_Motion.bAutoCameraTriger:=FALSE;
+		GVL_Motion.bGetImageEnd:=FALSE;
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ResetVar;
+	END_IF
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_ResetVar:(*ピック＆プレース使用の変数をリセット*)
+	
+	i:=1;
+	eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ValueCon;
+	AllAxisVelo:=300;
+	ZAxisTargetVelo:=50;
+	GripperVelo:=3600;
+	
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_ValueCon:(*標値の変換実施*)
+	//画像の座標をロボットの座標に変換X軸
+	IF GVL_Vision.aMassCenter[i][0]<1052 THEN
+		XAxisTarget:=0;
+	ELSIF 4354<GVL_Vision.aMassCenter[i][0] THEN
+		XAxisTarget:=300;
+	ELSE
+		XAxisTarget:=(300.0/(4354-1052))*(GVL_Vision.aMassCenter[i][0]-1052);
+	END_IF
+
+	//画像の座標をロボットの座標に変換Y軸
+	IF GVL_Vision.aMassCenter[i][1]<146 THEN
+		YAxisTarget:=0;
+	ELSIF 3472<GVL_Vision.aMassCenter[i][1] THEN
+		YAxisTarget:=300;
+	ELSE
+		YAxisTarget:=(300.0/(3472-146))*(GVL_Vision.aMassCenter[i][1]-146);
+	END_IF
+	
+	//XY軸よりZ軸のターゲット座標値
+	fbZAxisTargetPosCon(lrX_AxisTP		:=XAxisTarget,
+						lrY_AxisTP		:=YAxisTarget,
+						lrZ_AxisTP		:=ZAxisTarget,
+						lrZ_AxisConTP	=>
+						);
+
+	eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_XYAxisTargetPos;
+
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_XYAxisTargetPos:(*XY軸をターゲットポジションへ*)
+	fbMcMoveAbs[E_Axis.X_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Y_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.X_Axis].Position:=XAxisTarget;
+	fbMcMoveAbs[E_Axis.Y_Axis].Position:=YAxisTarget;
+	fbMcMoveAbs[E_Axis.X_Axis].Velocity:=AllAxisVelo;
+	fbMcMoveAbs[E_Axis.Y_Axis].Velocity:=AllAxisVelo;
+	
+	IF fbMcMoveAbs[E_Axis.X_Axis].Done=TRUE AND fbMcMoveAbs[E_Axis.Y_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos;
+		fbMcMoveAbs[E_Axis.X_Axis].Execute:=FALSE;
+		fbMcMoveAbs[E_Axis.Y_Axis].Execute:=FALSE;
+	END_IF;
+
+		
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos:(*Z軸を上昇位置へ*)
+
+	fbMcMoveAbs[E_Axis.Z_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Z_Axis].Position:=ZAxisUpTarget;
+	fbMcMoveAbs[E_Axis.Z_Axis].Velocity:=AllAxisVelo;
+
+	IF fbMcMoveAbs[E_Axis.Z_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisTargetPos;
+		fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+	END_IF;
+
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisTargetPos:(*Z軸をターゲットポジションへ*)
+
+	CASE iStep OF
+	
+	0:
+		fbMcMoveAbs[E_Axis.Z_Axis].Execute:=TRUE;
+		fbMcMoveAbs[E_Axis.Z_Axis].Position:=fbZAxisTargetPosCon.lrZ_AxisConTP-10;
+		fbMcMoveAbs[E_Axis.Z_Axis].Velocity:=AllAxisVelo;
+	
+		IF fbMcMoveAbs[E_Axis.Z_Axis].Done=TRUE THEN
+			iStep:=1;
+			fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+		END_IF;
+	
+	1:
+		fbMcMoveAbs[E_Axis.Z_Axis].Execute:=TRUE;
+		fbMcMoveAbs[E_Axis.Z_Axis].Position:=fbZAxisTargetPosCon.lrZ_AxisConTP;
+		fbMcMoveAbs[E_Axis.Z_Axis].Velocity:=ZAxisTargetVelo;
+	
+		IF fbMcMoveAbs[E_Axis.Z_Axis].Done=TRUE THEN
+			eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_GripperGrip;
+			iStep:=0;
+			fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+		END_IF;
+	
+	END_CASE
+
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_GripperGrip:(*グリッパーを閉じてマグネットを掴む*)
+	fbMcMoveAbs[E_Axis.Gripper].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Gripper].Position:=GripperTarget;
+	fbMcMoveAbs[E_Axis.Gripper].Velocity:=GripperVelo;
+
+	IF fbMcMoveAbs[E_Axis.Gripper].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos2;
+		fbMcMoveAbs[E_Axis.Gripper].Execute:=FALSE;
+	END_IF;
+		
+		
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos2:(*Z軸を上昇位置へ*)
+
+	fbMcMoveAbs[E_Axis.Z_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Z_Axis].Position:=ZAxisUpTarget;
+	fbMcMoveAbs[E_Axis.Z_Axis].Velocity:=AllAxisVelo;
+
+	IF fbMcMoveAbs[E_Axis.Z_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_XYAxis300Pos;
+		fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+	END_IF;
+		
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_XYAxis300Pos:(*XY軸を300ポジションへ、300にはお皿がおいてあるはず*)
+	fbMcMoveAbs[E_Axis.X_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Y_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.X_Axis].Position:=300;
+	fbMcMoveAbs[E_Axis.Y_Axis].Position:=300;
+	fbMcMoveAbs[E_Axis.X_Axis].Velocity:=AllAxisVelo;
+	fbMcMoveAbs[E_Axis.Y_Axis].Velocity:=AllAxisVelo;
+	
+	IF fbMcMoveAbs[E_Axis.X_Axis].Done=TRUE AND fbMcMoveAbs[E_Axis.Y_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisMidPos;
+		fbMcMoveAbs[E_Axis.X_Axis].Execute:=FALSE;
+		fbMcMoveAbs[E_Axis.Y_Axis].Execute:=FALSE;
+	END_IF;
+
+
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisMidPos:(*Z軸をマグネットをリリースする高さへ*)
+
+	fbMcMoveAbs[E_Axis.Z_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Z_Axis].Position:=ZAxisMidTarget;
+	fbMcMoveAbs[E_Axis.Z_Axis].Velocity:=AllAxisVelo;
+
+	IF fbMcMoveAbs[E_Axis.Z_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_GripperOpen;
+		fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+	END_IF;
+
+
+E_PickAndPlaceStep.PickAndPlaceMotion_GripperOpen:(*グリッパーを開けてマグネットをお皿へ*)
+	
+	fbMcMoveAbs[E_Axis.Gripper].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Gripper].Position:=0;
+	fbMcMoveAbs[E_Axis.Gripper].Velocity:=GripperVelo;
+
+	IF fbMcMoveAbs[E_Axis.Gripper].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos3;
+		fbMcMoveAbs[E_Axis.Gripper].Execute:=FALSE;
+	END_IF;
+
+
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos3:(*Z軸を上昇位置へ*)
+
+	fbMcMoveAbs[E_Axis.Z_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Z_Axis].Position:=ZAxisUpTarget;
+	fbMcMoveAbs[E_Axis.Z_Axis].Velocity:=AllAxisVelo;
+
+	IF fbMcMoveAbs[E_Axis.Z_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_NextCheck;
+		fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+	END_IF;
+	
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_NextCheck:(*次のマグネットがあるか確認、無ければ終わり、あればピック＆プレースの最初へ戻る*)
+
+	i:=i+1;
+	
+	IF ULINT_TO_INT(GVL_Vision.nDetectedNum) < i THEN
+		eStep:=E_PickAndPlaceStep.ZAxixZeroPotision2;
+	ELSE
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ValueCon;
+	END_IF
+
+
+E_PickAndPlaceStep.ZAxixZeroPotision2:(*Z軸をゼロポジションへ、衝突回避のためにまずZ軸を移動*)
+
+	fbMcMoveAbs[E_Axis.Z_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Z_Axis].Position:=0;
+	fbMcMoveAbs[E_Axis.Z_Axis].Velocity:=300;
+
+	IF fbMcMoveAbs[E_Axis.Z_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.XYAxixZeroPotision2;
+		fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+	END_IF;
+	
+E_PickAndPlaceStep.XYAxixZeroPotision2:(*Z軸移動後に、X,Y軸をゼロポジションへ移動*)
+
+	fbMcMoveAbs[E_Axis.X_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.Y_Axis].Execute:=TRUE;
+	fbMcMoveAbs[E_Axis.X_Axis].Position:=0;
+	fbMcMoveAbs[E_Axis.Y_Axis].Position:=0;
+	fbMcMoveAbs[E_Axis.X_Axis].Velocity:=300;
+	fbMcMoveAbs[E_Axis.Y_Axis].Velocity:=300;
+	
+	IF fbMcMoveAbs[E_Axis.X_Axis].Done=TRUE AND fbMcMoveAbs[E_Axis.Y_Axis].Done=TRUE THEN
+		eStep:=E_PickAndPlaceStep.Stay;
+		GVL_MitsubishiCom.bToPickAndPlaceMoving:=FALSE;
+		fbMcMoveAbs[E_Axis.X_Axis].Execute:=FALSE;
+		fbMcMoveAbs[E_Axis.Y_Axis].Execute:=FALSE;
+	END_IF;
+	
+E_PickAndPlaceStep.CommandAborted://McMoveコマンドアボート時の処理	
+
+	iStep:=0;
+	fbMcMoveAbs[E_Axis.X_Axis].Execute:=FALSE;
+	fbMcMoveAbs[E_Axis.Y_Axis].Execute:=FALSE;
+	fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+	fbMcMoveAbs[E_Axis.Gripper].Execute:=FALSE;
+	
+	GVL_MitsubishiCom.bToAutoMoveResetting:=FALSE;
+
+	IF fbMcMoveAbs[E_Axis.X_Axis].CommandAborted=FALSE
+		AND fbMcMoveAbs[E_Axis.Y_Axis].CommandAborted=FALSE
+		AND fbMcMoveAbs[E_Axis.Z_Axis].CommandAborted=FALSE
+		AND fbMcMoveAbs[E_Axis.Gripper].CommandAborted=FALSE THEN
+			eStep:=E_PickAndPlaceStep.Reset;
+	END_IF
+
+E_PickAndPlaceStep.Error://McMoveエラー時の処理	
+
+	iStep:=0;
+	fbMcMoveAbs[E_Axis.X_Axis].Execute:=FALSE;
+	fbMcMoveAbs[E_Axis.Y_Axis].Execute:=FALSE;
+	fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+	fbMcMoveAbs[E_Axis.Gripper].Execute:=FALSE;
+	
+	GVL_MitsubishiCom.bToAutoMoveResetting:=FALSE;
+
+	if fbMcMoveAbs[E_Axis.X_Axis].Error=FALSE
+		AND fbMcMoveAbs[E_Axis.Y_Axis].Error=FALSE
+		AND fbMcMoveAbs[E_Axis.Z_Axis].Error=FALSE
+		AND fbMcMoveAbs[E_Axis.Gripper].Error=FALSE THEN
+			eStep:=E_PickAndPlaceStep.Reset;
+	END_IF	
+	
+E_PickAndPlaceStep.Reset://McMoveのコマンドアボートorエラー後のリセット動作
+
+	CASE iStep OF
+
+	0:
+		IF GVL_MitsubishiCom.bFromAutoMoveReset=TRUE AND GVL_Alarm.fbMachineState.bStopMachine=FALSE THEN
+			GVL_MitsubishiCom.bToAutoMoveResetting:=TRUE;
+			iStep:=1;
+		END_IF
+
+	1:
+		fbMcMoveAbs[E_Axis.Gripper].Execute:=TRUE;
+		fbMcMoveAbs[E_Axis.Gripper].Position:=0;
+		fbMcMoveAbs[E_Axis.Gripper].Velocity:=150;
+
+		IF fbMcMoveAbs[E_Axis.Gripper].Done=TRUE THEN
+			iStep:=2;
+			fbMcMoveAbs[E_Axis.Gripper].Execute:=FALSE;
+		END_IF;
+
+	2:
+		fbMcMoveAbs[E_Axis.Z_Axis].Execute:=TRUE;
+		fbMcMoveAbs[E_Axis.Z_Axis].Position:=0;
+		fbMcMoveAbs[E_Axis.Z_Axis].Velocity:=150;
+
+		IF fbMcMoveAbs[E_Axis.Z_Axis].Done=TRUE THEN
+			iStep:=3;
+			fbMcMoveAbs[E_Axis.Z_Axis].Execute:=FALSE;
+		END_IF;
+
+	3:
+		fbMcMoveAbs[E_Axis.X_Axis].Execute:=TRUE;
+		fbMcMoveAbs[E_Axis.Y_Axis].Execute:=TRUE;
+		fbMcMoveAbs[E_Axis.X_Axis].Position:=0;
+		fbMcMoveAbs[E_Axis.Y_Axis].Position:=0;
+		fbMcMoveAbs[E_Axis.X_Axis].Velocity:=150;
+		fbMcMoveAbs[E_Axis.Y_Axis].Velocity:=150;
+
+		IF fbMcMoveAbs[E_Axis.X_Axis].Done=TRUE AND fbMcMoveAbs[E_Axis.Y_Axis].Done=TRUE THEN
+			fbMcMoveAbs[E_Axis.X_Axis].Execute:=FALSE;
+			fbMcMoveAbs[E_Axis.Y_Axis].Execute:=FALSE;
+			iStep:=0;
+			eStep:=E_PickAndPlaceStep.Stay;
+
+			GVL_MitsubishiCom.bToPickAndPlaceMoving:=FALSE;
+			GVL_MitsubishiCom.bToAutoMoveResetting:=FALSE;
+		END_IF;
+
+	END_CASE
+	
+END_CASE;
+
+	aMotion();]]></ST>
+    </Implementation>
+    <Action Name="aMotion" Id="{a3782552-786a-4485-b2b3-0f1fbf59e14a}">
+      <Implementation>
+        <ST><![CDATA[//各軸とグリッパーの駆動用
+	//メイン
+	fbMcMoveAbs[E_Axis.X_Axis](
+		Axis			:=GVL_Axis.stAxis[E_Axis.X_Axis],
+		BufferMode		:=MC_BlendingNext,
+	);
+
+	fbMcMoveAbs[E_Axis.Y_Axis](
+		Axis			:=GVL_Axis.stAxis[E_Axis.Y_Axis],
+		BufferMode		:=MC_BlendingNext,
+	);
+
+	fbMcMoveAbs[E_Axis.Z_Axis](
+		Axis			:=GVL_Axis.stAxis[E_Axis.Z_Axis],
+		BufferMode		:=MC_BlendingNext,
+	);
+	
+	fbMcMoveAbs[E_Axis.Gripper](
+		Axis			:=GVL_Axis.stAxis[E_Axis.Gripper],
+		BufferMode		:=MC_BlendingNext,
+	);]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="P_PickAndPlace">
+      <LineId Id="600" Count="85" />
+      <LineId Id="954" Count="0" />
+      <LineId Id="686" Count="29" />
+      <LineId Id="727" Count="15" />
+      <LineId Id="981" Count="9" />
+      <LineId Id="743" Count="0" />
+      <LineId Id="992" Count="0" />
+      <LineId Id="991" Count="0" />
+      <LineId Id="744" Count="0" />
+      <LineId Id="956" Count="0" />
+      <LineId Id="955" Count="0" />
+      <LineId Id="966" Count="0" />
+      <LineId Id="968" Count="0" />
+      <LineId Id="971" Count="6" />
+      <LineId Id="970" Count="0" />
+      <LineId Id="969" Count="0" />
+      <LineId Id="967" Count="0" />
+      <LineId Id="959" Count="5" />
+      <LineId Id="979" Count="0" />
+      <LineId Id="965" Count="0" />
+      <LineId Id="957" Count="0" />
+      <LineId Id="980" Count="0" />
+      <LineId Id="958" Count="0" />
+      <LineId Id="753" Count="199" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="P_PickAndPlace.aMotion">
+      <LineId Id="2" Count="19" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

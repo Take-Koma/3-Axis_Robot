@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="E_PickAndPlaceStep" Id="{1ec6cf26-a3fc-41de-be79-f7b72c1d44be}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_PickAndPlaceStep :
+(
+	Stay,
+	GripperOpen,
+	ZAxixZeroPos,
+	XYAxixShootingPos,
+	
+	Shooting,
+	
+	PickAndPlaceMotion_ResetVar,
+	PickAndPlaceMotion_ValueCon,
+	PickAndPlaceMotion_XYAxisTargetPos,
+	PickAndPlaceMotion_ZAxisUpPos,
+	PickAndPlaceMotion_ZAxisTargetPos,
+	PickAndPlaceMotion_GripperGrip,
+	PickAndPlaceMotion_ZAxisUpPos2,
+	PickAndPlaceMotion_XYAxis300Pos,
+	PickAndPlaceMotion_ZAxisMidPos,
+	PickAndPlaceMotion_GripperOpen,
+	PickAndPlaceMotion_ZAxisUpPos3,
+	PickAndPlaceMotion_NextCheck,
+	
+	ZAxixZeroPotision2,
+	XYAxixZeroPotision2,	
+
+	//McFb停止時用
+	CommandAborted,
+	Error,
+	Reset
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

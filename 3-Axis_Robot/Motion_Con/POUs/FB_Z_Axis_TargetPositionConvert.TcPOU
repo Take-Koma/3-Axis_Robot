@@ -8,7 +8,7 @@ VAR_INPUT
 	lrZ_AxisTP		:LREAL;	(*Z軸のターゲットポジション*)
 END_VAR
 VAR_OUTPUT
-	lrZ_AxisCorTP	:LREAL;	(*調整後のZ軸のターゲットポジション*)
+	lrZ_AxisConTP	:LREAL;	(*調整後のZ軸のターゲットポジション*)
 END_VAR
 VAR
 	lrXbuf			:LREAL;
@@ -18,7 +18,7 @@ END_VAR]]></Declaration>
       <ST><![CDATA[	lrXbuf:=GVL.lrXZ_Slope*lrX_AxisTP;
 	lrYbuf:=GVL.lrYZ_Slope*lrY_AxisTP;
 	
-	lrZ_AxisCorTP:=lrZ_AxisTP+lrXbuf+lrYbuf;]]></ST>
+	lrZ_AxisConTP:=lrZ_AxisTP+lrXbuf+lrYbuf;]]></ST>
     </Implementation>
     <LineIds Name="FB_Z_Axis_TargetPositionConvert">
       <LineId Id="9" Count="0" />

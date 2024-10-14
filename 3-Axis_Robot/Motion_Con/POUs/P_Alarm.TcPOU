@@ -38,25 +38,25 @@ END_VAR
 	);
 	
 	GVL_Alarm.fbAlarmXAxisMovingGripSwichNotOn(
-		bRaise		:=GVL_Axis.stAxis[E_Axis.X_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL_Axis.stAxis[E_Axis.X_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
 	GVL_Alarm.fbAlarmYAxisMovingGripSwichNotOn(
-		bRaise		:=GVL_Axis.stAxis[E_Axis.Y_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL_Axis.stAxis[E_Axis.Y_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
 	GVL_Alarm.fbAlarmZAxisMovingGripSwichNotOn(
-		bRaise		:=GVL_Axis.stAxis[E_Axis.Z_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL_Axis.stAxis[E_Axis.Z_Axis].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
 	
 	GVL_Alarm.fbAlarmGripperMovingGripSwichNotOn(
-		bRaise		:=GVL_Axis.stAxis[E_Axis.Gripper].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE,// AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
+		bRaise		:=GVL_Axis.stAxis[E_Axis.Gripper].Status.Moving=TRUE AND GVL_Safety.bGripSwich=FALSE AND GVL_MitsubishiCom.bFromKeySwitchClose=FALSE,
 		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);

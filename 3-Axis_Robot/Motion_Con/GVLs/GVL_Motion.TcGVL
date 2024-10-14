@@ -30,6 +30,11 @@ VAR_GLOBAL
 	bCircleWriteFin				:BOOL;																//円の書き終わり
 	bEllipseWriteFin			:BOOL;																//楕円の書き終わり
 	
+	//P_PickAndPlace用
+	bPickAndPlaceStart			:BOOL;																//ピック＆プレース開始
+	bAutoCameraTriger			:BOOL;																//カメラのトリガー
+	bGetImageEnd				:BOOL;																//イメージ取り込み完了
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
