@@ -120,7 +120,7 @@ TCVN_CS_ACQUIRING:
 		// ブロブ検出パラメータをセット
 		stBlobParams.bFilterByArea := TRUE;
 		stBlobParams.fMinArea := 30000;
-		stBlobParams.fMaxArea := 50000;
+		stBlobParams.fMaxArea := 55000;
 		
 		// 円形度判別
 		stBlobParams.bFilterByCircularity := TRUE;
