@@ -27,11 +27,11 @@ END_VAR]]></Declaration>
 	GVL_MitsubishiCom.bToYAsisMoving:=GVL_Axis.stAxis[E_Axis.Y_Axis].Status.Moving;
 	GVL_MitsubishiCom.bToZAsisMoving:=GVL_Axis.stAxis[E_Axis.Z_Axis].Status.Moving;
 	GVL_MitsubishiCom.bToGripperMoving:=GVL_Axis.stAxis[E_Axis.Gripper].Status.Moving;
-	//ActPos
-	GVL_MitsubishiCom.wToXAxisActPos:=LREAL_TO_WORD(GVL_Axis.stAxis[E_Axis.X_Axis].NcToPlc.ActPos);
-	GVL_MitsubishiCom.wToYAxisActPos:=LREAL_TO_WORD(GVL_Axis.stAxis[E_Axis.Y_Axis].NcToPlc.ActPos);
-	GVL_MitsubishiCom.wToZAxisActPos:=LREAL_TO_WORD(GVL_Axis.stAxis[E_Axis.Z_Axis].NcToPlc.ActPos);
-	GVL_MitsubishiCom.wToGripperActPos:=LREAL_TO_WORD(GVL_Axis.stAxis[E_Axis.Gripper].NcToPlc.ActPos);
+	//ActPos,GOTで100で割って小数点二位まで表示するために100倍にする
+	GVL_MitsubishiCom.wToXAxisActPos:=LREAL_TO_WORD(100*GVL_Axis.stAxis[E_Axis.X_Axis].NcToPlc.ActPos);
+	GVL_MitsubishiCom.wToYAxisActPos:=LREAL_TO_WORD(100*GVL_Axis.stAxis[E_Axis.Y_Axis].NcToPlc.ActPos);
+	GVL_MitsubishiCom.wToZAxisActPos:=LREAL_TO_WORD(100*GVL_Axis.stAxis[E_Axis.Z_Axis].NcToPlc.ActPos);
+	GVL_MitsubishiCom.wToGripperActPos:=LREAL_TO_WORD(100*GVL_Axis.stAxis[E_Axis.Gripper].NcToPlc.ActPos);
 	
 	//---各軸が動いているかをまとめる---
 	GVL_Motion.bAxisMove:= GVL_Axis.stAxis[E_Axis.X_Axis].Status.Moving 
