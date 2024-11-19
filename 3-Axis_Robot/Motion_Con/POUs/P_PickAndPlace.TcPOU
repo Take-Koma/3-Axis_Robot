@@ -107,13 +107,19 @@ E_PickAndPlaceStep.Shooting:(*カメラで画像を撮影*)
 	
 E_PickAndPlaceStep.PickAndPlaceMotion_ResetVar:(*ピック＆プレース使用の変数をリセット*)
 	
+	//変数リセット
 	i:=1;
-	eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ValueCon;
 	AllAxisVelo:=300;
 	ZAxisTargetVelo:=50;
 	GripperVelo:=3600;
 	
-	
+	//ワークの数が0個ではないか確認
+	IF ULINT_TO_INT(GVL_Vision.nDetectedNum) < i THEN
+		eStep:=E_PickAndPlaceStep.ZAxixZeroPotision2;
+	ELSE
+		eStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ValueCon;
+	END_IF
+
 E_PickAndPlaceStep.PickAndPlaceMotion_ValueCon:(*標値の変換実施*)
 	//画像の座標をロボットの座標に変換X軸
 	IF GVL_Vision.aMassCenter[i][0]<1052 THEN
@@ -424,9 +430,17 @@ END_CASE;
       </Implementation>
     </Action>
     <LineIds Name="P_PickAndPlace">
-      <LineId Id="600" Count="85" />
+      <LineId Id="600" Count="82" />
+      <LineId Id="1035" Count="0" />
+      <LineId Id="683" Count="0" />
+      <LineId Id="685" Count="0" />
       <LineId Id="954" Count="0" />
-      <LineId Id="686" Count="29" />
+      <LineId Id="686" Count="0" />
+      <LineId Id="1029" Count="0" />
+      <LineId Id="1034" Count="0" />
+      <LineId Id="1030" Count="3" />
+      <LineId Id="1018" Count="1" />
+      <LineId Id="689" Count="26" />
       <LineId Id="727" Count="15" />
       <LineId Id="981" Count="9" />
       <LineId Id="743" Count="0" />
