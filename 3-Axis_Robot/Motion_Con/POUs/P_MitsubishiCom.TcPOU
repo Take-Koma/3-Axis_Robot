@@ -54,6 +54,8 @@ END_VAR]]></Declaration>
 	GVL_MitsubishiCom.bFromAlarmReset							:=GVL.mb_Output_Coils[8];
 	GVL_MitsubishiCom.bFromSafetyReset							:=GVL.mb_Output_Coils[9];
 	GVL_MitsubishiCom.bFromGripSwich							:=GVL.mb_Output_Coils[10];
+	GVL_MitsubishiCom.bFromTareWeightSet						:=GVL.mb_Output_Coils[11];
+	GVL_MitsubishiCom.bFromCalibrationWeightSet					:=GVL.mb_Output_Coils[12];
 	GVL_MitsubishiCom.bFromXAxisJogStart						:=GVL.mb_Output_Coils[16];
 	GVL_MitsubishiCom.bFromYAxisJogStart						:=GVL.mb_Output_Coils[17];
 	GVL_MitsubishiCom.bFromZAxisJogStart						:=GVL.mb_Output_Coils[18];
@@ -61,14 +63,36 @@ END_VAR]]></Declaration>
 	GVL_MitsubishiCom.bFromWriteStart							:=GVL.mb_Output_Coils[20];
 	GVL_MitsubishiCom.bFromPickAndPlaceStart					:=GVL.mb_Output_Coils[21];
 	GVL_MitsubishiCom.bFromAutoMoveReset						:=GVL.mb_Output_Coils[22];
+	GVL_MitsubishiCom.bFromXAxisJogPlus							:=GVL.mb_Output_Coils[23];
+	GVL_MitsubishiCom.bFromYAxisJogPlus							:=GVL.mb_Output_Coils[24];
+	GVL_MitsubishiCom.bFromZAxisJogPlus							:=GVL.mb_Output_Coils[25];
+	GVL_MitsubishiCom.bFromGripperJogPlus						:=GVL.mb_Output_Coils[26];
+	GVL_MitsubishiCom.bFromXAxisJogPlusHigh						:=GVL.mb_Output_Coils[27];
+	GVL_MitsubishiCom.bFromYAxisJogPlusHigh						:=GVL.mb_Output_Coils[28];
+	GVL_MitsubishiCom.bFromZAxisJogPlusHigh						:=GVL.mb_Output_Coils[29];
+	GVL_MitsubishiCom.bFromGripperJogPlusHigh					:=GVL.mb_Output_Coils[30];
+	GVL_MitsubishiCom.bFromXAxisJogMinus						:=GVL.mb_Output_Coils[31];
+	GVL_MitsubishiCom.bFromYAxisJogMinus						:=GVL.mb_Output_Coils[32];
+	GVL_MitsubishiCom.bFromZAxisJogMinus						:=GVL.mb_Output_Coils[33];
+	GVL_MitsubishiCom.bFromGripperJogMinus						:=GVL.mb_Output_Coils[34];
+	GVL_MitsubishiCom.bFromXAxisJogMinusHigh					:=GVL.mb_Output_Coils[35];
+	GVL_MitsubishiCom.bFromYAxisJogMinusHigh					:=GVL.mb_Output_Coils[36];
+	GVL_MitsubishiCom.bFromZAxisJogMinusHigh					:=GVL.mb_Output_Coils[37];
+	GVL_MitsubishiCom.bFromGripperJogMinusHigh					:=GVL.mb_Output_Coils[38];
 
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
 	GVL.mb_Input_Registers[0]									:=GVL_MitsubishiCom.wToXAxisActPos;
 	GVL.mb_Input_Registers[1]									:=GVL_MitsubishiCom.wToYAxisActPos;
 	GVL.mb_Input_Registers[2]									:=GVL_MitsubishiCom.wToZAxisActPos;
 	GVL.mb_Input_Registers[3]									:=GVL_MitsubishiCom.wToGripperActPos;
+	GVL.mb_Input_Registers[4]									:=GVL_MitsubishiCom.wTolrBridgeVoltage;
+	GVL.mb_Input_Registers[5]									:=GVL_MitsubishiCom.wToSupplyVoltage;
+	GVL.mb_Input_Registers[6]									:=GVL_MitsubishiCom.wToGrossWeight;
+	GVL.mb_Input_Registers[7]									:=GVL_MitsubishiCom.wToNetWeight;
+	GVL.mb_Input_Registers[8]									:=GVL_MitsubishiCom.wToTareWeight;
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
+	GVL_MitsubishiCom.wFromCalibrationWeight					:=GVL.mb_Output_Registers[0];
 	GVL_MitsubishiCom.wFromXAxisJogTarget						:=GVL.mb_Output_Registers[16];
 	GVL_MitsubishiCom.wFromYAxisJogTarget						:=GVL.mb_Output_Registers[17];
 	GVL_MitsubishiCom.wFromZAxisJogTarget						:=GVL.mb_Output_Registers[18];
@@ -122,13 +146,22 @@ END_VAR]]></Declaration>
       <LineId Id="1689" Count="0" />
       <LineId Id="1548" Count="1" />
       <LineId Id="1717" Count="0" />
-      <LineId Id="1550" Count="13" />
+      <LineId Id="1550" Count="9" />
+      <LineId Id="1758" Count="1" />
+      <LineId Id="1560" Count="3" />
       <LineId Id="1735" Count="0" />
       <LineId Id="1739" Count="0" />
       <LineId Id="1744" Count="0" />
+      <LineId Id="1778" Count="14" />
+      <LineId Id="1763" Count="0" />
       <LineId Id="1564" Count="1" />
       <LineId Id="1729" Count="2" />
-      <LineId Id="1566" Count="11" />
+      <LineId Id="1566" Count="0" />
+      <LineId Id="1753" Count="3" />
+      <LineId Id="1752" Count="0" />
+      <LineId Id="1567" Count="1" />
+      <LineId Id="1757" Count="0" />
+      <LineId Id="1569" Count="8" />
       <LineId Id="1707" Count="1" />
       <LineId Id="1578" Count="11" />
       <LineId Id="1599" Count="0" />

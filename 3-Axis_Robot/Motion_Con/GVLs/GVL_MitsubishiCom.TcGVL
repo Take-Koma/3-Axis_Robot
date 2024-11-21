@@ -44,6 +44,8 @@ VAR_GLOBAL
 	bFromAlarmReset									:BOOL;				//8:スイッチ5　アラームリセット
 	bFromSafetyReset								:BOOL;				//9:スイッチ6　非常停止リセット
 	bFromGripSwich									:BOOL;				//10:グリップスイッチ
+	bFromTareWeightSet								:BOOL;				//11:風袋重量セット
+	bFromCalibrationWeightSet						:BOOL;				//12:校正重量セット
 	bFromXAxisJogStart								:BOOL;				//16:X軸Jog起動
 	bFromYAxisJogStart								:BOOL;				//17:Y軸Jog起動
 	bFromZAxisJogStart								:BOOL;				//18:Z軸Jog起動
@@ -51,14 +53,36 @@ VAR_GLOBAL
 	bFromWriteStart									:BOOL;				//20:図形描画スタート
 	bFromPickAndPlaceStart							:BOOL;				//21:ピック＆プレーススタート
 	bFromAutoMoveReset								:BOOL;				//22:オート動作のリセット
+	bFromXAxisJogPlus								:BOOL;				//23:X軸連続Jogプラス起動
+	bFromYAxisJogPlus								:BOOL;				//24:Y軸連続Jogプラス起動
+	bFromZAxisJogPlus								:BOOL;				//25:Z軸連続Jogプラス起動
+	bFromGripperJogPlus								:BOOL;				//26:グリッパー連続Jogプラス起動
+	bFromXAxisJogPlusHigh							:BOOL;				//27:X軸連続Jogプラスハイスピード起動
+	bFromYAxisJogPlusHigh							:BOOL;				//28:Y軸連続Jogプラスハイスピード起動
+	bFromZAxisJogPlusHigh							:BOOL;				//29:Z軸連続Jogプラスハイスピード起動
+	bFromGripperJogPlusHigh							:BOOL;				//30:グリッパー連続Jogプラスハイスピード起動
+	bFromXAxisJogMinus								:BOOL;				//31:X軸連続Jogマイナス起動
+	bFromYAxisJogMinus								:BOOL;				//32:Y軸連続Jogマイナス起動
+	bFromZAxisJogMinus								:BOOL;				//33:Z軸連続Jogマイナス起動
+	bFromGripperJogMinus							:BOOL;				//34:グリッパー連続Jogマイナス起動
+	bFromXAxisJogMinusHigh							:BOOL;				//35:X軸連続Jogマイナスハイスピード起動
+	bFromYAxisJogMinusHigh							:BOOL;				//36:Y軸連続Jogマイナスハイスピード起動
+	bFromZAxisJogMinusHigh							:BOOL;				//37:Z軸連続Jogマイナスハイスピード起動
+	bFromGripperJogMinusHigh						:BOOL;				//38:グリッパー連続Jogマイナスハイスピード起動
 	
 	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
 	wToXAxisActPos									:WORD;				//0:X軸ポジション
 	wToYAxisActPos									:WORD;				//1:Y軸ポジション
 	wToZAxisActPos									:WORD;				//2:Z軸ポジション
 	wToGripperActPos								:WORD;				//3:グリッパーポジション
+	wTolrBridgeVoltage								:WORD;				//4:ロードセルの出力電圧[mV]
+	wToSupplyVoltage								:WORD;				//5:ロードセルへの印加電圧[V]
+	wToGrossWeight									:WORD;				//6:測定重量[kg]
+	wToNetWeight									:WORD;				//7:正味重量[kg]
+	wToTareWeight 									:WORD;				//8:風袋重量[kg]
 	
 	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
+	wFromCalibrationWeight							:WORD;				//0:校正重量[kg]
 	wFromXAxisJogTarget								:WORD;				//16:X軸Jogターゲットポジション
 	wFromYAxisJogTarget								:WORD;				//17:Y軸Jogターゲットポジション
 	wFromZAxisJogTarget								:WORD;				//18:Z軸Jogターゲットポジション
