@@ -21,6 +21,8 @@ VAR_GLOBAL
 	bJog   						:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
 	fbMcMoveJog					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
 	lrJogPosition   			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF LREAL;
+	fbMcMoveJogSub				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
+	fbMcHaltJogSub				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Halt;
 
 	bAxisMove					:BOOL;																//いずれかの軸が動いていることの結果
 

@@ -8,6 +8,11 @@ VAR
 	fbMcPowerTon					:ton;
 	fbMcPowerREdge					:R_TRIG;
 	fbMcPowerFEdge					:F_TRIG;
+	
+	fbMcJogXAxisFEdge				:F_TRIG;
+	fbMcJogYAxisFEdge				:F_TRIG;
+	fbMcJogZAxisFEdge				:F_TRIG;
+	fbMcJogGripperFEdge				:F_TRIG;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[	//---各軸のステータスを読み込む---
@@ -82,7 +87,7 @@ END_VAR]]></Declaration>
 									OR GVL_Motion.fbMcMoveHome[E_Axis.Z_Axis].Busy
 									OR GVL_Motion.fbMcMoveHome[E_Axis.Gripper].Busy;
 
-	//-----Jog実行-----
+	//-----定位置Jog実行-----
 	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
 		//X軸
 		GVL_Motion.bJog[E_Axis.X_Axis]:=GVL_MitsubishiCom.bFromXAxisJogStart;
@@ -102,6 +107,122 @@ END_VAR]]></Declaration>
 		//グリッパー
 		GVL_Motion.bJog[E_Axis.Gripper]:=GVL_MitsubishiCom.bFromGripperJogStart;
 		GVL_Motion.lrJogPosition[E_Axis.Gripper]:=WORD_TO_INT(GVL_MitsubishiCom.wFromGripperJogTarget);
+	END_IF
+
+	//-----連続Jog実行-----
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		//X軸
+		fbMcJogXAxisFEdge(CLK:=GVL_MitsubishiCom.bFromXAxisJogPlus
+							OR GVL_MitsubishiCom.bFromXAxisJogMinus
+							OR GVL_MitsubishiCom.bFromXAxisJogPlusHigh
+							OR GVL_MitsubishiCom.bFromXAxisJogMinusHigh,
+						Q=>
+						);
+		GVL_Motion.fbMcMoveJogSub[E_Axis.X_Axis].Execute:= GVL_MitsubishiCom.bFromXAxisJogPlus
+														OR GVL_MitsubishiCom.bFromXAxisJogMinus
+														OR GVL_MitsubishiCom.bFromXAxisJogPlusHigh
+														OR GVL_MitsubishiCom.bFromXAxisJogMinusHigh;
+		
+		GVL_Motion.fbMcHaltJogSub[E_Axis.X_Axis].Execute:=fbMcJogXAxisFEdge.Q;
+		
+		IF GVL_MitsubishiCom.bFromXAxisJogPlus=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.X_Axis].Position:=300;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.X_Axis].Velocity:=50;
+		ELSIF GVL_MitsubishiCom.bFromXAxisJogPlusHigh=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.X_Axis].Position:=300;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.X_Axis].Velocity:=150;
+		ELSIF GVL_MitsubishiCom.bFromXAxisJogMinus=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.X_Axis].Position:=0;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.X_Axis].Velocity:=50;
+		ELSIF GVL_MitsubishiCom.bFromXAxisJogMinusHigh=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.X_Axis].Position:=0;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.X_Axis].Velocity:=150;
+		END_IF
+
+		//Y軸
+		fbMcJogYAxisFEdge(CLK:=GVL_MitsubishiCom.bFromYAxisJogPlus
+							OR GVL_MitsubishiCom.bFromYAxisJogMinus
+							OR GVL_MitsubishiCom.bFromYAxisJogPlusHigh
+							OR GVL_MitsubishiCom.bFromYAxisJogMinusHigh,
+						Q=>
+						);
+		GVL_Motion.fbMcMoveJogSub[E_Axis.Y_Axis].Execute:= GVL_MitsubishiCom.bFromYAxisJogPlus
+														OR GVL_MitsubishiCom.bFromYAxisJogMinus
+														OR GVL_MitsubishiCom.bFromYAxisJogPlusHigh
+														OR GVL_MitsubishiCom.bFromYAxisJogMinusHigh;
+		
+		GVL_Motion.fbMcHaltJogSub[E_Axis.Y_Axis].Execute:=fbMcJogYAxisFEdge.Q;
+		
+		IF GVL_MitsubishiCom.bFromYAxisJogPlus=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Y_Axis].Position:=300;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Y_Axis].Velocity:=50;
+		ELSIF GVL_MitsubishiCom.bFromYAxisJogPlusHigh=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Y_Axis].Position:=300;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Y_Axis].Velocity:=150;
+		ELSIF GVL_MitsubishiCom.bFromYAxisJogMinus=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Y_Axis].Position:=0;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Y_Axis].Velocity:=50;
+		ELSIF GVL_MitsubishiCom.bFromYAxisJogMinusHigh=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Y_Axis].Position:=0;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Y_Axis].Velocity:=150;
+		END_IF
+
+		//Z軸
+		fbMcJogZAxisFEdge(CLK:=GVL_MitsubishiCom.bFromZAxisJogPlus
+							OR GVL_MitsubishiCom.bFromZAxisJogMinus
+							OR GVL_MitsubishiCom.bFromZAxisJogPlusHigh
+							OR GVL_MitsubishiCom.bFromZAxisJogMinusHigh,
+						Q=>
+						);
+		GVL_Motion.fbMcMoveJogSub[E_Axis.Z_Axis].Execute:= GVL_MitsubishiCom.bFromZAxisJogPlus
+														OR GVL_MitsubishiCom.bFromZAxisJogMinus
+														OR GVL_MitsubishiCom.bFromZAxisJogPlusHigh
+														OR GVL_MitsubishiCom.bFromZAxisJogMinusHigh;
+		
+		GVL_Motion.fbMcHaltJogSub[E_Axis.Z_Axis].Execute:=fbMcJogZAxisFEdge.Q;
+		
+		IF GVL_MitsubishiCom.bFromZAxisJogPlus=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Z_Axis].Position:=225;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Z_Axis].Velocity:=50;
+		ELSIF GVL_MitsubishiCom.bFromZAxisJogPlusHigh=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Z_Axis].Position:=225;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Z_Axis].Velocity:=150;
+		ELSIF GVL_MitsubishiCom.bFromZAxisJogMinus=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Z_Axis].Position:=0;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Z_Axis].Velocity:=50;
+		ELSIF GVL_MitsubishiCom.bFromZAxisJogMinusHigh=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Z_Axis].Position:=0;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Z_Axis].Velocity:=150;
+		END_IF
+
+		//Gripper
+		fbMcJogGripperFEdge(CLK:=  GVL_MitsubishiCom.bFromGripperJogPlus
+								OR GVL_MitsubishiCom.bFromGripperJogMinus
+								OR GVL_MitsubishiCom.bFromGripperJogPlusHigh
+								OR GVL_MitsubishiCom.bFromGripperJogMinusHigh,
+							Q=>
+							);
+		GVL_Motion.fbMcMoveJogSub[E_Axis.Gripper].Execute:=GVL_MitsubishiCom.bFromGripperJogPlus
+														OR GVL_MitsubishiCom.bFromGripperJogMinus
+														OR GVL_MitsubishiCom.bFromGripperJogPlusHigh
+														OR GVL_MitsubishiCom.bFromGripperJogMinusHigh;
+		
+		GVL_Motion.fbMcHaltJogSub[E_Axis.Gripper].Execute:=fbMcJogGripperFEdge.Q;
+		
+		IF GVL_MitsubishiCom.bFromGripperJogPlus=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Gripper].Position:=160;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Gripper].Velocity:=100;
+		ELSIF GVL_MitsubishiCom.bFromGripperJogPlusHigh=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Gripper].Position:=160;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Gripper].Velocity:=500;
+		ELSIF GVL_MitsubishiCom.bFromGripperJogMinus=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Gripper].Position:=-160;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Gripper].Velocity:=100;
+		ELSIF GVL_MitsubishiCom.bFromGripperJogMinusHigh=TRUE THEN
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Gripper].Position:=-160;
+			GVL_Motion.fbMcMoveJogSub[E_Axis.Gripper].Velocity:=500;
+		END_IF
+														
 	END_IF
 	
 	//---図形描画実行---
@@ -149,7 +270,7 @@ END_VAR]]></Declaration>
 		ErrorID			=>
 	);	
 
-//ジョグ
+//定位置ジョグ
 	GVL_Motion.fbMcMoveJog[eAxis](
 		Axis			:=GVL_Axis.stAxis[eAxis],
 		Execute			:=GVL_Motion.bJog[eAxis],
@@ -162,6 +283,16 @@ END_VAR]]></Declaration>
 		Error			=>,
 		ErrorID			=>
 	);	
+
+//連続ジョグ
+	//起動
+	GVL_Motion.fbMcMoveJogSub[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+	);
+	//停止
+	GVL_Motion.fbMCHaltJogSub[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+	);
 	
 //全軸一時停止
 	GVL_Motion.fbMCHalt[eAxis](
@@ -199,40 +330,13 @@ END_VAR]]></Declaration>
       </Implementation>
     </Action>
     <LineIds Name="P_Motion">
-      <LineId Id="39" Count="4" />
-      <LineId Id="171" Count="1" />
-      <LineId Id="181" Count="0" />
-      <LineId Id="174" Count="2" />
-      <LineId Id="173" Count="0" />
-      <LineId Id="182" Count="0" />
-      <LineId Id="185" Count="2" />
-      <LineId Id="183" Count="1" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="188" Count="2" />
-      <LineId Id="44" Count="2" />
-      <LineId Id="150" Count="2" />
-      <LineId Id="64" Count="2" />
-      <LineId Id="140" Count="0" />
-      <LineId Id="156" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="191" Count="1" />
-      <LineId Id="194" Count="2" />
-      <LineId Id="178" Count="2" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="81" Count="13" />
-      <LineId Id="153" Count="2" />
-      <LineId Id="98" Count="6" />
-      <LineId Id="160" Count="3" />
-      <LineId Id="111" Count="21" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="204" Count="0" />
-      <LineId Id="206" Count="2" />
-      <LineId Id="216" Count="0" />
-      <LineId Id="218" Count="2" />
-      <LineId Id="217" Count="0" />
-      <LineId Id="205" Count="0" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="70" Count="1" />
+      <LineId Id="361" Count="122" />
+      <LineId Id="528" Count="0" />
+      <LineId Id="530" Count="25" />
+      <LineId Id="529" Count="0" />
+      <LineId Id="556" Count="27" />
+      <LineId Id="585" Count="27" />
+      <LineId Id="484" Count="15" />
       <LineId Id="69" Count="0" />
     </LineIds>
     <LineIds Name="P_Motion.aMotion">
@@ -242,7 +346,14 @@ END_VAR]]></Declaration>
       <LineId Id="217" Count="0" />
       <LineId Id="204" Count="11" />
       <LineId Id="153" Count="0" />
-      <LineId Id="216" Count="0" />
+      <LineId Id="238" Count="1" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="241" Count="1" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="255" Count="1" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="219" Count="0" />
       <LineId Id="154" Count="31" />
       <LineId Id="53" Count="0" />
     </LineIds>
