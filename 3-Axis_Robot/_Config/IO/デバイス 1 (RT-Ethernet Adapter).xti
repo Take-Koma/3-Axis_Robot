@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.56" ClassName="CDevEthernetAdapterDef" SubType="109">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.12" ClassName="CDevEthernetAdapterDef" SubType="109">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{03010035-0000-0000-E000-000000000064}" TcBaseType="true">ITcIoEthProtocol</Name>
@@ -59,6 +59,15 @@
 				<BitSize>48</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
+			<Format Name="MAC" Preview="00-00-00-00-00-00">
+				<Printf>%02X-%02X-%02X-%02X-%02X-%02X</Printf>
+				<Parameter>.b[0]</Parameter>
+				<Parameter>.b[1]</Parameter>
+				<Parameter>.b[2]</Parameter>
+				<Parameter>.b[3]</Parameter>
+				<Parameter>.b[4]</Parameter>
+				<Parameter>.b[5]</Parameter>
+			</Format>
 			<Hides>
 				<Hide GUID="{F45D8924-F151-4141-9296-7C8BB697BD07}"/>
 			</Hides>
@@ -695,7 +704,7 @@
 		<Name>__FILENAME__</Name>
 		<AddressInfo>
 			<Pnp>
-				<DeviceDesc>ÉCÅ[ÉTÉlÉbÉg (TwinCAT-Intel PCI Ethernet Adapter (G</DeviceDesc>
+				<DeviceDesc>C[Tlbg (TwinCAT-Intel PCI Ethernet Adapter (Gigabit</DeviceDesc>
 				<DeviceName>\DEVICE\{560D0558-791C-4768-9315-D2925BCCF390}</DeviceName>
 				<DeviceData>7c8334bb4187</DeviceData>
 			</Pnp>
@@ -706,6 +715,9 @@
 			<TmcDesc GUID="{080D0399-6A65-408D-80E1-18D8F699496A}">
 				<Name>TCP/UDP RT</Name>
 				<CLSID ClassFactory="TCIOETH">{03010070-0000-0000-F000-000000000064}</CLSID>
+				<Info>
+					<ImageData>424de6000000000000007600000028000000100000000e000000010004000000000070000000000000000000000000000000000000000000000000008000008000000080800080000000800080008080000080808000c0c0c0000000ff0000ff000000ffff00ff000000ff00ff00ffff0000ffffff00ffffffffffffffffff788833338887ffff78883bb38887ffffffff3bb3ffffffffffff8778fffffffffffffffffffffffffffffffff999ffff78f78fffffffffff78f78ffff999ffff78f7888fffffffff78f78f78f999ffff78f78f78ffffffff78f7888ff999ffffffffffffffffff</ImageData>
+				</Info>
 				<Licenses>
 					<License>
 						<LicenseId>{081AC839-28D0-49CA-9792-72680E1F3249}</LicenseId>
@@ -1104,102 +1116,6 @@
 						<Name>TcpRoundTripTime</Name>
 						<Value>3000</Value>
 					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.ip.nSendCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.ip.nSendFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.ip.nRecvCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.ip.nRecvFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.arpRequest.nSendCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.arpRequest.nSendFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.arpRequest.nRecvCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.arpRequest.nRecvFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.arpReply.nSendCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.arpReply.nSendFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.arpReply.nRecvCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.arpReply.nRecvFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.pingRequest.nSendCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.pingRequest.nSendFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.pingRequest.nRecvCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.pingRequest.nRecvFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.pingReply.nSendCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.pingReply.nSendFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.pingReply.nRecvCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.pingReply.nRecvFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.nLinkStatusChangedCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.nAllocFailCnt</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.nArpTimeoutFrames</Name>
-						<Value>0</Value>
-					</Value>
-					<Value>
-						<Name>IpStackDiagnosis.nDroppedFrames</Name>
-						<Value>0</Value>
-					</Value>
 				</ParameterValues>
 				<InterfacePointerValues>
 					<Value>
@@ -1209,7 +1125,7 @@
 				</InterfacePointerValues>
 			</TmcDesc>
 		</Module>
-		<Ethernet DeviceDesc="„Ç§„Éº„Çµ„Éç„ÉÉ„Éà (TwinCAT-Intel PCI Ethernet Adapter (Gigabit) V2)" Ports="1" VLanIds="0a0014001e00280032003c00460050005a0064006e00780082008c009600a000aa00b400be00c800d200dc00e600f000fa0004010e01180122012c01360140014a0154015e01680172017c01860190019a01a401ae01b801c201cc01d601e001ea01f401fe01080212021c02260230023a0244024e02580262026c0276028002">
+		<Ethernet DeviceDesc="C[Tlbg (TwinCAT-Intel PCI Ethernet Adapter (Gigabit) V2)" Ports="1" VLanIds="0a0014001e00280032003c00460050005a0064006e00780082008c009600a000aa00b400be00c800d200dc00e600f000fa0004010e01180122012c01360140014a0154015e01680172017c01860190019a01a401ae01b801c201cc01d601e001ea01f401fe01080212021c02260230023a0244024e02580262026c0276028002">
 			<Esl SyncSlaveProtocolPort="-1"/>
 		</Ethernet>
 	</Device>
