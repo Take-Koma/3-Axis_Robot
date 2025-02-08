@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="P_Alarm" Id="{2ba418d6-d2ad-4644-981b-51152d6f50c8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Alarm
 VAR
@@ -14,6 +14,10 @@ END_VAR
 		bStopMachine	=>
 	);
 
+	//TwinCATのシステム診断
+	GVL_Alarm.diTaskIdx := GETCURTASKINDEXEX();
+	GVL_Alarm.stPlcTaskSystemInfo:=_TaskInfo[GVL_Alarm.diTaskIdx];
+	
 	//---パトライト制御---
 	GVL_Alarm.fbPatlite.eMachineStateProp:=GVL_Alarm.fbMachineState.eMachineState;
 	GVL_Alarm.fbPatlite();
@@ -102,6 +106,39 @@ END_VAR
 		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
 		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
 	);
+	
+	GVL_Alarm.fbAlarmParsistentDataInit(
+		bRaise		:=NOT GVL_LoadCell.bPersistentDataNotInit,
+		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	GVL_Alarm.fbAlarmPersistentDataLoadFault(
+		bRaise		:=NOT _AppInfo.BootDataLoaded,
+		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	GVL_Alarm.fbAlarmOldPersistentDataLoad(
+		bRaise		:=_AppInfo.OldBootData,
+		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	GVL_Alarm.fbAlarmPersistentDataWriteError(
+		bRaise		:=GVL_LoadCell.bPersistentDataWriteError,
+		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+
+	
+	GVL_Alarm.fbAlarmCycleTimeExceeded(
+		bRaise		:=GVL_Alarm.stPlcTaskSystemInfo.CycleTimeExceeded,
+		bConfirm	:=GVL_Alarm.fbPatlite.bSwitchProp,
+		bClear		:=GVL_MitsubishiCom.bFromAlarmReset
+	);
+	
+	
 	]]></ST>
     </Implementation>
     <LineIds Name="P_Alarm">
@@ -109,7 +146,9 @@ END_VAR
       <LineId Id="125" Count="0" />
       <LineId Id="211" Count="2" />
       <LineId Id="209" Count="1" />
+      <LineId Id="318" Count="2" />
       <LineId Id="254" Count="0" />
+      <LineId Id="321" Count="0" />
       <LineId Id="253" Count="0" />
       <LineId Id="258" Count="0" />
       <LineId Id="252" Count="0" />
@@ -156,7 +195,19 @@ END_VAR
       <LineId Id="219" Count="0" />
       <LineId Id="262" Count="3" />
       <LineId Id="220" Count="1" />
-      <LineId Id="266" Count="4" />
+      <LineId Id="266" Count="5" />
+      <LineId Id="275" Count="1" />
+      <LineId Id="308" Count="1" />
+      <LineId Id="279" Count="3" />
+      <LineId Id="310" Count="1" />
+      <LineId Id="285" Count="3" />
+      <LineId Id="312" Count="1" />
+      <LineId Id="291" Count="3" />
+      <LineId Id="314" Count="1" />
+      <LineId Id="297" Count="0" />
+      <LineId Id="303" Count="3" />
+      <LineId Id="316" Count="1" />
+      <LineId Id="272" Count="2" />
       <LineId Id="222" Count="0" />
     </LineIds>
   </POU>

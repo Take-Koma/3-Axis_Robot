@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <GVL Name="GVL_Alarm" Id="{5ecfb3fe-9522-4643-b591-85b9a0d86530}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
@@ -19,6 +19,9 @@ VAR_GLOBAL
 														rbSwitch	:=bSwitch
 														);
 
+	diTaskIdx								:DINT;
+	stPlcTaskSystemInfo						:PlcTaskSystemInfo;
+
 	fbAlarmSafetyNotRun						:FB_Alarm(TC_Events.UserEventClass.SafetyNotRun ,fbMachineState);
 	fbAlarmSafetyFbError					:FB_Alarm(TC_Events.UserEventClass.SafetyFbError ,fbMachineState);
 	fbAlarmEmergencyStop					:FB_Alarm(TC_Events.UserEventClass.EmergencyStop ,fbMachineState);
@@ -33,7 +36,11 @@ VAR_GLOBAL
 	fbAlarmGripperError						:FB_Alarm(TC_Events.UserEventClass.GripperError ,fbMachineState);
 	fbAlarmEtherCATError					:FB_Alarm(TC_Events.UserEventClass.EtherCATError ,fbMachineState);
 	fbAlarmTerminalError					:FB_Alarm(TC_Events.UserEventClass.TerminalError ,fbMachineState);
-
+	fbAlarmParsistentDataInit				:FB_Alarm(TC_Events.UserEventClass.ParsistentDataInitialization,fbMachineState);
+	fbAlarmPersistentDataLoadFault			:FB_Alarm(TC_Events.UserEventClass.PersistentDataLoadFault,fbMachineState);
+	fbAlarmOldPersistentDataLoad			:FB_Alarm(TC_Events.UserEventClass.OldPersistentDataLoad,fbMachineState);
+	fbAlarmPersistentDataWriteError			:FB_Alarm(TC_Events.UserEventClass.PersistentDataWriteError,fbMachineState);
+	fbAlarmCycleTimeExceeded				:FB_Alarm(TC_Events.UserEventClass.CycleTimeExceeded,fbMachineState);
 END_VAR
 
 VAR_GLOBAL CONSTANT
