@@ -1,44 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="FB_DiagnosisTerminal" Id="{91eeac0d-8ecb-4fac-ba62-a6a0c4d5b6a5}" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="FB_DiagnosisTerminal" Id="{f0bcf887-6f1f-4a7f-b2f7-e3e9f9b9b5e3}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisTerminal
-VAR_INPUT
-	uiState				:REFERENCE TO UINT;
-	bWcState			:REFERENCE TO BOOL;
-END_VAR
-VAR_OUTPUT
-	bDiagnosisOK		:BOOL;
-END_VAR
 VAR
-	bStateOK			:BOOL;
-	bWcStateOK			:BOOL;		
-
-	sTerminalState		: STRING;
-	sStateStatusAll		: STRING(255);	
+	uiState			AT%I*	:UINT;
+	bWcState		AT%I*	:ARRAY[0..iMaxWcStateNumber] OF BOOL;
+	
+	sTerminalState			:STRING;
+	sStateStatusAll			:STRING(255);	
+END_VAR
+VAR CONSTANT
+	iMaxWcStateNumber		:INT	:=1;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//出力する変数リセット
-bDiagnosisOK:=TRUE;
-bStateOK:=TRUE;
-bWcStateOK:=TRUE;
-
-IF __ISVALIDREF(uiState)=TRUE THEN
-	State_Diagnosis();
-	
-	IF bStateOK=FALSE THEN
-		bDiagnosisOK:=FALSE;
-	END_IF
-END_IF
-
-IF __ISVALIDREF(bWcState)=TRUE THEN
-	WcState_Diagnosis();
-	
-	IF bWcStateOK=FALSE THEN
-		bDiagnosisOK:=FALSE;
-	END_IF
-END_IF]]></ST>
+      <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="State_Diagnosis" Id="{efd7d053-6627-49c9-8500-27a3f7aecfef}">
+    <Method Name="State_Diagnosis" Id="{b8641f0c-c7a3-4e26-a022-b53d79d95df3}">
       <Declaration><![CDATA[METHOD State_Diagnosis : BOOL
 VAR_INPUT
 END_VAR
@@ -125,42 +102,34 @@ END_IF
 
 //チェック結果を返す
 IF sTerminalState= 'Slave in OP state' AND  sStateStatusAll= '' THEN
-	bStateOK:= TRUE;
+	State_Diagnosis:= TRUE;
 ELSE
-	bStateOK:=FALSE;
+	State_Diagnosis:=FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="WcState_Diagnosis" Id="{a838fd89-d69b-4bd9-87d8-a4f23c3eb44e}">
+    <Method Name="WcState_Diagnosis" Id="{7beebd3f-2ceb-48c0-b0d2-5fa4b4f172b6}">
       <Declaration><![CDATA[METHOD WcState_Diagnosis : BOOL
 VAR_INPUT
+	iWcStateNumber		:INT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//ワーキングカウンターチェック
-IF bWcState = 0 THEN
-	bWcStateOK:=TRUE;
+IF bWcState[iWcStateNumber] = 0 THEN
+	WcState_Diagnosis:=TRUE;
 ELSE
-	bWcStateOK:=FALSE;
+	WcState_Diagnosis:=FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_DiagnosisTerminal">
-      <LineId Id="446" Count="0" />
-      <LineId Id="430" Count="0" />
-      <LineId Id="448" Count="0" />
-      <LineId Id="447" Count="0" />
-      <LineId Id="450" Count="6" />
-      <LineId Id="449" Count="0" />
-      <LineId Id="472" Count="6" />
-      <LineId Id="471" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_DiagnosisTerminal.State_Diagnosis">
-      <LineId Id="109" Count="83" />
-      <LineId Id="89" Count="0" />
+      <LineId Id="1" Count="84" />
     </LineIds>
     <LineIds Name="FB_DiagnosisTerminal.WcState_Diagnosis">
-      <LineId Id="25" Count="4" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="5" />
     </LineIds>
   </POU>
 </TcPlcObject>

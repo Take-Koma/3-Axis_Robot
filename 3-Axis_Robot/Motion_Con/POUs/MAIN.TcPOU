@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.8">
   <POU Name="MAIN" Id="{50158451-d374-4957-970b-65b4e1d88bf2}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -12,7 +12,19 @@ P_Alarm();
 P_Motion();
 P_MotionWrite();
 P_PickAndPlace();
-P_MitsubishiCom();]]></ST>
+P_MitsubishiCom();
+P_LoadCell();
+
+(*
+
+プログラム作成メモ
+
+ロードセルのファンクションブロック追加
+ワークを掴めていることの確認追加
+'_AppInfo'を追加
+'_TaskInfo[]'を追加
+
+*)]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="32" Count="0" />
@@ -21,6 +33,18 @@ P_MitsubishiCom();]]></ST>
       <LineId Id="35" Count="1" />
       <LineId Id="44" Count="0" />
       <LineId Id="12" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="52" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

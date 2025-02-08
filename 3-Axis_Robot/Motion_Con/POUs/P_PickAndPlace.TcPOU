@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="P_PickAndPlace" Id="{9b896662-1234-4b14-8f60-68f9ebf6e542}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_PickAndPlace
 VAR
@@ -24,7 +24,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//WriteMotin実行中か確認
+      <ST><![CDATA[//Pick And Place Motin実行中か確認
 IF eStep<>E_PickAndPlaceStep.Stay THEN
 	
 	//McMoveのコマンドアボートをチェック

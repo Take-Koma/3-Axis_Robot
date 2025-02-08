@@ -1,68 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="FB_DiagnosisEtherCAT" Id="{4955699a-80e1-4183-9118-d4482766b1fa}" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="FB_DiagnosisEtherCAT" Id="{4d69465a-f2cd-4c79-b6d9-39d89729a3d3}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisEtherCAT
-VAR_INPUT
-	uiDevState 				:REFERENCE TO UINT;
-	uiFrmState 				:REFERENCE TO UINT;
-	uiFrmWcState 			:REFERENCE TO UINT;
-	uiSlaveCount 			:REFERENCE TO UINT;
-	uiCfgSlaveCount 		:REFERENCE TO UINT;
-END_VAR
-VAR_OUTPUT
-	bDiagnosisOK			:BOOL;
-END_VAR
 VAR
-	bDevStateOK				:BOOL;
-	bFrmStateOK				:BOOL;
-	bFrmWcStateOk			:BOOL;
-	bSlaveCountOK			:BOOL;
+	uiDevState 			AT%I*	:UINT;
+	uiFrmState 			AT%I*	:ARRAY[0..uiMaxFrmNumber] OF UINT;
+	uiFrmWcState 		AT%I*	:ARRAY[0..uiMaxFrmNumber] OF UINT;
+	uiSlaveCount 		AT%I*	:UINT;
+	uiCfgSlaveCount 	AT%I*	:UINT;
 
-	sDevStateStatus			: STRING(255);	
-	sFrmStateStatus			: STRING(255);
-	sFrmWcStateStatus		: STRING(255);
+	sDevStateStatus				:STRING(255);	
+	sFrmStateStatus				:STRING(255);
+	sFrmWcStateStatus			:STRING(255);
+END_VAR
+VAR CONSTANT
+	uiMaxFrmNumber				:UINT :=2 ;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//出力する変数リセット
-bDiagnosisOK:=TRUE;
-bDevStateOK:=TRUE;
-bFrmStateOK:=TRUE;
-bFrmWcStateOk:=TRUE;
-bSlaveCountOK:=TRUE;
-
-IF __ISVALIDREF(uiDevState)=TRUE THEN
-	DevState_Diagnosis();
-	
-	IF bDevStateOK=FALSE THEN
-		bDiagnosisOK:=FALSE;
-	END_IF
-END_IF
-
-IF __ISVALIDREF(uiFrmState)=TRUE THEN
-	FrmState_Diagnosis();
-	
-	IF bFrmStateOK=FALSE THEN
-		bDiagnosisOK:=FALSE;
-	END_IF
-END_IF
-
-IF __ISVALIDREF(uiFrmWcState)=TRUE THEN
-	FrmWcState_Diagnosis();
-	
-	IF bFrmWcStateOk=FALSE THEN
-		bDiagnosisOK:=FALSE;
-	END_IF
-END_IF
-
-IF __ISVALIDREF(uiSlaveCount)=TRUE AND __ISVALIDREF(uiCfgSlaveCount)=TRUE THEN
-	SlaveCount_Diagnosis();
-	
-	IF bSlaveCountOK=FALSE THEN
-		bDiagnosisOK:=FALSE;
-	END_IF
-END_IF]]></ST>
+      <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="DevState_Diagnosis" Id="{330696a7-8fa8-4563-84ea-3d201043d0ec}">
+    <Method Name="DevState_Diagnosis" Id="{ba29eb12-5898-4f7d-a615-582491811c62}">
       <Declaration><![CDATA[METHOD DevState_Diagnosis : BOOL
 VAR_INPUT
 END_VAR]]></Declaration>
@@ -136,91 +93,92 @@ END_IF
 
 
 IF sDevStateStatus= '' THEN
-	bDevStateOK:= TRUE;
+	DevState_Diagnosis:= TRUE;
 ELSE
-	bDevStateOK:= FALSE;
+	DevState_Diagnosis:= FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="FrmState_Diagnosis" Id="{4e71e6c9-1f7f-42e3-ba00-14a104a9af40}">
+    <Method Name="FrmState_Diagnosis" Id="{9a8e8c7e-cd4e-419b-9a1d-7c35b62fac31}">
       <Declaration><![CDATA[METHOD FrmState_Diagnosis : BOOL
 VAR_INPUT
+	iFrmNumber		:INT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//フレームの状態チェック、エラーは複数発生する可能性があるので全bitチェック
-IF (uiFrmState < 32768 AND uiFrmState <>0) OR uiFrmState > 32768 THEN
+IF (uiFrmState[iFrmNumber] < 32768 AND uiFrmState[iFrmNumber] <>0) OR uiFrmState[iFrmNumber] > 32768 THEN
 
-	IF uiFrmState.0 THEN
+	IF uiFrmState[iFrmNumber].0 THEN
 		sFrmStateStatus:= '1. ';
 	ELSE
 		sFrmStateStatus:= '';
 	END_IF
-	IF uiFrmState.1 THEN
+	IF uiFrmState[iFrmNumber].1 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '2. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.2 THEN
+	IF uiFrmState[iFrmNumber].2 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '3. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.3 THEN
+	IF uiFrmState[iFrmNumber].3 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '4. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.4 THEN
+	IF uiFrmState[iFrmNumber].4 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '5. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.5 THEN
+	IF uiFrmState[iFrmNumber].5 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '6. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.6 THEN
+	IF uiFrmState[iFrmNumber].6 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '7. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.7 THEN
+	IF uiFrmState[iFrmNumber].7 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '8. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.8 THEN
+	IF uiFrmState[iFrmNumber].8 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '9. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.9 THEN
+	IF uiFrmState[iFrmNumber].9 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '10. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.10 THEN
+	IF uiFrmState[iFrmNumber].10 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '11. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.11 THEN
+	IF uiFrmState[iFrmNumber].11 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '12. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.12 THEN
+	IF uiFrmState[iFrmNumber].12 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '13. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.13 THEN
+	IF uiFrmState[iFrmNumber].13 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '14. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
 	END_IF
-	IF uiFrmState.14 THEN
+	IF uiFrmState[iFrmNumber].14 THEN
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '15. ');
 	ELSE
 		sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
@@ -228,11 +186,11 @@ IF (uiFrmState < 32768 AND uiFrmState <>0) OR uiFrmState > 32768 THEN
 
 	sFrmStateStatus:=CONCAT(sFrmStateStatus, 'EtherCAT command not sent (NOP requested). ');
 
-ELSIF uiFrmState= 0 THEN
+ELSIF uiFrmState[iFrmNumber]= 0 THEN
 	sFrmStateStatus:= '';
 END_IF
 
-IF uiFrmState.15 THEN
+IF uiFrmState[iFrmNumber].15 THEN
 	sFrmStateStatus:=  'Complete frame not sent. ';
 ELSE
 	sFrmStateStatus:= CONCAT( sFrmStateStatus, '');
@@ -240,92 +198,93 @@ END_IF
 
 
 IF sFrmStateStatus= '' THEN
-	bFrmStateOK:= TRUE;
+	FrmState_Diagnosis:= TRUE;
 ELSE
-	bFrmStateOK:= FALSE;
+	FrmState_Diagnosis:= FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="FrmWcState_Diagnosis" Id="{995b0ce3-70ea-47b8-9c05-26b0614015ab}">
+    <Method Name="FrmWcState_Diagnosis" Id="{2dd1d68f-eb06-4a94-a668-80611ad4df78}">
       <Declaration><![CDATA[METHOD FrmWcState_Diagnosis : BOOL
 VAR_INPUT
+	iFrmNumber		:INT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//サイクリックフレームごとのワーキングカウンターチェック、エラーは複数発生する可能性があるので全bitチェック
-IF (uiFrmWcState < 32768 AND uiFrmWcState<>0) OR uiFrmWcState>32768  THEN
+IF (uiFrmWcState[iFrmNumber] < 32768 AND uiFrmWcState[iFrmNumber]<>0) OR uiFrmWcState[iFrmNumber]>32768  THEN
 	sFrmWcStateStatus:= 'Wrong working counter of ';
 
-	IF uiFrmWcState.0 THEN
+	IF uiFrmWcState[iFrmNumber].0 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '1. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.1 THEN
+	IF uiFrmWcState[iFrmNumber].1 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '2. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.2 THEN
+	IF uiFrmWcState[iFrmNumber].2 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '3. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.3 THEN
+	IF uiFrmWcState[iFrmNumber].3 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '4. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.4 THEN
+	IF uiFrmWcState[iFrmNumber].4 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '5. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.5 THEN
+	IF uiFrmWcState[iFrmNumber].5 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '6. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.6 THEN
+	IF uiFrmWcState[iFrmNumber].6 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '7. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.7 THEN
+	IF uiFrmWcState[iFrmNumber].7 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '8. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.8 THEN
+	IF uiFrmWcState[iFrmNumber].8 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '9. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.9 THEN
+	IF uiFrmWcState[iFrmNumber].9 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '10. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.10 THEN
+	IF uiFrmWcState[iFrmNumber].10 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '11. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.11 THEN
+	IF uiFrmWcState[iFrmNumber].11 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '12. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.12 THEN
+	IF uiFrmWcState[iFrmNumber].12 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '13. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.13 THEN
+	IF uiFrmWcState[iFrmNumber].13 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '14. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
 	END_IF
-	IF uiFrmWcState.14 THEN
+	IF uiFrmWcState[iFrmNumber].14 THEN
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '15. ');
 	ELSE
 		sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
@@ -333,11 +292,11 @@ IF (uiFrmWcState < 32768 AND uiFrmWcState<>0) OR uiFrmWcState>32768  THEN
 
 	sFrmWcStateStatus:= CONCAT(sFrmWcStateStatus, 'EtherCAT command received. ' );
 
-ELSIF uiFrmWcState= 0 THEN
+ELSIF uiFrmWcState[iFrmNumber]= 0 THEN
 	sFrmWcStateStatus:= '';
 END_IF
 
-IF uiFrmWcState.15 THEN
+IF uiFrmWcState[iFrmNumber].15 THEN
 	sFrmWcStateStatus:=  'Complete frame missing! ';
 ELSE
 	sFrmWcStateStatus:= CONCAT( sFrmWcStateStatus, '');
@@ -345,67 +304,39 @@ END_IF
 
 
 IF sFrmWcStateStatus= '' THEN
-	bFrmWcStateOk:= TRUE;
+	FrmWcState_Diagnosis:= TRUE;
 ELSE
-	bFrmWcStateOk:= FALSE;
+	FrmWcState_Diagnosis:= FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="SlaveCount_Diagnosis" Id="{2aac9aab-8071-444c-b37a-81886fecb958}">
+    <Method Name="SlaveCount_Diagnosis" Id="{fe452df9-cf7a-4fa3-bd7c-baf094b8b75e}">
       <Declaration><![CDATA[METHOD SlaveCount_Diagnosis : BOOL
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF uiSlaveCount=uiCfgSlaveCount THEN
-	bSlaveCountOK:=TRUE;
+        <ST><![CDATA[IF uiSlaveCount=uiCfgSlaveCount AND uiSlaveCount<>0 AND uiCfgSlaveCount<>0 THEN
+	SlaveCount_Diagnosis:=TRUE;
 ELSE
-	bSlaveCountOK:=FALSE;
+	SlaveCount_Diagnosis:=FALSE;
 END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_DiagnosisEtherCAT">
-      <LineId Id="270" Count="0" />
-      <LineId Id="272" Count="0" />
-      <LineId Id="275" Count="2" />
-      <LineId Id="273" Count="0" />
-      <LineId Id="271" Count="0" />
-      <LineId Id="253" Count="1" />
-      <LineId Id="269" Count="0" />
-      <LineId Id="266" Count="2" />
-      <LineId Id="255" Count="0" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="284" Count="5" />
-      <LineId Id="281" Count="1" />
-      <LineId Id="290" Count="5" />
-      <LineId Id="283" Count="0" />
-      <LineId Id="296" Count="6" />
-      <LineId Id="278" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_DiagnosisEtherCAT.DevState_Diagnosis">
-      <LineId Id="85" Count="0" />
-      <LineId Id="8" Count="67" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="79" Count="1" />
-      <LineId Id="82" Count="0" />
+      <LineId Id="1" Count="72" />
     </LineIds>
     <LineIds Name="FB_DiagnosisEtherCAT.FrmState_Diagnosis">
-      <LineId Id="8" Count="92" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="104" Count="1" />
-      <LineId Id="107" Count="0" />
+      <LineId Id="1" Count="96" />
     </LineIds>
     <LineIds Name="FB_DiagnosisEtherCAT.FrmWcState_Diagnosis">
-      <LineId Id="8" Count="91" />
-      <LineId Id="101" Count="1" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="106" Count="1" />
-      <LineId Id="109" Count="0" />
+      <LineId Id="1" Count="97" />
     </LineIds>
     <LineIds Name="FB_DiagnosisEtherCAT.SlaveCount_Diagnosis">
-      <LineId Id="5" Count="1" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="7" Count="0" />
+      <LineId Id="1" Count="4" />
     </LineIds>
   </POU>
 </TcPlcObject>
