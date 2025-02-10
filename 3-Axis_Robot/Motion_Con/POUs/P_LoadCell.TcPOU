@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="P_LoadCell" Id="{61d512b8-4588-40d5-bf5d-fffd79c5d3fc}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_LoadCell
+VAR
+	lrBridgeVoltage					:LREAL;																				//ロードセルの出力電圧[mV]
+	lrSupplyVoltage					:LREAL;																				//ロードセルへの印加電圧[V]
+
+	lrGrossWeight					:LREAL;																				//測定重量[kg]
+	lrNetWeight						:LREAL;																				//正味重量[kg]
+	lrCalibrationWeight				:LREAL;																				//校正重量[kg]
+	
+	bTareWeightSet					:BOOL;																				//風袋重量セット
+	bCalibrationWeightSet			:BOOL;																				//校正重量セット
+	
+	fbWritePersistentData			:WritePersistentData;
+	fbTareWeightSetREdge			:R_TRIG;
+	fbCalibrationWeightSetREdge		:R_TRIG;
+END_VAR
+VAR CONSTANT
+	stLoadCellSpecification			:ST_LoadCellSpecification:=(lrRatedCapacity:=0.6000, lrRatedOutput:=1.00000);		//ロードセルの仕様
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//---ロードセルの測定値などを三菱と通信---
+	//測定値,GOTで1000で割って小数点三位まで表示するために1000倍にする
+	GVL_MitsubishiCom.wTolrBridgeVoltage:=lREAL_TO_WORD(1000*lrBridgeVoltage);
+	GVL_MitsubishiCom.wToSupplyVoltage:=lREAL_TO_WORD(1000*lrSupplyVoltage);
+	GVL_MitsubishiCom.wToGrossWeight:=lREAL_TO_WORD(1000*lrGrossWeight);
+	GVL_MitsubishiCom.wToNetWeight:=lREAL_TO_WORD(1000*lrNetWeight);
+	GVL_MitsubishiCom.wToTareWeight:=lREAL_TO_WORD(1000*GVL_LoadCell.lrTareWeight);
+	//校正重量,GOTで1000倍で入力するため1000で割る
+	lrCalibrationWeight:=WORD_TO_LREAL(GVL_MitsubishiCom.wFromCalibrationWeight)/1000;
+	//制御
+	bTareWeightSet:=GVL_MitsubishiCom.bFromTareWeightSet;
+	bCalibrationWeightSet:=GVL_MitsubishiCom.bFromCalibrationWeightSet;
+
+	
+//---ファンクションブロックと変数接続---
+	//実I/Oと接続
+	GVL_LoadCell.fbLoadCell.diBridgeInputsProp:=GVL_LoadCell.diBridgeInputs;
+	GVL_LoadCell.fbLoadCell.diSupplyInputsProp:=GVL_LoadCell.diSupplyInputs;
+	
+	//演算後の入力値
+	lrBridgeVoltage:=GVL_LoadCell.fbLoadCell.lrBridgeVoltageProp;
+	lrSupplyVoltage:=GVL_LoadCell.fbLoadCell.lrSupplyVoltageProp;
+	
+	//測定重量と正味重量と風袋重量とキャリブレーション重量
+	lrGrossWeight:=GVL_LoadCell.fbLoadCell.lrGrossWeightProp;
+	lrNetWeight:=GVL_LoadCell.fbLoadCell.lrNetWeightProp;
+	GVL_LoadCell.fbLoadCell.lrTareWeightProp REF=GVL_LoadCell.lrTareWeight;
+	GVL_LoadCell.fbLoadCell.lrCalibrationWeightProp:=lrCalibrationWeight;
+	
+	//ロードセルの仕様
+	GVL_LoadCell.fbLoadCell.stLoadCellSpecificationProp:=stLoadCellSpecification;
+
+//---制御---
+	//ファンクションブロックをコールしておく
+	GVL_LoadCell.fbLoadCell();
+	
+	//風袋重量セット
+	fbTareWeightSetREdge(CLK:=bTareWeightSet,Q=>);
+	IF fbTareWeightSetREdge.Q=TRUE THEN
+		GVL_LoadCell.fbLoadCell.TareWeightSet();
+	
+		fbWritePersistentData(	NETID:='192.168.15.2.1.1',
+								PORT:=851,
+								START:=TRUE,
+								TMOUT:=DEFAULT_ADS_TIMEOUT,
+								BUSY=>,
+								ERR=>GVL_LoadCell.bPersistentDataWriteError,
+								ERRID=>
+								);
+	ELSE
+		fbWritePersistentData(	START:=FALSE);
+	END_IF
+	
+	//キャリブレーションウェイトセット
+	fbCalibrationWeightSetREdge(CLK:=bCalibrationWeightSet,Q=>);
+	IF fbCalibrationWeightSetREdge.Q=TRUE THEN
+		GVL_LoadCell.fbLoadCell.CalibrationWeightSet();
+	END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="P_LoadCell">
+      <LineId Id="244" Count="26" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="271" Count="24" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="297" Count="3" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

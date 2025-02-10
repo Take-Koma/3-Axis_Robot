@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_LoadCell" Id="{0956b8bf-68cc-43c5-8995-ef78b567874c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_LoadCell IMPLEMENTS I_LoadCell
+VAR
+	//実I/Oと接続
+	diBridgeInputs				:DINT;
+	diSupplyInputs				:DINT;
+	
+	//演算後の入力値
+	lrBridgeVoltage				:LREAL;
+	lrSupplyVoltage				:LREAL;
+	
+	//測定重量と風袋重量
+	lrGrossWeight				:LREAL;
+	lrNetWeight					:LREAL;
+	lrTareWeight				:REFERENCE TO LREAL;
+	lrCalibrationWeight			:LREAL;	
+	
+	//ロードセルの仕様
+	stLoadCellSpecification		:ST_LoadCellSpecification;
+	
+	//校正後の傾き
+	lrSlope						:LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WeightMeasurement();]]></ST>
+    </Implementation>
+    <Method Name="CalibrationWeightSet" Id="{93f54278-cb31-49f4-bfc1-0775b8414e9c}">
+      <Declaration><![CDATA[{warning 'メソッド実装を追加'}
+METHOD CalibrationWeightSet
+VAR
+	lrNowGrossWeight				:LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	//今のグロスウェイト確認[kg]
+	IF lrSupplyVoltage<>0 AND stLoadCellSpecification.lrRatedOutput<>0 THEN
+		lrNowGrossWeight:=((DINT_TO_LREAL(diBridgeInputs)*20.0)/(DINT_TO_LREAL(diSupplyInputs)*12.0))*(stLoadCellSpecification.lrRatedCapacity/stLoadCellSpecification.lrRatedOutput);
+	END_IF
+	
+	//今のグロスウェイトが風袋重量より重いことを確認
+	IF lrTareWeight+0.010 < lrNowGrossWeight THEN
+		//切片を計算
+		IF lrNowGrossWeight<>0 AND lrTareWeight<>0 THEN
+			lrSlope:=(lrCalibrationWeight-0)/(lrNowGrossWeight-lrTareWeight);
+		END_IF
+	END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="diBridgeInputsProp" Id="{5eff2143-0b1c-497c-9e3c-1920cad2766f}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY diBridgeInputsProp : DINT
+]]></Declaration>
+      <Set Name="Set" Id="{91dc734f-9f57-4882-bca8-e62a29010e12}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[diBridgeInputs:=diBridgeInputsProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="diSupplyInputsProp" Id="{756219d0-0232-4b98-949a-708d0320154a}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY diSupplyInputsProp : DINT
+]]></Declaration>
+      <Set Name="Set" Id="{cd110deb-7528-4f6b-a889-4cd934eb29c8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[diSupplyInputs:=diSupplyInputsProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="lrBridgeVoltageProp" Id="{d3f760e8-41da-4ddc-b41c-ac4cddbe73bd}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY lrBridgeVoltageProp : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{f4149a2a-aba5-4856-bbf3-39ae86be694b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[lrBridgeVoltageProp:=lrBridgeVoltage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="lrCalibrationWeightProp" Id="{e55771da-6757-4d73-a527-38b789a79d63}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY lrCalibrationWeightProp : LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{48ec29ea-ef1c-4f49-8b4a-9485fd0250be}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[lrCalibrationWeight:=lrCalibrationWeightProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="lrGrossWeightProp" Id="{8f9a0b05-6d4e-44ea-a328-5a0f8141a8da}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY lrGrossWeightProp : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{62896a2e-2fba-4042-b7df-6cfb3676fd28}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[lrGrossWeightProp:=lrGrossWeight;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="lrNetWeightProp" Id="{f9feebdb-7d80-40b0-9659-026331130eb9}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY lrNetWeightProp : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{9192aaba-682f-4b2a-9c04-a538d57d343f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[lrNetWeightProp:=lrNetWeight;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="lrSupplyVoltageProp" Id="{f553a0ac-7513-4c81-bf0f-a359b42baf45}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY lrSupplyVoltageProp : LREAL
+]]></Declaration>
+      <Get Name="Get" Id="{b69cf58d-f6f5-463b-add2-575323fe50ab}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[lrSupplyVoltageProp:=lrSupplyVoltage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="lrTareWeightProp" Id="{db5e90bc-ae93-4279-baa9-42081ae45b8f}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY lrTareWeightProp : REFERENCE TO LREAL
+]]></Declaration>
+      <Set Name="Set" Id="{f22ff1e2-be44-4e4a-886a-e6c37f4f4282}">
+        <Declaration><![CDATA[VAR
+	bCheck :BOOL;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF __ISVALIDREF(lrTareWeightProp)=TRUE THEN
+	bCheck:=TRUE;
+END_IF
+
+lrTareWeight REF=lrTareWeightProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="stLoadCellSpecificationProp" Id="{a84a2845-c8f0-4433-984d-1e6ece6dee2b}">
+      <Declaration><![CDATA[{warning 'プロパティ実装を追加'}
+PROPERTY stLoadCellSpecificationProp : ST_LoadCellSpecification
+]]></Declaration>
+      <Set Name="Set" Id="{7ce3fc22-d897-4353-bd5d-f9e9ff3e4dfd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stLoadCellSpecification:=stLoadCellSpecificationProp;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="TareWeightSet" Id="{0eed874b-e426-4c5c-96b2-9198e67a49d2}">
+      <Declaration><![CDATA[{warning 'メソッド実装を追加'}
+METHOD TareWeightSet
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	//風袋重量セット[kg]
+	IF lrSupplyVoltage<>0 AND stLoadCellSpecification.lrRatedOutput<>0 THEN
+		lrTareWeight:=((DINT_TO_LREAL(diBridgeInputs)*20.0)/(DINT_TO_LREAL(diSupplyInputs)*12.0))*(stLoadCellSpecification.lrRatedCapacity/stLoadCellSpecification.lrRatedOutput);
+	END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WeightMeasurement" Id="{daeaec2b-19b4-41e3-b3a1-8d03e5dc53c7}">
+      <Declaration><![CDATA[{warning 'メソッド実装を追加'}
+METHOD WeightMeasurement
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	//ロードセルの出力電圧計算[mV]
+	lrBridgeVoltage:=DINT_TO_LREAL(diBridgeInputs)*(20.0/2147483647);
+	
+	//ロードセルへの印加電圧計算[V]
+	lrSupplyVoltage:=DINT_TO_LREAL(diSupplyInputs)*(12.0/2147483647);
+	
+	//グロスウェイト計算[kg]
+	IF lrSupplyVoltage<>0 AND stLoadCellSpecification.lrRatedOutput<>0 THEN
+		lrGrossWeight:=(lrBridgeVoltage/lrSupplyVoltage)*(stLoadCellSpecification.lrRatedCapacity/stLoadCellSpecification.lrRatedOutput);
+	END_IF
+	
+	//ネットウェイト計算[kg]
+	lrNetWeight:=lrGrossWeight-lrTareWeight;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_LoadCell">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.CalibrationWeightSet">
+      <LineId Id="5" Count="2" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="29" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.diBridgeInputsProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.diSupplyInputsProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.lrBridgeVoltageProp.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.lrCalibrationWeightProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.lrGrossWeightProp.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.lrNetWeightProp.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.lrSupplyVoltageProp.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.lrTareWeightProp.Set">
+      <LineId Id="9" Count="3" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.stLoadCellSpecificationProp.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.TareWeightSet">
+      <LineId Id="13" Count="2" />
+      <LineId Id="4" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell.WeightMeasurement">
+      <LineId Id="12" Count="2" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="23" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

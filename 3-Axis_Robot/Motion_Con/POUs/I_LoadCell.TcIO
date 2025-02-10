@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <Itf Name="I_LoadCell" Id="{444e1386-7220-4424-8216-2b11e058dfdc}">
+    <Declaration><![CDATA[INTERFACE I_LoadCell
+]]></Declaration>
+    <Method Name="CalibrationWeightSet" Id="{358441bd-5a3b-4ec8-aa39-31e555fde8db}">
+      <Declaration><![CDATA[METHOD CalibrationWeightSet
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="diBridgeInputsProp" Id="{58100160-6826-4a19-9fc7-7eda837a2841}">
+      <Declaration><![CDATA[PROPERTY diBridgeInputsProp : DINT]]></Declaration>
+      <Set Name="Set" Id="{0cdf2e71-006d-4bb9-a55d-c352066de9c0}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="diSupplyInputsProp" Id="{315db6b0-7852-45f8-9901-1edadde9c05f}">
+      <Declaration><![CDATA[PROPERTY diSupplyInputsProp : DINT]]></Declaration>
+      <Set Name="Set" Id="{ee99835b-aa2e-48bb-910a-ba739bf03192}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="lrBridgeVoltageProp" Id="{899df7e1-0a74-4d38-b439-db9db3280833}">
+      <Declaration><![CDATA[PROPERTY lrBridgeVoltageProp : LREAL]]></Declaration>
+      <Get Name="Get" Id="{fd322953-eb4e-45b6-a66f-9ab7b16afeef}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="lrCalibrationWeightProp" Id="{281d1769-18f9-4975-9ba4-b84284350883}">
+      <Declaration><![CDATA[PROPERTY lrCalibrationWeightProp : LREAL]]></Declaration>
+      <Set Name="Set" Id="{fb659821-2c91-4d68-bad0-7923e3e04c6d}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="lrGrossWeightProp" Id="{5d85a67f-2caf-49d3-b924-de93201ee0f0}">
+      <Declaration><![CDATA[PROPERTY lrGrossWeightProp : LREAL]]></Declaration>
+      <Get Name="Get" Id="{6354b373-f6ab-411f-8f4d-c42c0110120a}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="lrNetWeightProp" Id="{a8faba55-da95-4f00-8aea-7aed13900d3c}">
+      <Declaration><![CDATA[PROPERTY lrNetWeightProp : LREAL]]></Declaration>
+      <Get Name="Get" Id="{19e35281-6ac0-4310-8ace-ede9fdabc84f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="lrSupplyVoltageProp" Id="{cc93a862-2fdf-4670-aad9-705c6dde66d1}">
+      <Declaration><![CDATA[PROPERTY lrSupplyVoltageProp : LREAL]]></Declaration>
+      <Get Name="Get" Id="{18fda547-61a9-4e4e-b2ab-8a3d2e28eb03}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="lrTareWeightProp" Id="{96ba25db-5e37-4347-a16c-c651c378f9c0}">
+      <Declaration><![CDATA[PROPERTY lrTareWeightProp : REFERENCE TO LREAL]]></Declaration>
+      <Set Name="Set" Id="{8c73d000-3284-4790-b0ec-15bfc89a62b3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="stLoadCellSpecificationProp" Id="{4d886dab-db8a-4aef-8bcc-c1b4bb684216}">
+      <Declaration><![CDATA[PROPERTY stLoadCellSpecificationProp : ST_LoadCellSpecification]]></Declaration>
+      <Set Name="Set" Id="{9dcb1ebd-0194-445f-9779-02f7d04c1064}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="TareWeightSet" Id="{4a3e7526-df84-4620-90f5-5fde33394433}">
+      <Declaration><![CDATA[METHOD TareWeightSet
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="WeightMeasurement" Id="{288a454d-17c1-4896-9f55-4e3029710a27}">
+      <Declaration><![CDATA[METHOD WeightMeasurement
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
