@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <GVL Name="GVL_Motion" Id="{9d2fcb99-ce48-477a-bd80-3346c3c5c5d6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+(*
+
+	//---Axis Functions---
+	bPower						:BOOL;
+	fbMcPower					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Power;
+	bReset						:BOOL;
+	fbMcReset					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Reset;
+	
+	//---PTP Motion_Stop---
+	bStop						:BOOL;
+	fbMcStop					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Stop;
+	bHalt						:BOOL;
+	fbMcHalt					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Halt;
+	
+	//---PTP Motion_Move---
+	bHome						:BOOL;
+	fbMcMoveHome				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
+	bJog   						:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
+	fbMcMoveJog					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
+	lrJogPosition   			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF LREAL;
+	fbMcMoveJogSub				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_MoveAbsolute;
+	fbMcHaltJogSub				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF MC_Halt;
+
+	bAxisMove					:BOOL;																//いずれかの軸が動いていることの結果
+
+
+
+
+*)
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

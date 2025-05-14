@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="P_Motion" Id="{f27a55a5-997f-454a-b871-3cb76ed937db}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_Motion
+VAR
+	eAxis							:E_Axis;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	//---図形描画実行---
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL_Motion.bWriteMoveStart:=GVL_MitsubishiCom.bFromWriteStart;
+	END_IF
+
+	//---ピック＆プレース実行---
+	IF GVL_MitsubishiCom.bToMcPowerOn=TRUE THEN;
+		GVL_Motion.bPickAndPlaceStart:=GVL_MitsubishiCom.bFromPickAndPlaceStart;
+	END_IF
+	
+	//---アクションをコールして軸を起動---
+	FOR eAxis:= E_Axis.X_Axis TO E_Axis.Gripper DO
+		aMotion();
+	END_FOR;]]></ST>
+    </Implementation>
+    <Action Name="aMotion" Id="{7128f73f-11b3-4c17-add6-4b6df319662d}">
+      <Implementation>
+        <ST><![CDATA[//パワーON
+	GVL_Motion.fbMcPower[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+		Enable			:=GVL_Motion.bPower,
+		Enable_Positive	:=GVL_Motion.bPower,
+		Enable_Negative	:=GVL_Motion.bPower,
+		Override		:=100,
+		Status			=>,
+		Busy			=>,
+		Active			=>,
+		Error			=>,
+		ErrorID			=>
+	);
+	
+//ホーミング
+	GVL_Motion.fbMcMoveHome[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+		Execute			:=GVL_Motion.bHome,
+		Position		:=0,
+		Velocity		:=50,
+		Done			=>,
+		Busy			=>,
+		Active			=>,
+		CommandAborted	=>,
+		Error			=>,
+		ErrorID			=>
+	);	
+
+//定位置ジョグ
+	GVL_Motion.fbMcMoveJog[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+		Execute			:=GVL_Motion.bJog[eAxis],
+		Position		:=GVL_Motion.lrJogPosition[eAxis],
+		Velocity		:=50,
+		Done			=>,
+		Busy			=>,
+		Active			=>,
+		CommandAborted	=>,
+		Error			=>,
+		ErrorID			=>
+	);	
+
+//連続ジョグ
+	//起動
+	GVL_Motion.fbMcMoveJogSub[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+	);
+	//停止
+	GVL_Motion.fbMCHaltJogSub[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+	);
+	
+//全軸一時停止
+	GVL_Motion.fbMCHalt[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+		Execute			:=GVL_Motion.bHalt,
+		Done			=>,
+		Busy			=>,
+		Active			=>,
+		CommandAborted	=>,
+		Error			=>,
+		ErrorID			=>
+	);
+
+//全軸ストップ
+	GVL_Motion.fbMCStop[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+		Execute			:=GVL_Motion.bStop,
+		Done			=>,
+		Busy			=>,
+		Active			=>,
+		CommandAborted	=>,
+		Error			=>,
+		ErrorID			=>
+	);
+	
+//全軸リセット
+	GVL_Motion.fbMcReset[eAxis](
+		Axis			:=GVL_Axis.stAxis[eAxis],
+		Execute			:=GVL_Motion.bReset,
+		Done			=>,
+		Busy			=>,
+		Error			=>,
+		ErrorID			=>
+	);]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="P_Motion">
+      <LineId Id="1" Count="13" />
+    </LineIds>
+    <LineIds Name="P_Motion.aMotion">
+      <LineId Id="1" Count="84" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

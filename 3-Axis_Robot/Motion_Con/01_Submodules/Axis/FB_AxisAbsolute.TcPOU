@@ -1,0 +1,495 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="FB_AxisAbsolute" Id="{13905c50-061e-47bd-88e1-faf6cd8ad728}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AxisAbsolute
+VAR	
+	// =============== Done signals ============================
+	_bResetDone			:BOOL;					// Status of function block MC_Reset
+	_bHaltDone			:BOOL;					// Status of function block MC_Halt
+	_bStopDone			:BOOL;					// Status of function block MC_Stop
+	_bMoveDone			:BOOL;					// Status of function block MC_MoveAbsolute
+
+	// =============== State variables ========================
+	_bStatusEnable		:BOOL;					// Enable feedback
+	_bStateError		:BOOL;					// Error signal
+	_bMoveCommandAborted:BOOL;					// Status of function block MC_MoveAbsolute	
+	_nStateErrorID		:UDINT;					// Error ID
+	_bStateMoving		:BOOL;					// Status of moving
+	_fStateActPos		:LREAL;					// Actual Position
+	
+	// =============== Position Velocity, override ============
+	_fTargetPosition	:LREAL;					// Target Position 
+	_fTargetVelocity	:LREAL;					// Target Velocity
+	fOverride 			:LREAL := 100.0;		// Override 100%
+	
+	// =============== Axis Limit =============================
+	_fMaxPosition		:LREAL;					//	MAX Target Position 
+	_fMinPosition		:LREAL;					//	MIN Target Position 
+	_fMaxVelocity		:LREAL;					//	MAX Target Velocity
+	_fMinVelocity		:LREAL;					//	MIN Target Velocity
+	
+	// =============== Trigger function blocks ================
+	fbTriggerReset		:R_TRIG;				// Trigger to recognize rising edge of reset input
+	fbTriggerHalt		:R_TRIG;				// Trigger to recognize rising edge of halt input
+	fbTriggerStop		:R_TRIG;				// Trigger to recognize rising edge of stop input
+	fbTriggerMove		:R_TRIG;
+	
+	// =============== Axis reference =========================
+	AxisRef				:AXIS_REF;				// Axis reference (process data plc/nc)
+	
+	// =============== Motion function blocks =================
+	fbMcPower 			:MC_Power;				// FB for enable and override
+	fbMcReset 			:MC_Reset;				// FB to reset axis
+	fbMcStop 			:MC_Stop;				// FB to stop axis
+	fbMcHalt			:MC_Halt;				// FB to halt axis
+	fbMcMove			:MC_MoveAbsolute;		// FB to move axis (Absolute movement)
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// =========================================================
+;
+// =========================================================]]></ST>
+    </Implementation>
+    <Property Name="bStateEnable" Id="{b623c1c1-f1c5-4202-a065-02024e90e038}">
+      <Declaration><![CDATA[PROPERTY bStateEnable : BOOL]]></Declaration>
+      <Get Name="Get" Id="{fb4bbe37-ff9a-47af-9c53-30be12f9e058}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStateEnable := _bStatusEnable;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bStateError" Id="{092893f6-98d3-4487-baa8-93e66efc12a1}">
+      <Declaration><![CDATA[PROPERTY bStateError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{fd3d20a1-36c2-4f32-93ee-18cb01becb8c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStateError:=_bStateError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bStateHaltDone" Id="{f7de6af1-b5e5-48d8-b512-773820eeee42}">
+      <Declaration><![CDATA[PROPERTY bStateHaltDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f6a7a426-06e5-4d4b-8c96-62c52d509c00}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStateHaltDone := _bHaltDone;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bStateMoveCommandAborted" Id="{cef249cc-f1c2-4cc8-85c1-541688cd5c69}">
+      <Declaration><![CDATA[PROPERTY bStateMoveCommandAborted : BOOL]]></Declaration>
+      <Get Name="Get" Id="{a3d32fe0-47e5-4e51-b623-7951d31f69c1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStateMoveCommandAborted:=_bMoveCommandAborted;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bStateMoveDone" Id="{6198d3a8-ba94-4f92-9011-e865f254b2a2}">
+      <Declaration><![CDATA[PROPERTY bStateMoveDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b0882baf-0590-4f26-9187-a31096344f10}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStateMoveDone:=_bMoveDone;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bStateMoving" Id="{b25fddbe-ad1a-4469-9197-bd51ac3888c0}">
+      <Declaration><![CDATA[PROPERTY bStateMoving : BOOL]]></Declaration>
+      <Get Name="Get" Id="{79c7942e-f1eb-4237-9662-b5a72f4126a6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStateMoving:=_bStateMoving;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bStateResetDone" Id="{51f3a4de-1d38-488f-b402-3183f4c04168}">
+      <Declaration><![CDATA[PROPERTY bStateResetDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{04c36a28-a9c4-4734-940e-933f64603157}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStateResetDone := _bResetDone;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bStateStopDone" Id="{e0b8efe4-3e7d-4b41-8308-d3cbdfb03e2c}">
+      <Declaration><![CDATA[PROPERTY bStateStopDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d0fe241d-85d6-47a1-96fc-b3aab94999c5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStateStopDone:=_bStopDone;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Enable" Id="{2218bf4b-e6a5-4385-8a61-3d59b9953884}">
+      <Declaration><![CDATA[METHOD Enable
+VAR_INPUT
+	bEnable		: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+
+fbMCPower(	Enable 			:= bEnable, 
+			Enable_Positive	:= bEnable, 
+			Enable_Negative	:= bEnable, 
+			Override		:= fOverride,
+			Axis			:= AxisRef,
+			Status			=> _bStatusEnable);
+			
+IF fbMcPower.Error THEN
+	_bStateError		:= TRUE;
+	_nStateErrorID 		:= fbMcPower.ErrorID;
+END_IF
+
+AxisRef.ReadStatus();
+
+_bStateMoving	:= AxisRef.Status.Moving;
+
+_fStateActPos	:= AxisRef.NcToPlc.ActPos;
+
+// =========================================================]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{a51839ba-3519-4ac0-900f-65592382ed92}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+	
+
+	fMaxPosition	:LREAL;
+	fMinPosition	:LREAL;
+	fMaxVelocity	:LREAL;
+	fMinVelocity	:LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	_fMaxPosition:=fMaxPosition;
+	_fMinPosition:=fMinPosition;
+	_fMaxVelocity:=fMaxVelocity;
+	_fMinVelocity:=fMinVelocity;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="fStateActPos" Id="{459a73ba-42e1-4b1a-8cdb-74dcaacbbc2f}">
+      <Declaration><![CDATA[PROPERTY fStateActPos : LREAL]]></Declaration>
+      <Get Name="Get" Id="{4008270e-7e9d-4245-8293-afed7d19d752}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fStateActPos:=_fStateActPos;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="fTargetPosition" Id="{77146afd-a1df-4ddb-82da-373341e634e6}">
+      <Declaration><![CDATA[PROPERTY fTargetPosition : LREAL]]></Declaration>
+      <Get Name="Get" Id="{b639191e-3a45-47e0-9665-affaec67bafa}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fTargetPosition:=_fTargetPosition;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{60b0eb9f-25a0-4f88-8ef9-938c0a2f5a1f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_fTargetPosition:=LIMIT(_fMinPosition,fTargetPosition,_fMaxPosition);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="fTargetVelocity" Id="{072eee44-9a89-46ff-9c6c-081e21838b82}">
+      <Declaration><![CDATA[PROPERTY fTargetVelocity : LREAL]]></Declaration>
+      <Get Name="Get" Id="{5608d6f9-66c0-4ccb-b31f-4fe6dd87dabd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fTargetVelocity := _fTargetVelocity;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{70932f21-070c-4a8e-a2f5-0d6642329682}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_fTargetVelocity :=LIMIT(_fMinVelocity ,fTargetVelocity,_fMaxVelocity);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Halt" Id="{e88a2abb-6023-4065-9098-7fa187efe6ad}">
+      <Declaration><![CDATA[METHOD Halt
+VAR_INPUT
+	bDriveHalt		: BOOL;					// Request stop
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+
+IF bDriveHalt THEN
+	// Move Execute FALSE
+	fbMCMove(	Execute	:= FALSE,
+				Axis 	:= AxisRef);
+ELSE
+	// Reset done signal
+	_bHaltDone := FALSE;
+END_IF
+
+// Trigger
+fbTriggerHalt(CLK := bDriveHalt);
+
+IF fbTriggerHalt.Q THEN
+	fbMcHalt(	Execute	:= TRUE,
+				Axis 	:= AxisRef);
+ELSE
+	fbMcHalt(Axis := AxisRef);
+END_IF
+
+// Done / Error / Command aborted
+IF fbMcHalt.Done OR fbMcHalt.Error OR fbMcHalt.CommandAborted THEN
+	_bStateError		:= fbMcHalt.Error;
+	_nStateErrorID		:= fbMcHalt.ErrorID;
+	_bHaltDone 			:= fbMcHalt.Done;
+	
+	fbMCMove(	Execute	:= FALSE,
+				Axis 	:= AxisRef);
+				
+	fbMcHalt(	Execute	:= FALSE,
+				Axis 	:= AxisRef);
+END_IF
+
+// =========================================================]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MoveAbsolute" Id="{16ab69b9-b24d-46b6-acf0-f1ab70404dae}">
+      <Declaration><![CDATA[METHOD MoveAbsolute
+VAR_INPUT
+	bMove		:REFERENCE TO BOOL; 
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+
+IF bMove=TRUE AND(fbMCMove.Error=FALSE OR fbMcHalt.Execute=FALSE OR fbMcStop.Execute=FALSE) THEN
+	fbMCMove(	Execute 		:=TRUE,
+				Position		:=_fTargetPosition,
+				Velocity 		:= _fTargetVelocity,
+				Axis 			:= AxisRef,
+				Done			=>_bMoveDone,
+				CommandAborted	=>_bMoveCommandAborted);	
+ELSE
+	fbMCMove(	Axis 			:= AxisRef);	
+END_IF
+
+// Error / Command aborted
+IF fbMCMove.Done OR fbMCMove.Error OR fbMCMove.CommandAborted THEN
+	IF fbMcMove.Error THEN
+		_bStateError		:= TRUE;
+		_nStateErrorID		:= fbMCMove.ErrorID;
+	END_IF
+	
+	bMove:=FALSE;
+	
+	fbMCMove(	Execute 	:=FALSE,
+				Axis 		:= AxisRef);
+END_IF
+
+IF fbMcStop.Execute=TRUE OR fbMcHalt.Execute=TRUE THEN
+	bMove:=FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="nStateErrorID" Id="{393e9573-61b8-4020-8aeb-991444f3a449}">
+      <Declaration><![CDATA[PROPERTY nStateErrorID : UDINT]]></Declaration>
+      <Get Name="Get" Id="{c1f8ed2c-525f-48c1-8881-05e641af6bd6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[nStateErrorID:=_nStateErrorID;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Reset" Id="{ea6409fe-eb80-4f4d-b54a-780889e04b6e}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+	bDriveReset		: BOOL;					// Request reset
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+
+IF NOT bDriveReset THEN
+	_bResetDone 	:= FALSE;
+END_IF
+
+// Trigger
+fbTriggerReset(CLK := bDriveReset);
+
+IF fbTriggerReset.Q THEN
+	_bResetDone		:= FALSE;
+	
+	fbMcReset(Execute := TRUE, Axis := AxisRef);
+ELSE
+	fbMcReset(Axis := AxisRef);
+END_IF
+
+// Done / Error
+IF fbMcReset.Done OR fbMcReset.Error THEN
+	_bStateError		:= fbMcReset.Error;
+	_nStateErrorID		:= fbMcReset.ErrorID;
+	_bResetDone 		:= fbMcReset.Done;
+
+	fbMcReset(	Execute	:= FALSE,
+				Axis 	:= AxisRef);
+END_IF
+
+// =========================================================]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Stop" Id="{befb5a74-67aa-4deb-96cf-8551f6226c61}">
+      <Declaration><![CDATA[METHOD Stop
+VAR_INPUT
+	bDriveStop		: BOOL;					// Request stop
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+
+IF bDriveStop THEN
+	// Move Execute FALSE
+	fbMCMove(	Execute	:= FALSE,
+				Axis 	:= AxisRef);
+ELSE
+	// Reset done signal
+	_bStopDone := FALSE;
+END_IF
+
+// Trigger
+fbTriggerStop(CLK := bDriveStop);
+
+IF fbTriggerStop.Q THEN
+	fbMcStop(	Execute	:= TRUE,
+				Axis 	:= AxisRef);
+ELSE
+	fbMcStop(Axis := AxisRef);
+END_IF
+
+// Done / Error / Command aborted
+IF fbMcStop.Done OR fbMcStop.Error OR fbMcStop.CommandAborted THEN
+	_bStateError		:= fbMcStop.Error;
+	_nStateErrorID 		:= fbMcStop.ErrorID;
+	_bStopDone 			:= fbMcStop.Done;
+	
+	fbMCMove(	Execute	:= FALSE,
+				Axis 	:= AxisRef);
+				
+	fbMcStop(	Execute	:= FALSE,
+				Axis 	:= AxisRef);
+END_IF
+
+// =========================================================]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_AxisAbsolute">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.bStateEnable.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.bStateError.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.bStateHaltDone.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.bStateMoveCommandAborted.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.bStateMoveDone.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.bStateMoving.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.bStateResetDone.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.bStateStopDone.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.Enable">
+      <LineId Id="1" Count="20" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.FB_Init">
+      <LineId Id="1" Count="3" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.fStateActPos.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.fTargetPosition.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.fTargetPosition.Set">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.fTargetVelocity.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.fTargetVelocity.Set">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.Halt">
+      <LineId Id="1" Count="34" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.MoveAbsolute">
+      <LineId Id="107" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="149" Count="4" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="129" Count="5" />
+      <LineId Id="155" Count="1" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="136" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="159" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.nStateErrorID.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.Reset">
+      <LineId Id="1" Count="27" />
+    </LineIds>
+    <LineIds Name="FB_AxisAbsolute.Stop">
+      <LineId Id="1" Count="34" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

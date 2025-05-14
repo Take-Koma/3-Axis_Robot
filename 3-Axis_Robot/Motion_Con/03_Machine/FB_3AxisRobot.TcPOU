@@ -1,0 +1,1978 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="FB_3AxisRobot" Id="{a0d34793-0844-485a-a6b0-6164cc5328a4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_3AxisRobot
+	VAR
+//------データ管理------
+		bInit									:BOOL:=FALSE;																//リファレンスのデータの書き込みチェック
+
+
+//------セーフティー------		
+		//---EL2911のinternal I/Oの実入出力とのリンク---
+		bFbEStopInput1					AT %I*	:BOOL;																		//EL2911 input CH.1 非常停止ボタン1
+		bFbEStopInput2					AT %I*	:BOOL;																		//EL2911 input CH.2 非常停止ボタン2
+		bGripSwich						AT %I*	:BOOL;																		//EL2911 input CH.3 グリップスイッチ
+		bFbEstopOutput					AT %I*	:BOOL;																		//EL2911 output 非常停止の電源ON
+
+		//---Sefrtyのエイリアスデバイスとのリンク---
+		bSafetyRun_Stop					AT %Q*	:BOOL;																		//セーフティーラン
+		bSafetyInRun					AT %I*	:BOOL;																		//セーフティーランの確認
+		bSafetyErrAck 					AT %Q*	:BOOL;																		//セーフティーのエラーリセット
+		bFbEStopEDM						AT %Q*	:BOOL;																		//非常停止の電源OFFの結果をセーフティーへ	
+		bFbEStopReset					AT %Q*	:BOOL;																		//GOTからの非常停止リセットをセーフティーへ
+		bFbEstopError					AT %I*	:BOOL;																		//セーフティーの非常停止ファンクションブロックエラー
+		bFbEdmError						AT %I*	:BOOL;																		//セーフティーのEDMファンクションブロックのエラー
+
+
+//------診断-------
+		fbDiagnosisEtherCAT						:FB_DiagnosisEtherCAT;														//EtherCAT診断用FB
+		fbDiagnosisTerminal						:ARRAY[E_Terminal.EK1100..E_Terminal.AZD4A_KED] OF FB_DiagnosisTerminal;	//Terminal診断用FB
+		bEtherCATOK								:BOOL;																		//EtherCAT診断結果
+		bTerminalOK								:BOOL;																		//Terminal診断結果
+
+
+//------アラーム------
+		fbMachineState							:FB_MachineState;															//マシンステートFB
+		fbPatlite								:FB_Patlite;																//パトライトFB
+		//アラーム(アラーム詳細はユーザーイベントクラスを参照)
+		//!!!!!アラームのファンクションブロックを追加したらパラメーターのアラーム数を変更すること!!!!!
+		fbAlarmSafetyNotRun						:FB_Alarm(TC_Events.UserEventClass.SafetyNotRun ,fbMachineState);
+		fbAlarmSafetyFbError					:FB_Alarm(TC_Events.UserEventClass.SafetyFbError ,fbMachineState);
+		fbAlarmEmergencyStop					:FB_Alarm(TC_Events.UserEventClass.EmergencyStop ,fbMachineState);
+		fbAlarmXAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.XAxisMovingGripSwichNotOn ,fbMachineState);	
+		fbAlarmYAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.YAxisMovingGripSwichNotOn ,fbMachineState);	
+		fbAlarmZAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.ZAxisMovingGripSwichNotOn ,fbMachineState);	
+		fbAlarmGripperMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.GripperMovingGripSwichNotOn ,fbMachineState);	
+		fbAlarmMITSUBISHIError					:FB_Alarm(TC_Events.UserEventClass.MITSUBISHIError ,fbMachineState);
+		fbAlarmXAxisError						:FB_Alarm(TC_Events.UserEventClass.XAxisError ,fbMachineState);
+		fbAlarmYAxisError						:FB_Alarm(TC_Events.UserEventClass.YAxisError ,fbMachineState);
+		fbAlarmZAxisError						:FB_Alarm(TC_Events.UserEventClass.ZAxisError ,fbMachineState);
+		fbAlarmGripperError						:FB_Alarm(TC_Events.UserEventClass.GripperError ,fbMachineState);
+		fbAlarmEtherCATError					:FB_Alarm(TC_Events.UserEventClass.EtherCATError ,fbMachineState);
+		fbAlarmTerminalError					:FB_Alarm(TC_Events.UserEventClass.TerminalError ,fbMachineState);
+		fbAlarmParsistentDataInit				:FB_Alarm(TC_Events.UserEventClass.ParsistentDataInitialization,fbMachineState);
+		fbAlarmPersistentDataLoadFault			:FB_Alarm(TC_Events.UserEventClass.PersistentDataLoadFault,fbMachineState);
+		fbAlarmOldPersistentDataLoad			:FB_Alarm(TC_Events.UserEventClass.OldPersistentDataLoad,fbMachineState);
+		fbAlarmPersistentDataWriteError			:FB_Alarm(TC_Events.UserEventClass.PersistentDataWriteError,fbMachineState);
+		fbAlarmCycleTimeExceeded				:FB_Alarm(TC_Events.UserEventClass.CycleTimeExceeded,fbMachineState);
+
+
+//------パーシステントデータ管理------
+		fbPersistentDataManagement				:FB_PersistentDataManagement(Param_3AxisRobot.PcAmsNetId);						//パーシステントデータ管理ファンクションブロック
+		bPersistentDataWriteError				:BOOL;																			//パースステントデータ書き込み失敗
+		bPersistentDataWriteRequest				:BOOL;																			//パーシステントデータ書き込みリクエスト
+
+//------PCシャットダウン------
+		fbPcSafeOff								:FB_PcSafeOff(PcAmsNetId:=Param_3AxisRobot.PcAmsNetId);							//PCシャットダウン
+
+//------Axis制御------
+		fbXAxis									:FB_AxisAbsolute(	fMaxPosition:=Param_3AxisRobot.lrXYAxisMaxPosition,
+																	fMinPosition:=Param_3AxisRobot.lrXYZAxisMinPosition,
+																	fMaxVelocity:=Param_3AxisRobot.lrXYZAxisMaxVelocity,
+																	fMinVelocity:=Param_3AxisRobot.lrXYZAxisMinVelocity);		//X軸
+																	
+		fbYAxis									:FB_AxisAbsolute(	fMaxPosition:=Param_3AxisRobot.lrXYAxisMaxPosition,
+																	fMinPosition:=Param_3AxisRobot.lrXYZAxisMinPosition,
+																	fMaxVelocity:=Param_3AxisRobot.lrXYZAxisMaxVelocity,
+																	fMinVelocity:=Param_3AxisRobot.lrXYZAxisMinVelocity);		//Y軸
+																	
+		fbZAxis									:FB_ZAxisAbsolute(	fMaxPosition:=Param_3AxisRobot.lrZAxisMaxPosition,
+																	fMinPosition:=Param_3AxisRobot.lrXYZAxisMinPosition,
+																	fMaxVelocity:=Param_3AxisRobot.lrXYZAxisMaxVelocity,
+																	fMinVelocity:=Param_3AxisRobot.lrXYZAxisMinVelocity,
+																	fXZPlaneSlope:=Param_3AxisRobot.lrXZPlaneSlope,
+																	fYZPlaneSlope:=Param_3AxisRobot.lrYZPlaneSlope);			//Z軸
+						
+		fbGripper								:FB_GripperAbsolute(fMaxPosition:=Param_3AxisRobot.lrGripperMaxPosition,
+																	fMinPosition:=Param_3AxisRobot.lrGripperMinPosition,
+																	fMaxVelocity:=Param_3AxisRobot.lrGripperMaxVelocity,
+																	fMinVelocity:=Param_3AxisRobot.lrGripperMinVelocity,
+																	lrAttachmentDiameter:=Param_3AxisRobot.lrAttachmentDiameter,
+																	lrAttachmentRotationRadius:=Param_3AxisRobot.lrAttachmentRotationRadius);		//Gripper
+
+		bAxisPowerON							:BOOL;																			//ドライブON記憶
+		bAxisEnable								:BOOL;																			//全軸有効
+		bAxisMoving								:BOOL;																			//いずれかの軸が動作中
+		bAxisError								:BOOL;																			//いずれかの軸がエラー
+		bAxisMoveCommandAborted					:BOOL;																			//いずれかの軸でムーブ命令がアボート
+		fbMcPowerOffTon							:ton;																			//パワーオフの長押し用のタイマー
+		fbMcPowerREdge							:R_TRIG;
+		fbMcPowerFEdge							:F_TRIG;
+
+		fbJogFEdge								:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF F_TRIG;								//Jog動作用
+		bHomingStart							:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
+		bJogStart								:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
+
+//---ピック＆プレース制御---
+		ePickAndPlaceStep						:E_PickAndPlaceStep:=E_PickAndPlaceStep.Stay;
+		iPickAndPlaceSubStep					:INT:=0;
+		i										:INT;
+		bPickAndPlaceMoveStart					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
+		
+		lrPieceDiameter							:LREAL:=20;
+		ZAxisUpTarget							:LREAL:=200;
+		ZAxisMidTarget							:LREAL:=235;
+		ZAxisLowTarget							:LREAL:=270;
+	
+//---図形描画制御---
+		eShapeWriteStep							:E_WriteStep:=E_WriteStep.Stay;
+		iShapeWriteSubStep						:INT:=0;
+		bShapeWriteMoveStart					:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
+		bCircleWriteFin							:BOOL;																			//円の書き終わり
+		iNextProp:INT;//必要か不明
+
+//------ロードセル制御------
+		fbLoadCell								:FB_LoadCell(	lrRatedCapacity			:=lrRatedCapacity,
+																lrRatedOutput			:=lrRatedOutput,
+																diMaxNumber				:=diMaxNumber,
+																diBridgeMeasuringRange	:=diBridgeMeasuringRange,
+																diSupplyMeasuringRange	:=diSupplyMeasuringRange);				//ロードセル制御ファンクションブロック
+	END_VAR
+	VAR CONSTANT
+		//------ロードセルの仕様------
+		lrRatedCapacity							:LREAL		:=0.6000;															//ロードセル定格容量　R.C. [kg]
+		lrRatedOutput							:LREAL		:=1.00000;															//ロードセル定格出力 R.O. [mV/V]
+		
+		//------ロードセル用入力ターミナルの仕様------
+		diMaxNumber								:DINT		:=2147483647;														//ロードセル入力ターミナル最大値　
+		diBridgeMeasuringRange					:DINT		:=20;																//ロードセルの出力電圧入力ターミナル測定レンジ　[mV]
+		diSupplyMeasuringRange					:DINT		:=12;																//ロードセルへの印加電圧入力ターミナル測定レンジ [V]
+	END_VAR
+	VAR
+
+//------三菱と通信------
+		//---三菱Fx5sの実入出力と接続---
+		bTwinCATRun						AT %Q* :BOOL;																			//三菱のX2に入力 ターミナル5(EL2088)チャンネル1
+		bTwinCATModbusStart				AT %Q* :BOOL;																			//三菱のX3に入力 ターミナル5(EL2088)チャンネル2
+		bTwinCATAlarm					AT %Q* :BOOL;																			//三菱のx4に入力 ターミナル5(EL2088)チャンネル3
+		bQX004							AT %Q* :BOOL;																			//三菱のx5に入力 ターミナル5(EL2088)チャンネル4
+		bMitsubishiRun					AT %I* :BOOL;																			//三菱のY4より出力 ターミナル4(EL1088)チャンネル1
+		bMitsubishiModbusStart			AT %I* :BOOL;																			//三菱のY5より出力 ターミナル4(EL1088)チャンネル2
+		bMitsubishiAlarm				AT %I* :BOOL;																			//三菱のY6より出力 ターミナル4(EL1088)チャンネル3
+		bYI004							AT %I* :BOOL;																			//三菱のY7より出力 ターミナル4(EL1088)チャンネル4
+		
+		(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
+		bToXAxisError							:REFERENCE TO BOOL;																//0:X軸エラー発生中
+		bToYAxisError							:REFERENCE TO BOOL;																//1:Y軸エラー発生中
+		bToZAxisError							:REFERENCE TO BOOL;																//2:Z軸エラー発生中
+		bToGripperError							:REFERENCE TO BOOL;																//3:グリッパーエラー発生中
+		bToMcPowerOn							:REFERENCE TO BOOL;																//4:McPower On
+		bToMcMoveHomeOn							:REFERENCE TO BOOL;																//5:McMoveHome On
+		bToMcHaltOn								:REFERENCE TO BOOL;																//6:McHalt On
+		bToCameraSoftWareTrigger				:REFERENCE TO BOOL;																//7:カメラのトリガー
+		bToAlarmReset							:REFERENCE TO BOOL;																//8:アラームリセット
+		bToSafetyReset							:REFERENCE TO BOOL;																//9:セフティーリセット
+		bToXAsisMoving							:REFERENCE TO BOOL;																//10:X軸起動中
+		bToYAsisMoving							:REFERENCE TO BOOL;																//11:Y軸起動中
+		bToZAsisMoving							:REFERENCE TO BOOL;																//12:Z軸起動中
+		bToGripperMoving						:REFERENCE TO BOOL;																//13:グリッパー起動中
+		bToWriteMoving							:REFERENCE TO BOOL;																//20:図形描画中
+		bToPickAndPlaceMoving					:REFERENCE TO BOOL;																//21:ピック＆プレース実行中
+		bToAutoMoveResetting					:REFERENCE TO BOOL;																//22:オート動作のリセット中
+		
+		(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
+		bFromAxisErrorReset						:REFERENCE TO BOOL;																//0:軸エラーのリセット
+		bFromEStop								:REFERENCE TO BOOL;																//1:非常停止ボタン（通常ON）
+		bFromKeySwitchOpen						:REFERENCE TO BOOL;																//2:キースイッチ(開)
+		bFromKeySwitchClose						:REFERENCE TO BOOL;																//3:キースイッチ(閉)
+		bFromMcPowerOn							:REFERENCE TO BOOL;																//4:スイッチ1 ドライブON 長押しOFF
+		bFromMcMoveHomeOn						:REFERENCE TO BOOL;																//5:スイッチ2　原点復帰
+		bFromMcHaltOn							:REFERENCE TO BOOL;																//6:スイッチ3　停止
+		bFromCameraTrigger						:REFERENCE TO BOOL;																//7:スイッチ4　カメラトリガーON
+		bFromAlarmReset							:REFERENCE TO BOOL;																//8:スイッチ5　アラームリセット
+		bFromSafetyReset						:REFERENCE TO BOOL;																//9:スイッチ6　非常停止リセット
+		bFromGripSwich							:REFERENCE TO BOOL;																//10:グリップスイッチ
+		bFromTareWeightSet						:REFERENCE TO BOOL;																//11:風袋重量セット
+		bFromCalibrationWeightSet				:REFERENCE TO BOOL;																//12:校正重量セット
+		bFromPcReboot							:REFERENCE TO BOOL;																//13:PCリブート
+		bFromPcShutdown							:REFERENCE TO BOOL;																//14:PCシャットダウン
+		bFromXAxisJogStart						:REFERENCE TO BOOL;																//16:X軸Jog起動
+		bFromYAxisJogStart						:REFERENCE TO BOOL;																//17:Y軸Jog起動
+		bFromZAxisJogStart						:REFERENCE TO BOOL;																//18:Z軸Jog起動
+		bFromGripperJogStart					:REFERENCE TO BOOL;																//19:グリッパーJog起動
+		bFromWriteStart							:REFERENCE TO BOOL;																//20:図形描画スタート
+		bFromPickAndPlaceStart					:REFERENCE TO BOOL;																//21:ピック＆プレーススタート
+		bFromAutoMoveReset						:REFERENCE TO BOOL;																//22:オート動作のリセット
+		bFromXAxisJogPlus						:REFERENCE TO BOOL;																//23:X軸連続Jogプラス起動
+		bFromYAxisJogPlus						:REFERENCE TO BOOL;																//24:Y軸連続Jogプラス起動
+		bFromZAxisJogPlus						:REFERENCE TO BOOL;																//25:Z軸連続Jogプラス起動
+		bFromGripperJogPlus						:REFERENCE TO BOOL;																//26:グリッパー連続Jogプラス起動
+		bFromXAxisJogPlusHigh					:REFERENCE TO BOOL;																//27:X軸連続Jogプラスハイスピード起動
+		bFromYAxisJogPlusHigh					:REFERENCE TO BOOL;																//28:Y軸連続Jogプラスハイスピード起動
+		bFromZAxisJogPlusHigh					:REFERENCE TO BOOL;																//29:Z軸連続Jogプラスハイスピード起動
+		bFromGripperJogPlusHigh					:REFERENCE TO BOOL;																//30:グリッパー連続Jogプラスハイスピード起動
+		bFromXAxisJogMinus						:REFERENCE TO BOOL;																//31:X軸連続Jogマイナス起動
+		bFromYAxisJogMinus						:REFERENCE TO BOOL;																//32:Y軸連続Jogマイナス起動
+		bFromZAxisJogMinus						:REFERENCE TO BOOL;																//33:Z軸連続Jogマイナス起動
+		bFromGripperJogMinus					:REFERENCE TO BOOL;																//34:グリッパー連続Jogマイナス起動
+		bFromXAxisJogMinusHigh					:REFERENCE TO BOOL;																//35:X軸連続Jogマイナスハイスピード起動
+		bFromYAxisJogMinusHigh					:REFERENCE TO BOOL;																//36:Y軸連続Jogマイナスハイスピード起動
+		bFromZAxisJogMinusHigh					:REFERENCE TO BOOL;																//37:Z軸連続Jogマイナスハイスピード起動
+		bFromGripperJogMinusHigh				:REFERENCE TO BOOL;																//38:グリッパー連続Jogマイナスハイスピード起動
+		
+		(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
+		wToXAxisActPos							:REFERENCE TO WORD;																//0:X軸ポジション
+		wToYAxisActPos							:REFERENCE TO WORD;																//1:Y軸ポジション
+		wToZAxisActPos							:REFERENCE TO WORD;																//2:Z軸ポジション
+		wToGripperActPos						:REFERENCE TO WORD;																//3:グリッパーポジション
+		wTolrBridgeVoltage						:REFERENCE TO WORD;																//4:ロードセルの出力電圧[mV]
+		wToSupplyVoltage						:REFERENCE TO WORD;																//5:ロードセルへの印加電圧[V]
+		wToGrossWeight							:REFERENCE TO WORD;																//6:測定重量[kg]
+		wToNetWeight							:REFERENCE TO WORD;																//7:正味重量[kg]
+		wToTareWeight 							:REFERENCE TO WORD;																//8:風袋重量[kg]
+		
+		(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
+		wFromCalibrationWeight					:REFERENCE TO WORD;																//0:校正重量[kg]
+		wFromXAxisJogTarget						:REFERENCE TO WORD;																//16:X軸Jogターゲットポジション
+		wFromYAxisJogTarget						:REFERENCE TO WORD;																//17:Y軸Jogターゲットポジション
+		wFromZAxisJogTarget						:REFERENCE TO WORD;																//18:Z軸Jogターゲットポジション
+		wFromGripperJogTarget					:REFERENCE TO WORD;																//19:グリッパーJogターゲットポジション
+
+
+//------空き------
+		bEL1004Channel1					AT %I*	:BOOL;																			//ターミナル2(EL1004)チャンネル1
+		bEL1004Channel2					AT %I*	:BOOL;																			//ターミナル2(EL1004)チャンネル2
+		bEL1004Channel3					AT %I*	:BOOL;																			//ターミナル2(EL1004)チャンネル3
+		bEL1004Channel4					AT %I*	:BOOL;																			//ターミナル2(EL1004)チャンネル4
+	
+		bEL2004Channel2					AT %Q*	:BOOL;																			//ターミナル3(EL2004)チャンネル2
+		bEL2004Channel3					AT %Q*	:BOOL;																			//ターミナル3(EL2004)チャンネル3
+		bEL2004Channel4					AT %Q*	:BOOL;																			//ターミナル3(EL2004)チャンネル4
+	
+		bEL1088Channel5					AT %I*	:BOOL;																			//ターミナル4(EL1088)チャンネル5
+		bEL1088Channel6					AT %I*	:BOOL;																			//ターミナル4(EL1088)チャンネル6
+		bEL1088Channel7					AT %I*	:BOOL;																			//ターミナル4(EL1088)チャンネル7
+
+
+
+//------TEST------
+		bTEST:BOOL;
+
+	END_VAR
+
+	]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bInit=FALSE THEN
+	General_Init();
+ELSE
+	General_Safety();
+	General_Diagnosis();
+	General_Alarm();
+	General_MitsubishiCom();
+	General_MachineManagement();
+	
+	General_LoadCell();	
+	General_AxisOrganization();
+	
+	//---ストップステートでは無く、軸が有効の場合に起動---
+	IF fbMachineState.bStopMachine=FALSE AND bAxisEnable=TRUE  THEN
+		//ゼロポジション実行
+		Operating_Homing();
+		
+		//Jog実行
+		Operating_Jog();
+
+		//ピック＆プレース実行
+		Operating_PickAndPlace();	
+	
+		//図形描画実行
+		Operating_ShapeWrite();
+
+	END_IF
+	
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="General_Alarm" Id="{34f9dba5-00cb-40b5-942a-a6cbfdffda81}">
+      <Declaration><![CDATA[METHOD General_Alarm]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	//---マシンステートFB---
+	fbMachineState(
+		bStay			:=NOT bAxisEnable AND NOT bAxisMoving,
+		bStop			:=bAxisEnable AND NOT bAxisMoving,
+		bMoving			:=bAxisMoving,
+		bStopMachine	=>
+	);
+	
+	//---パトライト制御---
+	fbPatlite.eMachineState:=fbMachineState.eMachineState;
+	
+	//---アラーム制御---
+	fbAlarmSafetyNotRun(
+		bRaise		:=bSafetyRun_Stop=TRUE AND bSafetyInRun=FALSE,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromSafetyReset
+	);
+
+	fbAlarmSafetyFbError(
+		bRaise		:=bFBEstopError=TRUE OR bFBEdmError=TRUE,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromSafetyReset
+	);
+
+	fbAlarmEmergencyStop(
+		bRaise		:=bFBEStopInput1=FALSE AND bFBEStopInput2=FALSE AND bFBEstopOutput=FALSE,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromSafetyReset
+	);
+
+	fbAlarmXAxisMovingGripSwichNotOn(
+		bRaise		:=fbXAxis.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bFromKeySwitchClose=FALSE,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmYAxisMovingGripSwichNotOn(
+		bRaise		:=fbYAxis.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bFromKeySwitchClose=FALSE,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmZAxisMovingGripSwichNotOn(
+		bRaise		:=fbZAxis.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bFromKeySwitchClose=FALSE,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmGripperMovingGripSwichNotOn(
+		bRaise		:=fbGripper.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bFromKeySwitchClose=FALSE,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+
+	fbAlarmMITSUBISHIError(
+		bRaise		:=bMitsubishiRun=FALSE OR bMitsubishiModbusStart=FALSE OR bMitsubishiAlarm=FALSE,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+
+	fbAlarmXAxisError(
+		bRaise		:=fbXAxis.bStateError,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmYAxisError(
+		bRaise		:=fbYAxis.bStateError,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmZAxisError(
+		bRaise		:=fbZAxis.bStateError,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmGripperError(
+		bRaise		:=fbGripper.bStateError,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmEtherCATError(
+		bRaise		:=NOT bEtherCATOK,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmTerminalError(
+		bRaise		:=NOT bTerminalOK,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmParsistentDataInit(
+		bRaise		:=NOT fbPersistentDataManagement.bPersistentDataNotInit,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmPersistentDataLoadFault(
+		bRaise		:=NOT _AppInfo.BootDataLoaded,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmOldPersistentDataLoad(
+		bRaise		:=_AppInfo.OldBootData,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+	
+	fbAlarmPersistentDataWriteError(
+		bRaise		:=bPersistentDataWriteError,
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);
+
+	
+	fbAlarmCycleTimeExceeded(
+		bRaise		:=_TaskInfo[GETCURTASKINDEXEX()].CycleTimeExceeded, //	_TaskInfo[1].CycleTimeExceeded OR _TaskInfo[2].CycleTimeExceeded, //Vision TaskはPCのスペック的にサイクルタイム超過してしまうのでオミット
+		bConfirm	:=fbPatlite.bSwitch,
+		bClear		:=bFromAlarmReset
+	);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="General_AxisOrganization" Id="{85097ed6-20b1-4fc0-bd82-f0831168740c}">
+      <Declaration><![CDATA[METHOD General_AxisOrganization]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//---停止---
+	//---マシンステートのファンクションブロックが停止出力していたら停止---
+	fbXAxis.Stop	(bDriveStop:=fbMachineState.bStopMachine);
+	fbYAxis.Stop	(bDriveStop:=fbMachineState.bStopMachine);
+	fbZAxis.Stop	(bDriveStop:=fbMachineState.bStopMachine);
+	fbGripper.Stop	(bDriveStop:=fbMachineState.bStopMachine);
+
+//---三菱からのビットに応じてマニュアル駆動---
+	//---一時停止ボタン---
+	fbXAxis.Halt	(bDriveHalt:=bFromMcHaltOn);
+	fbYAxis.Halt	(bDriveHalt:=bFromMcHaltOn);
+	fbZAxis.Halt	(bDriveHalt:=bFromMcHaltOn);
+	fbGripper.Halt	(bDriveHalt:=bFromMcHaltOn);
+	bToMcHaltOn:=fbXAxis.bStateHaltDone AND fbYAxis.bStateHaltDone AND fbZAxis.bStateHaltDone AND fbGripper.bStateHaltDone;
+	
+	//---軸エラーのリセットボタン---
+	fbXAxis.Reset	(bDriveReset:=bFromAxisErrorReset);
+	fbYAxis.Reset	(bDriveReset:=bFromAxisErrorReset);
+	fbZAxis.Reset	(bDriveReset:=bFromAxisErrorReset);
+	fbGripper.Reset	(bDriveReset:=bFromAxisErrorReset);
+	
+	//-----McPoerのOnとOff------
+	fbMcPowerREdge(CLK:=bFromMcPowerOn,Q=>);
+	fbMcPowerFEdge(CLK:=bAxisEnable,Q=>);
+	fbMcPowerOffTon(IN:=bFromMcPowerOn,PT:=T#3S,Q=>,ET=>);
+
+	IF bAxisPowerON=FALSE AND fbMcPowerREdge.Q=TRUE THEN;
+		bAxisPowerON:=TRUE;
+	ELSIF bAxisPowerON=TRUE AND fbMcPowerOffTon.Q=TRUE THEN ;
+		bAxisPowerON:=FALSE;
+	ELSIF fbMcPowerFEdge.Q=TRUE THEN;
+		bAxisPowerON:=FALSE;
+	END_IF;
+
+	fbXAxis.Enable	(bEnable:= bAxisPowerON);	
+	fbYAxis.Enable	(bEnable:= bAxisPowerON);	
+	fbZAxis.Enable	(bEnable:= bAxisPowerON);
+	fbGripper.Enable(bEnable:= bAxisPowerON);
+
+//---軸の状態を取得---
+	bAxisEnable:=fbXAxis.bStateEnable AND fbYAxis.bStateEnable AND fbZAxis.bStateEnable AND fbGripper.bStateEnable;
+	bAxisMoving:=fbXAxis.bStateMoving OR fbYAxis.bStateMoving OR fbZAxis.bStateMoving OR fbGripper.bStateMoving;
+	bAxisError:=fbXAxis.bStateError OR fbYAxis.bStateError OR fbZAxis.bStateError OR fbGripper.bStateError;
+	bAxisMoveCommandAborted:=fbXAxis.bStateMoveCommandAborted OR fbYAxis.bStateMoveCommandAborted OR fbZAxis.bStateMoveCommandAborted	OR fbGripper.bStateMoveCommandAborted;
+
+//---各軸のステータスを三菱へ出力---
+	//PowerON
+	bToMcPowerOn:=bAxisEnable;
+	
+	//Error
+	bToXAxisError:=fbXAxis.bStateError;
+	bToYAxisError:=fbYAxis.bStateError;
+	bToZAxisError:=fbZAxis.bStateError;
+	bToGripperError:=fbGripper.bStateError;
+	
+	//Moving
+	bToXAsisMoving:=fbXAxis.bStateMoving;
+	bToYAsisMoving:=fbYAxis.bStateMoving;
+	bToZAsisMoving:=fbZAxis.bStateMoving;
+	bToGripperMoving:=fbGripper.bStateMoving;
+	
+	//ActPos,GOTで100で割って小数点二位まで表示するために100倍にする
+	wToXAxisActPos:=LREAL_TO_WORD(100*fbXAxis.fStateActPos);
+	wToYAxisActPos:=LREAL_TO_WORD(100*fbYAxis.fStateActPos);
+	wToZAxisActPos:=LREAL_TO_WORD(100*fbZAxis.fStateActPos);
+	wToGripperActPos:=LREAL_TO_WORD(100*fbGripper.fStateActPos);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="General_Diagnosis" Id="{9a8d7aaf-4600-48ce-bd79-d2627266e342}">
+      <Declaration><![CDATA[METHOD General_Diagnosis
+VAR
+	//i				:UINT;
+	eTerminal		:E_Terminal;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//パーシステントデータ書き込みとエラー取得
+	bPersistentDataWriteError:=fbPersistentDataManagement.WritePersistentData(bPersistentDataWriteRequest);
+
+//EtherCATマスター診断
+	IF fbDiagnosisEtherCAT.DevState_Diagnosis()=FALSE THEN
+		bEtherCATOK:=FALSE;
+	ELSIF fbDiagnosisEtherCAT.FrmState_Diagnosis(0)=FALSE THEN
+		bEtherCATOK:=FALSE;
+	ELSIF fbDiagnosisEtherCAT.FrmState_Diagnosis(1)=FALSE THEN
+		bEtherCATOK:=FALSE;
+	ELSIF fbDiagnosisEtherCAT.FrmState_Diagnosis(2)=FALSE THEN
+		bEtherCATOK:=FALSE;
+	ELSIF fbDiagnosisEtherCAT.FrmWcState_Diagnosis(0)=FALSE THEN
+		bEtherCATOK:=FALSE;
+	ELSIF fbDiagnosisEtherCAT.FrmWcState_Diagnosis(1)=FALSE THEN
+		bEtherCATOK:=FALSE;
+	ELSIF fbDiagnosisEtherCAT.FrmWcState_Diagnosis(2)=FALSE THEN
+		bEtherCATOK:=FALSE;
+	ELSIF fbDiagnosisEtherCAT.SlaveCount_Diagnosis()=FALSE THEN
+		bEtherCATOK:=FALSE;
+	ELSE
+		bEtherCATOK:=TRUE;
+	END_IF
+
+						
+//ターミナル診断
+	//診断用変数リセット
+	bTerminalOK:=TRUE;
+
+	FOR eTerminal:= E_Terminal.EK1100 TO E_Terminal.AZD4A_KED DO
+		
+		CASE eTerminal OF
+			E_Terminal.EK1100,E_Terminal.AZD4A_KED:	//EK1100とAZD4A-KEDはステータスしかないので、ステータスのみチェック
+				IF fbDiagnosisTerminal[eTerminal].State_Diagnosis()=FALSE THEN
+					bTerminalOK:=FALSE;
+				END_IF			
+			
+			E_Terminal.EL1004..E_Terminal.EL3351:	//通常ターミナルはステータスとワーキングカウンターをチェック
+				IF fbDiagnosisTerminal[eTerminal].State_Diagnosis()=FALSE THEN
+					bTerminalOK:=FALSE;
+				ELSIF fbDiagnosisTerminal[eTerminal].WcState_Diagnosis(0)=FALSE THEN
+					bTerminalOK:=FALSE;
+				END_IF
+				
+			E_Terminal.EL2911:	//EL2911はステータスとワーキングカウンター二個をチェック
+				IF fbDiagnosisTerminal[eTerminal].State_Diagnosis()=FALSE THEN
+					bTerminalOK:=FALSE;
+				ELSIF fbDiagnosisTerminal[eTerminal].WcState_Diagnosis(0)=FALSE THEN
+					bTerminalOK:=FALSE;
+				ELSIF fbDiagnosisTerminal[eTerminal].WcState_Diagnosis(1)=FALSE THEN
+					bTerminalOK:=FALSE;
+				END_IF
+				
+		END_CASE
+	END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="General_Init" Id="{a4330914-15ee-490a-abb7-3364e2d18ac8}">
+      <Declaration><![CDATA[METHOD General_Init]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
+	bToXAxisError					REF=GVL.mb_Input_Coils[0];
+	bToYAxisError					REF=GVL.mb_Input_Coils[1];
+	bToZAxisError					REF=GVL.mb_Input_Coils[2];
+	bToGripperError					REF=GVL.mb_Input_Coils[3];
+	bToMcPowerOn					REF=GVL.mb_Input_Coils[4];
+	bToMcMoveHomeOn					REF=GVL.mb_Input_Coils[5];
+	bToMcHaltOn						REF=GVL.mb_Input_Coils[6];
+	bToCameraSoftWareTrigger		REF=GVL.mb_Input_Coils[7];
+	bToAlarmReset					REF=GVL.mb_Input_Coils[8];
+	bToSafetyReset					REF=GVL.mb_Input_Coils[9];
+	bToXAsisMoving					REF=GVL.mb_Input_Coils[10];
+	bToYAsisMoving					REF=GVL.mb_Input_Coils[11];
+	bToZAsisMoving					REF=GVL.mb_Input_Coils[12];
+	bToGripperMoving				REF=GVL.mb_Input_Coils[13];
+	bToWriteMoving					REF=GVL.mb_Input_Coils[20];
+	bToPickAndPlaceMoving			REF=GVL.mb_Input_Coils[21];
+	bToAutoMoveResetting			REF=GVL.mb_Input_Coils[22];	
+	
+	
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
+	bFromAxisErrorReset				REF=GVL.mb_Output_Coils[0];
+	bFromEStop						REF=GVL.mb_Output_Coils[1];
+	bFromKeySwitchOpen				REF=GVL.mb_Output_Coils[2];
+	bFromKeySwitchClose				REF=GVL.mb_Output_Coils[3];
+	bFromMcPowerOn					REF=GVL.mb_Output_Coils[4];
+	bFromMcMoveHomeOn				REF=GVL.mb_Output_Coils[5];
+	bFromMcHaltOn					REF=GVL.mb_Output_Coils[6];
+	bFromCameraTrigger				REF=GVL.mb_Output_Coils[7];
+	bFromAlarmReset					REF=GVL.mb_Output_Coils[8];
+	bFromSafetyReset				REF=GVL.mb_Output_Coils[9];
+	bFromGripSwich					REF=GVL.mb_Output_Coils[10];
+	bFromTareWeightSet				REF=GVL.mb_Output_Coils[11];
+	bFromCalibrationWeightSet		REF=GVL.mb_Output_Coils[12];
+	bFromPcReboot					REF=GVL.mb_Output_Coils[13];
+	bFromPcShutdown					REF=GVL.mb_Output_Coils[14];
+	bFromXAxisJogStart				REF=GVL.mb_Output_Coils[16];
+	bFromYAxisJogStart				REF=GVL.mb_Output_Coils[17];
+	bFromZAxisJogStart				REF=GVL.mb_Output_Coils[18];
+	bFromGripperJogStart			REF=GVL.mb_Output_Coils[19];
+	bFromWriteStart					REF=GVL.mb_Output_Coils[20];
+	bFromPickAndPlaceStart			REF=GVL.mb_Output_Coils[21];
+	bFromAutoMoveReset				REF=GVL.mb_Output_Coils[22];
+	bFromXAxisJogPlus				REF=GVL.mb_Output_Coils[23];
+	bFromYAxisJogPlus				REF=GVL.mb_Output_Coils[24];
+	bFromZAxisJogPlus				REF=GVL.mb_Output_Coils[25];
+	bFromGripperJogPlus				REF=GVL.mb_Output_Coils[26];
+	bFromXAxisJogPlusHigh			REF=GVL.mb_Output_Coils[27];
+	bFromYAxisJogPlusHigh			REF=GVL.mb_Output_Coils[28];
+	bFromZAxisJogPlusHigh			REF=GVL.mb_Output_Coils[29];
+	bFromGripperJogPlusHigh			REF=GVL.mb_Output_Coils[30];
+	bFromXAxisJogMinus				REF=GVL.mb_Output_Coils[31];
+	bFromYAxisJogMinus				REF=GVL.mb_Output_Coils[32];
+	bFromZAxisJogMinus				REF=GVL.mb_Output_Coils[33];
+	bFromGripperJogMinus			REF=GVL.mb_Output_Coils[34];
+	bFromXAxisJogMinusHigh			REF=GVL.mb_Output_Coils[35];
+	bFromYAxisJogMinusHigh			REF=GVL.mb_Output_Coils[36];
+	bFromZAxisJogMinusHigh			REF=GVL.mb_Output_Coils[37];
+	bFromGripperJogMinusHigh		REF=GVL.mb_Output_Coils[38];
+
+	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
+	wToXAxisActPos					REF=GVL.mb_Input_Registers[0];
+	wToYAxisActPos					REF=GVL.mb_Input_Registers[1];
+	wToZAxisActPos					REF=GVL.mb_Input_Registers[2];
+	wToGripperActPos				REF=GVL.mb_Input_Registers[3];
+	wTolrBridgeVoltage				REF=GVL.mb_Input_Registers[4];
+	wToSupplyVoltage				REF=GVL.mb_Input_Registers[5];
+	wToGrossWeight					REF=GVL.mb_Input_Registers[6];
+	wToNetWeight					REF=GVL.mb_Input_Registers[7];
+	wToTareWeight					REF=GVL.mb_Input_Registers[8];
+	
+	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
+	wFromCalibrationWeight			REF=GVL.mb_Output_Registers[0];
+	wFromXAxisJogTarget				REF=GVL.mb_Output_Registers[16];
+	wFromYAxisJogTarget				REF=GVL.mb_Output_Registers[17];
+	wFromZAxisJogTarget				REF=GVL.mb_Output_Registers[18];
+	wFromGripperJogTarget			REF=GVL.mb_Output_Registers[19];
+	
+	//初期化後TRUEへ
+	bInit:=TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="General_LoadCell" Id="{73b2e210-cf8b-4425-9417-ec5486720479}">
+      <Declaration><![CDATA[METHOD General_LoadCell]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//---ロードセル制御---
+	//風袋重量セット
+	fbLoadCell.TareWeightSet(	bTareWeightSet				:=bFromTareWeightSet,
+								bPersistentDataWriteRequest	:=bPersistentDataWriteRequest);
+	
+	//キャリブレーションウェイトセット
+	fbLoadCell.CalibrationWeightSet(bCalibrationWeightSet:=bFromCalibrationWeightSet);
+
+
+//---ロードセルの測定値などを三菱と通信---
+	//測定値,GOTで1000で割って小数点三位まで表示するために1000倍にする
+	wTolrBridgeVoltage:=LREAL_TO_WORD(1000*fbLoadCell.lrBridgeVoltage);
+	wToSupplyVoltage:=LREAL_TO_WORD(1000*fbLoadCell.lrSupplyVoltage);
+	wToGrossWeight:=LREAL_TO_WORD(1000*fbLoadCell.lrGrossWeight);
+	wToNetWeight:=LREAL_TO_WORD(1000*fbLoadCell.lrNetWeight);
+	wToTareWeight:=LREAL_TO_WORD(1000*fbLoadCell.lrTareWeight);
+	//校正重量,GOTで1000倍で入力するため1000で割る
+	fbLoadCell.lrCalibrationWeight:=WORD_TO_LREAL(wFromCalibrationWeight)/1000;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="General_MachineManagement" Id="{e4607e6b-531b-4c3e-8e88-b2ed7fff2738}">
+      <Declaration><![CDATA[METHOD General_MachineManagement
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbPcSafeOff.Reboot(bReboot:=bFromPcReboot);
+
+fbPcSafeOff.Shutdown(bShutdown:=bFromPcShutdown);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="General_MitsubishiCom" Id="{87685c7c-3a1c-4d99-a4e3-28b58bb9d658}">
+      <Declaration><![CDATA[METHOD General_MitsubishiCom]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//---GVLのModbus TCPの変数をGVL_Mitsubishiの変数に書き込み---
+	//---アラームここから---
+	GVL.mb_Input_Coils[104]			:=fbAlarmSafetyNotRun.bRaised;
+	GVL.mb_Input_Coils[105]			:=fbAlarmSafetyFbError.bRaised;
+	GVL.mb_Input_Coils[106]			:=fbAlarmEmergencyStop.bRaised;
+	GVL.mb_Input_Coils[107]			:=fbAlarmXAxisMovingGripSwichNotOn.bRaised;
+	GVL.mb_Input_Coils[108]			:=fbAlarmYAxisMovingGripSwichNotOn.bRaised;
+	GVL.mb_Input_Coils[109]			:=fbAlarmZAxisMovingGripSwichNotOn.bRaised;
+	GVL.mb_Input_Coils[110]			:=fbAlarmGripperMovingGripSwichNotOn.bRaised;
+	GVL.mb_Input_Coils[111]			:=fbAlarmMITSUBISHIError.bRaised;
+	GVL.mb_Input_Coils[112]			:=fbAlarmXAxisError.bRaised;
+	GVL.mb_Input_Coils[113]			:=fbAlarmYAxisError.bRaised;
+	GVL.mb_Input_Coils[114]			:=fbAlarmZAxisError.bRaised;
+	GVL.mb_Input_Coils[115]			:=fbAlarmGripperError.bRaised;
+	GVL.mb_Input_Coils[116]			:=fbAlarmEtherCATError.bRaised;
+	GVL.mb_Input_Coils[117]			:=fbAlarmTerminalError.bRaised;
+	GVL.mb_Input_Coils[118]			:=fbAlarmParsistentDataInit.bRaised;
+	GVL.mb_Input_Coils[119]			:=fbAlarmPersistentDataLoadFault.bRaised;
+	GVL.mb_Input_Coils[120]			:=fbAlarmOldPersistentDataLoad.bRaised;
+	GVL.mb_Input_Coils[121]			:=fbAlarmPersistentDataWriteError.bRaised;
+	GVL.mb_Input_Coils[122]			:=fbAlarmCycleTimeExceeded.bRaised;
+	//---アラームここまで---
+
+
+
+//-----三菱へ出力-----
+	bTwinCATModbusStart:=TRUE;
+	bTwinCATRun:=TRUE;
+	
+	bQX004:=TRUE;	//未使用だけどONしないとアラーム発報してしまうからTRUE
+	
+	IF fbMachineState.eMachineState < E_MachineState.Stay THEN
+		bTwinCATAlarm:=FALSE;
+	ELSE
+		bTwinCATAlarm:=TRUE;
+	END_IF
+
+//---三菱より入力---
+	IF bMitsubishiRun=FALSE THEN
+		RETURN;
+	ELSIF bMitsubishiModbusStart=FALSE THEN
+		RETURN;
+	END_IF
+
+//-----カメラシャッター応答-----
+	GVL.bAutoCameraTriger:=bFromCameraTrigger;
+	bToCameraSoftWareTrigger:=bFromCameraTrigger;
+
+//-----アラームリセット応答-----
+	bToAlarmReset:=bFromAlarmReset;
+
+//-----セーフティー非常停止リセット応答-----
+	bToSafetyReset:=bFromSafetyReset;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="General_Safety" Id="{e816aed5-3245-4485-bfd2-ded282c259e8}">
+      <Declaration><![CDATA[METHOD General_Safety]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	//---セーフティーをランする---
+	bSafetyRun_Stop:=TRUE;
+	
+	//---非常停止の電源ONを反転してセーフティーのEDMへ---
+	bFbEStopEDM:= NOT bFbEstopOutput;
+	
+	//---GOTからの非常停止リセットをセーフティーへ---
+	bFbEStopReset:=bFromSafetyReset;
+	
+	//---GOTからの非常停止リセットでセフティーエラーもリセットする---
+	bSafetyErrAck:=bFromSafetyReset;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Operating_Homing" Id="{30476169-4805-46f3-9ce9-7bd70a951fc1}">
+      <Declaration><![CDATA[METHOD Operating_Homing]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	IF bFromMcMoveHomeOn=TRUE THEN
+		bHomingStart[E_Axis.X_Axis]:=TRUE;
+		bHomingStart[E_Axis.Y_Axis]:=TRUE;
+		bHomingStart[E_Axis.Z_Axis]:=TRUE;
+		bHomingStart[E_Axis.Gripper]:=TRUE;
+	END_IF
+
+	IF bHomingStart[E_Axis.X_Axis]=TRUE OR bHomingStart[E_Axis.Y_Axis]=TRUE OR bHomingStart[E_Axis.Z_Axis]=TRUE OR bHomingStart[E_Axis.Gripper]=TRUE THEN
+		
+		//パラメーター設定
+		fbXAxis.fTargetPosition:=0;
+		fbYAxis.fTargetPosition:=0;
+		fbZAxis.fTargetPosition:=0;
+		fbGripper.fTargetPosition:=0;
+		
+		fbXAxis.fTargetVelocity:=50;
+		fbYAxis.fTargetVelocity:=50;
+		fbZAxis.fTargetVelocity:=50;
+		fbGripper.fTargetVelocity:=100;
+		
+		bToMcMoveHomeOn:=TRUE;
+		
+		//軸起動
+		fbXAxis.MoveAbsolute	(bMove:=bHomingStart[E_Axis.X_Axis]);
+		fbYAxis.MoveAbsolute	(bMove:=bHomingStart[E_Axis.Y_Axis]);
+		fbZAxis.MoveAbsolute	(bMove:=bHomingStart[E_Axis.Z_Axis]);
+		fbGripper.MoveAbsolute	(bMove:=bHomingStart[E_Axis.Gripper]);
+
+		//完了確認
+		IF fbXAxis.bStateMoveDone AND fbYAxis.bStateMoveDone AND fbZAxis.bStateMoveDone AND fbGripper.bStateMoveDone THEN
+			bHomingStart[E_Axis.X_Axis]:=FALSE;
+			bHomingStart[E_Axis.Y_Axis]:=FALSE;
+			bHomingStart[E_Axis.Z_Axis]:=FALSE;
+			bHomingStart[E_Axis.Gripper]:=FALSE;
+		END_IF
+
+
+	ELSE
+		bToMcMoveHomeOn:=FALSE;
+	END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Operating_Jog" Id="{f2012ff5-6d43-4148-af42-fa0bd4705cdc}">
+      <Declaration><![CDATA[METHOD Operating_Jog]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//---X軸---
+	IF bFromXAxisJogStart OR bFromXAxisJogPlus OR bFromXAxisJogPlusHigh OR bFromXAxisJogMinus OR bFromXAxisJogMinusHigh THEN
+		bJogStart[E_Axis.X_Axis]:=TRUE;
+	END_IF
+	
+	IF bJogStart[E_Axis.X_Axis]=TRUE THEN
+		//立下りエッジを取得
+		fbJogFEdge[E_Axis.X_Axis](CLK:=bFromXAxisJogPlus OR bFromXAxisJogPlusHigh OR bFromXAxisJogMinus OR bFromXAxisJogMinusHigh,Q=>);	
+		IF fbJogFEdge[E_Axis.X_Axis].Q THEN
+			fbXAxis.Halt(bDriveHalt:=fbJogFEdge[E_Axis.X_Axis].Q);
+		END_IF
+		
+		//パラメーター設定
+		IF bFromXAxisJogPlusHigh=TRUE THEN
+			fbXAxis.fTargetPosition:=300;
+			fbXAxis.fTargetVelocity:=150;
+		ELSIF bFromXAxisJogPlus=TRUE THEN
+			fbXAxis.fTargetPosition:=300;
+			fbXAxis.fTargetVelocity:=50;
+		ELSIF bFromXAxisJogMinusHigh=TRUE THEN
+			fbXAxis.fTargetPosition:=0;
+			fbXAxis.fTargetVelocity:=150;
+		ELSIF bFromXAxisJogMinus=TRUE THEN
+			fbXAxis.fTargetPosition:=0;
+			fbXAxis.fTargetVelocity:=50;
+		ELSIF bFromXAxisJogStart=TRUE THEN
+			fbXAxis.fTargetPosition:=wFromXAxisJogTarget;
+			fbXAxis.fTargetVelocity:=50;
+		END_IF
+		
+		//軸起動
+		fbXAxis.MoveAbsolute(bMove:=bJogStart[E_Axis.X_Axis]);
+		
+	END_IF
+
+
+//---Y軸---
+	IF bFromYAxisJogStart OR bFromYAxisJogPlus OR bFromYAxisJogPlusHigh OR bFromYAxisJogMinus OR bFromYAxisJogMinusHigh THEN
+		bJogStart[E_Axis.Y_Axis]:=TRUE;
+	END_IF
+	
+	IF bJogStart[E_Axis.Y_Axis]=TRUE THEN
+		//立下りエッジを取得
+		fbJogFEdge[E_Axis.Y_Axis](CLK:=bFromYAxisJogPlus OR bFromYAxisJogPlusHigh OR bFromYAxisJogMinus OR bFromYAxisJogMinusHigh,Q=>);
+		IF fbJogFEdge[E_Axis.Y_Axis].Q THEN
+			fbYAxis.Halt(bDriveHalt:=fbJogFEdge[E_Axis.Y_Axis].Q);
+		END_IF
+		
+		//パラメーター設定
+		IF bFromYAxisJogPlusHigh=TRUE THEN
+			fbYAxis.fTargetPosition:=300;
+			fbYAxis.fTargetVelocity:=150;
+		ELSIF bFromYAxisJogPlus=TRUE THEN
+			fbYAxis.fTargetPosition:=300;
+			fbYAxis.fTargetVelocity:=50;
+		ELSIF bFromYAxisJogMinusHigh=TRUE THEN
+			fbYAxis.fTargetPosition:=0;
+			fbYAxis.fTargetVelocity:=150;
+		ELSIF bFromYAxisJogMinus=TRUE THEN
+			fbYAxis.fTargetPosition:=0;
+			fbYAxis.fTargetVelocity:=50;
+		ELSIF bFromYAxisJogStart=TRUE THEN
+			fbYAxis.fTargetPosition:=wFromYAxisJogTarget;
+			fbYAxis.fTargetVelocity:=50;
+		END_IF
+		
+		//軸起動
+		fbYAxis.MoveAbsolute(bMove:=bJogStart[E_Axis.Y_Axis]);	
+
+	END_IF
+
+
+//---Z軸---
+	IF bFromZAxisJogStart OR bFromZAxisJogPlus OR bFromZAxisJogPlusHigh OR bFromZAxisJogMinus OR bFromZAxisJogMinusHigh THEN
+		bJogStart[E_Axis.Z_Axis]:=TRUE;
+	END_IF
+
+	IF bJogStart[E_Axis.Z_Axis]=TRUE THEN
+		//立下りエッジを取得
+		fbJogFEdge[E_Axis.Z_Axis](CLK:=bFromZAxisJogPlus OR bFromZAxisJogPlusHigh OR bFromZAxisJogMinus OR bFromZAxisJogMinusHigh,Q=>);
+		IF fbJogFEdge[E_Axis.Z_Axis].Q THEN
+			fbZAxis.Halt(bDriveHalt:=fbJogFEdge[E_Axis.Z_Axis].Q);
+		END_IF
+		
+		//パラメーター設定
+		IF bFromZAxisJogPlusHigh=TRUE THEN
+			fbZAxis.fTargetPosition:=300;
+			fbZAxis.fTargetVelocity:=150;
+		ELSIF bFromZAxisJogPlus=TRUE THEN
+			fbZAxis.fTargetPosition:=300;
+			fbZAxis.fTargetVelocity:=50;
+		ELSIF bFromZAxisJogMinusHigh=TRUE THEN
+			fbZAxis.fTargetPosition:=0;
+			fbZAxis.fTargetVelocity:=150;
+		ELSIF bFromZAxisJogMinus=TRUE THEN
+			fbZAxis.fTargetPosition:=0;
+			fbZAxis.fTargetVelocity:=50;
+		ELSIF bFromZAxisJogStart=TRUE THEN
+			fbZAxis.fTargetPosition:=wFromZAxisJogTarget;
+			fbZAxis.fTargetVelocity:=50;
+		END_IF
+		
+		//軸起動
+		fbZAxis.MoveAbsolute(bMove:=bJogStart[E_Axis.Z_Axis]);
+
+	END_IF
+		
+
+//---グリッパー---
+	IF bFromGripperJogStart OR bFromGripperJogPlus OR bFromGripperJogPlusHigh OR bFromGripperJogMinus OR bFromGripperJogMinusHigh THEN
+		bJogStart[E_Axis.Gripper]:=TRUE;
+	END_IF
+
+	
+	IF bJogStart[E_Axis.Gripper]=TRUE THEN
+		//立下りエッジを取得
+		fbJogFEdge[E_Axis.Gripper](CLK:=bFromGripperJogPlus OR bFromGripperJogPlusHigh OR bFromGripperJogMinus OR bFromGripperJogMinusHigh,Q=>);
+		IF fbJogFEdge[E_Axis.Gripper].Q THEN
+			fbGripper.Halt(bDriveHalt:=fbJogFEdge[E_Axis.Gripper].Q);
+		END_IF
+		
+		//パラメーター設定
+		IF bFromGripperJogPlusHigh=TRUE THEN
+			fbGripper.fTargetPosition:=160;
+			fbGripper.fTargetVelocity:=500;
+		ELSIF bFromGripperJogPlus=TRUE THEN
+			fbGripper.fTargetPosition:=160;
+			fbGripper.fTargetVelocity:=100;
+		ELSIF bFromGripperJogMinusHigh=TRUE THEN
+			fbGripper.fTargetPosition:=-160;
+			fbGripper.fTargetVelocity:=500;
+		ELSIF bFromGripperJogMinus=TRUE THEN
+			fbGripper.fTargetPosition:=-160;
+			fbGripper.fTargetVelocity:=100;
+		ELSIF bFromGripperJogStart=TRUE THEN
+			fbGripper.fTargetPosition:=WORD_TO_INT(wFromGripperJogTarget);
+			fbGripper.fTargetVelocity:=100;
+		END_IF
+		
+		//軸起動
+		fbGripper.MoveAbsolute(bMove:=bJogStart[E_Axis.Gripper]);
+		
+	END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Operating_PickAndPlace" Id="{ba637b61-be9d-437c-b2e6-e74ed12ba4ac}">
+      <Declaration><![CDATA[METHOD Operating_PickAndPlace]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Pick And Place Motin実行中か確認
+IF ePickAndPlaceStep<>E_PickAndPlaceStep.Stay THEN
+	
+	//軸のコマンドアボートをチェック
+	IF bAxisMoveCommandAborted=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.CommandAborted;
+	END_IF
+	
+	//軸のエラーをチェック
+	IF bAxisError=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.Error;
+	END_IF
+
+END_IF
+	
+CASE ePickAndPlaceStep OF
+
+E_PickAndPlaceStep.Stay:(*初期値、bMoveがTrueになったらステップを進める*)
+
+	IF bFromPickAndPlaceStart=TRUE THEN
+		GVL.bAutoCameraTriger:=FALSE;
+		GVL.bGetImageEnd:=FALSE;
+		bToPickAndPlaceMoving:=TRUE;
+		
+		fbXAxis.fTargetVelocity:=300;
+		fbYAxis.fTargetVelocity:=300;
+		fbZAxis.fTargetVelocity:=300;
+		fbGripper.fTargetVelocity:=7200;
+	
+		ePickAndPlaceStep:=E_PickAndPlaceStep.GripperOpen;
+	ELSE
+		ePickAndPlaceStep:=E_PickAndPlaceStep.Stay;
+	END_IF;
+
+E_PickAndPlaceStep.GripperOpen:(*グリッパーを開ける*)
+
+	fbGripper.fTargetPosition:=0;
+	bPickAndPlaceMoveStart[E_Axis.Gripper]:=TRUE;
+	
+	fbGripper.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Gripper]);
+	
+	IF fbGripper.bStateMoveDone=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.ZAxixZeroPos;
+	END_IF
+
+E_PickAndPlaceStep.ZAxixZeroPos:(*Z軸をゼロポジションへ、衝突回避のためにまずZ軸を移動*)
+
+	fbZAxis.fTargetPosition:=0;
+	bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=TRUE;
+	
+	fbZAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Z_Axis]);
+	
+	IF fbZAxis.bStateMoveDone=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.XYAxixShootingPos;
+	END_IF;
+
+E_PickAndPlaceStep.XYAxixShootingPos:(*Z軸移動後に、X,Y軸を撮影ポジションへ移動*)
+	CASE iPickAndPlaceSubStep OF
+	
+	0:
+		fbXAxis.fTargetPosition:=0;
+		fbYAxis.fTargetPosition:=300;
+		bPickAndPlaceMoveStart[E_Axis.X_Axis]:=TRUE;
+		bPickAndPlaceMoveStart[E_Axis.Y_Axis]:=TRUE;
+		iPickAndPlaceSubStep:=1;
+	
+	1:		
+		fbXAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.X_Axis]);
+		fbYAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Y_Axis]);
+		
+		IF fbXAxis.bStateMoveDone=TRUE AND fbYAxis.bStateMoveDone=TRUE THEN
+			ePickAndPlaceStep:=E_PickAndPlaceStep.Shooting;
+			iPickAndPlaceSubStep:=0;
+		END_IF
+	END_CASE
+
+E_PickAndPlaceStep.Shooting:(*カメラで画像を撮影*)
+	
+	GVL.bAutoCameraTriger:=TRUE;
+
+	IF GVL.bGetImageEnd=TRUE THEN
+		GVL.bAutoCameraTriger:=FALSE;
+		GVL.bGetImageEnd:=FALSE;
+		ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ResetVar;
+	END_IF
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_ResetVar:(*ピック＆プレース使用の変数をリセット*)
+	
+	//変数リセット
+	i:=1;
+
+	//軸速度設定	
+	fbXAxis.fTargetVelocity:=300;
+	fbYAxis.fTargetVelocity:=300;
+	fbZAxis.fTargetVelocity:=300;
+	fbGripper.fTargetVelocity:=3600;	
+	
+	//ワークの数が0個ではないか確認
+	IF ULINT_TO_INT(GVL.nDetectedNum) < i THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.ZAxixZeroPotision2;
+	ELSE
+		ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ValueCon;
+	END_IF
+
+E_PickAndPlaceStep.PickAndPlaceMotion_ValueCon:(*標値の変換実施*)
+	//画像の座標をロボットの座標に変換X軸
+	IF GVL.aMassCenter[i][0]<1052 THEN
+		fbXAxis.fTargetPosition:=0;
+	ELSIF 4354<GVL.aMassCenter[i][0] THEN
+		fbXAxis.fTargetPosition:=300;
+	ELSE
+		fbXAxis.fTargetPosition:=(300.0/(4354-1052))*(GVL.aMassCenter[i][0]-1052);
+	END_IF
+
+	//画像の座標をロボットの座標に変換Y軸
+	IF GVL.aMassCenter[i][1]<146 THEN
+		fbYAxis.fTargetPosition:=0;
+	ELSIF 3472<GVL.aMassCenter[i][1] THEN
+		fbYAxis.fTargetPosition:=300;
+	ELSE
+		fbYAxis.fTargetPosition:=(300.0/(3472-146))*(GVL.aMassCenter[i][1]-146);
+	END_IF
+	
+	//Z軸にXY軸のターゲット座標を入力より
+	fbZAxis.fXAxisActualPosition:=fbXAxis.fTargetPosition;
+	fbZAxis.fYAxisActualPosition:=fbYAxis.fTargetPosition;
+
+	ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_XYAxisTargetPos;
+
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_XYAxisTargetPos:(*XY軸をターゲットポジションへ*)
+	CASE iPickAndPlaceSubStep OF
+	
+	0:
+		bPickAndPlaceMoveStart[E_Axis.X_Axis]:=TRUE;
+		bPickAndPlaceMoveStart[E_Axis.Y_Axis]:=TRUE;
+		iPickAndPlaceSubStep:=1;
+	
+	1:		
+		fbXAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.X_Axis]);
+		fbYAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Y_Axis]);
+		
+		IF fbXAxis.bStateMoveDone=TRUE AND fbYAxis.bStateMoveDone=TRUE THEN
+			ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos;
+			iPickAndPlaceSubStep:=0;
+		END_IF
+	END_CASE
+
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos:(*Z軸を上昇位置へ*)
+	fbZAxis.fTargetPosition:=ZAxisUpTarget;
+	bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=TRUE;
+	
+	fbZAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Z_Axis]);
+	
+	IF fbZAxis.bStateMoveDone=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisTargetPos;
+	END_IF;
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisTargetPos:(*Z軸をターゲットポジションへ*)
+
+	CASE iPickAndPlaceSubStep OF
+	
+	0:
+		fbZAxis.fTargetVelocity:=300;
+		fbZAxis.fTargetPosition:=ZAxisLowTarget-10;
+		bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=TRUE;
+		
+		fbZAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Z_Axis]);
+		
+		IF fbZAxis.bStateMoveDone=TRUE THEN
+			iPickAndPlaceSubStep:=1;
+		END_IF;
+
+	1:
+		
+		fbZAxis.fTargetVelocity:=50;
+		fbZAxis.fTargetPosition:=ZAxisLowTarget;
+		bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=TRUE;
+		
+		fbZAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Z_Axis]);
+		
+		IF fbZAxis.bStateMoveDone=TRUE THEN
+			iPickAndPlaceSubStep:=0;
+			ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_GripperGrip;
+		END_IF;
+	
+	END_CASE
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_GripperGrip:(*グリッパーを閉じてマグネットを掴む*)
+
+	fbGripper.lrWorkDiameter:=lrPieceDiameter;
+	bPickAndPlaceMoveStart[E_Axis.Gripper]:=TRUE;
+	
+	fbGripper.WorkGrippingAbs(bMove:=bPickAndPlaceMoveStart[E_Axis.Gripper]);
+	
+	IF fbGripper.bStateMoveDone=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos2;
+	END_IF
+		
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos2:(*Z軸を上昇位置へ*)
+
+	fbZAxis.fTargetVelocity:=300;
+	fbZAxis.fTargetPosition:=ZAxisUpTarget;
+	bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=TRUE;
+	
+	fbZAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Z_Axis]);
+	
+	IF fbZAxis.bStateMoveDone=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_XYAxis300Pos;
+	END_IF;
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_XYAxis300Pos:(*XY軸を300ポジションへ、300にはお皿がおいてあるはず*)
+	CASE iPickAndPlaceSubStep OF
+	
+	0:
+		fbXAxis.fTargetPosition:=300;
+		fbYAxis.fTargetPosition:=300;
+		bPickAndPlaceMoveStart[E_Axis.X_Axis]:=TRUE;
+		bPickAndPlaceMoveStart[E_Axis.Y_Axis]:=TRUE;
+		iPickAndPlaceSubStep:=1;
+	
+	1:		
+		fbXAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.X_Axis]);
+		fbYAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Y_Axis]);
+		
+		IF fbXAxis.bStateMoveDone=TRUE AND fbYAxis.bStateMoveDone=TRUE THEN
+			ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisMidPos;
+			iPickAndPlaceSubStep:=0;
+		END_IF
+	END_CASE
+
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisMidPos:(*Z軸をマグネットをリリースする高さへ*)
+
+	fbZAxis.fTargetVelocity:=300;
+	fbZAxis.fTargetPosition:=ZAxisMidTarget;
+	bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=TRUE;
+	
+	fbZAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Z_Axis]);
+	
+	IF fbZAxis.bStateMoveDone=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_GripperOpen;
+	END_IF;
+
+E_PickAndPlaceStep.PickAndPlaceMotion_GripperOpen:(*グリッパーを開けてマグネットをお皿へ*)
+
+	fbGripper.fTargetPosition:=0;
+	bPickAndPlaceMoveStart[E_Axis.Gripper]:=TRUE;
+	
+	fbGripper.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Gripper]);
+	
+	IF fbGripper.bStateMoveDone=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos3;
+	END_IF
+
+E_PickAndPlaceStep.PickAndPlaceMotion_ZAxisUpPos3:(*Z軸を上昇位置へ*)
+
+	fbZAxis.fTargetPosition:=ZAxisUpTarget;
+	bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=TRUE;
+	
+	fbZAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Z_Axis]);
+	
+	IF fbZAxis.bStateMoveDone=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_NextCheck;
+	END_IF;
+	
+E_PickAndPlaceStep.PickAndPlaceMotion_NextCheck:(*次のマグネットがあるか確認、無ければ終わり、あればピック＆プレースの最初へ戻る*)
+
+	i:=i+1;
+	
+	IF ULINT_TO_INT(GVL.nDetectedNum) < i THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.ZAxixZeroPotision2;
+	ELSE
+		ePickAndPlaceStep:=E_PickAndPlaceStep.PickAndPlaceMotion_ValueCon;
+	END_IF
+
+
+E_PickAndPlaceStep.ZAxixZeroPotision2:(*Z軸をゼロポジションへ、衝突回避のためにまずZ軸を移動*)
+
+	fbZAxis.fTargetPosition:=0;
+	bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=TRUE;
+	
+	fbZAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Z_Axis]);
+	
+	IF fbZAxis.bStateMoveDone=TRUE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.XYAxixZeroPotision2;
+	END_IF;
+
+E_PickAndPlaceStep.XYAxixZeroPotision2:(*Z軸移動後に、X,Y軸をゼロポジションへ移動*)
+	CASE iPickAndPlaceSubStep OF
+	
+	0:
+		fbXAxis.fTargetPosition:=0;
+		fbYAxis.fTargetPosition:=0;
+		bPickAndPlaceMoveStart[E_Axis.X_Axis]:=TRUE;
+		bPickAndPlaceMoveStart[E_Axis.Y_Axis]:=TRUE;
+		iPickAndPlaceSubStep:=1;
+	
+	1:		
+		fbXAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.X_Axis]);
+		fbYAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Y_Axis]);
+		
+		IF fbXAxis.bStateMoveDone=TRUE AND fbYAxis.bStateMoveDone=TRUE THEN
+			ePickAndPlaceStep:=E_PickAndPlaceStep.Stay;
+			iPickAndPlaceSubStep:=0;
+			bToPickAndPlaceMoving:=FALSE;
+		END_IF
+	END_CASE
+	
+E_PickAndPlaceStep.CommandAborted://McMoveコマンドアボート時の処理	
+
+	iPickAndPlaceSubStep:=0;
+	bPickAndPlaceMoveStart[E_Axis.X_Axis]:=FALSE;
+	bPickAndPlaceMoveStart[E_Axis.Y_Axis]:=FALSE;
+	bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=FALSE;
+	bPickAndPlaceMoveStart[E_Axis.Gripper]:=FALSE;
+	bToAutoMoveResetting:=FALSE;
+
+	IF bAxisMoveCommandAborted=FALSE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.Reset;
+	END_IF
+
+E_PickAndPlaceStep.Error://McMoveエラー時の処理	
+
+	iPickAndPlaceSubStep:=0;
+	bPickAndPlaceMoveStart[E_Axis.X_Axis]:=FALSE;
+	bPickAndPlaceMoveStart[E_Axis.Y_Axis]:=FALSE;
+	bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=FALSE;
+	bPickAndPlaceMoveStart[E_Axis.Gripper]:=FALSE;
+	
+	bToAutoMoveResetting:=FALSE;
+
+	IF bAxisError=FALSE THEN
+		ePickAndPlaceStep:=E_PickAndPlaceStep.Reset;
+	END_IF	
+	
+E_PickAndPlaceStep.Reset://McMoveのコマンドアボートorエラー後のリセット動作
+
+	CASE iPickAndPlaceSubStep OF
+
+	0:
+		IF bFromAutoMoveReset=TRUE AND fbMachineState.bStopMachine=FALSE THEN
+			bToAutoMoveResetting:=TRUE;
+			iPickAndPlaceSubStep:=1;
+		END_IF
+
+	1:
+		fbGripper.fTargetVelocity:=150;
+		fbGripper.fTargetPosition:=0;
+		bPickAndPlaceMoveStart[E_Axis.Gripper]:=TRUE;
+		
+		fbGripper.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Gripper]);
+		
+		IF fbGripper.bStateMoveDone=TRUE THEN
+			iPickAndPlaceSubStep:=2;
+		END_IF
+
+	2:
+		fbZAxis.fTargetVelocity:=150;
+		fbZAxis.fTargetPosition:=0;
+		bPickAndPlaceMoveStart[E_Axis.Z_Axis]:=TRUE;
+		
+		fbZAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Z_Axis]);
+		
+		IF fbZAxis.bStateMoveDone=TRUE THEN
+			iPickAndPlaceSubStep:=3;
+		END_IF;
+
+	3:
+		fbXAxis.fTargetVelocity:=150;
+		fbYAxis.fTargetVelocity:=150;
+		fbXAxis.fTargetPosition:=0;
+		fbYAxis.fTargetPosition:=0;
+		bPickAndPlaceMoveStart[E_Axis.X_Axis]:=TRUE;
+		bPickAndPlaceMoveStart[E_Axis.Y_Axis]:=TRUE;
+		iPickAndPlaceSubStep:=4;
+	
+	4:
+		fbXAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.X_Axis]);
+		fbYAxis.MoveAbsolute(bMove:=bPickAndPlaceMoveStart[E_Axis.Y_Axis]);
+		
+		IF fbXAxis.bStateMoveDone=TRUE AND fbYAxis.bStateMoveDone=TRUE THEN
+			ePickAndPlaceStep:=E_PickAndPlaceStep.Stay;
+			
+			iPickAndPlaceSubStep:=0;
+
+			bToPickAndPlaceMoving:=FALSE;
+			bToAutoMoveResetting:=FALSE;				
+			
+		END_IF;
+
+	END_CASE
+
+END_CASE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Operating_ShapeWrite" Id="{19773d91-9b77-4412-888c-6adf8dd97696}">
+      <Declaration><![CDATA[METHOD Operating_ShapeWrite]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//WriteMotin実行中か確認
+IF eShapeWriteStep<>E_WriteStep.Stay THEN
+	
+	//軸のコマンドアボートをチェック
+	IF bAxisMoveCommandAborted=TRUE THEN
+		eShapeWriteStep:=E_WriteStep.CommandAborted;
+	END_IF
+	
+	//軸のエラーをチェック
+	IF bAxisError=TRUE THEN
+		eShapeWriteStep:=E_WriteStep.Error;
+	END_IF
+
+END_IF
+
+	
+CASE eShapeWriteStep OF
+
+E_WriteStep.Stay:(*初期値、bMoveがTrueになったらステップを進める*)
+
+	IF bFromWriteStart=TRUE THEN
+		bCircleWriteFin:=FALSE;
+		bToWriteMoving:=TRUE;
+		
+		fbXAxis.fTargetVelocity:=300;
+		fbYAxis.fTargetVelocity:=300;
+		fbZAxis.fTargetVelocity:=300;
+		fbGripper.fTargetVelocity:=7200;
+		
+		eShapeWriteStep:=E_WriteStep.GripperOpen;
+	ELSE
+		eShapeWriteStep:=E_WriteStep.Stay;
+	END_IF;
+
+E_WriteStep.GripperOpen:(*グリッパーを開ける*)
+
+	fbGripper.fTargetPosition:=0;
+	bShapeWriteMoveStart[E_Axis.Gripper]:=TRUE;
+	
+	fbGripper.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Gripper]);
+	
+	IF fbGripper.bStateMoveDone=TRUE THEN
+		eShapeWriteStep:=E_WriteStep.ZAxixZeroPotision;
+	END_IF
+
+E_WriteStep.ZAxixZeroPotision:(*Z軸をゼロポジションへ、衝突回避のためにまずZ軸を移動*)
+
+	fbZAxis.fTargetPosition:=0;
+	bShapeWriteMoveStart[E_Axis.Z_Axis]:=TRUE;
+	
+	fbZAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Z_Axis]);
+	
+	IF fbZAxis.bStateMoveDone=TRUE THEN
+		eShapeWriteStep:=E_WriteStep.XYAxixZeroPotision;
+	END_IF;
+
+E_WriteStep.XYAxixZeroPotision:(*Z軸移動後に、X,Y軸をゼロポジションへ移動*)
+	CASE iShapeWriteSubStep OF
+	
+	0:
+		fbXAxis.fTargetPosition:=0;
+		fbYAxis.fTargetPosition:=0;
+		bShapeWriteMoveStart[E_Axis.X_Axis]:=TRUE;
+		bShapeWriteMoveStart[E_Axis.Y_Axis]:=TRUE;
+		iShapeWriteSubStep:=1;
+	
+	1:		
+		fbXAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.X_Axis]);
+		fbYAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Y_Axis]);
+		
+		IF fbXAxis.bStateMoveDone=TRUE AND fbYAxis.bStateMoveDone=TRUE THEN
+			eShapeWriteStep:=E_WriteStep.PenGripp;
+			iShapeWriteSubStep:=0;
+		END_IF
+	END_CASE
+
+E_WriteStep.PenGripp:(*ペンを掴む*)
+
+	CASE iShapeWriteSubStep OF
+	0:(*何もしない*)
+		iShapeWriteSubStep:=1;
+	
+	1:(*ペンを掴む高さに移動*)
+		fbZAxis.fTargetPosition:=205.0-Param_3AxisRobot.lrPenHalfLength+Param_3AxisRobot.lrPenGripLength;
+		bShapeWriteMoveStart[E_Axis.Z_Axis]:=TRUE;
+		
+		fbZAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Z_Axis]);
+		
+		IF fbZAxis.bStateMoveDone=TRUE THEN
+			iShapeWriteSubStep:=2;
+		END_IF;
+	
+	2:(*グリッパーを閉じてペンを掴む*)
+		fbGripper.fTargetVelocity:=150;
+		fbGripper.lrWorkDiameter:=Param_3AxisRobot.lrPenDiameter;
+		bShapeWriteMoveStart[E_Axis.Gripper]:=TRUE;
+		
+		fbGripper.WorkGrippingAbs(bMove:=bShapeWriteMoveStart[E_Axis.Gripper]);
+		
+		IF fbGripper.bStateMoveDone=TRUE THEN
+			iShapeWriteSubStep:=3;
+		END_IF
+	
+	3:(*Z軸をゼロポジションへ戻す*)
+		fbZAxis.fTargetPosition:=0;
+		bShapeWriteMoveStart[E_Axis.Z_Axis]:=TRUE;
+		
+		fbZAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Z_Axis]);
+		
+		IF fbZAxis.bStateMoveDone=TRUE THEN
+			eShapeWriteStep:=E_WriteStep.Write;
+			iShapeWriteSubStep:=0;
+		END_IF;
+	
+	END_CASE;
+
+E_WriteStep.Write:(*図形を書いていく*)
+(*	CASE iShapeWriteSubStep OF
+	0:
+		iShapeWriteSubStep:=1;
+	
+	1:
+		fbMotionShapeWrite.stCircleSettingsProp:=stCircleSettings;
+		fbMotionShapeWrite.stEllipseSettingsProp:=stEllipseSettings;
+		
+		fbMotionShapeWrite.bStartProp:=TRUE;
+		
+		IF fbMotionShapeWrite.bEndProp=TRUE THEN
+			fbMotionShapeWrite.bStartProp:=FALSE;
+			fbMotionShapeWrite.bEndProp:=FALSE;
+			iShapeWriteSubStep:=2;
+		END_IF
+		
+		fbMotionShapeWrite();
+		
+	2:
+		eShapeWriteStep:=E_WriteStep.ZAxixZeroPotision2;
+		iShapeWriteSubStep:=0;
+		
+	END_CASE
+*)
+	eShapeWriteStep:=E_WriteStep.ZAxixZeroPotision2;
+
+E_WriteStep.ZAxixZeroPotision2:(*Z軸をゼロポジションへ、衝突回避のためにまずZ軸を移動*)
+	fbZAxis.fTargetPosition:=0;
+	bShapeWriteMoveStart[E_Axis.Z_Axis]:=TRUE;
+	
+	fbZAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Z_Axis]);
+	
+	IF fbZAxis.bStateMoveDone=TRUE THEN
+		eShapeWriteStep:=E_WriteStep.XYAxixZeroPotision2;
+	END_IF;
+	
+E_WriteStep.XYAxixZeroPotision2:(*Z軸移動後に、X,Y軸をゼロポジションへ移動*)
+	CASE iShapeWriteSubStep OF
+	
+	0:
+		fbXAxis.fTargetPosition:=0;
+		fbYAxis.fTargetPosition:=0;
+		bShapeWriteMoveStart[E_Axis.X_Axis]:=TRUE;
+		bShapeWriteMoveStart[E_Axis.Y_Axis]:=TRUE;
+		iShapeWriteSubStep:=1;
+	
+	1:		
+		fbXAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.X_Axis]);
+		fbYAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Y_Axis]);
+		
+		IF fbXAxis.bStateMoveDone=TRUE AND fbYAxis.bStateMoveDone=TRUE THEN
+			eShapeWriteStep:=E_WriteStep.PenRelease;
+			iShapeWriteSubStep:=0;
+		END_IF
+	END_CASE
+
+E_WriteStep.PenRelease:(*ペンをリリースする*)
+	CASE iShapeWriteSubStep OF
+	0:
+		iShapeWriteSubStep:=1;
+		
+	1:(*ペンを放す高さに移動*)
+		fbZAxis.fTargetPosition:=205.0-Param_3AxisRobot.lrPenHalfLength+Param_3AxisRobot.lrPenGripLength;
+		bShapeWriteMoveStart[E_Axis.Z_Axis]:=TRUE;
+		
+		fbZAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Z_Axis]);
+		
+		IF fbZAxis.bStateMoveDone=TRUE THEN
+			iShapeWriteSubStep:=2;
+		END_IF;
+	
+	2:
+		fbGripper.fTargetPosition:=0;
+		bShapeWriteMoveStart[E_Axis.Gripper]:=TRUE;
+		
+		fbGripper.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Gripper]);
+		
+		IF fbGripper.bStateMoveDone=TRUE THEN
+			iShapeWriteSubStep:=3;
+		END_IF
+	
+	3:
+		fbZAxis.fTargetPosition:=0;
+		bShapeWriteMoveStart[E_Axis.Z_Axis]:=TRUE;
+		
+		fbZAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Z_Axis]);
+		
+		IF fbZAxis.bStateMoveDone=TRUE THEN
+			eShapeWriteStep:=E_WriteStep.Stay;
+			iShapeWriteSubStep:=0;
+			bToWriteMoving:=FALSE;
+		END_IF;
+	
+	END_CASE;
+	
+E_WriteStep.CommandAborted://McMoveコマンドアボート時の処理	
+
+	iShapeWriteSubStep:=0;
+	bShapeWriteMoveStart[E_Axis.X_Axis]:=FALSE;
+	bShapeWriteMoveStart[E_Axis.Y_Axis]:=FALSE;
+	bShapeWriteMoveStart[E_Axis.Z_Axis]:=FALSE;
+	bShapeWriteMoveStart[E_Axis.Gripper]:=FALSE;
+	
+	bToAutoMoveResetting:=FALSE;
+	
+	IF bAxisMoveCommandAborted=FALSE THEN
+		eShapeWriteStep:=E_WriteStep.Reset;
+	END_IF
+
+E_WriteStep.Error://McMoveエラー時の処理	
+
+	iShapeWriteSubStep:=0;
+	bShapeWriteMoveStart[E_Axis.X_Axis]:=FALSE;
+	bShapeWriteMoveStart[E_Axis.Y_Axis]:=FALSE;
+	bShapeWriteMoveStart[E_Axis.Z_Axis]:=FALSE;
+	bShapeWriteMoveStart[E_Axis.Gripper]:=FALSE;
+	
+	bToAutoMoveResetting:=FALSE;
+	
+	IF bAxisError=FALSE THEN
+		eShapeWriteStep:=E_WriteStep.Reset;
+	END_IF	
+	
+E_WriteStep.Reset://McMoveのコマンドアボートorエラー後のリセット動作
+
+	CASE iShapeWriteSubStep OF
+
+	0:
+		IF bFromAutoMoveReset=TRUE AND fbMachineState.bStopMachine=FALSE THEN
+			bToAutoMoveResetting:=TRUE;
+			iShapeWriteSubStep:=1;
+			//FB_MotionShapeWriteのリセット
+			iNextProp:=0;
+		END_IF
+
+	1:
+		fbGripper.fTargetVelocity:=150;
+		fbGripper.fTargetPosition:=0;
+		bShapeWriteMoveStart[E_Axis.Gripper]:=TRUE;
+		
+		fbGripper.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Gripper]);
+		
+		IF fbGripper.bStateMoveDone=TRUE THEN
+			iShapeWriteSubStep:=2;
+		END_IF
+
+	2:
+		fbZAxis.fTargetVelocity:=150;
+		fbZAxis.fTargetPosition:=0;
+		bShapeWriteMoveStart[E_Axis.Z_Axis]:=TRUE;
+		
+		fbZAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Z_Axis]);
+		
+		IF fbZAxis.bStateMoveDone=TRUE THEN
+			iShapeWriteSubStep:=3;
+		END_IF;
+
+	3:
+		fbXAxis.fTargetVelocity:=150;
+		fbYAxis.fTargetVelocity:=150;
+		fbXAxis.fTargetPosition:=0;
+		fbYAxis.fTargetPosition:=0;
+		bShapeWriteMoveStart[E_Axis.X_Axis]:=TRUE;
+		bShapeWriteMoveStart[E_Axis.Y_Axis]:=TRUE;
+		iPickAndPlaceSubStep:=4;
+	
+	4:
+		fbXAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.X_Axis]);
+		fbYAxis.MoveAbsolute(bMove:=bShapeWriteMoveStart[E_Axis.Y_Axis]);
+		
+		IF fbXAxis.bStateMoveDone=TRUE AND fbYAxis.bStateMoveDone=TRUE THEN
+			iShapeWriteSubStep:=0;
+			eShapeWriteStep:=E_WriteStep.Stay;
+
+			bToWriteMoving:=FALSE;
+			bToAutoMoveResetting:=FALSE;				
+			
+		END_IF;
+
+	END_CASE
+	
+END_CASE;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_3AxisRobot">
+      <LineId Id="131" Count="6" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="138" Count="2" />
+      <LineId Id="144" Count="3" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="154" Count="1" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="166" Count="3" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="173" Count="2" />
+      <LineId Id="177" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.General_Alarm">
+      <LineId Id="128" Count="9" />
+      <LineId Id="139" Count="48" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="189" Count="64" />
+      <LineId Id="127" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.General_AxisOrganization">
+      <LineId Id="20" Count="37" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="90" Count="2" />
+      <LineId Id="69" Count="15" />
+      <LineId Id="63" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.General_Diagnosis">
+      <LineId Id="55" Count="0" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="1" Count="51" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.General_Init">
+      <LineId Id="1" Count="33" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="35" Count="43" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.General_LoadCell">
+      <LineId Id="1" Count="17" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.General_MachineManagement">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.General_MitsubishiCom">
+      <LineId Id="1" Count="44" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="46" Count="7" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.General_Safety">
+      <LineId Id="1" Count="10" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.Operating_Homing">
+      <LineId Id="80" Count="1" />
+      <LineId Id="110" Count="2" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="157" Count="1" />
+      <LineId Id="87" Count="10" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="174" Count="3" />
+      <LineId Id="172" Count="1" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="167" Count="2" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="73" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.Operating_Jog">
+      <LineId Id="1" Count="7" />
+      <LineId Id="174" Count="1" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="11" Count="16" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="36" Count="10" />
+      <LineId Id="176" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="49" Count="16" />
+      <LineId Id="162" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="73" Count="11" />
+      <LineId Id="179" Count="1" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="87" Count="16" />
+      <LineId Id="169" Count="1" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="111" Count="12" />
+      <LineId Id="187" Count="1" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="126" Count="17" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="150" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.Operating_PickAndPlace">
+      <LineId Id="2" Count="4" />
+      <LineId Id="10" Count="4" />
+      <LineId Id="18" Count="12" />
+      <LineId Id="404" Count="0" />
+      <LineId Id="406" Count="1" />
+      <LineId Id="401" Count="1" />
+      <LineId Id="405" Count="0" />
+      <LineId Id="31" Count="5" />
+      <LineId Id="384" Count="1" />
+      <LineId Id="629" Count="1" />
+      <LineId Id="414" Count="0" />
+      <LineId Id="410" Count="0" />
+      <LineId Id="392" Count="0" />
+      <LineId Id="394" Count="1" />
+      <LineId Id="46" Count="1" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="397" Count="0" />
+      <LineId Id="631" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="411" Count="0" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="56" Count="2" />
+      <LineId Id="737" Count="1" />
+      <LineId Id="735" Count="0" />
+      <LineId Id="408" Count="1" />
+      <LineId Id="412" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="739" Count="2" />
+      <LineId Id="634" Count="1" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="582" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="742" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="743" Count="0" />
+      <LineId Id="72" Count="14" />
+      <LineId Id="421" Count="0" />
+      <LineId Id="420" Count="0" />
+      <LineId Id="417" Count="2" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="90" Count="27" />
+      <LineId Id="422" Count="1" />
+      <LineId Id="123" Count="4" />
+      <LineId Id="750" Count="2" />
+      <LineId Id="755" Count="11" />
+      <LineId Id="745" Count="0" />
+      <LineId Id="141" Count="1" />
+      <LineId Id="654" Count="0" />
+      <LineId Id="648" Count="5" />
+      <LineId Id="645" Count="0" />
+      <LineId Id="153" Count="5" />
+      <LineId Id="628" Count="0" />
+      <LineId Id="439" Count="1" />
+      <LineId Id="657" Count="1" />
+      <LineId Id="441" Count="2" />
+      <LineId Id="437" Count="0" />
+      <LineId Id="167" Count="2" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="447" Count="1" />
+      <LineId Id="659" Count="1" />
+      <LineId Id="449" Count="2" />
+      <LineId Id="453" Count="0" />
+      <LineId Id="445" Count="0" />
+      <LineId Id="178" Count="1" />
+      <LineId Id="181" Count="1" />
+      <LineId Id="466" Count="0" />
+      <LineId Id="461" Count="2" />
+      <LineId Id="655" Count="1" />
+      <LineId Id="464" Count="1" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="192" Count="1" />
+      <LineId Id="467" Count="0" />
+      <LineId Id="471" Count="2" />
+      <LineId Id="661" Count="1" />
+      <LineId Id="474" Count="1" />
+      <LineId Id="477" Count="0" />
+      <LineId Id="468" Count="0" />
+      <LineId Id="204" Count="1" />
+      <LineId Id="772" Count="2" />
+      <LineId Id="789" Count="0" />
+      <LineId Id="776" Count="12" />
+      <LineId Id="767" Count="0" />
+      <LineId Id="219" Count="1" />
+      <LineId Id="488" Count="0" />
+      <LineId Id="491" Count="2" />
+      <LineId Id="680" Count="1" />
+      <LineId Id="494" Count="2" />
+      <LineId Id="489" Count="0" />
+      <LineId Id="231" Count="1" />
+      <LineId Id="497" Count="0" />
+      <LineId Id="499" Count="1" />
+      <LineId Id="682" Count="1" />
+      <LineId Id="501" Count="2" />
+      <LineId Id="498" Count="0" />
+      <LineId Id="243" Count="1" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="508" Count="1" />
+      <LineId Id="684" Count="1" />
+      <LineId Id="510" Count="2" />
+      <LineId Id="505" Count="0" />
+      <LineId Id="255" Count="12" />
+      <LineId Id="513" Count="0" />
+      <LineId Id="517" Count="1" />
+      <LineId Id="686" Count="1" />
+      <LineId Id="519" Count="2" />
+      <LineId Id="515" Count="0" />
+      <LineId Id="277" Count="1" />
+      <LineId Id="795" Count="15" />
+      <LineId Id="814" Count="0" />
+      <LineId Id="811" Count="0" />
+      <LineId Id="790" Count="0" />
+      <LineId Id="293" Count="3" />
+      <LineId Id="815" Count="2" />
+      <LineId Id="533" Count="0" />
+      <LineId Id="302" Count="2" />
+      <LineId Id="308" Count="5" />
+      <LineId Id="534" Count="2" />
+      <LineId Id="317" Count="3" />
+      <LineId Id="324" Count="14" />
+      <LineId Id="537" Count="0" />
+      <LineId Id="540" Count="1" />
+      <LineId Id="704" Count="1" />
+      <LineId Id="542" Count="2" />
+      <LineId Id="538" Count="0" />
+      <LineId Id="347" Count="1" />
+      <LineId Id="545" Count="0" />
+      <LineId Id="547" Count="1" />
+      <LineId Id="706" Count="1" />
+      <LineId Id="549" Count="2" />
+      <LineId Id="546" Count="0" />
+      <LineId Id="357" Count="1" />
+      <LineId Id="724" Count="4" />
+      <LineId Id="717" Count="0" />
+      <LineId Id="812" Count="0" />
+      <LineId Id="718" Count="0" />
+      <LineId Id="813" Count="0" />
+      <LineId Id="719" Count="4" />
+      <LineId Id="734" Count="0" />
+      <LineId Id="731" Count="2" />
+      <LineId Id="729" Count="1" />
+      <LineId Id="709" Count="0" />
+      <LineId Id="375" Count="3" />
+      <LineId Id="626" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisRobot.Operating_ShapeWrite">
+      <LineId Id="1" Count="22" />
+      <LineId Id="344" Count="0" />
+      <LineId Id="347" Count="2" />
+      <LineId Id="345" Count="1" />
+      <LineId Id="24" Count="5" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="304" Count="6" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="315" Count="7" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="327" Count="16" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="65" Count="7" />
+      <LineId Id="354" Count="6" />
+      <LineId Id="350" Count="0" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="366" Count="6" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="96" Count="1" />
+      <LineId Id="375" Count="6" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="107" Count="26" />
+      <LineId Id="509" Count="1" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="388" Count="6" />
+      <LineId Id="385" Count="0" />
+      <LineId Id="145" Count="1" />
+      <LineId Id="398" Count="16" />
+      <LineId Id="397" Count="0" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="163" Count="3" />
+      <LineId Id="415" Count="7" />
+      <LineId Id="174" Count="2" />
+      <LineId Id="423" Count="0" />
+      <LineId Id="427" Count="5" />
+      <LineId Id="424" Count="0" />
+      <LineId Id="184" Count="1" />
+      <LineId Id="434" Count="5" />
+      <LineId Id="443" Count="1" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="195" Count="5" />
+      <LineId Id="445" Count="2" />
+      <LineId Id="208" Count="2" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="448" Count="1" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="221" Count="3" />
+      <LineId Id="451" Count="4" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="458" Count="0" />
+      <LineId Id="456" Count="1" />
+      <LineId Id="235" Count="0" />
+      <LineId Id="245" Count="5" />
+      <LineId Id="461" Count="1" />
+      <LineId Id="464" Count="1" />
+      <LineId Id="463" Count="0" />
+      <LineId Id="459" Count="0" />
+      <LineId Id="257" Count="1" />
+      <LineId Id="468" Count="7" />
+      <LineId Id="466" Count="0" />
+      <LineId Id="267" Count="1" />
+      <LineId Id="478" Count="7" />
+      <LineId Id="476" Count="0" />
+      <LineId Id="277" Count="1" />
+      <LineId Id="488" Count="5" />
+      <LineId Id="486" Count="1" />
+      <LineId Id="494" Count="0" />
+      <LineId Id="497" Count="3" />
+      <LineId Id="508" Count="0" />
+      <LineId Id="503" Count="4" />
+      <LineId Id="495" Count="0" />
+      <LineId Id="295" Count="3" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

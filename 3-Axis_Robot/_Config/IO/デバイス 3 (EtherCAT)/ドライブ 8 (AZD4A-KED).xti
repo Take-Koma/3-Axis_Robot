@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.56" ClassName="CFlbTermDef" SubType="9099">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.14" ClassName="CFlbTermDef" SubType="9099">
 	<ImageDatas>
 		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000130b0000130b00000000000000000000fffffffffffffffffff4f4f4ebebebeae9eac5c5c5b7b7b7d5d5d5dcdcdcd5d5d5f3f3f3fffffffffffffffffffffffffffffffffffff7f7f7d4d2d4c6c5c6d1d0d1747474323432626362c4c4c4c9c9c9dcdcdcfefefefffffffffffffffffffffffffffffff9f9f9c5c3c57e7d7e8585857071702b2d2b1f221f8081809e9e9e9f9f9ff9f9f9fffffffffffffffffffffffffffffff5f5f59a9b9a2a2d2a3b3d3b6263623739371e211e6a6b6a8e8e8e585958dcdcdcfffffffffffffffffffffffffffffff5f5f59b9c9b2125211d201d3234323537353b3c3b9999999b9b9b282828989998fbfbfbfffffffffffffffffffffffff7f7f7cacbca5e605e292b293335335152518d8c8dd2d0d29897981c1c1c4e4e4eddddddfffffffffffffffffffffffff1f1f1d2d2d2bab9ba908f908d8d8da4a4a4bbbabba2a0a26161611c1d1c222222b1b1b1fbfbfbffffffffffffffffffecebecb8b9b89d9e9d7d7e7d6162614b4e4b3d3f3d3233322325231d1f1d1b1b1ba0a0a0f9f9f9fffffffffffffffffff9f9f9d6d6d67e7f7e2b2e2b2326232326232225222224221c1e1c1e201e1f201f999999f8f8f8fffffffffffffffffffffffffdfdfdd3d3d35d5f5d2023202023201f211f1e211e1e201e1e1f1e292a299e9e9ef8f8f8fffffffffffffffffffffffffefefefcfcfcbcbdbc4849481a1c1a1314131516151b1d1b2325236a6b6adbdbdbfcfcfcfffffffffffffffffffffffffffffffffffff8f8f8b3b4b35051501a1c1a1c1d1c1214121f201fa5a5a5fefefefffffffffffffffffffffffffffffffffffffffffffffffffdfdfdd3d4d3a2a3a28d8f8d404140353735bebfbefffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffefefefafaf9f3f3f3c5c5c5c1c2c1f1f1f1ffffffffffffffffff</ImageData>
 	</ImageDatas>
@@ -10,7 +10,7 @@
 			<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
 			<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
 			<SyncMan>00141e006400010003000000010000011e00001464010000</SyncMan>
-			<SyncMan>00171e002000010004000000010000011e00001720010000</SyncMan>
+			<SyncMan>001726002000010004000000010000011e00001720010000</SyncMan>
 			<Fmmu>0000000000000000001400020100000001000000000000000000000000000000</Fmmu>
 			<Fmmu>0000000000000000001700010100000002000000000000000000000000000000</Fmmu>
 			<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
@@ -30,6 +30,9 @@
 				</Entry>
 				<Entry Name="Modes of operation display" Index="#x6061">
 					<Type>SINT</Type>
+				</Entry>
+				<Entry Name="Axis1 main power voltage" Index="#x40a4" Sub="#x01">
+					<Type>INT</Type>
 				</Entry>
 			</Pdo>
 			<Pdo Name="Axis1 Transmit PDO mapping 2" Index="#x1a01" Flags="#x0000">
@@ -81,6 +84,9 @@
 				<Entry Name="Modes of operation display" Index="#x6861">
 					<Type>SINT</Type>
 				</Entry>
+				<Entry Name="Axis2 main power voltage" Index="#x40a4" Sub="#x02">
+					<Type>INT</Type>
+				</Entry>
 			</Pdo>
 			<Pdo Name="Axis2 Transmit PDO mapping 2" Index="#x1a11" Flags="#x0000">
 				<ExcludePdo>#x1a10</ExcludePdo>
@@ -131,6 +137,9 @@
 				<Entry Name="Modes of operation display" Index="#x7061">
 					<Type>SINT</Type>
 				</Entry>
+				<Entry Name="Axis3 main power voltage" Index="#x40a4" Sub="#x03">
+					<Type>INT</Type>
+				</Entry>
 			</Pdo>
 			<Pdo Name="Axis3 Transmit PDO mapping 2" Index="#x1a21" Flags="#x0000">
 				<ExcludePdo>#x1a20</ExcludePdo>
@@ -180,6 +189,9 @@
 				</Entry>
 				<Entry Name="Modes of operation display" Index="#x7861">
 					<Type>SINT</Type>
+				</Entry>
+				<Entry Name="Axis4 main power voltage" Index="#x40a4" Sub="#x04">
+					<Type>INT</Type>
 				</Entry>
 			</Pdo>
 			<Pdo Name="Axis4 Transmit PDO mapping 2" Index="#x1a31" Flags="#x0000">

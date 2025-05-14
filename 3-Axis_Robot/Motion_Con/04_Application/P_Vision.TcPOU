@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="P_Vision" Id="{01db0ff9-afb1-4980-a0cc-1cc5a7f8bb47}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_Vision
+VAR
+	hr					: HRESULT;					// Vision関数の戻り値を表す変数
+	hrTemp				: HRESULT;					// 関数戻り値
+
+	fbCamera			: FB_VN_SimpleCameraControl;// Cameraオブジェクト or File Sourceオブジェクト
+	eState				: ETcVnCameraState;			// Cameraオブジェクト (or FileSourceオブジェクト) の状態を表す
+
+	// Images
+	ipImageIn			: ITcVnImage;				// 入力画像
+	ipImageRes			: ITcVnImage;				// 結果画像
+	ipImageProc			: ITcVnImage;				// 途中経過画像
+	
+	// Displayable Images
+	ipImageInDisp		: ITcVnDisplayableImage;	// 入力画像の画面表示用変数
+	ipImageResDisp		: ITcVnDisplayableImage;	// 結果画像の画面表示用変数
+	ipImageProcDisp		: ITcVnDisplayableImage;	// 途中経過画像1の画面表示用変数
+	
+	// その他ローカル変数
+	nNewImageCounter	: UINT;						// 画像取得カウンタ
+	bNewImageArrived	: BOOL;						// 画像取得すると TRUE  (※TRUEの後、すぐにFALSEに戻す)
+	bSoftWareTrigger	: BOOL;						// ソフトウェアトリガー
+	fbR_TRIG			: R_TRIG;					// ボタンスイッチの立ち上がりエッジを検出
+	fbTon				: ton;						// LEDライト点灯安定待ち
+	stImageInfo			: TcVnImageInfo;			// 画像情報構造体
+	iStep				: INT:=0;					// 画像処理のステップ進行用
+	iImageCount			: INT:=0;					// 画像の枚数をカウント用
+	
+	// ブロブ検出用
+	stBlobParams		: TcVnParamsBlobDetection;	// Blob params
+	ipContourList		: ITcVnContainer;			// Blob Container
+	ipContour			: ITcVnContainer;			// Blob個々の輪郭情報
+	ipIterator			: ITcVnForwardIterator;		// 個々のBlobが格納されたコンテナから各要素へアクセスする為のイテレータ （≒ポインタ）	
+
+	fArea				: LREAL;					// 面積 [pixel]
+
+	fbFormatString		: FB_FormatString;			// (need library : "Tc2_Utilities")
+	sText				: STRING;
+	aDrawPos			: ARRAY[0..1] OF UDINT;
+	
+	// カラー定義
+	aColorRed			: TcVnVector4_LREAL := [255, 50, 50, 0];
+	aColorGreen			: TcVnVector4_LREAL := [0, 255, 0, 0];
+	aColorBlue			: TcVnVector4_LREAL := [0, 0, 255, 0];
+	aColorWhite			: TcVnVector4_LREAL := [255, 255, 255, 0];
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[eState := fbCamera.GetState();
+
+CASE eState OF
+TCVN_CS_ERROR:
+	hr := fbCamera.Reset();	// エラーの時はリセットを実行
+
+TCVN_CS_TRIGGERING:
+	hr := fbCamera.TriggerImage();	// ソフトウェアトリガー
+
+TCVN_CS_INITIAL..TCVN_CS_STARTACQUISITION:
+	hr := fbCamera.StartAcquisition();	// 取込開始状態に移行させる
+
+TCVN_CS_ACQUIRING:
+
+	CASE iStep OF
+	0:
+		fbR_TRIG(CLK := GVL.bAutoCameraTriger, Q => );	// ボタンスイッチを押すとソフトウェアトリガーを発行する
+		
+		IF fbR_TRIG.Q=TRUE THEN
+			GVL.bLedLight:=TRUE;
+		END_IF
+
+		fbTon(IN:=GVL.bLedLight,PT:=T#500MS,Q=>,ET=>);	//LEDの照度安定待ち
+		
+		IF fbTon.Q=TRUE THEN
+			bSoftWareTrigger:=TRUE;
+			iStep := 1;
+		END_IF
+		
+	1:
+		IF bSoftwareTrigger=TRUE THEN
+			hr := fbCamera.TriggerImage();
+			IF SUCCEEDED(hr)=TRUE THEN
+				bSoftwareTrigger := FALSE;
+			END_IF
+		ELSE
+			hr := fbCamera.GetCurrentImage(ipImageIn);	// 最新画像を取得			
+			// new image was received.
+			IF SUCCEEDED(hr)=TRUE AND ipImageIn <> 0 THEN
+				nNewImageCounter := nNewImageCounter + 1;
+				iStep := 2;
+			END_IF
+		END_IF
+		
+	2:
+			GVL.bLedLight:=FALSE;
+			iStep:=3;
+	
+	3:	
+		// Bayerフォーマットからカラー画像へ変換
+		// ※画像情報をチェックし、ピクセルフォーマットがBayerエンコーディングされている時はカラー画像に変更。
+		// ※最初からカラー画像の時はカラー変換しない。
+		hr := F_VN_GetImageInfo(ipImageIn, stImageInfo, hr);
+		IF SUCCEEDED(hr) AND_THEN stImageInfo.stPixelFormat.ePixelEncoding <> ETcVnPixelEncoding.TCVN_PE_NONE THEN
+			hr := F_VN_ConvertColorSpace(ipImageIn, ipImageIn, TCVN_CST_BAYER_RG_TO_RGB, hr);
+		END_IF
+		iStep:=4;
+	
+	4:
+		hr := F_VN_CopyImage(ipImageIn, ipimageRes, hr);	// copy to ResultImage
+		iStep:=5;
+	
+	5:
+		// グレー画像に変換
+		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageProc, ETcVnColorSpaceTransform.TCVN_CST_RGB_TO_GRAY, hr);
+		iStep:=6;
+		
+	6:
+		// ブロブ検出パラメータをセット
+		stBlobParams.bFilterByArea := TRUE;
+		stBlobParams.fMinArea := 30000;
+		stBlobParams.fMaxArea := 60000;
+		
+		// 円形度判別
+		stBlobParams.bFilterByCircularity := TRUE;
+		stBlobParams.fMinCircularity := 0.70;
+		
+		// 輝度閾値
+		stBlobParams.fMinThreshold	:= 180;
+		stBlobParams.fMaxThreshold := 255;
+		stBlobParams.fThresholdStep := 0;
+		
+		// Detect Blobs
+		hr := F_VN_DetectBlobs(ipImageProc, ipContourList, stBlobParams, hr);
+		
+		IF SUCCEEDED(hr) AND ipContourList <> 0 THEN
+			hr := ipContourList.GetElementNum(GVL.nDetectedNum);	// 検出したブロブ数を取得
+		END_IF
+		iStep:=7;
+
+	7:
+		IF GVL.nDetectedNum > 0 THEN
+			// 検出したブロブの輪郭を描画
+			hr := F_VN_DrawContours(ipContourList, -1, ipImageRes,  P_Vision.aColorGreen, 3, hr);
+			
+			// 各ブロブ情報が格納されたコンテナ(ContourList)から、最初の要素へのイテレータを取得
+			hr := F_VN_GetForwardIterator(ipContourList, ipIterator, hr);
+			
+			//画像のカウンターをリセットする
+			iImageCOunt:=0;
+			
+			WHILE SUCCEEDED(hr) AND_THEN ipIterator.CheckIfEnd() <> S_OK DO
+				//画像のカウントをインクリメント
+				iImageCount:=iImageCount+1;	
+				//アレイの数が10までしか用意してないので、ブロブの検出数が多かった場合は、いったん0に巻き戻す
+				IF 10<iImageCount THEN
+					iImageCount:=0;
+				END_IF
+			
+				// イテレータが指し示しているContourを取り出す。その後イテレータが次のContourを指し示すよう進める
+				hr := F_VN_GetContainer(ipIterator, ipContour, hr);
+				hr := F_VN_IncrementIterator(ipIterator, hr);
+				
+				// Containerから欲しい結果を取得
+				hr := F_VN_ContourArea(ipContour, fArea, hr);
+				hr := F_VN_ContourCenterOfMass(ipContour, GVL.aMassCenter[iImageCount], hr);
+				
+				// 個々の結果を描画
+				aDrawPos[0] := LREAL_TO_UDINT(GVL.aMassCenter[iImageCount][0]);
+				aDrawPos[1] := LREAL_TO_UDINT(GVL.aMassCenter[iImageCount][1]);
+				
+				// 重心位置をマーク
+				hrTemp := F_VN_DrawPointExp(aDrawPos[0], aDrawPos[1], 
+											ipImageRes, 
+											ETcVnDrawShape.TCVN_DS_PLUS, 
+											aColorGreen, 5, 1, 
+											ETcVnLineType.TCVN_LT_4_CONNECTED, 0);
+				
+				// 面積値を結果画像に対して出力
+				sText := CONCAT('Area : ', DINT_TO_STRING(LREAL_TO_DINT(fArea)));
+				hrTemp := F_VN_PutText(	sText, 
+										ipImageRes, 
+										aDrawPos[0] - 50, aDrawPos[1] + 20, 
+										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, aColorRed, 0);
+				
+				// 座標情報を結果画像に対して出力
+				fbFormatString(	sFormat := '(X, Y) = (%0.3f, %0.3f)', 
+								arg1 := F_LREAL(GVL.aMassCenter[iImageCount][0]), arg2 := F_LREAL(GVL.aMassCenter[iImageCount][1]), sOut => sText);
+				hrTemp := F_VN_PutText(	sText, 
+										ipImageRes, 
+										aDrawPos[0] - 110, aDrawPos[1] + 80, 
+										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, aColorRed, 0);
+			END_WHILE
+			
+			FW_SafeRelease(ADR(ipContour));		// ループの外で開放するほうが効率的なので、ここで開放する
+			FW_SafeRelease(ADR(ipIterator));	
+		END_IF
+		FW_SafeRelease(ADR(ipContourList));
+							
+		istep:=8;
+	
+	8:		
+		// 画面表示イメージを作成する
+		hr := F_VN_TransformIntoDisplayableImage(ipImageIn, ipImageInDisp, hr);
+		hr := F_VN_TransformIntoDisplayableImage(ipImageRes, ipImageResDisp, S_OK);
+		hr := F_VN_TransformIntoDisplayableImage(ipImageProc, ipImageProcDisp, S_OK);
+		
+		istep:=0;
+		
+		GVL.bGetImageEnd:=TRUE;
+	END_CASE
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="P_Vision">
+      <LineId Id="1" Count="161" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

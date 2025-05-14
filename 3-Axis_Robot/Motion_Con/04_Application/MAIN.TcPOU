@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="MAIN" Id="{50158451-d374-4957-970b-65b4e1d88bf2}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	fb3AxisRobot	:FB_3AxisRobot;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//P_Motion();
+//P_MotionWrite();
+//P_PickAndPlace();
+
+
+
+fb3AxisRobot();
+
+
+
+
+(*
+プログラム作成メモ
+ワークを掴めていることの確認追加
+*)]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="1" Count="6" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="9" Count="4" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

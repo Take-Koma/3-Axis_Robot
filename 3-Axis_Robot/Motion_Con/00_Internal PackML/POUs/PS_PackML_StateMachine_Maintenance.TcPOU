@@ -1,0 +1,576 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="PS_PackML_StateMachine_Maintenance" Id="{786d26b1-195f-4b14-bfcd-e4639c302e75}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PS_PackML_StateMachine_Maintenance
+VAR_INPUT
+	Start				: BOOL;
+	Hold				: BOOL;
+	UnHold				: BOOL;
+	Suspend				: BOOL;
+	UnSuspend			: BOOL;
+	Abort				: BOOL;
+	Stop				: BOOL;
+	Complete			: BOOL;
+	Clear				: BOOL;
+	Reset				: BOOL;
+	StateComplete		: BOOL;
+END_VAR
+VAR_OUTPUT
+	Status				: WORD;
+
+	ST_Starting			: BOOL;
+	ST_Completing		: BOOL;
+	ST_Resetting		: BOOL;
+	ST_Holding			: BOOL;
+	ST_UnHolding		: BOOL;
+	ST_Suspending		: BOOL;
+	ST_UnSuspending		: BOOL;
+	ST_Clearing			: BOOL;
+	ST_Stopping			: BOOL;
+	ST_Aborting			: BOOL;
+
+	(* State Complete*)
+	ST_Execute			: BOOL;
+	ST_Complete			: BOOL;
+	ST_Idle				: BOOL;
+	ST_Held				: BOOL;
+	ST_Suspended		: BOOL;
+	ST_Stopped			: BOOL;
+	ST_Aborted			: BOOL;
+
+	(* additional *)
+	Error				: BOOL;
+	ErrorID				: DWORD;
+	ePMLState			: E_PMLState := E_PMLState.IDLE;
+END_VAR
+VAR
+	ePMLStatePrev		: E_PMLState;
+	bStateChange		: BOOL;
+	StateCompletePrev	: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* check for state change *)
+IF ePMLStatePrev <> ePMLState THEN
+	ePMLStatePrev 	:= ePMLState;
+	bStateChange	:= TRUE;
+ELSE
+	bStateChange	:= FALSE;
+END_IF
+
+
+(* change to new state if requested *)
+CASE ePMLState OF
+	E_PMLState.UNDEFINED:
+				(* undefined state *)
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Aborting		:= TRUE;
+				ELSIF Stop THEN
+					ePMLState 		:= E_PMLState.STOPPING;
+					ST_Stopping		:= TRUE;
+				END_IF
+
+
+	E_PMLState.IDLE:
+				(* final state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= TRUE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Idle			:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF Stop THEN
+					ePMLState 		:= E_PMLState.STOPPING;
+					ST_Idle			:= FALSE;
+					ST_Stopping		:= TRUE;
+				ELSIF Start THEN
+					ePMLState 		:= E_PMLState.STARTING;
+					ST_Idle			:= FALSE;
+					ST_Starting		:= TRUE;
+				END_IF
+
+
+	E_PMLState.STARTING:
+				(* transient state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= TRUE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Starting		:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF Stop THEN
+					ePMLState 		:= E_PMLState.STOPPING;
+					ST_Starting		:= FALSE;
+					ST_Stopping		:= TRUE;
+				ELSIF StateComplete AND NOT StateCompletePrev THEN
+					ePMLState 		:= E_PMLState.EXECUTE;
+					StateCompletePrev := StateComplete;
+					ST_Starting		:= FALSE;
+					ST_Execute		:= TRUE;
+				END_IF
+
+
+	E_PMLState.EXECUTE:
+				(* final state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= TRUE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Execute		:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF Stop THEN
+					ePMLState 		:= E_PMLState.STOPPING;
+					ST_Execute		:= FALSE;
+					ST_Stopping		:= TRUE;
+				ELSIF Hold THEN
+					ePMLState 		:= E_PMLState.HOLDING;
+					ST_Execute		:= FALSE;
+					ST_Holding		:= TRUE;
+				END_IF
+
+
+	E_PMLState.RESETTING:
+				(* transient state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= TRUE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Resetting	:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF Stop THEN
+					ePMLState 		:= E_PMLState.STOPPING;
+					ST_Resetting	:= FALSE;
+					ST_Stopping		:= TRUE;
+				ELSIF StateComplete AND NOT StateCompletePrev THEN
+					ePMLState 		:= E_PMLState.IDLE;
+					StateCompletePrev := StateComplete;
+					ST_Resetting	:= FALSE;
+					ST_Idle			:= TRUE;
+				END_IF
+
+
+	E_PMLState.HOLDING:
+				(* transient state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= TRUE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Holding		:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF Stop THEN
+					ePMLState 		:= E_PMLState.STOPPING;
+					ST_Holding		:= FALSE;
+					ST_Stopping		:= TRUE;
+				ELSIF StateComplete AND NOT StateCompletePrev THEN
+					ePMLState 		:= E_PMLState.HELD;
+					StateCompletePrev := StateComplete;
+					ST_Holding		:= FALSE;
+					ST_Held			:= TRUE;
+				END_IF
+
+
+	E_PMLState.HELD:
+				(* final state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= TRUE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Held			:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF Stop THEN
+					ePMLState 		:= E_PMLState.STOPPING;
+					ST_Held			:= FALSE;
+					ST_Stopping		:= TRUE;
+				ELSIF UnHold THEN
+					ePMLState 		:= E_PMLState.UNHOLDING;
+					ST_Held			:= FALSE;
+					ST_UnHolding	:= TRUE;
+				END_IF
+
+
+	E_PMLState.UNHOLDING:
+				(* transient state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= TRUE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_UnHolding	:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF Stop THEN
+					ePMLState 		:= E_PMLState.STOPPING;
+					ST_UnHolding	:= FALSE;
+					ST_Stopping		:= TRUE;
+				ELSIF StateComplete THEN
+					ePMLState 		:= E_PMLState.EXECUTE;
+					StateCompletePrev := StateComplete;
+					ST_UnHolding	:= FALSE;
+					ST_Execute		:= TRUE;
+				END_IF
+
+
+	E_PMLState.STOPPING:
+				(* transient state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= TRUE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF StateComplete AND NOT StateCompletePrev THEN
+					ePMLState 		:= E_PMLState.STOPPED;
+					StateCompletePrev := StateComplete;
+					ST_Stopping		:= FALSE;
+					ST_Stopped		:= TRUE;
+				END_IF
+
+
+	E_PMLState.STOPPED:
+				(* final state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= TRUE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Stopped		:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF Reset THEN
+					ePMLState 		:= E_PMLState.RESETTING;
+					ST_Stopped		:= FALSE;
+					ST_Resetting	:= TRUE;
+				END_IF
+
+
+E_PMLState.ABORTING:
+				(* transient state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= TRUE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF StateComplete AND NOT StateCompletePrev THEN
+					ePMLState 		:= E_PMLState.ABORTED;
+					StateCompletePrev := StateComplete;
+					ST_Aborting		:= FALSE;
+					ST_Aborted		:= TRUE;
+				END_IF
+
+
+	E_PMLState.ABORTED:
+				(* final state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= FALSE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= TRUE;
+				END_IF
+		
+				IF Clear THEN
+					ePMLState 		:= E_PMLState.CLEARING;
+					ST_Aborted		:= FALSE;
+					ST_Clearing		:= TRUE;
+				END_IF
+
+
+	E_PMLState.CLEARING:
+				(* transient state *)
+		
+				IF bStateChange THEN
+					(* transient state *)
+					ST_Starting		:= FALSE;
+					ST_Completing	:= FALSE;
+					ST_Resetting	:= FALSE;
+					ST_Holding		:= FALSE;
+					ST_UnHolding	:= FALSE;
+					ST_Suspending	:= FALSE;
+					ST_UnSuspending	:= FALSE;
+					ST_Clearing		:= TRUE;
+					ST_Stopping		:= FALSE;
+					ST_Aborting		:= FALSE;
+		
+					(* final state *)
+					ST_Execute		:= FALSE;
+					ST_Complete		:= FALSE;
+					ST_Idle			:= FALSE;
+					ST_Held			:= FALSE;
+					ST_Suspended	:= FALSE;
+					ST_Stopped		:= FALSE;
+					ST_Aborted		:= FALSE;
+				END_IF
+		
+				IF Abort THEN
+					ePMLState 		:= E_PMLState.ABORTING;
+					ST_Stopped		:= FALSE;
+					ST_Aborting		:= TRUE;
+				ELSIF StateComplete AND NOT StateCompletePrev THEN
+					ePMLState 		:= E_PMLState.STOPPED;
+					ST_Clearing		:= FALSE;
+					ST_Stopped		:= TRUE;
+				END_IF
+
+END_CASE
+
+(* auto clear with StateComplete = FALSE *)
+StateCompletePrev := StateCompletePrev AND StateComplete;]]></ST>
+    </Implementation>
+    <LineIds Name="PS_PackML_StateMachine_Maintenance">
+      <LineId Id="1" Count="517" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

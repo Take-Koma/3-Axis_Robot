@@ -8,7 +8,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>Motion_Con</Name>
-    <ProgramVersion>3.1.4026.13</ProgramVersion>
+    <ProgramVersion>3.1.4026.15</ProgramVersion>
     <Application>{3e578fbf-8593-4971-a049-a334d40a2de2}</Application>
     <TypeSystem>{06c75c1e-0f40-44c5-a8bf-ddc4f0ae36a3}</TypeSystem>
     <Implicit_Task_Info>{558334a8-64b5-43ad-807e-2d9c9d5c9ec6}</Implicit_Task_Info>
@@ -21,136 +21,130 @@
     <GlobalVersionStructureIncluded>false</GlobalVersionStructureIncluded>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\E_Axis.TcDUT">
+    <Compile Include="00_Internal PackML\POUs\PS_PackML_StateMachine_Auto.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\E_CircleEllipseWriteStep.TcDUT">
+    <Compile Include="00_Internal PackML\POUs\PS_PackML_StateMachine_Maintenance.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\E_LedColor.TcDUT">
+    <Compile Include="00_Internal PackML\POUs\PS_PackML_StateMachine_Manual.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\E_MachineState.TcDUT">
+    <Compile Include="00_Internal PackML\POUs\PS_PackML_StateMachine_SemiAuto.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\E_PickAndPlaceStep.TcDUT">
+    <Compile Include="00_Internal PackML\POUs\PS_UnitModeManager.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\E_Terminal.TcDUT">
+    <Compile Include="01_Submodules\Diagnosis\E_Terminal.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\E_WriteStep.TcDUT">
+    <Compile Include="01_Submodules\Diagnosis\FB_DiagnosisEtherCAT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_CircleSettings.TcDUT">
+    <Compile Include="01_Submodules\Diagnosis\FB_DiagnosisTerminal.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_EllipseSetting.TcDUT">
+    <Compile Include="01_Submodules\Axis\E_Axis.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\ST_LoadCellSpecification.TcDUT">
+    <Compile Include="01_Submodules\Axis\FB_AxisVelocity.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\GVL.TcGVL">
+    <Compile Include="01_Submodules\Axis\FB_AxisAbsolute.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Axis\FB_GripperAbsolute.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Axis\FB_ZAxisAbsolute.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\E_PickAndPlaceStep.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\E_WriteStep.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\FB_Alarm.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\LoadCell\FB_LoadCell.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\MachineManagement\E_MachineState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\MachineManagement\FB_MachineState.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\MachineManagement\FB_PcSafeOff.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\MachineManagement\FB_PersistentDataManagement.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Patlite\E_LedColor.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Patlite\FB_Patlite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Patlite\I_Patlite.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\ST_CircleSettings.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="03_Machine\FB_3AxisRobot.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="03_Machine\Param_3AxisRobot.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\GVL_Alarm.TcGVL">
+    <Compile Include="04_Application\GVL.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\GVL_Axis.TcGVL">
+    <Compile Include="04_Application\MAIN.TcPOU">
       <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\GVL_Diagnosis.TcGVL">
+    <Compile Include="04_Application\P_Vision.TcPOU">
       <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="GVLs\GVL_LoadCell.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="GVLs\GVL_MitsubishiCom.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="GVLs\GVL_Motion.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="GVLs\GVL_Safety.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="GVLs\GVL_Vision.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_Alarm.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_DiagnosisEtherCAT.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_DiagnosisTerminal.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_LoadCell.TcPOU">
+    <Compile Include="POUs\E_CircleEllipseWriteStep.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FB_MotionShapeWrite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FB_Gripper_GripAngle.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_MachineState.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_Patlite.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FB_Z_Axis_TargetPositionConvert.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\I_LoadCell.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\I_Patlite.TcIO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\P_Alarm.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\P_Diagnosis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\P_LoadCell.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\P_PickAndPlace.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\P_Safety.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\P_Motion.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\MAIN.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\P_MotionWrite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\P_MitsubishiCom.TcPOU">
+    <Compile Include="POUs\ゴミ箱\FB_3AxisAbs.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\P_Vision.TcPOU">
+    <Compile Include="POUs\ゴミ箱\FB_Gripper_GripAngle.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ゴミ箱\FB_Z_Axis_TargetPositionConvert.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ゴミ箱\GVL_Motion.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\ゴミ箱\P_Motion.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ゴミ箱\P_PickAndPlace.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ゴミ箱\ST_EllipseSetting.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VisionTask.TcTTO">
@@ -161,15 +155,26 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DUTs" />
-    <Folder Include="GVLs" />
+    <Folder Include="00_Internal PackML" />
+    <Folder Include="00_Internal PackML\POUs" />
+    <Folder Include="01_Submodules\Axis" />
+    <Folder Include="01_Submodules\LoadCell" />
+    <Folder Include="01_Submodules\Diagnosis" />
+    <Folder Include="01_Submodules\MachineManagement" />
+    <Folder Include="01_Submodules\Patlite" />
+    <Folder Include="03_Machine" />
+    <Folder Include="01_Submodules" />
+    <Folder Include="02_Subsystems" />
+    <Folder Include="04_Application" />
     <Folder Include="POUs" />
+    <Folder Include="POUs\ゴミ箱" />
   </ItemGroup>
   <ItemGroup>
-    <PlaceholderReference Include="Tc2_EtherCAT">
-      <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_EtherCAT</Namespace>
-    </PlaceholderReference>
+    <None Include="Motion_Con.tmc">
+      <SubType>Content</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <PlaceholderReference Include="Tc2_MC2">
       <DefaultResolution>Tc2_MC2, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_MC2</Namespace>
@@ -198,21 +203,12 @@
       <DefaultResolution>Tc3_Vision, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Vision</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="VisuDialogs">
-      <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
-      <Namespace>VisuDialogs</Namespace>
-    </PlaceholderReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Motion_Con.tmc">
-      <SubType>Content</SubType>
-    </None>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -234,6 +230,12 @@
         <o>
           <v n="Name">"{29BD8D0C-3586-4548-BB48-497B9A01693F}"</v>
           <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+            <v>NamingConventions</v>
+            <o>
+              <v n="Name">"NamingConventions"</v>
+              <d n="SubKeys" t="Hashtable" />
+              <d n="Values" t="Hashtable" />
+            </o>
             <v>Rules</v>
             <o>
               <v n="Name">"Rules"</v>
@@ -283,15 +285,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

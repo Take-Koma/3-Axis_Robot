@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="FB_PersistentDataManagement" Id="{37612fc2-982d-4b05-b314-861642293de6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PersistentDataManagement
+VAR
+	fbWritePersistentData		:FB_WritePersistentData;
+	fbWriteREdge				:R_TRIG;
+	fbWriteErrorREdge			:R_TRIG;
+	PcAmsNetId					:AMSNETID;					//PC AMS Net ID
+END_VAR
+VAR PERSISTENT
+	_bPersistentDataNotInit		:BOOL	:=FALSE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="bPersistentDataNotInit" Id="{91ab302d-7911-4309-aaae-bced3bae8bc7}">
+      <Declaration><![CDATA[PROPERTY bPersistentDataNotInit : BOOL]]></Declaration>
+      <Get Name="Get" Id="{137d3994-8e59-4a21-b475-ed557a77d9a1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bPersistentDataNotInit:=_bPersistentDataNotInit;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{055da954-316b-43f0-8806-03eaf1d68751}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF _bPersistentDataNotInit<>bPersistentDataNotInit THEN
+	_bPersistentDataNotInit:=bPersistentDataNotInit;
+	WritePersistentData(TRUE);
+END_IF
+
+
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_Init" Id="{d3d5a76b-f9a2-48de-9228-66fc5721cd21}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+
+	PcAmsNetId			:AMSNETID;		//PC AMS Net ID
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.PcAmsNetId		:=PcAmsNetId;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WritePersistentData" Id="{f4a12748-047c-4d03-a762-74091f042f32}">
+      <Declaration><![CDATA[METHOD WritePersistentData : BOOL
+VAR_INPUT
+	bPersistentDataWrite		:BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	fbWriteREdge(CLK:=bPersistentDataWrite,Q=>);
+
+	IF fbWriteREdge.Q=TRUE THEN
+		fbWritePersistentData(	NETID	:=F_CreateAmsNetId(PcAmsNetId),
+								PORT	:=_AppInfo.AdsPort,
+								START	:=TRUE,
+								TMOUT	:=DEFAULT_ADS_TIMEOUT,
+								MODE	:=E_PersistentMode.SPDM_2PASS,
+								BUSY	=>,
+								ERR		=>,
+								ERRID	=>
+								);
+	ELSE
+		fbWritePersistentData(	START	:=FALSE);
+	END_IF
+
+	fbWriteErrorREdge(CLK:=fbWritePersistentData.ERR,Q=>WritePersistentData);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_PersistentDataManagement">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PersistentDataManagement.bPersistentDataNotInit.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PersistentDataManagement.bPersistentDataNotInit.Set">
+      <LineId Id="1" Count="6" />
+    </LineIds>
+    <LineIds Name="FB_PersistentDataManagement.FB_Init">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PersistentDataManagement.WritePersistentData">
+      <LineId Id="1" Count="16" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

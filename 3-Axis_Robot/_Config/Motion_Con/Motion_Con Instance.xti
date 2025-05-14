@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.13" ClassName="CTComPlcObjDef">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.14" ClassName="CTComPlcObjDef">
 	<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" XtvPath="Motion_Con\Motion_Con Instance.xtv" TmcPath="Motion_Con\Motion_Con.tmc">
 		<Name>__FILENAME__</Name>
 		<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
@@ -239,6 +239,183 @@
 				</OwnerB>
 			</OwnerA>
 		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2025-02-10T17:47:19">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 6 (EL3351)">
+					<Link VarA="GVL_LoadCell.fbLoadCell.diBridgeInputs" TypeA="DINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000009}" VarB="AIBridge Inputs^Value" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_LoadCell.fbLoadCell.diSupplyInputs" TypeA="DINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000009}" VarB="AISupply Inputs^Value" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2025-02-11T14:26:41">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 6 (EL3351)">
+					<Link VarA="P_LoadCell.fbLoadCell.diBridgeInputs" TypeA="DINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000009}" VarB="AIBridge Inputs^Value" RestoreInfo="ANotFound"/>
+					<Link VarA="P_LoadCell.fbLoadCell.diSupplyInputs" TypeA="DINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000009}" VarB="AISupply Inputs^Value" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2025-02-11T14:49:01">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1088)">
+					<Link VarA="GVL_Alarm.bSwitch" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 8^Input" Size="1" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+			<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 5 (EL2088)">
+					<Link VarA="GVL_Alarm.bBlueLed" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 7^Output" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Alarm.bBuzzerON" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 8^Output" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Alarm.bGreenLed" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 6^Output" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Alarm.bRedLed" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 5^Output" Size="1" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2025-02-11T15:34:50">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TIID^Device 3 (EtherCAT)">
+					<Link VarA="P_Diagnosis.fbDiagnosisEtherCAT.uiCfgSlaveCount" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^CfgSlaveCount" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisEtherCAT.uiDevState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="Inputs^DevState" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisEtherCAT.uiFrmState[0]" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="Inputs^Frm0State" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisEtherCAT.uiFrmState[1]" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="Inputs^Frm1State" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisEtherCAT.uiFrmState[2]" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="Inputs^Frm2State" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisEtherCAT.uiFrmWcState[0]" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="Inputs^Frm0WcState" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisEtherCAT.uiFrmWcState[1]" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="Inputs^Frm1WcState" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisEtherCAT.uiFrmWcState[2]" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="Inputs^Frm2WcState" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisEtherCAT.uiSlaveCount" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="Inputs^SlaveCount" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Drive 8 (AZD4A-KED)">
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[8].uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)">
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[1].uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 2 (EL1004)">
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[2].bWcState[0]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[2].uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 3 (EL2004)">
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[3].bWcState[0]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[3].uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1088)">
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[4].bWcState[0]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[4].uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 5 (EL2088)">
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[5].bWcState[0]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[5].uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 6 (EL3351)">
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[6].bWcState[0]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[6].uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 7 (EL2911)">
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[7].bWcState[0]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState0" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[7].bWcState[1]" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState1" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="P_Diagnosis.fbDiagnosisTerminal[7].uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2025-02-11T16:04:37">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 7 (EL2911)">
+					<Link VarA="GVL_Safety.bFbEStopInput1" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bFbEStopInput2" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bFbEdmError" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^RobotSafety.bFbEdmError_22" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bFbEstopError" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^RobotSafety.bFbEstopError_21" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bFbEstopOutput" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bGripSwich" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bSafetyInRun" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardInputs^RobotSafety.bSafetyInRun_12" Size="1" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+			<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 7 (EL2911)">
+					<Link VarA="GVL_Safety.bFbEStopEDM" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^RobotSafety.bFbEStopEDM_7" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bFbEStopReset" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^RobotSafety.bFbEStopReset_5" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bSafetyErrAck" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^RobotSafety.bSafetyErrAck_1" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="GVL_Safety.bSafetyRun_Stop" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^RobotSafety.bSafetyRun_Stop_2" Size="1" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2025-02-13T13:35:20">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
+					<Link VarA="GVL_Axis.stAxis[3].NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^X">
+					<Link VarA="GVL_Axis.stAxis[0].NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Y">
+					<Link VarA="GVL_Axis.stAxis[1].NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Z">
+					<Link VarA="GVL_Axis.stAxis[2].NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+			<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
+					<Link VarA="GVL_Axis.stAxis[3].PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^X">
+					<Link VarA="GVL_Axis.stAxis[0].PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Y">
+					<Link VarA="GVL_Axis.stAxis[1].PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Z">
+					<Link VarA="GVL_Axis.stAxis[2].PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2025-02-17T07:25:36">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisAbs.fbGripper.AxisRef.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^X">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisAbs.fbXAxis.AxisRef.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Y">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisAbs.fbYAxis.AxisRef.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Z">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisAbs.fbZAxis.AxisRef.NcToPlc" TypeA="MC.NCTOPLC_AXIS_REF" InOutA="0" GuidA="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" VarB="Outputs^ToPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+			<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisAbs.fbGripper.AxisRef.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^X">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisAbs.fbXAxis.AxisRef.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Y">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisAbs.fbYAxis.AxisRef.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Z">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisAbs.fbZAxis.AxisRef.PlcToNc" TypeA="MC.PLCTONC_AXIS_REF" InOutA="1" GuidA="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" VarB="Inputs^FromPlc" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2025-02-20T21:37:49">
+			<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+				<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 3 (EL2004)">
+					<Link VarA="GVL_Vision.bLedLight" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 1^Output" Size="1" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2025-03-11T05:31:17">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TINC^NC-Task 1 SAF^Objects^Group1 (MC Group Coordinated Motion)">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisInterpolation.stGroupRef.NcToPlc" TypeA="MC.CDT_MCTOPLC_GROUP" InOutA="0" GuidA="{467F4325-10DF-4BC1-88DD-E8240EB4F8E3}" VarB="Group Outputs^ToPLC" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+			<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+				<OwnerB Name="TINC^NC-Task 1 SAF^Objects^Group1 (MC Group Coordinated Motion)">
+					<Link VarA="MAIN.fb3AxisRobot.fb3AxisInterpolation.stGroupRef.PlcToNc" TypeA="MC.CDT_PLCTOMC_GROUP" InOutA="1" GuidA="{0E2E3852-A98C-4AF3-81E2-209EE128940C}" VarB="Group Inputs^FromPLC" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
 		<Contexts>
 			<Context>
 				<Id>0</Id>
@@ -282,99 +459,97 @@
 	<Mappings>
 		<OwnerA>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)">
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisEtherCAT.uiCfgSlaveCount" VarB="InfoData^CfgSlaveCount"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisEtherCAT.uiDevState" VarB="Inputs^DevState"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisEtherCAT.uiFrmState[0]" VarB="Inputs^Frm0State"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisEtherCAT.uiFrmState[1]" VarB="Inputs^Frm1State"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisEtherCAT.uiFrmState[2]" VarB="Inputs^Frm2State"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisEtherCAT.uiFrmWcState[0]" VarB="Inputs^Frm0WcState"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisEtherCAT.uiFrmWcState[1]" VarB="Inputs^Frm1WcState"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisEtherCAT.uiFrmWcState[2]" VarB="Inputs^Frm2WcState"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisEtherCAT.uiSlaveCount" VarB="Inputs^SlaveCount"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT.uiCfgSlaveCount" VarB="InfoData^CfgSlaveCount"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT.uiDevState" VarB="Inputs^DevState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT.uiFrmState[0]" VarB="Inputs^Frm0State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT.uiFrmState[1]" VarB="Inputs^Frm1State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT.uiFrmWcState[0]" VarB="Inputs^Frm0WcState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT.uiFrmWcState[1]" VarB="Inputs^Frm1WcState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT.uiSlaveCount" VarB="Inputs^SlaveCount"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Drive 8 (AZD4A-KED)">
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[8].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[8].uiState" VarB="InfoData^State"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)">
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[1].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[1].uiState" VarB="InfoData^State"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 2 (EL1004)">
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[2].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[2].uiState" VarB="InfoData^State"/>
-				<Link VarA="VisionTask Inputs^GVL.bEL1004Channel1" VarB="Channel 1^Input" Size="1"/>
-				<Link VarA="VisionTask Inputs^GVL.bEL1004Channel2" VarB="Channel 2^Input" Size="1"/>
-				<Link VarA="VisionTask Inputs^GVL.bEL1004Channel3" VarB="Channel 3^Input" Size="1"/>
-				<Link VarA="VisionTask Inputs^GVL.bEL1004Channel4" VarB="Channel 4^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bEL1004Channel1" VarB="Channel 1^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bEL1004Channel2" VarB="Channel 2^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bEL1004Channel3" VarB="Channel 3^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bEL1004Channel4" VarB="Channel 4^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[2].bWcState[0]" VarB="WcState^WcState" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[2].uiState" VarB="InfoData^State"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 3 (EL2004)">
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[3].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[3].uiState" VarB="InfoData^State"/>
-				<Link VarA="VisionTask Outputs^GVL.bEL2004Channel2" VarB="Channel 2^Output" Size="1"/>
-				<Link VarA="VisionTask Outputs^GVL.bEL2004Channel3" VarB="Channel 3^Output" Size="1"/>
-				<Link VarA="VisionTask Outputs^GVL.bEL2004Channel4" VarB="Channel 4^Output" Size="1"/>
-				<Link VarA="VisionTask Outputs^GVL_Vision.bLedLight" VarB="Channel 1^Output" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[3].bWcState[0]" VarB="WcState^WcState" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[3].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bEL2004Channel2" VarB="Channel 2^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bEL2004Channel3" VarB="Channel 3^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bEL2004Channel4" VarB="Channel 4^Output" Size="1"/>
+				<Link VarA="VisionTask Outputs^GVL.bLedLight" VarB="Channel 1^Output" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1088)">
-				<Link VarA="PlcTask Inputs^GVL_MitsubishiCom.bMitsubishiAlarm" VarB="Channel 3^Input" Size="1"/>
-				<Link VarA="PlcTask Inputs^GVL_MitsubishiCom.bMitsubishiModbusStart" VarB="Channel 2^Input" Size="1"/>
-				<Link VarA="PlcTask Inputs^GVL_MitsubishiCom.bMitsubishiRun" VarB="Channel 1^Input" Size="1"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[4].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[4].uiState" VarB="InfoData^State"/>
-				<Link VarA="VisionTask Inputs^GVL.bEL1088Channel5" VarB="Channel 5^Input" Size="1"/>
-				<Link VarA="VisionTask Inputs^GVL.bEL1088Channel6" VarB="Channel 6^Input" Size="1"/>
-				<Link VarA="VisionTask Inputs^GVL.bEL1088Channel7" VarB="Channel 7^Input" Size="1"/>
-				<Link VarA="VisionTask Inputs^GVL_Alarm.bSwitch" VarB="Channel 8^Input" Size="1"/>
-				<Link VarA="VisionTask Inputs^GVL_MitsubishiCom.bYI004" VarB="Channel 4^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bEL1088Channel5" VarB="Channel 5^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bEL1088Channel6" VarB="Channel 6^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bEL1088Channel7" VarB="Channel 7^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bMitsubishiAlarm" VarB="Channel 3^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bMitsubishiModbusStart" VarB="Channel 2^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bMitsubishiRun" VarB="Channel 1^Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bYI004" VarB="WcState^InputToggle" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[4].bWcState[0]" VarB="WcState^WcState" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[4].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbPatlite._bSwitch" VarB="Channel 8^Input" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 5 (EL2088)">
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[5].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[5].uiState" VarB="InfoData^State"/>
-				<Link VarA="PlcTask Outputs^GVL_MitsubishiCom.bQX004" VarB="Channel 4^Output" Size="1"/>
-				<Link VarA="PlcTask Outputs^GVL_MitsubishiCom.bTwinCATAlarm" VarB="Channel 3^Output" Size="1"/>
-				<Link VarA="PlcTask Outputs^GVL_MitsubishiCom.bTwinCATModbusStart" VarB="Channel 2^Output" Size="1"/>
-				<Link VarA="PlcTask Outputs^GVL_MitsubishiCom.bTwinCATRun" VarB="Channel 1^Output" Size="1"/>
-				<Link VarA="VisionTask Outputs^GVL_Alarm.bBlueLed" VarB="Channel 7^Output" Size="1"/>
-				<Link VarA="VisionTask Outputs^GVL_Alarm.bBuzzerON" VarB="Channel 8^Output" Size="1"/>
-				<Link VarA="VisionTask Outputs^GVL_Alarm.bGreenLed" VarB="Channel 6^Output" Size="1"/>
-				<Link VarA="VisionTask Outputs^GVL_Alarm.bRedLed" VarB="Channel 5^Output" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[5].bWcState[0]" VarB="WcState^WcState" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[5].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bQX004" VarB="Channel 4^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bTwinCATAlarm" VarB="Channel 3^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bTwinCATModbusStart" VarB="Channel 2^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bTwinCATRun" VarB="Channel 1^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbPatlite.bBlueLed" VarB="Channel 7^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbPatlite.bBuzzerON" VarB="Channel 8^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbPatlite.bGreenLed" VarB="Channel 6^Output" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbPatlite.bRedLed" VarB="Channel 5^Output" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 6 (EL3351)">
-				<Link VarA="PlcTask Inputs^GVL_LoadCell.diBridgeInputs" VarB="AIBridge Inputs^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_LoadCell.diSupplyInputs" VarB="AISupply Inputs^Value"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[6].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[6].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[6].bWcState[0]" VarB="WcState^WcState" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[6].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbLoadCell.diBridgeInputs" VarB="AIBridge Inputs^Value"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbLoadCell.diSupplyInputs" VarB="AISupply Inputs^Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EtherCAT)^Term 1 (EK1100)^Term 7 (EL2911)">
-				<Link VarA="PlcTask Inputs^GVL_Safety.bFbEStopInput1" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input" Size="1"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bFbEStopInput2" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input" Size="1"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bFbEdmError" VarB="StandardInputs^RobotSafety.bFbEdmError_22" Size="1"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bFbEstopError" VarB="StandardInputs^RobotSafety.bFbEstopError_21" Size="1"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bFbEstopOutput" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output" Size="1"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input" Size="1"/>
-				<Link VarA="PlcTask Inputs^GVL_Safety.bSafetyInRun" VarB="StandardInputs^RobotSafety.bSafetyInRun_12" Size="1"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[7].bWcState[0]" VarB="WcState^WcState0" Size="1"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[7].bWcState[1]" VarB="WcState^WcState1" Size="1"/>
-				<Link VarA="PlcTask Inputs^P_Diagnosis.fbDiagnosisTerminal[7].uiState" VarB="InfoData^State"/>
-				<Link VarA="PlcTask Outputs^GVL_Safety.bFbEStopEDM" VarB="StandardOutputs^RobotSafety.bFbEStopEDM_7" Size="1"/>
-				<Link VarA="PlcTask Outputs^GVL_Safety.bFbEStopReset" VarB="StandardOutputs^RobotSafety.bFbEStopReset_5" Size="1"/>
-				<Link VarA="PlcTask Outputs^GVL_Safety.bSafetyErrAck" VarB="StandardOutputs^RobotSafety.bSafetyErrAck_1" Size="1"/>
-				<Link VarA="PlcTask Outputs^GVL_Safety.bSafetyRun_Stop" VarB="StandardOutputs^RobotSafety.bSafetyRun_Stop_2" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bFbEStopInput1" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 1.Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bFbEStopInput2" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 2.Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bFbEdmError" VarB="StandardInputs^RobotSafety.bFbEdmError_22" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bFbEstopError" VarB="StandardInputs^RobotSafety.bFbEstopError_21" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bFbEstopOutput" VarB="Device Info Data^Internal I/O^Output Safe Data FSOUT Module.Output" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bSafetyInRun" VarB="StandardInputs^RobotSafety.bSafetyInRun_12" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[7].bWcState[0]" VarB="WcState^WcState0" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[7].bWcState[1]" VarB="WcState^WcState1" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[7].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bFbEStopEDM" VarB="StandardOutputs^RobotSafety.bFbEStopEDM_7" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bFbEStopReset" VarB="StandardOutputs^RobotSafety.bFbEStopReset_5" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bSafetyErrAck" VarB="StandardOutputs^RobotSafety.bSafetyErrAck_1" Size="1"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bSafetyRun_Stop" VarB="StandardOutputs^RobotSafety.bSafetyRun_Stop_2" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
-				<Link VarA="PlcTask Inputs^GVL_Axis.stAxis[3].NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^GVL_Axis.stAxis[3].PlcToNc" VarB="Inputs^FromPlc"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbGripper.AxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbGripper.AxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^X">
-				<Link VarA="PlcTask Inputs^GVL_Axis.stAxis[0].NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^GVL_Axis.stAxis[0].PlcToNc" VarB="Inputs^FromPlc"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbXAxis.AxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbXAxis.AxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Y">
-				<Link VarA="PlcTask Inputs^GVL_Axis.stAxis[1].NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^GVL_Axis.stAxis[1].PlcToNc" VarB="Inputs^FromPlc"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbYAxis.AxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbYAxis.AxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Z">
-				<Link VarA="PlcTask Inputs^GVL_Axis.stAxis[2].NcToPlc" VarB="Outputs^ToPlc"/>
-				<Link VarA="PlcTask Outputs^GVL_Axis.stAxis[2].PlcToNc" VarB="Inputs^FromPlc"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbZAxis.AxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbZAxis.AxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

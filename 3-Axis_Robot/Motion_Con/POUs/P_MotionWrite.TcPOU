@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
   <POU Name="P_MotionWrite" Id="{a13c4fb8-4faa-4e1e-970b-514f68ab2a7e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_MotionWrite
 VAR
@@ -284,7 +284,7 @@ E_WriteStep.Reset://McMoveのコマンドアボートorエラー後のリセッ�
 	CASE iStep OF
 
 	0:
-		IF GVL_MitsubishiCom.bFromAutoMoveReset=TRUE AND GVL_Alarm.fbMachineState.bStopMachine=FALSE THEN
+		IF GVL_MitsubishiCom.bFromAutoMoveReset=TRUE AND MAIN.fb3AxisRobot.fbMachineState.bStopMachine=FALSE THEN
 			GVL_MitsubishiCom.bToAutoMoveResetting:=TRUE;
 			iStep:=1;
 			//FB_MotionShapeWriteのリセット

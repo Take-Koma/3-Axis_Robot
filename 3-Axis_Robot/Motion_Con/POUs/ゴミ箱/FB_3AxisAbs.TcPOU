@@ -1,0 +1,392 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="FB_3AxisAbs" Id="{96c0f27a-7dc1-4352-9995-0ffba358f922}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_3AxisAbs
+VAR_INPUT
+END_VAR
+VAR
+	_bAxisError				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;				//各軸Error
+	nAxisErrorID			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF UDINT;				//各軸Error ID
+	_bAxisMoving			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;				//各軸moving
+	_fAxisActPos			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF LREAL;				//各軸Actual Position
+	
+	_bAxisEnable			:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;				//各軸PoerON
+	_bResetDone				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;				//各軸リセット完了
+	_bHaltDone				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;				//各軸一時停止完了
+	_bStopDone				:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;				//各軸停止完了
+
+
+
+
+
+	
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//---なし---]]></ST>
+    </Implementation>
+    <Folder Name="GetState" Id="{1ecf3b7b-9174-412b-a010-f357b25b0168}" />
+    <Method Name="AbsMove" Id="{3deffb0d-1398-4bdc-8eb4-b1e592b9a473}">
+      <Declaration><![CDATA[METHOD AbsMove
+VAR_INPUT
+	eAxis			:E_Axis;
+	bMove			:BOOL;
+	fTargetPos		:LREAL;
+	fTargetVelo		:LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eAxis OF
+	E_Axis.X_Axis:
+		fbXAxis.fTargetPosition:=fTargetPos;
+		fbXAxis.fTargetVelocity:=fTargetVelo;
+		fbXAxis.MoveAbsolute(bMove:=bMove);
+
+	E_Axis.Y_Axis:
+		fbYAxis.fTargetPosition:=fTargetPos;
+		fbYAxis.fTargetVelocity:=fTargetVelo;
+		fbYAxis.MoveAbsolute(bMove:=bMove);
+	
+	E_Axis.Z_Axis:
+		fbZAxis.fTargetPosition:=fTargetPos;
+		fbZAxis.fTargetVelocity:=fTargetVelo;
+		fbZAxis.MoveAbsolute(bMove:=bMove);
+		
+	E_Axis.Gripper:
+		fbGripper.fTargetPosition:=fTargetPos;
+		fbGripper.fTargetVelocity:=fTargetVelo;
+		fbGripper.MoveAbsolute(bMove:=bMove);
+	
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="bAxisError" Id="{f2bdfde1-bf1b-406d-8321-2da14790c152}" FolderPath="GetState\">
+      <Declaration><![CDATA[METHOD bAxisError : BOOL
+VAR_INPUT
+	eAxis	:E_Axis;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bAxisError:=_bAxisError[eAxis];]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="bAxisMoving" Id="{72fcb2bc-4221-4a98-91f6-a159a6365f66}" FolderPath="GetState\">
+      <Declaration><![CDATA[METHOD bAxisMoving : BOOL
+VAR_INPUT
+	eAxis	:E_Axis;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bAxisMoving:=_bAxisMoving[eAxis];]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="bEnable" Id="{d0ee063c-29bb-4a0d-a052-69fa432f6f41}" FolderPath="GetState\">
+      <Declaration><![CDATA[PROPERTY bEnable : BOOL]]></Declaration>
+      <Get Name="Get" Id="{913c575c-8a9f-4e3d-9750-0d8f0e2fbb54}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bEnable:=_bAxisEnable[E_Axis.X_Axis] AND _bAxisEnable[E_Axis.Y_Axis] AND _bAxisEnable[E_Axis.Z_Axis] AND _bAxisEnable[E_Axis.Gripper];]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bError" Id="{ab62a505-7438-4fa7-b246-56db0abaeca9}" FolderPath="GetState\">
+      <Declaration><![CDATA[PROPERTY bError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{482bc996-a415-42c3-9d51-2c6fbd676bc8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bError:=_bAxisError[E_Axis.X_Axis] or _bAxisError[E_Axis.Y_Axis] or _bAxisError[E_Axis.Z_Axis] or _bAxisError[E_Axis.Gripper];]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bHaltDone" Id="{38dfe199-187e-428e-8ed4-c12eabb134f1}" FolderPath="GetState\">
+      <Declaration><![CDATA[PROPERTY bHaltDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f2108639-dde1-4838-b916-e03eb88054e4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bHaltDone:=_bHaltDone[E_Axis.X_Axis] AND _bHaltDone[E_Axis.Y_Axis] AND _bHaltDone[E_Axis.Z_Axis] AND _bHaltDone[E_Axis.Gripper];]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bMoving" Id="{22ef7bf8-9104-4eee-b69b-3ba118a6f103}" FolderPath="GetState\">
+      <Declaration><![CDATA[PROPERTY bMoving : BOOL]]></Declaration>
+      <Get Name="Get" Id="{a5740c56-5f33-4c08-8942-759845c7ee85}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bMoving:=_bAxisMoving[E_Axis.X_Axis] or _bAxisMoving[E_Axis.Y_Axis] or _bAxisMoving[E_Axis.Z_Axis] or _bAxisMoving[E_Axis.Gripper];]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bResetDone" Id="{2d2cf9b8-32ea-461c-8bcf-405972d396ce}" FolderPath="GetState\">
+      <Declaration><![CDATA[PROPERTY bResetDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d5a12549-be47-4220-ab8c-a8e25e885648}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bResetDone:=_bResetDone[E_Axis.X_Axis] AND _bResetDone[E_Axis.Y_Axis] AND _bResetDone[E_Axis.Z_Axis] AND _bResetDone[E_Axis.Gripper];]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bStopDone" Id="{918ba6dc-b5b3-4326-8cc6-589330f004da}" FolderPath="GetState\">
+      <Declaration><![CDATA[PROPERTY bStopDone : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b495c926-d4a2-409d-b150-2e728dd8436a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bStopDone:=_bStopDone[E_Axis.X_Axis] AND _bStopDone[E_Axis.Y_Axis] AND _bStopDone[E_Axis.Z_Axis] AND _bStopDone[E_Axis.Gripper];]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="fAxisActPos" Id="{69b63679-9054-4e21-bef6-a8c2c526f4cc}" FolderPath="GetState\">
+      <Declaration><![CDATA[METHOD fAxisActPos : LREAL
+VAR_INPUT
+	eAxis	:E_Axis;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fAxisActPos:=_fAxisActPos[eAxis];]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Halt" Id="{b54adf64-ccd1-466d-bb7c-69ce3a73680e}">
+      <Declaration><![CDATA[METHOD Halt
+VAR_INPUT
+	bHalt		: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+// Halting axis
+
+	fbXAxis.Halt(bDriveHalt:= bHalt);
+	fbYAxis.Halt(bDriveHalt:= bHalt);
+	fbZAxis.Halt(bDriveHalt:= bHalt);
+	fbGripper.Halt(bDriveHalt:= bHalt);
+
+	_bHaltDone[E_Axis.X_Axis]:=fbXAxis.bStateHaltDone;
+	_bHaltDone[E_Axis.Y_Axis]:=fbYAxis.bStateHaltDone;
+	_bHaltDone[E_Axis.Z_Axis]:=fbZAxis.bStateHaltDone;
+	_bHaltDone[E_Axis.Gripper]:=fbGripper.bStateHaltDone;
+
+// =========================================================]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Homing" Id="{6f106111-2f0f-4ae2-8cd5-adc130115872}">
+      <Declaration><![CDATA[METHOD Homing: BOOL
+VAR_INPUT
+	bHome						:BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bHome=TRUE THEN
+	fbXAxis.fTargetPosition:=0;
+	fbYAxis.fTargetPosition:=0;
+	fbZAxis.fTargetPosition:=0;
+	fbGripper.fTargetPosition:=0;
+	
+	fbXAxis.fTargetVelocity:=50;
+	fbYAxis.fTargetVelocity:=50;
+	fbZAxis.fTargetVelocity:=50;
+	fbGripper.fTargetVelocity:=100;
+END_IF
+
+fbXAxis.MoveAbsolute(bMove:=bHome);
+fbYAxis.MoveAbsolute(bMove:=bHome);
+fbZAxis.MoveAbsolute(bMove:=bHome);
+fbGripper.MoveAbsolute(bMove:=bHome);
+
+
+IF bHome=TRUE AND bMoving=TRUE THEN
+	Homing:=TRUE;
+ELSIF bMoving=FALSE THEN
+	Homing:=FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Jog" Id="{e7b8e2da-3d1c-4ca2-8d33-599ed5ce88f8}">
+      <Declaration><![CDATA[METHOD Jog
+VAR_INPUT
+	eAxis			:E_Axis;
+	bMove			:BOOL;
+	fTargetPos		:LREAL;
+	fTargetVelo		:LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//立下りエッジを取得	
+fbJogFEdge[eAxis](CLK:=bMove,Q=>);
+
+CASE eAxis OF
+	E_Axis.X_Axis:
+		fbXAxis.fTargetPosition:=fTargetPos;
+		fbXAxis.fTargetVelocity:=fTargetVelo;
+		fbXAxis.MoveAbsolute(bMove:=bMove);
+		fbXAxis.Halt(bDriveHalt:=fbJogFEdge[eAxis].Q);
+
+	E_Axis.Y_Axis:
+		fbYAxis.fTargetPosition:=fTargetPos;
+		fbYAxis.fTargetVelocity:=fTargetVelo;
+		fbYAxis.MoveAbsolute(bMove:=bMove);
+		fbYAxis.Halt(bDriveHalt:=fbJogFEdge[eAxis].Q);
+	
+	E_Axis.Z_Axis:
+		fbZAxis.fTargetPosition:=fTargetPos;
+		fbZAxis.fTargetVelocity:=fTargetVelo;
+		fbZAxis.MoveAbsolute(bMove:=bMove);
+		fbZAxis.Halt(bDriveHalt:=fbJogFEdge[eAxis].Q);
+		
+	E_Axis.Gripper:
+		fbGripper.fTargetPosition:=fTargetPos;
+		fbGripper.fTargetVelocity:=fTargetVelo;
+		fbGripper.MoveAbsolute(bMove:=bMove);
+		fbGripper.Halt(bDriveHalt:=fbJogFEdge[eAxis].Q);
+	
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Power" Id="{51b884c8-d2fc-4356-8911-012ebb2fd5ac}">
+      <Declaration><![CDATA[METHOD Power
+VAR_INPUT
+	bAxisEnable				: BOOL;			// Enable of axis
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+	
+	
+
+	_bAxisError[E_Axis.X_Axis]	:=fbXAxis.bStateError;
+	nAxisErrorID[E_Axis.X_Axis]	:=fbXAxis.nStateErrorID;
+	_bAxisMoving[E_Axis.X_Axis]	:=fbXAxis.bStateMoving;
+	_fAxisActPos[E_Axis.X_Axis]	:=fbXAxis.fStateActPos;
+
+	
+	
+	_bAxisError[E_Axis.Y_Axis]	:=fbYAxis.bStateError;
+	nAxisErrorID[E_Axis.Y_Axis]	:=fbYAxis.nStateErrorID;
+	_bAxisMoving[E_Axis.Y_Axis]	:=fbYAxis.bStateMoving;
+	_fAxisActPos[E_Axis.Y_Axis]	:=fbYAxis.fStateActPos;
+
+	
+		
+	_bAxisError[E_Axis.Z_Axis]	:=fbZAxis.bStateError;
+	nAxisErrorID[E_Axis.Z_Axis]	:=fbZAxis.nStateErrorID;
+	_bAxisMoving[E_Axis.Z_Axis]	:=fbZAxis.bStateMoving;
+	_fAxisActPos[E_Axis.Z_Axis]	:=fbZAxis.fStateActPos;
+	
+	
+		
+	_bAxisError[E_Axis.Gripper]	:=fbGripper.bStateError;
+	nAxisErrorID[E_Axis.Gripper]:=fbGripper.nStateErrorID;
+	_bAxisMoving[E_Axis.Gripper]:=fbGripper.bStateMoving;
+	_fAxisActPos[E_Axis.Gripper]:=fbGripper.fStateActPos;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{564f71f6-fe7f-411c-a8cf-667aa59290fc}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+	bReset		: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+// Resetting axis
+
+	fbXAxis.Reset(bDriveReset := bReset);
+	fbYAxis.Reset(bDriveReset := bReset);
+	fbZAxis.Reset(bDriveReset := bReset);
+	fbGripper.Reset(bDriveReset := bReset);
+	
+	_bResetDone[E_Axis.X_Axis]:=fbXAxis.bStateResetDone;
+	_bResetDone[E_Axis.Y_Axis]:=fbYAxis.bStateResetDone;
+	_bResetDone[E_Axis.Z_Axis]:=fbZAxis.bStateResetDone;
+	_bResetDone[E_Axis.Gripper]:=fbGripper.bStateResetDone;
+
+// =========================================================]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Stop" Id="{df408de1-c41d-49e9-a76d-f6660668daa7}">
+      <Declaration><![CDATA[METHOD Stop
+VAR_INPUT
+	bStop		: BOOL;	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+// Stopping axis
+
+	fbXAxis.Stop(bDriveStop := bStop);
+	fbYAxis.Stop(bDriveStop := bStop);
+	fbZAxis.Stop(bDriveStop := bStop);
+	fbGripper.Stop(bDriveStop := bStop);
+	
+	_bStopDone[E_Axis.X_Axis]:=fbXAxis.bStateStopDone;
+	_bStopDone[E_Axis.Y_Axis]:=fbYAxis.bStateStopDone;
+	_bStopDone[E_Axis.Z_Axis]:=fbZAxis.bStateStopDone;
+	_bStopDone[E_Axis.Gripper]:=fbGripper.bStateStopDone;
+		
+// =========================================================]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_3AxisAbs">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.AbsMove">
+      <LineId Id="1" Count="21" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.bAxisError">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.bAxisMoving">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.bEnable.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.bError.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.bHaltDone.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.bMoving.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.bResetDone.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.bStopDone.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.fAxisActPos">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.Halt">
+      <LineId Id="1" Count="13" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.Homing">
+      <LineId Id="1" Count="22" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.Jog">
+      <LineId Id="1" Count="29" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.Power">
+      <LineId Id="1" Count="29" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.Reset">
+      <LineId Id="1" Count="13" />
+    </LineIds>
+    <LineIds Name="FB_3AxisAbs.Stop">
+      <LineId Id="1" Count="13" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

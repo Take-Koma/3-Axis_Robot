@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <POU Name="FB_GripperAbsolute" Id="{7d932cf9-9c48-4f74-86d3-5eee41e6ec49}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_GripperAbsolute EXTENDS FB_AxisAbsolute
+VAR
+	_lrAttachmentDiameter			:LREAL;		//アタッチメントの直径
+	_lrAttachmentRotationRadius		:LREAL;		//アタッチメントの回転半径
+	
+	_lrWorkDiameter					:LREAL;		//ワークの直径
+	
+	lrCalcBufA						:LREAL;		//計算バッファー
+	lrCalcBufB						:LREAL;		//計算バッファー
+
+	lrFingerRotationAngle			:LREAL;		//グリップ角度
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{6a2aef89-f007-4051-b235-900e302c415e}">
+      <Declaration><![CDATA[(*FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。*)
+METHOD FB_Init : BOOL
+VAR_INPUT
+	(* TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)*)
+	bInitRetains	: BOOL;
+	(* TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。*)
+	bInCopyCode	: BOOL;
+	
+	fMaxPosition	: LREAL;
+	fMinPosition	: LREAL;
+	fMaxVelocity	: LREAL;
+	fMinVelocity	: LREAL;
+	
+	lrAttachmentDiameter			:LREAL;		//アタッチメントの直径
+	lrAttachmentRotationRadius		:LREAL;		//アタッチメントの回転半径
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	_fMaxPosition:=fMaxPosition;
+	_fMinPosition:=fMinPosition;
+	_fMaxVelocity:=fMaxVelocity;
+	_fMinVelocity:=fMinVelocity;
+	
+	_lrAttachmentDiameter		:=lrAttachmentDiameter;
+	_lrAttachmentRotationRadius	:=lrAttachmentRotationRadius;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="lrWorkDiameter" Id="{bdab0cab-f27d-425e-97bc-d506fea10f29}">
+      <Declaration><![CDATA[PROPERTY lrWorkDiameter : LREAL]]></Declaration>
+      <Set Name="Set" Id="{7d6b5868-de55-421b-aefd-55958b4e0419}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_lrWorkDiameter:=lrWorkDiameter;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="WorkGrippingAbs" Id="{c2f17a31-216f-4531-96f3-0519a18d7246}">
+      <Declaration><![CDATA[METHOD WorkGrippingAbs
+VAR_INPUT
+	bMove		:REFERENCE TO BOOL; 
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//ワークの直径からワークをグリップする角度を計算
+	lrCalcBufA:=EXPT((_lrWorkDiameter+_lrAttachmentDiameter)/2,2)-EXPT(9.05,2)-EXPT(_lrAttachmentRotationRadius,2);
+	lrCalcBufB:=2*9.05*_lrAttachmentRotationRadius;
+
+	IF -1<lrCalcBufA/lrCalcBufB AND lrCalcBufA/lrCalcBufB<1 THEN
+		lrFingerRotationAngle:=180/PI*ACOS(lrCalcBufA/lrCalcBufB);
+	ELSE
+		lrFingerRotationAngle:=0;	//角度計算できない場合噛みこまないように0度にする
+	END_IF;
+	
+//駆動命令起動
+	SUPER^.fTargetPosition:=lrFingerRotationAngle;
+	SUPER^.MoveAbsolute(bMove:=bMove);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_GripperAbsolute">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GripperAbsolute.FB_Init">
+      <LineId Id="1" Count="6" />
+    </LineIds>
+    <LineIds Name="FB_GripperAbsolute.lrWorkDiameter.Set">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GripperAbsolute.WorkGrippingAbs">
+      <LineId Id="1" Count="12" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

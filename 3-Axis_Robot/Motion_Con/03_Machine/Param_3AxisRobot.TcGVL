@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+  <GVL Name="Param_3AxisRobot" Id="{886d77ee-fee3-4fe8-862e-0e42223480e0}" ParameterList="True">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+//------全体の設定値------
+	uiAlarmMaxCount					:UINT		:=100;					//アラーム総数!!!アラームのファンクションブロックより多い数字にすること！！！
+	PcAmsNetId						:AMSNETID	:=[192,168,15,2,1,1];	//PC AMS Net ID	
+
+//------軸関係の設定値------
+	lrXYAxisMaxPosition				:LREAL		:=300;					//XY軸の最大位置［mm］
+	lrZAxisMaxPosition				:LREAL		:=270;					//Z軸の最大位置［mm］
+	lrXYZAxisMinPosition			:LREAL		:=0;					//XYZ軸の最小位置［mm］
+	
+	lrXYZAxisMaxVelocity			:LREAL		:=300;					//XYZ軸の最大速度［mm/s］
+	lrXYZAxisMinVelocity			:LREAL		:=0;					//XYZ軸の最小速度［mm/s］
+
+//------グリッパー関係の設定値------
+	lrGripperMaxPosition			:LREAL		:=160;					//Gripperの最大位置[°]
+	lrGripperMinPosition			:LREAL		:=-160;					//Gripperの最小位置[°]
+	lrGripperMaxVelocity			:LREAL		:=7200;					//Gripperの最大速度[°/s]
+	lrGripperMinVelocity			:LREAL		:=0;					//Gripperの最小速度[°/s]
+	
+	lrAttachmentDiameter			:LREAL		:=6.000;				//アタッチメントの直径［mm］
+	lrAttachmentRotationRadius		:LREAL		:=6.400;				//アタッチメントの回転半径［mm］
+	
+//------ステージ関係の設置値------
+	lrXZPlaneSlope					:LREAL		:=-0.1/300;				//ステージのXZ軸の傾き
+	lrYZPlaneSlope					:LREAL		:=-2.0/300;				//ステージのYZ軸の傾き
+	
+//------ペンのサイズ------ペンに合わせて調整必須!!!
+	lrPenFullLength					:LREAL		:=165.00;				//ペンの全長[mm]
+	lrPenDiameter					:LREAL		:=9.10;					//ペンの直径[mm]
+	lrPenHalfLength					:LREAL		:=142.00;				//ペンのドリルチャックからの出代 緩さしで142[mm]	しっかりさしで130[mm]
+	lrPenGripLength					:LREAL		:=40.00;				//ペンのグリップ長[mm]
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
