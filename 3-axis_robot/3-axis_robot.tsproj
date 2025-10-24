@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.14">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19">
 	<Translations>
 		<Text TxtId="MachineAlarmEvent">
 			<Text LcId="1041"><![CDATA[装置アラームイベント]]></Text>
@@ -1528,7 +1528,7 @@
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{DF7C4704-ABC7-4E02-85EA-66B676040BD5}" PersistentType="true">UserEventClass</Name>
+			<Name GUID="{714AB463-6698-454B-8F4E-C2B09C58256A}" PersistentType="true">UserEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[MachineAlarmEvent]]></DisplayName>
 			<EventId>
 				<Name Id="1">SafetyNotRun</Name>
@@ -1651,7 +1651,7 @@
 					<Text LcId="1041"><![CDATA[グリッパー起動時グリップスイッチOFF]]></Text>
 				</Text>
 				<Text TxtId="MITSUBISHIError">
-					<Text LcId="1041"><![CDATA[シーケンサーエラー]]></Text>
+					<Text LcId="1041"><![CDATA[シーケンサーエラー（Fx5s無くなったので未使用）]]></Text>
 				</Text>
 				<Text TxtId="XAxisError">
 					<Text LcId="1041"><![CDATA[X軸エラー]]></Text>
@@ -1677,19 +1677,16 @@
 				<Hide GUID="{EDB6C057-C1BE-4DFC-8F44-C0D3BE174E7E}"/>
 				<Hide GUID="{9FD1487A-DA6D-47D6-854C-F532D872FEF3}"/>
 				<Hide GUID="{1EC8A248-8BAB-43F0-BA41-73CFFA3AF4AF}"/>
+				<Hide GUID="{DF7C4704-ABC7-4E02-85EA-66B676040BD5}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
 	<Project ProjectGUID="{532687BD-A483-4709-A8ED-A4C60FBD9671}" TargetNetId="192.168.15.2.1.1" Target64Bit="true" AutoPrioManagement="true" ShowHideConfigurations="#x6">
 		<System>
-			<Settings MaxCpus="8" NonWinCpus="6" RouterMemory="536870912">
-				<Cpu CpuId="2" BaseTime="5000"/>
-				<Cpu CpuId="3" BaseTime="5000"/>
-				<Cpu CpuId="4" BaseTime="5000"/>
-				<Cpu CpuId="5" BaseTime="5000"/>
-				<Cpu CpuId="6" BaseTime="5000"/>
-				<Cpu CpuId="7" BaseTime="5000"/>
-				<IoIdleTask Priority="14" CycleTime="5000"/>
+			<Settings MaxCpus="2" RouterMemory="268435456">
+				<Cpu BaseTime="1000"/>
+				<Cpu CpuId="1"/>
+				<IoIdleTask Priority="4" CycleTime="1000" Affinity="#x00000001"/>
 			</Settings>
 			<Licenses>
 				<Target>
@@ -1698,33 +1695,17 @@
 				</Target>
 			</Licenses>
 			<Tasks>
-				<Task Id="4" Priority="10" CycleTime="5000" AmsPort="351" AdtTasks="true">
+				<Task Id="4" Priority="6" CycleTime="5000" AmsPort="351" Affinity="#x00000001" AdtTasks="true">
 					<Name>PlcTask</Name>
 				</Task>
-				<Task Id="8" Priority="18" CycleTime="100000" AmsPort="352" Affinity="#x00000080" DisableFpExceptions="true" AdtTasks="true">
+				<Task Id="8" Priority="16" CycleTime="100000" AmsPort="352" Affinity="#x00000002" DisableFpExceptions="true" AdtTasks="true">
 					<Name>VisionTask</Name>
 				</Task>
-				<Task Id="6" Priority="12" CycleTime="10000" AmsPort="350" Affinity="#x00000080" AdtTasks="true">
-					<Name>VnTask ImgAcq (Camera1)</Name>
+				<Task Id="7" Priority="12" CycleTime="10000" AmsPort="353" Affinity="#x00000002" AdtTasks="true">
+					<Name>VnTask ImgAcq (3AxisRoboCamera)</Name>
 				</Task>
-				<Task Id="9" Priority="16" CycleTime="100000" AmsPort="354" Affinity="#x00000080" AdtTasks="true">
-					<Name>VnTask ADS (Camera1)</Name>
-				</Task>
-				<Task Id="10" Priority="1" Affinity="#x00000008" DisableFpExceptions="true" AdtTasks="true" JobTask="true">
-					<Name>JobTask1</Name>
-					<ImageId>327</ImageId>
-				</Task>
-				<Task Id="11" Priority="2" Affinity="#x00000010" DisableFpExceptions="true" AdtTasks="true" JobTask="true">
-					<Name>JobTask2</Name>
-					<ImageId>327</ImageId>
-				</Task>
-				<Task Id="12" Priority="3" Affinity="#x00000020" DisableFpExceptions="true" AdtTasks="true" JobTask="true">
-					<Name>JobTask3</Name>
-					<ImageId>327</ImageId>
-				</Task>
-				<Task Id="13" Priority="4" Affinity="#x00000040" DisableFpExceptions="true" AdtTasks="true" JobTask="true">
-					<Name>JobTask4</Name>
-					<ImageId>327</ImageId>
+				<Task Id="10" Priority="14" CycleTime="100000" AmsPort="355" Affinity="#x00000002" AdtTasks="true">
+					<Name>VnTask ADS (3AxisRoboCamera)</Name>
 				</Task>
 			</Tasks>
 		</System>
@@ -1733,6 +1714,7 @@
 		</Motion>
 		<Plc>
 			<Project File="Motion_Con.xti"/>
+			<PlcAuxTask Affinity="#x00000001"/>
 		</Plc>
 		<Safety>
 			<Project File="RobotSafety.xti"/>
@@ -1762,11 +1744,11 @@
 					<Parameters>
 						<Parameter ShowSubItems="true">
 							<Name>JobTasks</Name>
-							<BitSize>128</BitSize>
+							<BitSize>0</BitSize>
 							<BaseType GUID="{DB6B59A0-4FB0-4B14-A83C-AC7A76AD688D}">JobTaskId</BaseType>
 							<ArrayInfo>
 								<LBound>0</LBound>
-								<Elements Min="0" Max="64">4</Elements>
+								<Elements Min="0" Max="64">0</Elements>
 							</ArrayInfo>
 							<PTCID>#x08508041</PTCID>
 							<ContextId>1</ContextId>
@@ -1781,22 +1763,6 @@
 					</Parameters>
 					<ParameterValues>
 						<Value>
-							<Name>JobTasks[0]</Name>
-							<Value>33620128</Value>
-						</Value>
-						<Value>
-							<Name>JobTasks[1]</Name>
-							<Value>33620144</Value>
-						</Value>
-						<Value>
-							<Name>JobTasks[2]</Name>
-							<Value>33620160</Value>
-						</Value>
-						<Value>
-							<Name>JobTasks[3]</Name>
-							<Value>33620176</Value>
-						</Value>
-						<Value>
 							<Name>PoolId</Name>
 							<Value>1073741840</Value>
 						</Value>
@@ -1806,17 +1772,20 @@
 			<App File="Application1.xti"/>
 		</Vision>
 		<Io>
-			<Device File="デバイス 1 (RT-Ethernet Adapter).xti" Id="1"/>
-			<Device File="デバイス 3 (EtherCAT).xti" Id="3"/>
+			<Device File="デバイス 1 (Beckhoff CCAT).xti" Id="1"/>
+			<Device File="デバイス 2 (EtherCAT).xti" Id="2"/>
+			<Device File="デバイス 6 (EtherCAT).xti" Id="6"/>
+			<Device File="デバイス 3 (RT-Ethernet Adapter).xti" Id="3"/>
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500841000403}" Id="#x02030040"/>
-		<MappingInfo Identifier="{00000000-0020-0304-1000-040320000403}" Id="#x02030010"/>
-		<MappingInfo Identifier="{00000000-0030-0304-1000-040332000403}" Id="#x02030020"/>
-		<MappingInfo Identifier="{08502001-0020-0304-0020-500820000403}" Id="#x02030030" Watchdog="04000000040000000400000004000000"/>
-		<MappingInfo Identifier="{08502001-0030-0304-0020-500830000403}" Id="#x02030060" Watchdog="00000000000000000000000000000000"/>
-		<MappingInfo Identifier="{08502003-0040-0304-0020-500840000403}" Id="#x02030050" Watchdog="00000000000000000000000000000000"/>
-		<MappingInfo Identifier="{05000010-2001-0850-1000-040300205008}" Id="#x02030070" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{00000000-2005-0850-0020-500820000403}" Id="#x02030020"/>
+		<MappingInfo Identifier="{00000000-2005-0850-0020-500831000403}" Id="#x02030040"/>
+		<MappingInfo Identifier="{00000000-2005-0850-0020-500881000403}" Id="#x02030060"/>
+		<MappingInfo Identifier="{00000000-0070-0304-1000-040370000403}" Id="#x02030010"/>
+		<MappingInfo Identifier="{08502003-0020-0304-0020-500820000403}" Id="#x02030030" Watchdog="00000000000000000000000000000000"/>
+		<MappingInfo Identifier="{08502005-0010-0500-0020-500810000403}" Id="#x02030080" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{08502005-0070-0304-0020-500870000403}" Id="#x02030050" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{05000010-0080-0304-1000-040380000403}" Id="#x02030070" Watchdog="00000000000000000000000000000000"/>
 	</Mappings>
 </TcSmProject>

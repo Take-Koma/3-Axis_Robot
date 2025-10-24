@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="FB_IoLinkMasterDiagnosis" Id="{9204d9a4-c6ad-46d7-bc45-5d241d05aa19}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_IoLinkMasterDiagnosis
+VAR
+	//実I/Oにリンク
+	byStatus			AT %I*	:ARRAY[1..8] OF BYTE;		//State Ch.*にリンク
+	_bOccurrenceEvent	AT %I*	:BOOL;						//Device Diagにリンク
+	_bPortError			AT %I*	:BOOL;						//Device Stateにリンク
+	
+	//初期化の際に入力
+	bEnabledPort				:ARRAY[1..8] OF BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+BeckhoffのIO-Linkマスターで使用する前提のファンクションブロックです。
+初期化の際に使用するIO-LinkポートをTRUEにしてください。
+
+デバイスでイベント発生時にはbOccurrenceEventがTRUEになります。
+どれかのデバイスと通信が中断した場合にはbPortErrorがTRUEになります。
+
+どのポートにてエラーが発生しているかは、iPortErrorのBitでわかります。
+ポート1はBit1,ポート2はBit2。。。ポート8はBit8
+
+ポートのエラーとステータスの内容はメソッドIoLinkPortDiagnosisでわかります。
+*)]]></ST>
+    </Implementation>
+    <Property Name="bOccurrenceEvent" Id="{5682cda9-7edb-41fc-88f4-5840b0a887c1}">
+      <Declaration><![CDATA[PROPERTY bOccurrenceEvent : BOOL]]></Declaration>
+      <Get Name="Get" Id="{40d617b3-6dfd-498f-84cf-5ae99a7ad809}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bOccurrenceEvent:=_bOccurrenceEvent;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bPortError" Id="{923cb5c8-1f08-4337-b498-f645bf7df5bf}">
+      <Declaration><![CDATA[PROPERTY bPortError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{5c681484-b6af-4022-b586-07bca7b0633f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bPortError:=_bPortError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="FB_Init" Id="{60bdc26f-5bb8-4011-98c1-daa3ab6b92cc}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains	:BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode		:BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+	
+	bEnabledPort	:ARRAY[1..8] OF BOOL;
+END_VAR
+VAR
+	i				:INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR i:=1 TO 8 DO
+	THIS^.bEnabledPort[i]:=bEnabledPort[i];
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IoLinkPortDiagnosis" Id="{878299ce-5636-4e29-9e9b-564bc6e6abc3}">
+      <Declaration><![CDATA[METHOD IoLinkPortDiagnosis
+VAR_INPUT
+	eIoLinkPort				:E_IolPort;
+	eIoLinkPortError		:REFERENCE TO E_IolPortError;
+	eIoLinkPortState		:REFERENCE TO E_IolPortState;
+	sChannelStateText		:REFERENCE TO STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eIoLinkPortError	:=F_IolGetPortError(byStatus[eIoLinkPort]);
+eIoLinkPortState	:=F_IolGetPortState(byStatus[eIoLinkPort]);
+sChannelStateText	:=F_IolGetChannelStateTxt(nIolChState:=byStatus[eIoLinkPort],nPort:=eIoLinkPort);
+
+(*
+Port Error
+Name					Value
+NoError					:0
+WatchdogDetected		:1
+InternalError			:2
+InvalidDeviceID			:3
+InvalidVendorID			:4
+InvalidIOLinkVersion	:5
+InvalidFrameCapability	:6
+InvalidCycletime		:7
+InvalidPdInLength		:8
+InvalidPdOutLenght		:9
+NoDeviceDetected		:10
+
+Port State
+Name					Value
+Disabled				:0
+stDigIn					:1
+stDigOut				:2
+CommunicationOP			:3
+CommunicationComstop	:4
+*)]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="iPortError" Id="{b517d108-6e72-4190-b344-895fc3bd37e3}">
+      <Declaration><![CDATA[PROPERTY iPortError : int]]></Declaration>
+      <Get Name="Get" Id="{2a04a9e4-3fff-4e17-bfd3-981803287f3a}">
+        <Declaration><![CDATA[VAR
+	i		:INT;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF _bPortError=TRUE THEN
+	FOR i := 1 TO 8 DO
+		IF bEnabledPort[i]=TRUE AND F_IolGetPortError(byStatus[i])<>E_IolPortError.NoError THEN
+			CASE  i OF
+				1:iPortError.1:=TRUE;
+				2:iPortError.2:=TRUE;
+				3:iPortError.3:=TRUE;
+				4:iPortError.4:=TRUE;
+				5:iPortError.5:=TRUE;
+				6:iPortError.6:=TRUE;
+				7:iPortError.7:=TRUE;
+				8:iPortError.8:=TRUE;
+			END_CASE
+		END_IF	
+	END_FOR
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="FB_IoLinkMasterDiagnosis">
+      <LineId Id="1" Count="11" />
+    </LineIds>
+    <LineIds Name="FB_IoLinkMasterDiagnosis.bOccurrenceEvent.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_IoLinkMasterDiagnosis.bPortError.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_IoLinkMasterDiagnosis.FB_Init">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_IoLinkMasterDiagnosis.IoLinkPortDiagnosis">
+      <LineId Id="1" Count="26" />
+    </LineIds>
+    <LineIds Name="FB_IoLinkMasterDiagnosis.iPortError.Get">
+      <LineId Id="1" Count="15" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

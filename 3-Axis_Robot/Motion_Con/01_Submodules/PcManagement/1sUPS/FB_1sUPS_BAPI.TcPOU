@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="FB_1sUPS_BAPI" Id="{279cc759-b3cd-4952-90bb-d46146b29c9c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_1sUPS_BAPI IMPLEMENTS i1sUPS
+VAR
+	fb1sUps		:FB_S_UPS_BAPI;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="bPowerFailDetect" Id="{a89a936d-5a17-4906-9c8d-cec43bd647d4}">
+      <Declaration><![CDATA[PROPERTY bPowerFailDetect : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{c26666b7-54c6-4f24-8c5f-ee8c5c507497}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bPowerFailDetect:=fb1sUps.bPowerFailDetect;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="eUpsState" Id="{dad24e9e-cb8b-445c-a7b8-faecd1b5c173}">
+      <Declaration><![CDATA[PROPERTY eUpsState : E_S_UPS_State
+]]></Declaration>
+      <Get Name="Get" Id="{c5dcc6eb-ab01-4c55-bf5a-60c9fece5ca6}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eUpsState := fb1sUps.eState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="UPSCall" Id="{9f41339e-51b0-4ce2-8c16-04c0d06ce6ec}">
+      <Declaration><![CDATA[METHOD UPSCall
+VAR_INPUT
+	(*PC AMS Net ID*)
+	PcAmsNetId	: AMSNETID;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fb1sUps(sNetID				:=F_CreateAmsNetId(PcAmsNetId),
+		iPLCPort			:=_AppInfo.AdsPort,
+		tTimeout			:=DEFAULT_ADS_TIMEOUT,
+		eUpsMode			:=E_S_UPS_Mode.eSUPS_WrPersistData_Shutdown,
+		ePersistentMode		:=E_PersistentMode.SPDM_2PASS,
+		tRecoverTime		:=T#10S,
+		bPowerFailDetect	=>,
+		eState				=>,
+		nCapacity			=>,
+		bBusy				=>,
+		bError				=>,
+		nErrID				=>
+		);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_1sUPS_BAPI">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_1sUPS_BAPI.bPowerFailDetect.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_1sUPS_BAPI.eUpsState.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_1sUPS_BAPI.UPSCall">
+      <LineId Id="2" Count="1" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="4" Count="9" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

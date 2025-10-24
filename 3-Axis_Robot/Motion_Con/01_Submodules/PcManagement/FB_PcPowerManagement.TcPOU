@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="FB_PcPowerManagement" Id="{a838037a-1898-4803-a40b-4cae93a39ef4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PcPowerManagement
+VAR
+	fbWritePersistentData		:FB_WritePersistentData;	//パーシステントデータ書き込み
+	
+	fbPlcStop					:PLC_Stop;					//PLCストップ
+	
+	fbNtShutdown				:NT_Shutdown;				//PCシャットダウン
+	fbNtReboot					:NT_Reboot;					//PCリブート
+	
+	fb1sUPS						:i1sUPS;					//1sUPS管理FB
+	
+	PcAmsNetId					:AMSNETID;					//PC AMS Net ID
+	
+	fbRebootTon					:TON;
+	fbShutdownTon				:TON;
+	
+	iRebootStep					:INT;
+	iShutdownStep				:INT;
+END_VAR
+VAR PERSISTENT
+	bPowerFailDetected			:BOOL;						//停電検知記憶
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{9ffa7f8d-2ee0-4b92-b303-254ac03ae195}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+
+	PcAmsNetId			:AMSNETID;		//PC AMS Net ID
+	fb1sUPS				:i1sUPS;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.PcAmsNetId		:=PcAmsNetId;
+THIS^.fb1sUPS			:=fb1sUPS;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reboot" Id="{d1d1267f-1e25-4cdd-ab44-1fe5180ef081}">
+      <Declaration><![CDATA[METHOD Reboot
+VAR_INPUT
+	bReboot	:bool;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE iRebootStep OF
+	0:
+		fbRebootTon(IN:=bReboot,PT:=T#2S,Q=>,ET=>);
+			
+		IF fbRebootTon.Q=TRUE THEN
+			fbWritePersistentData.START:=TRUE;
+			iRebootStep:=1;			
+		END_IF
+
+	1:
+		fbWritePersistentData(	NETID	:=F_CreateAmsNetId(PcAmsNetId),
+								PORT	:=_AppInfo.AdsPort,
+								START	:=,
+								TMOUT	:=DEFAULT_ADS_TIMEOUT,
+								MODE	:=E_PersistentMode.SPDM_2PASS,
+								BUSY	=>,
+								ERR		=>,
+								ERRID	=>
+								);
+	
+		IF fbWritePersistentData.BUSY=FALSE THEN
+			fbWritePersistentData.START:=FALSE;
+			iRebootStep:=2;
+		END_IF
+	
+	2:
+		fbPlcStop.STOP:=TRUE;
+		fbNtReboot.START:=TRUE;
+		iRebootStep:=3;
+	
+	3:
+		fbPlcStop(	NETID	:=F_CreateAmsNetId(PcAmsNetId),
+					PORT	:=_AppInfo.AdsPort,
+					Stop	:=,
+					TMOUT	:=DEFAULT_ADS_TIMEOUT,
+					BUSY	=>,
+					ERR		=>,
+					ERRID	=>
+					);
+
+		fbNtReboot(	NETID	:=F_CreateAmsNetId(PcAmsNetId),
+					DELAY	:=1,
+					START	:=,
+					TMOUT	:=DEFAULT_ADS_TIMEOUT,
+					BUSY	=>,
+					ERR		=>,
+					ERRID	=>
+					);
+
+END_CASE
+
+			
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Shutdown" Id="{b0d0c740-c26b-4bb4-9fc2-86d7cf6edd45}">
+      <Declaration><![CDATA[METHOD Shutdown
+VAR_INPUT
+	bShutdown	:BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE iShutdownStep OF
+	0:
+		fbShutdownTon(IN:=bShutdown,PT:=T#2S,Q=>,ET=>);
+	
+		IF fbShutdownTon.Q=TRUE THEN
+			fbWritePersistentData.START:=TRUE;
+			iShutdownStep:=1;			
+		END_IF
+
+	1:
+		fbWritePersistentData(	NETID	:=F_CreateAmsNetId(PcAmsNetId),
+								PORT	:=_AppInfo.AdsPort,
+								START	:=,
+								TMOUT	:=DEFAULT_ADS_TIMEOUT,
+								MODE	:=E_PersistentMode.SPDM_2PASS,
+								BUSY	=>,
+								ERR		=>,
+								ERRID	=>
+								);
+	
+		IF fbWritePersistentData.BUSY=FALSE THEN
+			fbWritePersistentData.START:=FALSE;
+			iShutdownStep:=2;
+		END_IF
+	
+	2:
+		fbPlcStop.STOP:=TRUE;
+		fbNtShutdown.START:=TRUE;
+		iShutdownStep:=3;
+	
+	3:
+		fbPlcStop(	NETID	:=F_CreateAmsNetId(PcAmsNetId),
+					PORT	:=_AppInfo.AdsPort,
+					Stop	:=,
+					TMOUT	:=DEFAULT_ADS_TIMEOUT,
+					BUSY	=>,
+					ERR		=>,
+					ERRID	=>
+					);
+
+		fbNtShutdown(	NETID	:=F_CreateAmsNetId(PcAmsNetId),
+						DELAY	:=1,
+						START	:=,
+						TMOUT	:=DEFAULT_ADS_TIMEOUT,
+						BUSY	=>,
+						ERR		=>,
+						ERRID	=>
+						);
+	
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UPSControl" Id="{adab31b2-b404-49d2-80fd-e93f34f99f0e}">
+      <Declaration><![CDATA[METHOD UPSControl
+VAR_INPUT
+	bPowerFailDetectReset		:BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fb1sUPS.UPSCall(PcAmsNetId:=PcAmsNetId);
+
+IF fb1sUPS.bPowerFailDetect=TRUE THEN
+	bPowerFailDetected		:=fb1sUPS.bPowerFailDetect;
+ELSIF bPowerFailDetectReset=TRUE THEN
+	bPowerFailDetected		:=FALSE;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_PcPowerManagement">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PcPowerManagement.FB_Init">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_PcPowerManagement.Reboot">
+      <LineId Id="1" Count="53" />
+    </LineIds>
+    <LineIds Name="FB_PcPowerManagement.Shutdown">
+      <LineId Id="1" Count="49" />
+    </LineIds>
+    <LineIds Name="FB_PcPowerManagement.UPSControl">
+      <LineId Id="1" Count="9" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

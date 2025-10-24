@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <Itf Name="i1sUPS" Id="{a3d4dadb-cbcc-45dc-9c32-777e8f010ae0}">
+    <Declaration><![CDATA[INTERFACE i1sUPS
+]]></Declaration>
+    <Property Name="bPowerFailDetect" Id="{308c85cb-eb7a-4ff6-9a7c-0534294587ab}">
+      <Declaration><![CDATA[PROPERTY bPowerFailDetect : bool]]></Declaration>
+      <Get Name="Get" Id="{beb2e631-4b22-4f25-bcf1-35d01a1bf26c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="eUpsState" Id="{b3b83b4b-f94c-4f6a-a48c-b02264ac592a}">
+      <Declaration><![CDATA[PROPERTY eUpsState : E_S_UPS_State]]></Declaration>
+      <Get Name="Get" Id="{0300f15b-e905-49b7-a86b-afff88d77d7c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="UPSCall" Id="{636be49c-911a-4fbc-aece-b7a3c5ae21c9}">
+      <Declaration><![CDATA[METHOD UPSCall
+VAR_INPUT
+	(*PC AMS Net ID*)
+	PcAmsNetId	: AMSNETID;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

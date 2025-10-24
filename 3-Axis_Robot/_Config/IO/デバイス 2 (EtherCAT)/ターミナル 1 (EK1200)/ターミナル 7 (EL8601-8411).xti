@@ -1,0 +1,382 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19" ClassName="CFlbTermDef" SubType="9099">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-00200000000C}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..11] OF BIT</Name>
+			<BitSize>12</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>12</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-00200000000F}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..14] OF BIT</Name>
+			<BitSize>15</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>15</Elements>
+			</ArrayInfo>
+		</DataType>
+	</DataTypes>
+	<ImageDatas>
+		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1001">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000000000ff00ffff00ffff00ff000000ff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ff000000ff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ff000000ff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ff000000ff00ff000000ff00ff000000ff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff000000000000ff00ff000000000000ff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ff000000ff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1002">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff00ffff00ffff00ffff00ffff00ffff00ffffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1003">424dd6020000000000003600000028000000100000000e0000000100180000000000a002000000000000000000000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ffff00ffff00ffff00ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ffff00ffff00ffff00ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ffff00ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ffff00ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ffff00ffff00ffff00ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ffff00ffff00ffff00ffff00ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1004">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000120b0000120b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1005">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+		<ImageData Id="1006">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff0000ff0000ff0000ff0000ff0000ff0000c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
+	</ImageDatas>
+	<Box Id="4" BoxType="9099" BoxFlags="#x00000020">
+		<Name>__FILENAME__</Name>
+		<ImageId>1000</ImageId>
+		<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x21993052" RevisionNo="#x001020db" InfoDataAddr="true" TimeoutMailbox2="2000" DownloadSlotCfg="true" CheckRevisionNoType="3" PortPhys="51" DownloadSlotCfgIP="true" SdoUploadWithMaxLength="true" MaxSlotCount="12" MaxSlotGroupCount="4" SlotPdoIncrement="16" SlotIndexIncrement="16" Type="EL8601-8411 12Ch. Multi-interface, 8x DI, 1x CNT, 4x DO, 2x PWM, 1x AI, 1x AO, 1x ENC AB" Desc="EL8601-8411">
+			<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+			<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+			<SyncMan>001106002400010003000000000000001200001124010000</SyncMan>
+			<SyncMan>801102002000010004000000000000001c00801120010000</SyncMan>
+			<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+			<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+			<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+			<BootStrapData>0010f400f410f400</BootStrapData>
+			<MBoxUserCmdData>004003000c0000000000000003000000000000000000000000000000000000002081f00104000000db20100000</MBoxUserCmdData>
+			<MBoxUserCmdData>004003000a0000001f000000030010000000000000000000000000000000000020f31005020000000100456e61626c6520446961674d65737361676520617320656d657267656e637900</MBoxUserCmdData>
+			<Pdo Name="DEV Inputs" Index="#x1b00" Flags="#x0011" SyncMan="3">
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-00200000000C}">ARRAY [0..11] OF BIT</Type>
+				</Entry>
+				<Entry Name="Diag" Index="#xf600" Sub="#x0d">
+					<Type>BIT</Type>
+				</Entry>
+				<Entry Name="TxPDO State" Index="#xf600" Sub="#x0e">
+					<Type>BIT</Type>
+				</Entry>
+				<Entry Name="Input cycle counter" Index="#xf600" Sub="#x0f">
+					<Type>BIT2</Type>
+				</Entry>
+			</Pdo>
+			<Pdo Name="PWM Outputs Channel 1" Index="#x1680" InOut="1" Flags="#x0291" SyncMan="2">
+				<Entry Name="PWM output" Index="#x7080" Sub="#x11" Flags="#x00001000">
+					<Type>UINT</Type>
+				</Entry>
+				<Entry Name="PWM period" Index="#x7080" Sub="#x12" Flags="#x00001000">
+					<Type>UINT</Type>
+				</Entry>
+			</Pdo>
+			<Pdo Name="DOS Outputs Channel 1" Index="#x1690" InOut="1" Flags="#x0291" SyncMan="2">
+				<Entry Name="Output" Index="#x7090" Sub="#x01" Flags="#x00001000">
+					<Type>BIT</Type>
+				</Entry>
+				<Entry>
+					<Type GUID="{18071995-0000-0000-0000-00200000000F}">ARRAY [0..14] OF BIT</Type>
+				</Entry>
+			</Pdo>
+			<Slot Name="Slot Group 1 Slot 1">
+				<SlotData>0000010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>1057177</ModuleIdent>
+				<ModuleIdent>1581465</ModuleIdent>
+				<ModuleIdent>532889</ModuleIdent>
+				<ModuleIdent>5775769</ModuleIdent>
+				<ModuleIdent>4727193</ModuleIdent>
+				<ModuleIdent>5251481</ModuleIdent>
+				<Module Id="#x03090001" Type="empty" Class="">
+					<Name>SlotGroup 1 (EMPTY4)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 1 Slot 2">
+				<SlotData>0000010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>532889</ModuleIdent>
+				<ModuleIdent>4202905</ModuleIdent>
+				<Module Id="#x03090002" Type="empty" Class="">
+					<Name>SlotGroup 1 (EMPTY4)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 1 Slot 3">
+				<SlotData>0000010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>532889</ModuleIdent>
+				<ModuleIdent>4202905</ModuleIdent>
+				<Module Id="#x03090003" Type="empty" Class="">
+					<Name>SlotGroup 1 (EMPTY4)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 1 Slot 4">
+				<SlotData>0000010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>4202905</ModuleIdent>
+				<ModuleIdent>532889</ModuleIdent>
+				<Module Id="#x03090004" Type="empty" Class="">
+					<Name>SlotGroup 1 (EMPTY4)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 2 Slot 1">
+				<SlotData>0100010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>532889</ModuleIdent>
+				<Module Id="#x03090005" Type="empty" Class="">
+					<Name>SlotGroup 2 (EMPTY4)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 2 Slot 2">
+				<SlotData>0100010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>532889</ModuleIdent>
+				<Module Id="#x03090006" Type="empty" Class="">
+					<Name>SlotGroup 2 (EMPTY4)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 2 Slot 3">
+				<SlotData>0100010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>532889</ModuleIdent>
+				<Module Id="#x03090007" Type="empty" Class="">
+					<Name>SlotGroup 2 (EMPTY4)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 2 Slot 4">
+				<SlotData>0100010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>532889</ModuleIdent>
+				<Module Id="#x03090008" Type="empty" Class="">
+					<Name>SlotGroup 2 (EMPTY4)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 3 Slot 1">
+				<SlotData>0200010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>4202905</ModuleIdent>
+				<ModuleIdent>2105753</ModuleIdent>
+				<ModuleIdent>2630041</ModuleIdent>
+				<Module Id="#x03090009" Type="PWM_OUT" Class="">
+					<Name>SlotGroup 3 (PWM_OUT_DO)</Name>
+					<ImageId>554</ImageId>
+					<ModuleData>0200000099212800000004000000000001000000000000000000000000000000</ModuleData>
+					<PdoIndex>5760</PdoIndex>
+					<CoeProfile ProfileNo="#x00fa1389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 3 Slot 2">
+				<SlotData>0200010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>4202905</ModuleIdent>
+				<ModuleIdent>2105753</ModuleIdent>
+				<Module Id="#x0309000a" Type="DOS" Class="">
+					<Name>SlotGroup 3 (PWM_OUT_DO)</Name>
+					<ImageId>554</ImageId>
+					<ModuleData>0200000099214000000004000000000001000000000000000000000000000000</ModuleData>
+					<PdoIndex>5776</PdoIndex>
+					<CoeProfile ProfileNo="#x00c91389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 4 Slot 1">
+				<SlotData>0300010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>3678617</ModuleIdent>
+				<ModuleIdent>3154329</ModuleIdent>
+				<Module Id="#x0309000b" Type="empty" Class="">
+					<Name>SlotGroup 4 (EMPTY1)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<Slot Name="Slot Group 5 Slot 1">
+				<SlotData>0400010001001600100000001000000000000000000000000000000000000000</SlotData>
+				<ModuleIdent>0</ModuleIdent>
+				<ModuleIdent>6824345</ModuleIdent>
+				<ModuleIdent>6300057</ModuleIdent>
+				<Module Id="#x0309000c" Type="empty" Class="">
+					<Name>SlotGroup 5 (EMPTY1)</Name>
+					<ImageId>559</ImageId>
+					<ModuleData>0200000000000000000004000000000000000000000000000000000000000000</ModuleData>
+					<CoeProfile ProfileNo="#x00001389"/>
+				</Module>
+			</Slot>
+			<SlotGroupData Name="SlotGroup 1" ImageId="1000">
+				<SlotGroup>0</SlotGroup>
+				<ModuleGroupData Name="Counter, 2xDI" Type="CNT_2xDI" Class="Counter" ImageId="1001">
+					<Id>16385</Id>
+					<ModuleIdent>1057177</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Counter, 2xDO" Type="CNT_2xDO" Class="Counter" ImageId="1001">
+					<Id>16386</Id>
+					<ModuleIdent>1057177</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Counter, 1xDI, 1xDO" Type="CNT_DI_DO" Class="Counter" ImageId="1001">
+					<Id>16387</Id>
+					<ModuleIdent>1057177</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Counter, 1xThreshold Out, 1xDO" Type="CNT_OUT_DO" Class="Counter" ImageId="1001">
+					<Id>16388</Id>
+					<ModuleIdent>1581465</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Digital, 2xDI, 2xDO" Type="DIO_2xDI_2xDO" Class="Digital Input/Output" ImageId="1002">
+					<Id>16389</Id>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Digital, 4xDI" Type="DI_4x" Class="Digital Input" ImageId="1002">
+					<Id>16390</Id>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Encoder, 2xDI" Type="ENC_2xDI" Class="Encoder" ImageId="1001">
+					<Id>16391</Id>
+					<ModuleIdent>5775769</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Encoder, 2xDO" Type="ENC_2xDO" Class="Encoder" ImageId="1001">
+					<Id>16392</Id>
+					<ModuleIdent>5775769</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Encoder, 1xDI, 1xDO" Type="ENC_DI_DO" Class="Encoder" ImageId="1001">
+					<Id>16393</Id>
+					<ModuleIdent>5775769</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Encoder, 1xLatch, 1xGate" Type="ENC_L_G" Class="Encoder" ImageId="1001">
+					<Id>16394</Id>
+					<ModuleIdent>4727193</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Encoder, 1xThreshold Out, 1xDO" Type="ENC_OUT_DO" Class="Encoder" ImageId="1001">
+					<Id>16395</Id>
+					<ModuleIdent>5251481</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="empty4" Type="EMPTY4" Class="Empty" ImageId="1003">
+					<Id>260</Id>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+			</SlotGroupData>
+			<SlotGroupData Name="SlotGroup 2" ImageId="1000">
+				<SlotGroup>1</SlotGroup>
+				<ModuleGroupData Name="Digital, 4xDI" Type="DI_4x" Class="Digital Input" ImageId="1002">
+					<Id>16390</Id>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+					<ModuleIdent>532889</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="empty4" Type="EMPTY4" Class="Empty" ImageId="1003">
+					<Id>260</Id>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+			</SlotGroupData>
+			<SlotGroupData Name="SlotGroup 3" ImageId="1000">
+				<SlotGroup>2</SlotGroup>
+				<ModuleGroupData Name="Digital, 2xDO" Type="DO_2x" Class="Digital Output" ImageId="1004">
+					<Id>8193</Id>
+					<ModuleIdent>4202905</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="PWM, 2xPWM Out" Type="PWM_2xOUT" Class="PWM" ImageId="1004">
+					<Id>8194</Id>
+					<ModuleIdent>2105753</ModuleIdent>
+					<ModuleIdent>2105753</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="PWM, 1xPWM Out, 1xDO" Type="PWM_OUT_DO" Class="PWM" ImageId="1004">
+					<Id>8195</Id>
+					<ModuleIdent>2630041</ModuleIdent>
+					<ModuleIdent>4202905</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="empty2" Type="EMPTY2" Class="Empty" ImageId="1003">
+					<Id>258</Id>
+					<ModuleIdent>0</ModuleIdent>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+			</SlotGroupData>
+			<SlotGroupData Name="SlotGroup 4" ImageId="1000">
+				<SlotGroup>3</SlotGroup>
+				<ModuleGroupData Name="Analog, 1xCurrent In" Type="AI_1xC" Class="Analog Input" ImageId="1005">
+					<Id>4097</Id>
+					<ModuleIdent>3678617</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Analog, 1xVoltage In" Type="AI_1xV" Class="Analog Input" ImageId="1005">
+					<Id>4098</Id>
+					<ModuleIdent>3154329</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="empty1" Type="EMPTY1" Class="Empty" ImageId="1003">
+					<Id>257</Id>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+			</SlotGroupData>
+			<SlotGroupData Name="SlotGroup 5" ImageId="1000">
+				<SlotGroup>4</SlotGroup>
+				<ModuleGroupData Name="Analog, 1xCurrent Out" Type="AO_1xC" Class="Analog Output" ImageId="1006">
+					<Id>4099</Id>
+					<ModuleIdent>6824345</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="Analog, 1xVoltage Out" Type="AO_1xV" Class="Analog Output" ImageId="1006">
+					<Id>4100</Id>
+					<ModuleIdent>6300057</ModuleIdent>
+				</ModuleGroupData>
+				<ModuleGroupData Name="empty1" Type="EMPTY1" Class="Empty" ImageId="1003">
+					<Id>257</Id>
+					<ModuleIdent>0</ModuleIdent>
+				</ModuleGroupData>
+			</SlotGroupData>
+		</EtherCAT>
+	</Box>
+</TcSmItem>

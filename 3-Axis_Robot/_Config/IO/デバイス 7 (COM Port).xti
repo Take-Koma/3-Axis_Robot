@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19" ClassName="CDevComPortDef" SubType="11">
+	<Device Id="7" DevType="11" AmsPort="28679">
+		<Name>__FILENAME__</Name>
+		<AddressInfo>
+			<Pnp>
+				<DeviceDesc>COM1</DeviceDesc>
+				<DeviceName>ACPI/AMDI0021/0</DeviceName>
+				<DeviceData>414d44493030323100</DeviceData>
+			</Pnp>
+		</AddressInfo>
+		<Image Id="6" AddrType="1" ImageType="1">
+			<Name>イメージ</Name>
+		</Image>
+		<Serial Baud="38400" Parity="1" StopBit="1" RsType="1" WaitTimeToShutdown="60" BufSize="4096" DataBit="8" ComPortNo="1" Timeout="300"/>
+	</Device>
+</TcSmItem>

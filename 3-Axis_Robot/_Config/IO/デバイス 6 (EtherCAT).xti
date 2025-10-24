@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19" ClassName="CDevEtherCATDef" SubType="111">
+	<Device Id="6" DevType="111" DevFlags="#x0003" AmsPort="28678" AmsNetId="192.168.15.2.7.1" RemoteName="デバイス 6 (EtherCAT)" InfoImageId="8">
+		<Name>__FILENAME__</Name>
+		<AddressInfo>
+			<Ccat>
+				<Address>-251658240</Address>
+				<Offset>65536</Offset>
+				<Size>16384</Size>
+				<BaseAddr>0</BaseAddr>
+				<BusNo>3</BusNo>
+				<SlotNo>0</SlotNo>
+				<VendorId>5612</VendorId>
+				<DeviceId>20480</DeviceId>
+				<Dma>
+					<Address>0</Address>
+					<Offset>4096</Offset>
+					<Size>256</Size>
+					<BaseAddr>2</BaseAddr>
+					<RxChn>2</RxChn>
+					<TxChn>3</TxChn>
+				</Dma>
+				<Identification>
+					<Value>263670726</Value>
+					<Version>1</Version>
+					<Size>512</Size>
+				</Identification>
+			</Ccat>
+		</AddressInfo>
+		<Image Id="7" AddrType="9" ImageType="3">
+			<Name>イメージ</Name>
+		</Image>
+		<Box File="ドライブ 14 (AZD4A-KED).xti" Id="12">
+			<EtherCAT PortABoxInfo="#x00ffffff"/>
+		</Box>
+		<EtherCAT DcSyncMode="2"/>
+	</Device>
+</TcSmItem>

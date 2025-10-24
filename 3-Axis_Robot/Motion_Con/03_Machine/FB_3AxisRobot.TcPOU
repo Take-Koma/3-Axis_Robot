@@ -1,18 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="FB_3AxisRobot" Id="{a0d34793-0844-485a-a6b0-6164cc5328a4}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_3AxisRobot
 	VAR
 //------データ管理------
 		bInit									:BOOL:=FALSE;																//リファレンスのデータの書き込みチェック
 
-
 //------セーフティー------		
 		//---EL2911のinternal I/Oの実入出力とのリンク---
-		bFbEStopInput1					AT %I*	:BOOL;																		//EL2911 input CH.1 非常停止ボタン1
-		bFbEStopInput2					AT %I*	:BOOL;																		//EL2911 input CH.2 非常停止ボタン2
+		bEStop1Input1					AT %I*	:BOOL;																		//EL2911 input CH.1 非常停止ボタン1-1
+		bEStop1Input2					AT %I*	:BOOL;																		//EL2911 input CH.2 非常停止ボタン1-2
 		bGripSwich						AT %I*	:BOOL;																		//EL2911 input CH.3 グリップスイッチ
-		bFbEstopOutput					AT %I*	:BOOL;																		//EL2911 output 非常停止の電源ON
+		bEStop2Input1					AT %I*	:BOOL;																		//EL2911 input CH.4 非常停止ボタン1-1
+		bEstopOutput					AT %I*	:BOOL;																		//EL2911 output 非常停止の電源ON
+		bEL2911InputToggle				AT %I*	:BOOL;																		//EL2911 InputToggle
 
 		//---Sefrtyのエイリアスデバイスとのリンク---
 		bSafetyRun_Stop					AT %Q*	:BOOL;																		//セーフティーラン
@@ -22,18 +23,19 @@
 		bFbEStopReset					AT %Q*	:BOOL;																		//GOTからの非常停止リセットをセーフティーへ
 		bFbEstopError					AT %I*	:BOOL;																		//セーフティーの非常停止ファンクションブロックエラー
 		bFbEdmError						AT %I*	:BOOL;																		//セーフティーのEDMファンクションブロックのエラー
+		bInputToggleOut					AT %Q*	:BOOL;																		//EL2911のインプットトグルをセーフティーへ
 
 
 //------診断-------
-		fbDiagnosisEtherCAT						:FB_DiagnosisEtherCAT;														//EtherCAT診断用FB
-		fbDiagnosisTerminal						:ARRAY[E_Terminal.EK1100..E_Terminal.AZD4A_KED] OF FB_DiagnosisTerminal;	//Terminal診断用FB
+		fbDiagnosisEtherCAT						:ARRAY[1..2] OF FB_DiagnosisEtherCAT;										//EtherCAT診断用FB
+		fbDiagnosisTerminal						:ARRAY[E_Terminal.EL9410..E_Terminal.AZD4A_KED] OF FB_DiagnosisTerminal;	//Terminal診断用FB
 		bEtherCATOK								:BOOL;																		//EtherCAT診断結果
 		bTerminalOK								:BOOL;																		//Terminal診断結果
 
 
 //------アラーム------
 		fbMachineState							:FB_MachineState;															//マシンステートFB
-		fbPatlite								:FB_Patlite;																//パトライトFB
+		
 		//アラーム(アラーム詳細はユーザーイベントクラスを参照)
 		//!!!!!アラームのファンクションブロックを追加したらパラメーターのアラーム数を変更すること!!!!!
 		fbAlarmSafetyNotRun						:FB_Alarm(TC_Events.UserEventClass.SafetyNotRun ,fbMachineState);
@@ -62,9 +64,44 @@
 		bPersistentDataWriteError				:BOOL;																			//パースステントデータ書き込み失敗
 		bPersistentDataWriteRequest				:BOOL;																			//パーシステントデータ書き込みリクエスト
 
-//------PCシャットダウン------
-		fbPcSafeOff								:FB_PcSafeOff(PcAmsNetId:=Param_3AxisRobot.PcAmsNetId);							//PCシャットダウン
 
+//-----制御盤管理-----
+		bPowerSupplyOk					AT %I*	:BOOL;																			//EL1004 input CH.1	パワーサプライOK
+		bSwitchingHubOk					AT %I*	:BOOL;																			//EL1004 input CH.2	スイッチングハブOK
+
+		fbIoLinkMaster							:FB_IoLinkMasterDiagnosis(Param_3AxisRobot.bEnabledPort);						//IO-Link管理
+		
+		fb787									:FB_787(MasterAoeNetId	:=F_CreateAmsNetId(Param_3AxisRobot.IoLinkMasterAmsNetId),
+														port			:=E_IolPort.Port1,
+														Name			:='787-1664/0000-0080');								//サーキットプロテクタFB
+														
+		uInputVoltage							:U_2Word;																		//CP入力電圧
+		uActualCurrent							:ARRAY[1..4] OF U_2Word;														//CP各チャンネル実電流値
+		uBreakerCurrentSetting					:ARRAY[1..4] OF U_2Word;														//CP各チャンネル設置電流値
+														
+		fbIoLinkPatlite							:FB_IoLinkPatlite(	MasterAoeNetId	:=F_CreateAmsNetId(Param_3AxisRobot.IoLinkMasterAmsNetId),
+																	port			:=E_IolPort.Port2,
+																	Name			:='LB6-20ILWCBW');							//パトライトFB
+
+		fb1sUPS									:FB_1sUPS_BAPI;												 					//1sUPSコントロール
+		bPowerFailDetectReset					:BOOL;																			//停電検知リセット
+
+		fbPcPowerManagement						:FB_PcPowerManagement(	PcAmsNetId	:=Param_3AxisRobot.PcAmsNetId,
+																		fb1sUPS		:=fb1sUPS);									//PC電源管理
+		
+		fbFanControl							:FB_FanControl;																	//吸排気ファンコントロール
+		uInAirTemp								:U_Word;																		//吸気温度
+		uOutAirTemp								:U_Word;																		//排気温度
+		uInFanSpeed								:U_2Word;																		//排気ファン速度
+		uOutFanSpeed							:U_2Word;																		//排気ファン速度
+	END_VAR
+	VAR PERSISTENT
+		uManualFanSpeed							:U_Word:=(uiUINT:=32767);														//FANマニュアルスピード設定
+		uMaxTemp								:U_2Word:=(rREAL:=40);															//PWMのパルス幅を100%にする温度
+		uMinTemp								:U_2Word:=(rREAL:=0);															//PWMのパルス幅を0%にする温度
+	END_VAR
+	VAR
+	
 //------Axis制御------
 		fbXAxis									:FB_AxisAbsolute(	fMaxPosition:=Param_3AxisRobot.lrXYAxisMaxPosition,
 																	fMinPosition:=Param_3AxisRobot.lrXYZAxisMinPosition,
@@ -102,6 +139,8 @@
 		fbJogFEdge								:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF F_TRIG;								//Jog動作用
 		bHomingStart							:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
 		bJogStart								:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF BOOL;
+		
+		uAxisActPos								:ARRAY[E_Axis.X_Axis..E_Axis.Gripper] OF U_2Word;
 
 //---ピック＆プレース制御---
 		ePickAndPlaceStep						:E_PickAndPlaceStep:=E_PickAndPlaceStep.Stay;
@@ -141,114 +180,185 @@
 	VAR
 
 //------三菱と通信------
-		//---三菱Fx5sの実入出力と接続---
-		bTwinCATRun						AT %Q* :BOOL;																			//三菱のX2に入力 ターミナル5(EL2088)チャンネル1
-		bTwinCATModbusStart				AT %Q* :BOOL;																			//三菱のX3に入力 ターミナル5(EL2088)チャンネル2
-		bTwinCATAlarm					AT %Q* :BOOL;																			//三菱のx4に入力 ターミナル5(EL2088)チャンネル3
-		bQX004							AT %Q* :BOOL;																			//三菱のx5に入力 ターミナル5(EL2088)チャンネル4
-		bMitsubishiRun					AT %I* :BOOL;																			//三菱のY4より出力 ターミナル4(EL1088)チャンネル1
-		bMitsubishiModbusStart			AT %I* :BOOL;																			//三菱のY5より出力 ターミナル4(EL1088)チャンネル2
-		bMitsubishiAlarm				AT %I* :BOOL;																			//三菱のY6より出力 ターミナル4(EL1088)チャンネル3
-		bYI004							AT %I* :BOOL;																			//三菱のY7より出力 ターミナル4(EL1088)チャンネル4
+		//---GOT実入出力と接続---
+		bMcPowerOn						AT %I*	:BOOL;																			//EL1088 input CH.1 GOTスイッチ1 ドライブON 長押しOFF
+		bMcMoveHomeOn					AT %I*	:BOOL;																			//EL1088 input CH.2 GOTスイッチ2　原点復帰
+		bMcHaltOn						AT %I*	:BOOL;																			//EL1088 input CH.3 GOTスイッチ3　停止
+		bBuzzerStop						AT %I*	:BOOL;																			//EL1088 input CH.4 GOTスイッチ4　ブザー停止　and アラームコンフィルム
+		bAlarmReset						AT %I*	:BOOL;																			//EL1088 input CH.5 GOTスイッチ5　アラームリセット
+		bSafetyReset					AT %I*	:BOOL;																			//EL1088 input CH.6 GOTスイッチ6　非常停止リセット
+		bKeySwitchOpen					AT %I*	:BOOL;																			//EL1088 input CH.7 GOTキースイッチ(開)
+		bKeySwitchClose					AT %I*	:BOOL;																			//EL1088 input CH.8 GOTキースイッチ(閉)
 		
-		(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
-		bToXAxisError							:REFERENCE TO BOOL;																//0:X軸エラー発生中
-		bToYAxisError							:REFERENCE TO BOOL;																//1:Y軸エラー発生中
-		bToZAxisError							:REFERENCE TO BOOL;																//2:Z軸エラー発生中
-		bToGripperError							:REFERENCE TO BOOL;																//3:グリッパーエラー発生中
-		bToMcPowerOn							:REFERENCE TO BOOL;																//4:McPower On
-		bToMcMoveHomeOn							:REFERENCE TO BOOL;																//5:McMoveHome On
-		bToMcHaltOn								:REFERENCE TO BOOL;																//6:McHalt On
-		bToCameraSoftWareTrigger				:REFERENCE TO BOOL;																//7:カメラのトリガー
-		bToAlarmReset							:REFERENCE TO BOOL;																//8:アラームリセット
-		bToSafetyReset							:REFERENCE TO BOOL;																//9:セフティーリセット
-		bToXAsisMoving							:REFERENCE TO BOOL;																//10:X軸起動中
-		bToYAsisMoving							:REFERENCE TO BOOL;																//11:Y軸起動中
-		bToZAsisMoving							:REFERENCE TO BOOL;																//12:Z軸起動中
-		bToGripperMoving						:REFERENCE TO BOOL;																//13:グリッパー起動中
-		bToWriteMoving							:REFERENCE TO BOOL;																//20:図形描画中
-		bToPickAndPlaceMoving					:REFERENCE TO BOOL;																//21:ピック＆プレース実行中
-		bToAutoMoveResetting					:REFERENCE TO BOOL;																//22:オート動作のリセット中
+		(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils	GOTデバイス1*)
+		//---0~99システム関係使用---
+		//---50~99アラーム使用---
+		//---GOT画面100使用---
+		bToTwinCATRun							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[100];									//100:TwinCAT起動
+		bToAlarmRaise							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[101];									//101:TwinCATアラーム発生
+		//---GOT画面200使用---
+		bToXAxisError							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[200];									//200:X軸エラー発生中
+		bToYAxisError							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[201];									//201:Y軸エラー発生中
+		bToZAxisError							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[202];									//202:Z軸エラー発生中
+		bToGripperError							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[203];									//203:グリッパーエラー発生中
+		bToXAsisMoving							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[204];									//204:X軸起動中
+		bToYAsisMoving							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[205];									//205:Y軸起動中
+		bToZAsisMoving							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[206];									//206:Z軸起動中
+		bToGripperMoving						:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[207];									//207:グリッパー起動中	
+		//---GOT画面300使用---
+		bToWriteMoving							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[300];									//300:図形描画中
+		bToPickAndPlaceMoving					:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[301];									//301:ピック＆プレース実行中
+		bToAutoMoveResetting					:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[302];									//302:オート動作のリセット中		
+		//---GOT画面4200使用---
+		bToPowerSupplyOk						:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[4200];								//4200:パワーサプライOK
+		bToSwitchingHubOk						:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[4201];								//4201:スイッチングハブOK
+		bToCPError								:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[4202];								//4202:CPエラー
+		bToCPWarning							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[4203];								//4203:CPワーニング
+		//---GOT画面10000使用---
+		bToMcPowerOn							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[10000];								//10000:McPower On
+		bToMcMoveHomeOn							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[10001];								//10001:McMoveHome On
+		bToMcHaltOn								:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[10002];								//10002:McHalt On
+		bToBuzzerStop							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[10003];								//10003:Bzzer Stop
+		bToAlarmReset							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[10004];								//10004:アラームリセット
+		bToSafetyReset							:REFERENCE TO BOOL REF=GVL.mb_Input_Coils[10005];								//10005:セフティーリセット	
+
+		(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils	GOTデバイス0*)
+		//---0~99システム関係使用---
+		//---GOT画面200使用---
+		bFromAxisErrorReset						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[200];								//200:軸エラーのリセット
+		//---GOT画面300使用---
+		bFromWriteStart							:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[300];								//300:図形描画スタート
+		bFromPickAndPlaceStart					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[301];								//301:ピック＆プレーススタート
+		bFromAutoMoveReset						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[302];								//302:オート動作のリセット
+		//---GOT画面500,700使用---
+		bFromXAxisJogStart						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[500];								//500:X軸Jog起動
+		bFromYAxisJogStart						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[501];								//501:Y軸Jog起動
+		bFromZAxisJogStart						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[502];								//502:Z軸Jog起動
+		bFromGripperJogStart					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[503];								//503:グリッパーJog起動
+		//---GOT画面600使用---
+		bFromXAxisJogPlus						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[600];								//600:X軸連続Jogプラス起動
+		bFromYAxisJogPlus						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[601];								//601:Y軸連続Jogプラス起動
+		bFromZAxisJogPlus						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[602];								//602:Z軸連続Jogプラス起動
+		bFromGripperJogPlus						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[603];								//603:グリッパー連続Jogプラス起動	
+		bFromXAxisJogPlusHigh					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[604];								//604:X軸連続Jogプラスハイスピード起動
+		bFromYAxisJogPlusHigh					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[605];								//605:Y軸連続Jogプラスハイスピード起動
+		bFromZAxisJogPlusHigh					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[606];								//606:Z軸連続Jogプラスハイスピード起動
+		bFromGripperJogPlusHigh					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[607];								//607:グリッパー連続Jogプラスハイスピード起動
+		bFromXAxisJogMinus						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[608];								//608:X軸連続Jogマイナス起動
+		bFromYAxisJogMinus						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[609];								//609:Y軸連続Jogマイナス起動
+		bFromZAxisJogMinus						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[610];								//610:Z軸連続Jogマイナス起動
+		bFromGripperJogMinus					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[611];								//611:グリッパー連続Jogマイナス起動
+		bFromXAxisJogMinusHigh					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[612];								//612:X軸連続Jogマイナスハイスピード起動
+		bFromYAxisJogMinusHigh					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[613];								//613:Y軸連続Jogマイナスハイスピード起動
+		bFromZAxisJogMinusHigh					:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[614];								//614:Z軸連続Jogマイナスハイスピード起動
+		bFromGripperJogMinusHigh				:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[615];								//615:グリッパー連続Jogマイナスハイスピード起動		
+		//---GOT画面4100使用---
+		bFromManualFanSpeed						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[4100];								//4100:FANマニュアルスピード有効		
+		//---GOT画面4300使用---
+		bFromPcReboot							:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[4300];								//4300:PCリブート
+		bFromPcShutdown							:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[4301];								//4301:PCシャットダウン		
+		bCameraTrigger							:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[4302];								//4303:カメラトリガーON
+		//---GOT画面4400使用---
+		bFromTareWeightSet						:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[4400];								//4400:風袋重量セット
+		bFromCalibrationWeightSet				:REFERENCE TO BOOL REF=GVL.mb_Output_Coils[4401];								//4401:校正重量セット
+	
+		(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers	GOTデバイス3*)
+		//---0~99システム関係使用---
+		wToSysSignal1_1							:REFERENCE TO WORD REF=GVL.mb_Input_Registers[0];								//0:システム信号1-1
+		wToSysSignal1_2							:REFERENCE TO WORD REF=GVL.mb_Input_Registers[1];								//1:システム信号1-2
+		wToIOSignal								:REFERENCE TO WORD REF=GVL.mb_Input_Registers[2];								//2:外部入出力機能・出力情報
+		//---GOT画面200使用---
+		wToXAxisActPos_L						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[200];								//200:X軸ポジション L
+		wToXAxisActPos_H						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[201];								//201:X軸ポジション H
+		wToYAxisActPos_L						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[202];								//202:Y軸ポジション L
+		wToYAxisActPos_H						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[203];								//203:Y軸ポジション H
+		wToZAxisActPos_L						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[204];								//204:Z軸ポジション L
+		wToZAxisActPos_H						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[205];								//205:Z軸ポジション H
+		wToGripperActPos_L						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[206];								//206:グリッパーポジション L
+		wToGripperActPos_H						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[207];								//207:グリッパーポジション H
+		//---GOT画面4100使用---
+		uToInAirTemp							:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4100];							//4100:吸気温度
+		uToOutAirTemp							:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4101];							//4101:排気温度
+		uToInFanSpeed_L							:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4102];							//4102:排気ファン速度 L
+		uToInFanSpeed_H							:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4103];							//4103:排気ファン速度 H
+		uToOutFanSpeed_L						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4104];							//4104:排気ファン速度 L
+		uToOutFanSpeed_H						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4105];							//4104:排気ファン速度 H
+		//---GOT画面4200使用---
+		uToInputVoltage_L						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4200];							//4200:CPへの入力電圧　L
+		uToInputVoltage_H						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4201];							//4201:CPへの入力電圧　H
+		uToActualCurrent1ch_L					:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4202];							//4202:CP1chの実電流値 L
+		uToActualCurrent1ch_H					:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4203];							//4203:CP1chの実電流値 H
+		uToActualCurrent2ch_L					:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4204];							//4204:CP2chの実電流値 L
+		uToActualCurrent2ch_H					:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4205];							//4205:CP2chの実電流値 H		
+		uToActualCurrent3ch_L					:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4206];							//4206:CP3chの実電流値 L
+		uToActualCurrent3ch_H					:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4207];							//4207:CP3chの実電流値 H		
+		uToActualCurrent4ch_L					:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4208];							//4208:CP4chの実電流値 L
+		uToActualCurrent4ch_H					:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4209];							//4209:CP4chの実電流値 H
+		uToBreakerCurrentSetting1ch_L			:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4210];							//4210:CP1chの設定電流値 L
+		uToBreakerCurrentSetting1ch_H			:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4211];							//4211:CP1chの設定電流値 H
+		uToBreakerCurrentSetting2ch_L			:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4212];							//4212:CP2chの設定電流値 L
+		uToBreakerCurrentSetting2ch_H			:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4213];							//4213:CP2chの設定電流値 H
+		uToBreakerCurrentSetting3ch_L			:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4214];							//4214:CP3chの設定電流値 L
+		uToBreakerCurrentSetting3ch_H			:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4215];							//4215:CP3chの設定電流値 H
+		uToBreakerCurrentSetting4ch_L			:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4216];							//4216:CP4chの設定電流値 L
+		uToBreakerCurrentSetting4ch_H			:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4217];							//4217:CP4chの設定電流値 H
+		//---GOT画面4400使用---
+		wTolrBridgeVoltage						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4400];							//4400:ロードセルの出力電圧[mV]
+		wToSupplyVoltage						:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4401];							//4401:ロードセルへの印加電圧[V]
+		wToGrossWeight							:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4402];							//4402:測定重量[kg]
+		wToNetWeight							:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4403];							//4403:正味重量[kg]
+		wToTareWeight 							:REFERENCE TO WORD REF=GVL.mb_Input_Registers[4404];							//4404:風袋重量[kg]
+
 		
-		(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
-		bFromAxisErrorReset						:REFERENCE TO BOOL;																//0:軸エラーのリセット
-		bFromEStop								:REFERENCE TO BOOL;																//1:非常停止ボタン（通常ON）
-		bFromKeySwitchOpen						:REFERENCE TO BOOL;																//2:キースイッチ(開)
-		bFromKeySwitchClose						:REFERENCE TO BOOL;																//3:キースイッチ(閉)
-		bFromMcPowerOn							:REFERENCE TO BOOL;																//4:スイッチ1 ドライブON 長押しOFF
-		bFromMcMoveHomeOn						:REFERENCE TO BOOL;																//5:スイッチ2　原点復帰
-		bFromMcHaltOn							:REFERENCE TO BOOL;																//6:スイッチ3　停止
-		bFromCameraTrigger						:REFERENCE TO BOOL;																//7:スイッチ4　カメラトリガーON
-		bFromAlarmReset							:REFERENCE TO BOOL;																//8:スイッチ5　アラームリセット
-		bFromSafetyReset						:REFERENCE TO BOOL;																//9:スイッチ6　非常停止リセット
-		bFromGripSwich							:REFERENCE TO BOOL;																//10:グリップスイッチ
-		bFromTareWeightSet						:REFERENCE TO BOOL;																//11:風袋重量セット
-		bFromCalibrationWeightSet				:REFERENCE TO BOOL;																//12:校正重量セット
-		bFromPcReboot							:REFERENCE TO BOOL;																//13:PCリブート
-		bFromPcShutdown							:REFERENCE TO BOOL;																//14:PCシャットダウン
-		bFromXAxisJogStart						:REFERENCE TO BOOL;																//16:X軸Jog起動
-		bFromYAxisJogStart						:REFERENCE TO BOOL;																//17:Y軸Jog起動
-		bFromZAxisJogStart						:REFERENCE TO BOOL;																//18:Z軸Jog起動
-		bFromGripperJogStart					:REFERENCE TO BOOL;																//19:グリッパーJog起動
-		bFromWriteStart							:REFERENCE TO BOOL;																//20:図形描画スタート
-		bFromPickAndPlaceStart					:REFERENCE TO BOOL;																//21:ピック＆プレーススタート
-		bFromAutoMoveReset						:REFERENCE TO BOOL;																//22:オート動作のリセット
-		bFromXAxisJogPlus						:REFERENCE TO BOOL;																//23:X軸連続Jogプラス起動
-		bFromYAxisJogPlus						:REFERENCE TO BOOL;																//24:Y軸連続Jogプラス起動
-		bFromZAxisJogPlus						:REFERENCE TO BOOL;																//25:Z軸連続Jogプラス起動
-		bFromGripperJogPlus						:REFERENCE TO BOOL;																//26:グリッパー連続Jogプラス起動
-		bFromXAxisJogPlusHigh					:REFERENCE TO BOOL;																//27:X軸連続Jogプラスハイスピード起動
-		bFromYAxisJogPlusHigh					:REFERENCE TO BOOL;																//28:Y軸連続Jogプラスハイスピード起動
-		bFromZAxisJogPlusHigh					:REFERENCE TO BOOL;																//29:Z軸連続Jogプラスハイスピード起動
-		bFromGripperJogPlusHigh					:REFERENCE TO BOOL;																//30:グリッパー連続Jogプラスハイスピード起動
-		bFromXAxisJogMinus						:REFERENCE TO BOOL;																//31:X軸連続Jogマイナス起動
-		bFromYAxisJogMinus						:REFERENCE TO BOOL;																//32:Y軸連続Jogマイナス起動
-		bFromZAxisJogMinus						:REFERENCE TO BOOL;																//33:Z軸連続Jogマイナス起動
-		bFromGripperJogMinus					:REFERENCE TO BOOL;																//34:グリッパー連続Jogマイナス起動
-		bFromXAxisJogMinusHigh					:REFERENCE TO BOOL;																//35:X軸連続Jogマイナスハイスピード起動
-		bFromYAxisJogMinusHigh					:REFERENCE TO BOOL;																//36:Y軸連続Jogマイナスハイスピード起動
-		bFromZAxisJogMinusHigh					:REFERENCE TO BOOL;																//37:Z軸連続Jogマイナスハイスピード起動
-		bFromGripperJogMinusHigh				:REFERENCE TO BOOL;																//38:グリッパー連続Jogマイナスハイスピード起動
-		
-		(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
-		wToXAxisActPos							:REFERENCE TO WORD;																//0:X軸ポジション
-		wToYAxisActPos							:REFERENCE TO WORD;																//1:Y軸ポジション
-		wToZAxisActPos							:REFERENCE TO WORD;																//2:Z軸ポジション
-		wToGripperActPos						:REFERENCE TO WORD;																//3:グリッパーポジション
-		wTolrBridgeVoltage						:REFERENCE TO WORD;																//4:ロードセルの出力電圧[mV]
-		wToSupplyVoltage						:REFERENCE TO WORD;																//5:ロードセルへの印加電圧[V]
-		wToGrossWeight							:REFERENCE TO WORD;																//6:測定重量[kg]
-		wToNetWeight							:REFERENCE TO WORD;																//7:正味重量[kg]
-		wToTareWeight 							:REFERENCE TO WORD;																//8:風袋重量[kg]
-		
-		(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
-		wFromCalibrationWeight					:REFERENCE TO WORD;																//0:校正重量[kg]
-		wFromXAxisJogTarget						:REFERENCE TO WORD;																//16:X軸Jogターゲットポジション
-		wFromYAxisJogTarget						:REFERENCE TO WORD;																//17:Y軸Jogターゲットポジション
-		wFromZAxisJogTarget						:REFERENCE TO WORD;																//18:Z軸Jogターゲットポジション
-		wFromGripperJogTarget					:REFERENCE TO WORD;																//19:グリッパーJogターゲットポジション
+		(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers	GOTデバイス4*)
+		//---0~99システム関係使用---
+		wFromSysSignal2_1						:REFERENCE TO WORD REF=GVL.mb_Output_Registers[0];								//0:システム信号2-1
+		wFromNumericInputNumber					:REFERENCE TO WORD REF=GVL.mb_Output_Registers[1];								//1:数値入力番号
+		wFromValueBeforeNumericInputChange32_L	:REFERENCE TO WORD REF=GVL.mb_Output_Registers[2];								//2:数値入力変更前値(32ビット)L
+		wFromValueBeforeNumericInputChange32_H	:REFERENCE TO WORD REF=GVL.mb_Output_Registers[3];								//3:数値入力変更前値(32ビット)H
+		wFromValueAfterNumericInputChange32_L	:REFERENCE TO WORD REF=GVL.mb_Output_Registers[4];								//4:数値入力変更後値(32ビット)L
+		wFromValueAfterNumericInputChange32_H	:REFERENCE TO WORD REF=GVL.mb_Output_Registers[5];								//5:数値入力変更後値(32ビット)H
+		wFromGotErrorCode						:REFERENCE TO WORD REF=GVL.mb_Output_Registers[6];								//6:GOTエラーコード
+		wFromGotErrorCode2						:REFERENCE TO WORD REF=GVL.mb_Output_Registers[7];								//7:GOTエラーコード2
+		wFromReportScreenNumberBeingPrinted		:REFERENCE TO WORD REF=GVL.mb_Output_Registers[8];								//8:印字中レポート画面番号
+		wFromDisplayedBaseScreenNumber			:REFERENCE TO WORD REF=GVL.mb_Output_Registers[9];								//9:表示中ベース画面番号
+		wFromDisplayedWindow1ScreenNumber		:REFERENCE TO WORD REF=GVL.mb_Output_Registers[10];								//10:表示中ウィンドウ1画面番号
+		wFromCurrentCursorDisplayObjectID		:REFERENCE TO WORD REF=GVL.mb_Output_Registers[11];								//11:現在カーソル表示オブジェクトID
+		wFromPreviousCursorDisplayObjectID		:REFERENCE TO WORD REF=GVL.mb_Output_Registers[12];								//12:前回カーソル表示オブジェクトID
+		wFromCurrentCursorDisplayUserID			:REFERENCE TO WORD REF=GVL.mb_Output_Registers[13];								//13:現在カーソル表示ユーザID
+		wFromPreviousCursorDisplayUserID		:REFERENCE TO WORD REF=GVL.mb_Output_Registers[14];								//14:前回カーソル表示ユーザID
+		wFromInputKeyCode						:REFERENCE TO WORD REF=GVL.mb_Output_Registers[15];								//15:入力キーコード
+		wFromExternalInOutFUNCTIONInformation1	:REFERENCE TO WORD REF=GVL.mb_Output_Registers[16];								//16:外部入出力機能，入力情報1
+		wFromExternalInOutFUNCTIONInformation2	:REFERENCE TO WORD REF=GVL.mb_Output_Registers[17];								//17:外部入出力機能，入力情報2
+		//---GOT画面500,600,700使用---
+		wFromXAxisJogTarget						:REFERENCE TO WORD REF=GVL.mb_Output_Registers[500];							//500:X軸Jogターゲットポジション
+		wFromYAxisJogTarget						:REFERENCE TO WORD REF=GVL.mb_Output_Registers[501];							//501:Y軸Jogターゲットポジション
+		wFromZAxisJogTarget						:REFERENCE TO WORD REF=GVL.mb_Output_Registers[502];							//502:Z軸Jogターゲットポジション
+		wFromGripperJogTarget					:REFERENCE TO WORD REF=GVL.mb_Output_Registers[503];							//503:グリッパーJogターゲットポジション		
+		//---GOT画面4100使用---
+		uFromManualFanSpeed						:REFERENCE TO WORD REF=GVL.mb_Output_Registers[4100];							//4100:FANマニュアルスピード設定
+		uFromMaxTemp_L							:REFERENCE TO WORD REF=GVL.mb_Output_Registers[4101];							//4101:PWMのパルス幅を100%にする温度 L
+		uFromMaxTemp_H							:REFERENCE TO WORD REF=GVL.mb_Output_Registers[4102];							//4102:PWMのパルス幅を100%にする温度 H
+		uFromMinTemp_L							:REFERENCE TO WORD REF=GVL.mb_Output_Registers[4103];							//4103:PWMのパルス幅を0%にする温度 L
+		uFromMinTemp_H							:REFERENCE TO WORD REF=GVL.mb_Output_Registers[4104];							//4104:PWMのパルス幅を0%にする温度 H
+		//---GOT画面4400使用---
+		wFromCalibrationWeight					:REFERENCE TO WORD REF=GVL.mb_Output_Registers[4400];							//4400:校正重量[kg]
 
 
 //------空き------
-		bEL1004Channel1					AT %I*	:BOOL;																			//ターミナル2(EL1004)チャンネル1
-		bEL1004Channel2					AT %I*	:BOOL;																			//ターミナル2(EL1004)チャンネル2
 		bEL1004Channel3					AT %I*	:BOOL;																			//ターミナル2(EL1004)チャンネル3
 		bEL1004Channel4					AT %I*	:BOOL;																			//ターミナル2(EL1004)チャンネル4
-	
-		bEL2004Channel2					AT %Q*	:BOOL;																			//ターミナル3(EL2004)チャンネル2
-		bEL2004Channel3					AT %Q*	:BOOL;																			//ターミナル3(EL2004)チャンネル3
+
 		bEL2004Channel4					AT %Q*	:BOOL;																			//ターミナル3(EL2004)チャンネル4
-	
-		bEL1088Channel5					AT %I*	:BOOL;																			//ターミナル4(EL1088)チャンネル5
-		bEL1088Channel6					AT %I*	:BOOL;																			//ターミナル4(EL1088)チャンネル6
-		bEL1088Channel7					AT %I*	:BOOL;																			//ターミナル4(EL1088)チャンネル7
+
+//-----FB作成テスト-----
+	bTEST:BOOL;
 
 
-
-//------TEST------
-		bTEST:BOOL;
 
 	END_VAR
+
+
 
 	]]></Declaration>
     <Implementation>
@@ -263,7 +373,8 @@ ELSE
 	
 	General_LoadCell();	
 	General_AxisOrganization();
-	
+
+
 	//---ストップステートでは無く、軸が有効の場合に起動---
 	IF fbMachineState.bStopMachine=FALSE AND bAxisEnable=TRUE  THEN
 		//ゼロポジション実行
@@ -273,14 +384,23 @@ ELSE
 		Operating_Jog();
 
 		//ピック＆プレース実行
-		Operating_PickAndPlace();	
+		//Operating_PickAndPlace();	
 	
 		//図形描画実行
-		Operating_ShapeWrite();
+		//Operating_ShapeWrite();
 
 	END_IF
-	
-END_IF]]></ST>
+
+END_IF
+
+
+//---TEST---
+fbIoLinkPatlite.bStartupBuzzer:=bTEST;
+
+
+
+
+]]></ST>
     </Implementation>
     <Method Name="General_Alarm" Id="{34f9dba5-00cb-40b5-942a-a6cbfdffda81}">
       <Declaration><![CDATA[METHOD General_Alarm]]></Declaration>
@@ -294,122 +414,123 @@ END_IF]]></ST>
 	);
 	
 	//---パトライト制御---
-	fbPatlite.eMachineState:=fbMachineState.eMachineState;
+	fbIoLinkPatlite.eMachineState:=fbMachineState.eMachineState;
+	fbIoLinkPatlite.bBuzzerStop:=bBuzzerStop;
 	
 	//---アラーム制御---
 	fbAlarmSafetyNotRun(
 		bRaise		:=bSafetyRun_Stop=TRUE AND bSafetyInRun=FALSE,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromSafetyReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bSafetyReset
 	);
 
 	fbAlarmSafetyFbError(
 		bRaise		:=bFBEstopError=TRUE OR bFBEdmError=TRUE,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromSafetyReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bSafetyReset
 	);
 
 	fbAlarmEmergencyStop(
-		bRaise		:=bFBEStopInput1=FALSE AND bFBEStopInput2=FALSE AND bFBEstopOutput=FALSE,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromSafetyReset
+		bRaise		:=((bEStop1Input1=FALSE AND bEStop1Input2=FALSE) OR bEStop2Input1=FALSE) AND bEstopOutput=FALSE,
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bSafetyReset
 	);
 
 	fbAlarmXAxisMovingGripSwichNotOn(
-		bRaise		:=fbXAxis.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bFromKeySwitchClose=FALSE,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bRaise		:=fbXAxis.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bKeySwitchClose=FALSE,
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmYAxisMovingGripSwichNotOn(
-		bRaise		:=fbYAxis.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bFromKeySwitchClose=FALSE,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bRaise		:=fbYAxis.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bKeySwitchClose=FALSE,
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmZAxisMovingGripSwichNotOn(
-		bRaise		:=fbZAxis.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bFromKeySwitchClose=FALSE,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bRaise		:=fbZAxis.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bKeySwitchClose=FALSE,
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmGripperMovingGripSwichNotOn(
-		bRaise		:=fbGripper.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bFromKeySwitchClose=FALSE,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bRaise		:=fbGripper.bStateMoving=TRUE AND bGripSwich=FALSE,// AND bKeySwitchClose=FALSE,
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 
 	fbAlarmMITSUBISHIError(
-		bRaise		:=bMitsubishiRun=FALSE OR bMitsubishiModbusStart=FALSE OR bMitsubishiAlarm=FALSE,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bRaise		:=FALSE,
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 
 	fbAlarmXAxisError(
 		bRaise		:=fbXAxis.bStateError,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmYAxisError(
 		bRaise		:=fbYAxis.bStateError,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmZAxisError(
 		bRaise		:=fbZAxis.bStateError,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmGripperError(
 		bRaise		:=fbGripper.bStateError,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmEtherCATError(
 		bRaise		:=NOT bEtherCATOK,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmTerminalError(
 		bRaise		:=NOT bTerminalOK,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmParsistentDataInit(
 		bRaise		:=NOT fbPersistentDataManagement.bPersistentDataNotInit,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmPersistentDataLoadFault(
 		bRaise		:=NOT _AppInfo.BootDataLoaded,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmOldPersistentDataLoad(
 		bRaise		:=_AppInfo.OldBootData,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 	
 	fbAlarmPersistentDataWriteError(
 		bRaise		:=bPersistentDataWriteError,
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);
 
 	
 	fbAlarmCycleTimeExceeded(
 		bRaise		:=_TaskInfo[GETCURTASKINDEXEX()].CycleTimeExceeded, //	_TaskInfo[1].CycleTimeExceeded OR _TaskInfo[2].CycleTimeExceeded, //Vision TaskはPCのスペック的にサイクルタイム超過してしまうのでオミット
-		bConfirm	:=fbPatlite.bSwitch,
-		bClear		:=bFromAlarmReset
+		bConfirm	:=bBuzzerStop,
+		bClear		:=bAlarmReset
 	);]]></ST>
       </Implementation>
     </Method>
@@ -425,10 +546,10 @@ END_IF]]></ST>
 
 //---三菱からのビットに応じてマニュアル駆動---
 	//---一時停止ボタン---
-	fbXAxis.Halt	(bDriveHalt:=bFromMcHaltOn);
-	fbYAxis.Halt	(bDriveHalt:=bFromMcHaltOn);
-	fbZAxis.Halt	(bDriveHalt:=bFromMcHaltOn);
-	fbGripper.Halt	(bDriveHalt:=bFromMcHaltOn);
+	fbXAxis.Halt	(bDriveHalt:=bMcHaltOn);
+	fbYAxis.Halt	(bDriveHalt:=bMcHaltOn);
+	fbZAxis.Halt	(bDriveHalt:=bMcHaltOn);
+	fbGripper.Halt	(bDriveHalt:=bMcHaltOn);
 	bToMcHaltOn:=fbXAxis.bStateHaltDone AND fbYAxis.bStateHaltDone AND fbZAxis.bStateHaltDone AND fbGripper.bStateHaltDone;
 	
 	//---軸エラーのリセットボタン---
@@ -438,9 +559,9 @@ END_IF]]></ST>
 	fbGripper.Reset	(bDriveReset:=bFromAxisErrorReset);
 	
 	//-----McPoerのOnとOff------
-	fbMcPowerREdge(CLK:=bFromMcPowerOn,Q=>);
+	fbMcPowerREdge(CLK:=bMcPowerOn,Q=>);
 	fbMcPowerFEdge(CLK:=bAxisEnable,Q=>);
-	fbMcPowerOffTon(IN:=bFromMcPowerOn,PT:=T#3S,Q=>,ET=>);
+	fbMcPowerOffTon(IN:=bMcPowerOn,PT:=T#3S,Q=>,ET=>);
 
 	IF bAxisPowerON=FALSE AND fbMcPowerREdge.Q=TRUE THEN;
 		bAxisPowerON:=TRUE;
@@ -477,11 +598,27 @@ END_IF]]></ST>
 	bToZAsisMoving:=fbZAxis.bStateMoving;
 	bToGripperMoving:=fbGripper.bStateMoving;
 	
-	//ActPos,GOTで100で割って小数点二位まで表示するために100倍にする
-	wToXAxisActPos:=LREAL_TO_WORD(100*fbXAxis.fStateActPos);
-	wToYAxisActPos:=LREAL_TO_WORD(100*fbYAxis.fStateActPos);
-	wToZAxisActPos:=LREAL_TO_WORD(100*fbZAxis.fStateActPos);
-	wToGripperActPos:=LREAL_TO_WORD(100*fbGripper.fStateActPos);]]></ST>
+	//ActPos
+	uAxisActPos[E_Axis.X_Axis].rREAL:=LREAL_TO_REAL(fbXAxis.fStateActPos);
+	wToXAxisActPos_L:=uAxisActPos[E_Axis.X_Axis].wWORD[1];
+	wToXAxisActPos_H:=uAxisActPos[E_Axis.X_Axis].wWORD[2];
+	
+	uAxisActPos[E_Axis.Y_Axis].rREAL:=LREAL_TO_REAL(fbYAxis.fStateActPos);
+	wToYAxisActPos_L:=uAxisActPos[E_Axis.Y_Axis].wWORD[1];
+	wToYAxisActPos_H:=uAxisActPos[E_Axis.Y_Axis].wWORD[2];
+
+	uAxisActPos[E_Axis.Z_Axis].rREAL:=LREAL_TO_REAL(fbZAxis.fStateActPos);
+	wToZAxisActPos_L:=uAxisActPos[E_Axis.Z_Axis].wWORD[1];
+	wToZAxisActPos_H:=uAxisActPos[E_Axis.Z_Axis].wWORD[2];
+
+	uAxisActPos[E_Axis.Gripper].rREAL:=LREAL_TO_REAL(fbGripper.fStateActPos);
+	wToGripperActPos_L:=uAxisActPos[E_Axis.Gripper].wWORD[1];
+	wToGripperActPos_H:=uAxisActPos[E_Axis.Gripper].wWORD[2];
+	
+	
+	
+	
+	]]></ST>
       </Implementation>
     </Method>
     <Method Name="General_Diagnosis" Id="{9a8d7aaf-4600-48ce-bd79-d2627266e342}">
@@ -496,40 +633,47 @@ END_VAR
 	bPersistentDataWriteError:=fbPersistentDataManagement.WritePersistentData(bPersistentDataWriteRequest);
 
 //EtherCATマスター診断
-	IF fbDiagnosisEtherCAT.DevState_Diagnosis()=FALSE THEN
+	//デバイス2
+	IF fbDiagnosisEtherCAT[1].DevState_Diagnosis()=FALSE THEN
 		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT.FrmState_Diagnosis(0)=FALSE THEN
+	ELSIF fbDiagnosisEtherCAT[1].FrmState_Diagnosis(0)=FALSE THEN
 		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT.FrmState_Diagnosis(1)=FALSE THEN
+	ELSIF fbDiagnosisEtherCAT[1].FrmWcState_Diagnosis(0)=FALSE THEN
 		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT.FrmState_Diagnosis(2)=FALSE THEN
+	ELSIF fbDiagnosisEtherCAT[1].SlaveCount_Diagnosis()=FALSE THEN
 		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT.FrmWcState_Diagnosis(0)=FALSE THEN
+	
+	//デバイス6	
+	ELSIF fbDiagnosisEtherCAT[2].DevState_Diagnosis()=FALSE THEN
 		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT.FrmWcState_Diagnosis(1)=FALSE THEN
+	ELSIF fbDiagnosisEtherCAT[2].FrmState_Diagnosis(0)=FALSE THEN
 		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT.FrmWcState_Diagnosis(2)=FALSE THEN
+	ELSIF fbDiagnosisEtherCAT[2].FrmWcState_Diagnosis(0)=FALSE THEN
 		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT.SlaveCount_Diagnosis()=FALSE THEN
+	ELSIF fbDiagnosisEtherCAT[2].SlaveCount_Diagnosis()=FALSE THEN
 		bEtherCATOK:=FALSE;
+		
+	//すべて問題なしで出力
 	ELSE
 		bEtherCATOK:=TRUE;
 	END_IF
 
+	
+	
 						
 //ターミナル診断
 	//診断用変数リセット
 	bTerminalOK:=TRUE;
 
-	FOR eTerminal:= E_Terminal.EK1100 TO E_Terminal.AZD4A_KED DO
+	FOR eTerminal:= E_Terminal.EL3202 TO E_Terminal.AZD4A_KED DO
 		
 		CASE eTerminal OF
-			E_Terminal.EK1100,E_Terminal.AZD4A_KED:	//EK1100とAZD4A-KEDはステータスしかないので、ステータスのみチェック
+			E_Terminal.AZD4A_KED:	//AZD4A-KEDはステータスしかないので、ステータスのみチェック
 				IF fbDiagnosisTerminal[eTerminal].State_Diagnosis()=FALSE THEN
 					bTerminalOK:=FALSE;
 				END_IF			
 			
-			E_Terminal.EL1004..E_Terminal.EL3351:	//通常ターミナルはステータスとワーキングカウンターをチェック
+			E_Terminal.EL9410..E_Terminal.EL1088:	//通常ターミナルはステータスとワーキングカウンターをチェック
 				IF fbDiagnosisTerminal[eTerminal].State_Diagnosis()=FALSE THEN
 					bTerminalOK:=FALSE;
 				ELSIF fbDiagnosisTerminal[eTerminal].WcState_Diagnosis(0)=FALSE THEN
@@ -552,86 +696,18 @@ END_VAR
     <Method Name="General_Init" Id="{a4330914-15ee-490a-abb7-3364e2d18ac8}">
       <Declaration><![CDATA[METHOD General_Init]]></Declaration>
       <Implementation>
-        <ST><![CDATA[	(*Modbusマスター読み取りのみ	GVL.mb_Input_Coils*)
-	bToXAxisError					REF=GVL.mb_Input_Coils[0];
-	bToYAxisError					REF=GVL.mb_Input_Coils[1];
-	bToZAxisError					REF=GVL.mb_Input_Coils[2];
-	bToGripperError					REF=GVL.mb_Input_Coils[3];
-	bToMcPowerOn					REF=GVL.mb_Input_Coils[4];
-	bToMcMoveHomeOn					REF=GVL.mb_Input_Coils[5];
-	bToMcHaltOn						REF=GVL.mb_Input_Coils[6];
-	bToCameraSoftWareTrigger		REF=GVL.mb_Input_Coils[7];
-	bToAlarmReset					REF=GVL.mb_Input_Coils[8];
-	bToSafetyReset					REF=GVL.mb_Input_Coils[9];
-	bToXAsisMoving					REF=GVL.mb_Input_Coils[10];
-	bToYAsisMoving					REF=GVL.mb_Input_Coils[11];
-	bToZAsisMoving					REF=GVL.mb_Input_Coils[12];
-	bToGripperMoving				REF=GVL.mb_Input_Coils[13];
-	bToWriteMoving					REF=GVL.mb_Input_Coils[20];
-	bToPickAndPlaceMoving			REF=GVL.mb_Input_Coils[21];
-	bToAutoMoveResetting			REF=GVL.mb_Input_Coils[22];	
-	
-	
-	(*Modbusマスターが読み書き可能	GVL.mb_Output_Coils*)
-	bFromAxisErrorReset				REF=GVL.mb_Output_Coils[0];
-	bFromEStop						REF=GVL.mb_Output_Coils[1];
-	bFromKeySwitchOpen				REF=GVL.mb_Output_Coils[2];
-	bFromKeySwitchClose				REF=GVL.mb_Output_Coils[3];
-	bFromMcPowerOn					REF=GVL.mb_Output_Coils[4];
-	bFromMcMoveHomeOn				REF=GVL.mb_Output_Coils[5];
-	bFromMcHaltOn					REF=GVL.mb_Output_Coils[6];
-	bFromCameraTrigger				REF=GVL.mb_Output_Coils[7];
-	bFromAlarmReset					REF=GVL.mb_Output_Coils[8];
-	bFromSafetyReset				REF=GVL.mb_Output_Coils[9];
-	bFromGripSwich					REF=GVL.mb_Output_Coils[10];
-	bFromTareWeightSet				REF=GVL.mb_Output_Coils[11];
-	bFromCalibrationWeightSet		REF=GVL.mb_Output_Coils[12];
-	bFromPcReboot					REF=GVL.mb_Output_Coils[13];
-	bFromPcShutdown					REF=GVL.mb_Output_Coils[14];
-	bFromXAxisJogStart				REF=GVL.mb_Output_Coils[16];
-	bFromYAxisJogStart				REF=GVL.mb_Output_Coils[17];
-	bFromZAxisJogStart				REF=GVL.mb_Output_Coils[18];
-	bFromGripperJogStart			REF=GVL.mb_Output_Coils[19];
-	bFromWriteStart					REF=GVL.mb_Output_Coils[20];
-	bFromPickAndPlaceStart			REF=GVL.mb_Output_Coils[21];
-	bFromAutoMoveReset				REF=GVL.mb_Output_Coils[22];
-	bFromXAxisJogPlus				REF=GVL.mb_Output_Coils[23];
-	bFromYAxisJogPlus				REF=GVL.mb_Output_Coils[24];
-	bFromZAxisJogPlus				REF=GVL.mb_Output_Coils[25];
-	bFromGripperJogPlus				REF=GVL.mb_Output_Coils[26];
-	bFromXAxisJogPlusHigh			REF=GVL.mb_Output_Coils[27];
-	bFromYAxisJogPlusHigh			REF=GVL.mb_Output_Coils[28];
-	bFromZAxisJogPlusHigh			REF=GVL.mb_Output_Coils[29];
-	bFromGripperJogPlusHigh			REF=GVL.mb_Output_Coils[30];
-	bFromXAxisJogMinus				REF=GVL.mb_Output_Coils[31];
-	bFromYAxisJogMinus				REF=GVL.mb_Output_Coils[32];
-	bFromZAxisJogMinus				REF=GVL.mb_Output_Coils[33];
-	bFromGripperJogMinus			REF=GVL.mb_Output_Coils[34];
-	bFromXAxisJogMinusHigh			REF=GVL.mb_Output_Coils[35];
-	bFromYAxisJogMinusHigh			REF=GVL.mb_Output_Coils[36];
-	bFromZAxisJogMinusHigh			REF=GVL.mb_Output_Coils[37];
-	bFromGripperJogMinusHigh		REF=GVL.mb_Output_Coils[38];
+        <ST><![CDATA[	//パーシステントデータのModbus変数へ書き込み
+	uFromManualFanSpeed		:=uManualFanSpeed.wWORD;		
+	uFromMaxTemp_L			:=uMaxTemp.wWORD[1];
+	uFromMaxTemp_H			:=uMaxTemp.wWORD[2];
+	uFromMinTemp_L			:=uMinTemp.wWORD[1];
+	uFromMinTemp_H			:=uMinTemp.wWORD[2];
 
-	(*Modbusマスター読み取りのみ	GVL.mb_Input_Registers*)
-	wToXAxisActPos					REF=GVL.mb_Input_Registers[0];
-	wToYAxisActPos					REF=GVL.mb_Input_Registers[1];
-	wToZAxisActPos					REF=GVL.mb_Input_Registers[2];
-	wToGripperActPos				REF=GVL.mb_Input_Registers[3];
-	wTolrBridgeVoltage				REF=GVL.mb_Input_Registers[4];
-	wToSupplyVoltage				REF=GVL.mb_Input_Registers[5];
-	wToGrossWeight					REF=GVL.mb_Input_Registers[6];
-	wToNetWeight					REF=GVL.mb_Input_Registers[7];
-	wToTareWeight					REF=GVL.mb_Input_Registers[8];
-	
-	(*Modbusマスターが読み書き可能	GVL.mb_Output_Registers*)
-	wFromCalibrationWeight			REF=GVL.mb_Output_Registers[0];
-	wFromXAxisJogTarget				REF=GVL.mb_Output_Registers[16];
-	wFromYAxisJogTarget				REF=GVL.mb_Output_Registers[17];
-	wFromZAxisJogTarget				REF=GVL.mb_Output_Registers[18];
-	wFromGripperJogTarget			REF=GVL.mb_Output_Registers[19];
 	
 	//初期化後TRUEへ
-	bInit:=TRUE;]]></ST>
+	bInit:=TRUE;
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="General_LoadCell" Id="{73b2e210-cf8b-4425-9417-ec5486720479}">
@@ -659,11 +735,97 @@ END_VAR
     </Method>
     <Method Name="General_MachineManagement" Id="{e4607e6b-531b-4c3e-8e88-b2ed7fff2738}">
       <Declaration><![CDATA[METHOD General_MachineManagement
-]]></Declaration>
+VAR
+	i	:int;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[fbPcSafeOff.Reboot(bReboot:=bFromPcReboot);
+        <ST><![CDATA[//スイッチングハブ
+	bToSwitchingHubOk				:=bSwitchingHubOk;
+	
+//パワーサプライ
+	bToPowerSupplyOk				:=bPowerSupplyOk;
 
-fbPcSafeOff.Shutdown(bShutdown:=bFromPcShutdown);]]></ST>
+//サーキットプロテクター
+	fb787.GetAllState();	//CPのステータスを読み込みたいので、ステータスゲットのメソッド呼び出し
+	
+	//エラーとワーニングチェック
+	bToCPError			:=fb787.bError;
+	bToCPWarning		:=fb787.bWarning;
+	
+	//CPの入力電圧
+	uInputVoltage.rREAL	:=LREAL_TO_REAL(fb787.lrInputVoltage);
+	uToInputVoltage_L	:=uInputVoltage.wWORD[1];
+	uToInputVoltage_H	:=uInputVoltage.wWORD[2];
+	
+	//CPの設定電流値と現在電流値
+	FOR i := 1 TO 4 DO
+		uActualCurrent[i].rREAL			:=LREAL_TO_REAL(fb787.ActualCurrent(iChannel:=i));
+		uBreakerCurrentSetting[i].rREAL	:=LREAL_TO_REAL(fb787.BreakerCurrentSetting(iChannel:=i));
+	END_FOR
+		
+	uToActualCurrent1ch_L				:=uActualCurrent[1].wWORD[1];
+	uToActualCurrent1ch_H				:=uActualCurrent[1].wWORD[2];
+	uToActualCurrent2ch_L				:=uActualCurrent[2].wWORD[1];
+	uToActualCurrent2ch_H				:=uActualCurrent[2].wWORD[2];
+	uToActualCurrent3ch_L				:=uActualCurrent[3].wWORD[1];
+	uToActualCurrent3ch_H				:=uActualCurrent[3].wWORD[2];
+	uToActualCurrent4ch_L				:=uActualCurrent[4].wWORD[1];
+	uToActualCurrent4ch_H				:=uActualCurrent[4].wWORD[2];
+	uToBreakerCurrentSetting1ch_L		:=uBreakerCurrentSetting[1].wWORD[1];
+	uToBreakerCurrentSetting1ch_H		:=uBreakerCurrentSetting[1].wWORD[2];
+	uToBreakerCurrentSetting2ch_L		:=uBreakerCurrentSetting[2].wWORD[1];
+	uToBreakerCurrentSetting2ch_H		:=uBreakerCurrentSetting[2].wWORD[2];
+	uToBreakerCurrentSetting3ch_L		:=uBreakerCurrentSetting[3].wWORD[1];
+	uToBreakerCurrentSetting3ch_H		:=uBreakerCurrentSetting[3].wWORD[2];
+	uToBreakerCurrentSetting4ch_L		:=uBreakerCurrentSetting[4].wWORD[1];
+	uToBreakerCurrentSetting4ch_H		:=uBreakerCurrentSetting[4].wWORD[2];
+
+	
+//PCシャットダウン、リブート
+	fbPcPowerManagement.Reboot(bReboot:=bFromPcReboot);
+	fbPcPowerManagement.Shutdown(bShutdown:=bFromPcShutdown);
+	fbPcPowerManagement.UPSControl(bPowerFailDetectReset:=bPowerFailDetectReset);
+	
+//FANコントロール
+	fbFanControl.AirFanOn();	//ファンを回したいのでONするメソッドを呼び出し
+	
+	//吸気温度をGOTへ
+	uInAirTemp.iINT					:=fbFanControl.iInAirTemp;
+	uToInAirTemp					:=uInAirTemp.wWORD;
+	
+	//排気温度をGOTへ
+	uOutAirTemp.iINT				:=fbFanControl.iOutAirTemp;
+	uToOutAirTemp					:=uOutAirTemp.wWORD;
+	
+	//吸気FAN SpeedをGOTへ
+	uInFanSpeed.rREAL				:=fbFanControl.rInFanSpeed;
+	uToInFanSpeed_L					:=uInFanSpeed.wWORD[1];
+	uToInFanSpeed_H					:=uInFanSpeed.wWORD[2];
+	
+	//排気FAN SpeedをGOTへ
+	uOutFanSpeed.rREAL				:=fbFanControl.rOutFanSpeed;
+	uToOutFanSpeed_L				:=uOutFanSpeed.wWORD[1];
+	uToOutFanSpeed_H				:=uOutFanSpeed.wWORD[2];
+	
+	//マニュアルFAN Speed設定をGOTより読み取り
+	uManualFanSpeed.wWORD			:=uFromManualFanSpeed;
+	fbFanControl.uiManualFanSpeed	:=uManualFanSpeed.uiUINT;
+	
+	fbFanControl.bManualFanSpeed	:=bFromManualFanSpeed;
+	
+	//ファン回転数比例制御設定をGOTより読み取り
+	uMaxTemp.wWORD[1]				:=uFromMaxTemp_L;
+	uMaxTemp.wWORD[2]				:=uFromMaxTemp_H;
+	fbFanControl.rMaxTemp			:=uMaxTemp.rREAL;
+	
+	uMinTemp.wWORD[1]				:=uFromMinTemp_L;
+	uMinTemp.wWORD[2]				:=uFromMinTemp_H;
+	fbFanControl.rMinTemp			:=uMinTemp.rREAL;
+
+
+	
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="General_MitsubishiCom" Id="{87685c7c-3a1c-4d99-a4e3-28b58bb9d658}">
@@ -671,58 +833,63 @@ fbPcSafeOff.Shutdown(bShutdown:=bFromPcShutdown);]]></ST>
       <Implementation>
         <ST><![CDATA[//---GVLのModbus TCPの変数をGVL_Mitsubishiの変数に書き込み---
 	//---アラームここから---
-	GVL.mb_Input_Coils[104]			:=fbAlarmSafetyNotRun.bRaised;
-	GVL.mb_Input_Coils[105]			:=fbAlarmSafetyFbError.bRaised;
-	GVL.mb_Input_Coils[106]			:=fbAlarmEmergencyStop.bRaised;
-	GVL.mb_Input_Coils[107]			:=fbAlarmXAxisMovingGripSwichNotOn.bRaised;
-	GVL.mb_Input_Coils[108]			:=fbAlarmYAxisMovingGripSwichNotOn.bRaised;
-	GVL.mb_Input_Coils[109]			:=fbAlarmZAxisMovingGripSwichNotOn.bRaised;
-	GVL.mb_Input_Coils[110]			:=fbAlarmGripperMovingGripSwichNotOn.bRaised;
-	GVL.mb_Input_Coils[111]			:=fbAlarmMITSUBISHIError.bRaised;
-	GVL.mb_Input_Coils[112]			:=fbAlarmXAxisError.bRaised;
-	GVL.mb_Input_Coils[113]			:=fbAlarmYAxisError.bRaised;
-	GVL.mb_Input_Coils[114]			:=fbAlarmZAxisError.bRaised;
-	GVL.mb_Input_Coils[115]			:=fbAlarmGripperError.bRaised;
-	GVL.mb_Input_Coils[116]			:=fbAlarmEtherCATError.bRaised;
-	GVL.mb_Input_Coils[117]			:=fbAlarmTerminalError.bRaised;
-	GVL.mb_Input_Coils[118]			:=fbAlarmParsistentDataInit.bRaised;
-	GVL.mb_Input_Coils[119]			:=fbAlarmPersistentDataLoadFault.bRaised;
-	GVL.mb_Input_Coils[120]			:=fbAlarmOldPersistentDataLoad.bRaised;
-	GVL.mb_Input_Coils[121]			:=fbAlarmPersistentDataWriteError.bRaised;
-	GVL.mb_Input_Coils[122]			:=fbAlarmCycleTimeExceeded.bRaised;
+	GVL.mb_Input_Coils[50]			:=fbAlarmSafetyNotRun.bRaised;
+	GVL.mb_Input_Coils[51]			:=fbAlarmSafetyFbError.bRaised;
+	GVL.mb_Input_Coils[52]			:=fbAlarmEmergencyStop.bRaised;
+	GVL.mb_Input_Coils[53]			:=fbAlarmXAxisMovingGripSwichNotOn.bRaised;
+	GVL.mb_Input_Coils[54]			:=fbAlarmYAxisMovingGripSwichNotOn.bRaised;
+	GVL.mb_Input_Coils[55]			:=fbAlarmZAxisMovingGripSwichNotOn.bRaised;
+	GVL.mb_Input_Coils[56]			:=fbAlarmGripperMovingGripSwichNotOn.bRaised;
+	GVL.mb_Input_Coils[57]			:=fbAlarmMITSUBISHIError.bRaised;
+	GVL.mb_Input_Coils[58]			:=fbAlarmXAxisError.bRaised;
+	GVL.mb_Input_Coils[59]			:=fbAlarmYAxisError.bRaised;
+	GVL.mb_Input_Coils[60]			:=fbAlarmZAxisError.bRaised;
+	GVL.mb_Input_Coils[61]			:=fbAlarmGripperError.bRaised;
+	GVL.mb_Input_Coils[62]			:=fbAlarmEtherCATError.bRaised;
+	GVL.mb_Input_Coils[63]			:=fbAlarmTerminalError.bRaised;
+	GVL.mb_Input_Coils[64]			:=fbAlarmParsistentDataInit.bRaised;
+	GVL.mb_Input_Coils[65]			:=fbAlarmPersistentDataLoadFault.bRaised;
+	GVL.mb_Input_Coils[66]			:=fbAlarmOldPersistentDataLoad.bRaised;
+	GVL.mb_Input_Coils[67]			:=fbAlarmPersistentDataWriteError.bRaised;
+	GVL.mb_Input_Coils[68]			:=fbAlarmCycleTimeExceeded.bRaised;
 	//---アラームここまで---
 
 
 
 //-----三菱へ出力-----
-	bTwinCATModbusStart:=TRUE;
-	bTwinCATRun:=TRUE;
+	wToIOSignal.6:=bGripSwich;		//グリップスイッチLED用
 	
-	bQX004:=TRUE;	//未使用だけどONしないとアラーム発報してしまうからTRUE
+	bToTwinCATRun:=TRUE;			//TwinCAT runをGOTへ
 	
-	IF fbMachineState.eMachineState < E_MachineState.Stay THEN
-		bTwinCATAlarm:=FALSE;
-	ELSE
-		bTwinCATAlarm:=TRUE;
+	//アラーム状態出力
+	IF fbMachineState.eMachineState=E_MachineState.Critical THEN
+		bToAlarmRaise:=TRUE;
+	ELSIF fbMachineState.eMachineState=E_MachineState.Error THEN
+		bToAlarmRaise:=TRUE;
+	ELSIF fbMachineState.eMachineState=E_MachineState.Warning THEN
+		bToAlarmRaise:=TRUE;
+	ELSIF fbMachineState.eMachineState=E_MachineState.Stay THEN
+		bToAlarmRaise:=FALSE;
+	ELSIF fbMachineState.eMachineState=E_MachineState.Stop THEN
+		bToAlarmRaise:=FALSE;
+	ELSIF fbMachineState.eMachineState=E_MachineState.Moving THEN
+		bToAlarmRaise:=FALSE;
 	END_IF
 
-//---三菱より入力---
-	IF bMitsubishiRun=FALSE THEN
-		RETURN;
-	ELSIF bMitsubishiModbusStart=FALSE THEN
-		RETURN;
-	END_IF
 
-//-----カメラシャッター応答-----
-	GVL.bAutoCameraTriger:=bFromCameraTrigger;
-	bToCameraSoftWareTrigger:=bFromCameraTrigger;
+	
+
+//-----カメラシャッター-----
+	GVL.bAutoCameraTriger:=bCameraTrigger;
 
 //-----アラームリセット応答-----
-	bToAlarmReset:=bFromAlarmReset;
+	bToAlarmReset:=bAlarmReset;
 
 //-----セーフティー非常停止リセット応答-----
-	bToSafetyReset:=bFromSafetyReset;
-]]></ST>
+	bToSafetyReset:=bSafetyReset;
+
+//-----ブザー停止応答-----
+	bToBuzzerStop:=bBuzzerStop;]]></ST>
       </Implementation>
     </Method>
     <Method Name="General_Safety" Id="{e816aed5-3245-4485-bfd2-ded282c259e8}">
@@ -732,19 +899,22 @@ fbPcSafeOff.Shutdown(bShutdown:=bFromPcShutdown);]]></ST>
 	bSafetyRun_Stop:=TRUE;
 	
 	//---非常停止の電源ONを反転してセーフティーのEDMへ---
-	bFbEStopEDM:= NOT bFbEstopOutput;
+	bFbEStopEDM:= NOT bEstopOutput;
 	
 	//---GOTからの非常停止リセットをセーフティーへ---
-	bFbEStopReset:=bFromSafetyReset;
+	bFbEStopReset:=bSafetyReset;
 	
 	//---GOTからの非常停止リセットでセフティーエラーもリセットする---
-	bSafetyErrAck:=bFromSafetyReset;]]></ST>
+	bSafetyErrAck:=bSafetyReset;
+	
+	//---EL2911からのインプットトグルをセーフティーへ---
+	bInputToggleOut:=bEL2911InputToggle;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Operating_Homing" Id="{30476169-4805-46f3-9ce9-7bd70a951fc1}">
       <Declaration><![CDATA[METHOD Operating_Homing]]></Declaration>
       <Implementation>
-        <ST><![CDATA[	IF bFromMcMoveHomeOn=TRUE THEN
+        <ST><![CDATA[	IF bMcMoveHomeOn=TRUE THEN
 		bHomingStart[E_Axis.X_Axis]:=TRUE;
 		bHomingStart[E_Axis.Y_Axis]:=TRUE;
 		bHomingStart[E_Axis.Z_Axis]:=TRUE;
@@ -1641,7 +1811,8 @@ END_CASE;]]></ST>
       <LineId Id="131" Count="6" />
       <LineId Id="189" Count="0" />
       <LineId Id="138" Count="2" />
-      <LineId Id="144" Count="3" />
+      <LineId Id="193" Count="1" />
+      <LineId Id="145" Count="2" />
       <LineId Id="152" Count="0" />
       <LineId Id="154" Count="1" />
       <LineId Id="157" Count="0" />
@@ -1650,9 +1821,15 @@ END_CASE;]]></ST>
       <LineId Id="188" Count="0" />
       <LineId Id="173" Count="2" />
       <LineId Id="177" Count="0" />
+      <LineId Id="198" Count="1" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="205" Count="1" />
+      <LineId Id="201" Count="2" />
+      <LineId Id="200" Count="0" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Alarm">
-      <LineId Id="128" Count="9" />
+      <LineId Id="128" Count="8" />
+      <LineId Id="257" Count="1" />
       <LineId Id="139" Count="48" />
       <LineId Id="255" Count="0" />
       <LineId Id="189" Count="64" />
@@ -1669,32 +1846,65 @@ END_CASE;]]></ST>
       <LineId Id="85" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="90" Count="2" />
-      <LineId Id="69" Count="15" />
-      <LineId Id="63" Count="0" />
+      <LineId Id="69" Count="12" />
+      <LineId Id="94" Count="3" />
+      <LineId Id="119" Count="2" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="113" Count="5" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Diagnosis">
       <LineId Id="55" Count="0" />
       <LineId Id="53" Count="1" />
-      <LineId Id="1" Count="51" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="2" Count="3" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="61" Count="7" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="22" Count="30" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Init">
-      <LineId Id="1" Count="33" />
-      <LineId Id="79" Count="1" />
-      <LineId Id="35" Count="43" />
+      <LineId Id="269" Count="1" />
+      <LineId Id="260" Count="1" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="265" Count="0" />
+      <LineId Id="227" Count="2" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="258" Count="1" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_LoadCell">
       <LineId Id="1" Count="17" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_MachineManagement">
-      <LineId Id="1" Count="2" />
+      <LineId Id="139" Count="85" />
+      <LineId Id="36" Count="0" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_MitsubishiCom">
-      <LineId Id="1" Count="44" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="46" Count="7" />
+      <LineId Id="76" Count="43" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="122" Count="2" />
+      <LineId Id="126" Count="5" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="53" Count="0" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Safety">
-      <LineId Id="1" Count="10" />
+      <LineId Id="1" Count="11" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.Operating_Homing">
       <LineId Id="80" Count="1" />

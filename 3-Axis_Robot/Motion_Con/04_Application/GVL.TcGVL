@@ -1,14 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <GVL Name="GVL" Id="{c4a012fd-1931-4ffe-914c-5d1b04b3e29f}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 //---Modbus TCPの変数---
-	mb_Input_Coils    		:ARRAY [0..255] OF BOOL;			//Modbusマスター読み取りのみ
-	mb_Output_Coils 		:ARRAY [0..255] OF BOOL;			//Modbusマスターが読み書き可能
-	mb_Input_Registers 		:ARRAY [0..255] OF WORD;			//Modbusマスター読み取りのみ
-	mb_Output_Registers 	:ARRAY [0..255] OF WORD;			//Modbusマスターが読み書き可能
-	
+	mb_Input_Coils    		:ARRAY [0..65535] OF BOOL;			//Modbusマスター読み取りのみ
+	mb_Output_Coils 		:ARRAY [0..65535] OF BOOL;			//Modbusマスターが読み書き可能
+	mb_Input_Registers 		:ARRAY [0..65535] OF WORD;			//Modbusマスター読み取りのみ
+	mb_Output_Registers 	:ARRAY [0..65535] OF WORD;			//Modbusマスターが読み書き可能
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	bLedLight		AT %Q*	:BOOL;								//カメラ用LED照明 ターミナル3(EL2004)チャンネル1
 	
 	bAutoCameraTriger		:BOOL;								//カメラのトリガー

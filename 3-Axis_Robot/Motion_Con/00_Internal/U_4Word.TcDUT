@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="U_4Word" Id="{0bd1800a-01fd-4c12-88ad-5d43b94806ca}">
+    <Declaration><![CDATA[TYPE U_4Word :
+UNION
+	lwLWORD		:LWORD;
+	liLINT		:LINT;
+	uliULINT	:ULINT;
+	lrLREAL		:LREAL;
+	ltLTIME		:LTIME;
+	
+	wWORD		:ARRAY[1..4] OF WORD;
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

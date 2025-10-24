@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="FB_1sUPS_CX81xx" Id="{5fee1a52-36ad-4634-b7aa-2b454d5b0cfc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_1sUPS_CX81xx IMPLEMENTS i1sUPS
+VAR
+	fb1sUps		:FB_S_UPS_CX81xx;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="bPowerFailDetect" Id="{145ccd25-65a1-4329-bcc9-4c0ba64c1f1c}">
+      <Declaration><![CDATA[PROPERTY bPowerFailDetect : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{7f60a16f-a5d0-4748-9ce6-2f4a0fbc7355}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bPowerFailDetect:=fb1sUps.bPowerFailDetect;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="eUpsState" Id="{44ce7aae-7277-4290-a71c-cc16f8727397}">
+      <Declaration><![CDATA[PROPERTY eUpsState : E_S_UPS_State
+]]></Declaration>
+      <Get Name="Get" Id="{157c05f2-a0e1-4c99-b63c-3c114dc89b9a}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[eUpsState := fb1sUps.eState;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="UPSCall" Id="{499423f5-7cc8-4342-b4d5-98136fb34e33}">
+      <Declaration><![CDATA[METHOD UPSCall
+VAR_INPUT
+	(*PC AMS Net ID*)
+	PcAmsNetId	: AMSNETID;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fb1sUps(sNetID				:=F_CreateAmsNetId(PcAmsNetId),
+		iPLCPort			:=_AppInfo.AdsPort,
+		tTimeout			:=DEFAULT_ADS_TIMEOUT,
+		eUpsMode			:=E_S_UPS_Mode.eSUPS_WrPersistData_Shutdown,
+		ePersistentMode		:=E_PersistentMode.SPDM_2PASS,
+		tRecoverTime		:=T#10S,
+		bPowerFailDetect	=>,
+		eState				=>
+		);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_1sUPS_CX81xx">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_1sUPS_CX81xx.bPowerFailDetect.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_1sUPS_CX81xx.eUpsState.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_1sUPS_CX81xx.UPSCall">
+      <LineId Id="1" Count="8" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

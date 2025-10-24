@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="FB_787" Id="{995882a1-3557-4671-a4fb-5a935cda0405}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_787 EXTENDS FB_IolStdVarSlave
+	VAR CONSTANT
+		//チャンネル数
+		iNumberChannel						:INT	:=4;
+	END_VAR
+	VAR	
+//---プロセスデータとリンク--
+		//インプットデータ
+		bOff						AT %I*	:BIT;
+		bTrippedCollective			AT %I*	:BIT;
+		bOver90						AT %I*	:BIT;
+		bOver100					AT %I*	:BIT;
+		bHardwareFuse				AT %I*	:BIT;
+		bLocalOff					AT %I*	:BIT;
+		bInputVoltageAlarm			AT %I*	:BIT;
+		ControlByteDump				AT %I*	:BYTE;
+		byPdByte3					AT %I*	:BYTE;
+		byPdByte4					AT %I*	:BYTE;
+		byPdByte5					AT %I*	:BYTE;
+		//アプトプットデータ
+		byChOnOffReset				AT %Q*	:BYTE:=0;
+		byControllByte				AT %Q*	:BYTE;
+		byValidByte					AT %Q*	:BYTE:=7;
+
+//---サーキットプロテクターの状態確認---
+		//負荷状態
+		bWarningOverloadOver90Percent		:ARRAY[1..iNumberChannel] OF BOOL;
+		bWarningOverloadOver100Percent		:ARRAY[1..iNumberChannel] OF BOOL;
+		//トリップ状態
+		bTripped							:ARRAY[1..iNumberChannel] OF BOOL;
+		bTrippedThermalRelease				:ARRAY[1..iNumberChannel] OF BOOL;
+		bTrippedHardwareError				:ARRAY[1..iNumberChannel] OF BOOL;
+		//スイッチ状態
+		bSwitchedOn							:ARRAY[1..iNumberChannel] OF BOOL;
+		bSwitchedOffLocal					:ARRAY[1..iNumberChannel] OF BOOL;
+		bSwitchedOffRemote					:ARRAY[1..iNumberChannel] OF BOOL;
+		//ブレーカー設定電流
+		lrBreakerCurrentSetting				:ARRAY[1..iNumberChannel] OF LREAL;
+		//ブレーカーローターリースイッチ設定
+		bBreakerRemoteControlSetting		:ARRAY[1..iNumberChannel] OF BOOL;
+		//ブレーカーへの入力電圧
+		_lrInputVoltage						:LREAL;
+		//電流値
+		lrActualCurrent						:ARRAY[1..iNumberChannel] OF LREAL;
+
+//---変数---
+		iGetStateStep						:INT;
+		_bError								:BOOL;
+		_bWarning							:BOOL;
+	END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+wagoの787-1664/0000-0080で使用するFBです。
+全ステータス取得のメソッド[GetAllState]をコールしないと、bErrorとbWarningのプロパティー以外は取得できません。
+
+初期化の際にIO-LinkマスターのAoE Net IDと接続先ポートナンバーとデバイス名を設定して下さい。
+この三項目を設定しないとFB_IolStdVarSlaveのメソッドが使えません。
+
+トリップ、ハードウェアエラー、入力電圧異常が発生した場合は、bErrorがTRUEになります。
+負荷が90%以上、100%以上のチャンネルがある場合は、bWarningがTRUEになります。
+
+各チャンネルのONとOFF、トリップ時のリセットは、ハードのボタンから実施して下さい。
+*)]]></ST>
+    </Implementation>
+    <Method Name="ActualCurrent" Id="{553df845-9041-41a0-9228-ca37b26b6587}">
+      <Declaration><![CDATA[METHOD ActualCurrent : LREAL
+VAR_INPUT
+	iChannel		:INT;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ActualCurrent:=lrActualCurrent[iChannel];]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="bError" Id="{1a358e4a-9bc9-485a-89da-ad49dc75f519}">
+      <Declaration><![CDATA[PROPERTY bError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{a4ffb09a-b08a-4bb1-8ecd-fd462184d9f8}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bError:=FALSE;
+
+IF bTrippedCollective=TRUE THEN
+	_bError:=TRUE;
+ELSIF bHardwareFuse=TRUE THEN
+	_bError:=TRUE;
+ELSIF bInputVoltageAlarm=TRUE THEN
+	_bError:=TRUE;
+END_IF
+
+bError:=_bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="BreakerCurrentSetting" Id="{41d92651-31e9-48b9-bfe0-df965b31220d}">
+      <Declaration><![CDATA[METHOD BreakerCurrentSetting : LREAL
+VAR_INPUT
+	iChannel		:INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[BreakerCurrentSetting:=lrBreakerCurrentSetting[iChannel];]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="bWarning" Id="{8ae43f3e-3445-4d33-9dd6-d698dd8729ef}">
+      <Declaration><![CDATA[PROPERTY bWarning : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e8026803-7ee7-4d25-9801-88cf2fab6681}">
+        <Declaration><![CDATA[VAR
+END_VAR]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_bWarning:=FALSE;
+
+IF bOver90=TRUE THEN
+	_bWarning:=TRUE;
+ELSIF bOver100=TRUE THEN
+	_bWarning:=TRUE;
+END_IF
+
+bWarning:=_bWarning;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ChannelState" Id="{436de512-7f05-4a41-8e37-aa4e41f83e5a}">
+      <Declaration><![CDATA[METHOD ChannelState: E_787Status
+VAR_INPUT
+	iChannel		:INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bTrippedHardwareError[iChannel]=TRUE THEN
+	ChannelState:=E_787Status.TrippedHardwareError;
+ELSIF bTripped[iChannel]=TRUE THEN
+	ChannelState:=E_787Status.Tripped;
+ELSIF bTrippedThermalRelease[iChannel]=TRUE THEN
+	ChannelState:=E_787Status.TrippedThermalRelease;
+ELSIF bWarningOverloadOver100Percent[iChannel]=TRUE THEN
+	ChannelState:=E_787Status.SwitchedOnOverloadOver100Percent;
+ELSIF bWarningOverloadOver90Percent[iChannel]=TRUE THEN
+	ChannelState:=E_787Status.SwitchedOnOverloadOver90Percent;
+ELSIF bSwitchedOn[iChannel]=TRUE THEN
+	ChannelState:=E_787Status.SwitchedOn;
+ELSIF bSwitchedOffLocal[iChannel]=TRUE OR bSwitchedOffRemote[iChannel]=TRUE THEN
+	ChannelState:=E_787Status.switchedOffLocalOrRemote;
+ELSE
+	ChannelState:=E_787Status.InitializationDevice;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{7e410fde-38c5-4b7f-9cdf-d418c5c47be1}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+	
+	MasterAoeNetId	:T_AmsNetID;
+	port			:E_IolPort;
+	Name			:STRING(255);
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^.MasterAoeNetId	:=MasterAoeNetId;
+SUPER^.Port				:=port;
+SUPER^.Name				:=Name;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetAllState" Id="{9ff98ed8-917d-4375-9bfb-f071b6b9592a}">
+      <Declaration><![CDATA[METHOD GetAllState
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE iGetStateStep OF
+	0:	iGetStateStep:=1;//ステイする必要が出来たら追加する
+	
+	1:	byControllByte:=1;
+		IF ControlByteDump = byControllByte THEN
+			bWarningOverloadOver100Percent[1]	:=byPdByte3.0;
+			bWarningOverloadOver100Percent[2]	:=byPdByte3.1;
+			bWarningOverloadOver100Percent[3]	:=byPdByte3.2;
+			bWarningOverloadOver100Percent[4]	:=byPdByte3.3;
+			
+			bTripped[1]							:=byPdByte4.0;
+			bTripped[2]							:=byPdByte4.1;
+			bTripped[3]							:=byPdByte4.2;
+			bTripped[4]							:=byPdByte4.3;
+			
+			bSwitchedOffLocal[1]				:=byPdByte5.0;
+			bSwitchedOffLocal[2]				:=byPdByte5.1;
+			bSwitchedOffLocal[3]				:=byPdByte5.2;
+			bSwitchedOffLocal[4]				:=byPdByte5.3;
+			
+			iGetStateStep:=3;
+		END_IF
+
+	3:	byControllByte:=3;
+		IF ControlByteDump = byControllByte THEN
+			bWarningOverloadOver90Percent[1]	:=byPdByte3.0;
+			bWarningOverloadOver90Percent[2]	:=byPdByte3.1;
+			bWarningOverloadOver90Percent[3]	:=byPdByte3.2;
+			bWarningOverloadOver90Percent[4]	:=byPdByte3.3;
+			
+			bTrippedHardwareError[1]			:=byPdByte4.0;
+			bTrippedHardwareError[2]			:=byPdByte4.1;
+			bTrippedHardwareError[3]			:=byPdByte4.2;
+			bTrippedHardwareError[4]			:=byPdByte4.3;
+			
+			_lrInputVoltage						:=(byPdByte5/10.0)+15;
+			
+			iGetStateStep:=6;
+		END_IF
+	
+	6:	byControllByte:=6;
+		IF ControlByteDump = byControllByte THEN
+			bSwitchedOffRemote[1]				:=byPdByte4.0;
+			bSwitchedOffRemote[2]				:=byPdByte4.1;
+			bSwitchedOffRemote[3]				:=byPdByte4.2;
+			bSwitchedOffRemote[4]				:=byPdByte4.3;
+			
+			iGetStateStep:=13;
+		END_IF
+	
+	13:	byControllByte:=13;
+		IF ControlByteDump = byControllByte THEN
+			bSwitchedOn[1]						:=byPdByte3.0;
+			bSwitchedOn[2]						:=byPdByte3.1;
+			bSwitchedOn[3]						:=byPdByte3.2;
+			bSwitchedOn[4]						:=byPdByte3.3;
+			
+			lrActualCurrent[1]					:=byPdByte4/10.0;
+			lrActualCurrent[2]					:=byPdByte5/10.0;
+			
+			iGetStateStep:=14;
+		END_IF
+	
+	14:	byControllByte:=14;
+		IF ControlByteDump = byControllByte THEN
+			lrActualCurrent[3]					:=byPdByte4/10.0;
+			lrActualCurrent[4]					:=byPdByte5/10.0;
+			
+			iGetStateStep:=17;
+		END_IF
+		
+	17:	byControllByte:=17;
+		IF ControlByteDump = byControllByte THEN
+			bTrippedThermalRelease[1]			:=byPdByte4.0;
+			bTrippedThermalRelease[2]			:=byPdByte4.1;
+			bTrippedThermalRelease[3]			:=byPdByte4.2;
+			bTrippedThermalRelease[4]			:=byPdByte4.3;
+		
+			iGetStateStep:=18;
+		END_IF
+
+	18:	byControllByte:=18;
+		IF ControlByteDump = byControllByte THEN
+			lrBreakerCurrentSetting[1]			:=byPdByte4/10.0;
+			lrBreakerCurrentSetting[2]			:=byPdByte5/10.0;
+			
+			iGetStateStep:=19;
+		END_IF
+
+	19:	byControllByte:=19;
+		IF ControlByteDump = byControllByte THEN
+			lrBreakerCurrentSetting[3]			:=byPdByte4/10.0;
+			lrBreakerCurrentSetting[4]			:=byPdByte5/10.0;
+		
+			iGetStateStep:=22;
+		END_IF
+		
+	22:	byControllByte:=22;
+		IF ControlByteDump = byControllByte THEN
+			bBreakerRemoteControlSetting[1]		:=byPdByte4.0;
+			bBreakerRemoteControlSetting[2]		:=byPdByte4.1;
+			bBreakerRemoteControlSetting[3]		:=byPdByte4.2;
+			bBreakerRemoteControlSetting[4]		:=byPdByte4.3;
+			
+			iGetStateStep:=0;
+		END_IF
+
+END_CASE
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="lrInputVoltage" Id="{6247d0e7-d008-4461-ae6c-f4b66ea39a51}">
+      <Declaration><![CDATA[PROPERTY lrInputVoltage : LREAL]]></Declaration>
+      <Get Name="Get" Id="{4fee15aa-8e7d-4b54-b205-702689da5ae4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[lrInputVoltage:=_lrInputVoltage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="FB_787">
+      <LineId Id="1" Count="11" />
+    </LineIds>
+    <LineIds Name="FB_787.ActualCurrent">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_787.bError.Get">
+      <LineId Id="1" Count="10" />
+    </LineIds>
+    <LineIds Name="FB_787.BreakerCurrentSetting">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_787.bWarning.Get">
+      <LineId Id="1" Count="8" />
+    </LineIds>
+    <LineIds Name="FB_787.ChannelState">
+      <LineId Id="1" Count="16" />
+    </LineIds>
+    <LineIds Name="FB_787.FB_Init">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_787.GetAllState">
+      <LineId Id="1" Count="111" />
+    </LineIds>
+    <LineIds Name="FB_787.lrInputVoltage.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

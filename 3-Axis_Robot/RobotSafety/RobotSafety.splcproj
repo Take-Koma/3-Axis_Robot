@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Crc="3879832925" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project Crc="2227830869" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
@@ -16,7 +16,7 @@
     <IntProjName>RobotSafety</IntProjName>
     <IsNewCreated>false</IsNewCreated>
     <SPlcProjVersion>1.8.0.0</SPlcProjVersion>
-    <NextSdsId>24</NextSdsId>
+    <NextSdsId>27</NextSdsId>
     <DocuEditor>takes</DocuEditor>
     <PlotDate>2025-02-08</PlotDate>
     <CompanyName>Beckhoff Automation GmbH &amp; Co. KG</CompanyName>
@@ -36,12 +36,15 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="RobotSafety\Alias Devices\bFbEStopEDM.sds" />
-    <None Include="RobotSafety\Alias Devices\bFbEStopReset.sds" />
-    <None Include="RobotSafety\Alias Devices\bFbEdmError.sds" />
-    <None Include="RobotSafety\Alias Devices\bFbEstopError.sds" />
-    <None Include="RobotSafety\Alias Devices\bSafetyInRun.sds" />
-    <None Include="RobotSafety\Alias Devices\ターミナル 7 %28EL2911%29 - Module 1 %28FSOE%29.sds" />
+    <None Include="RobotSafety\Alias Devices\FSoE\ターミナル 7 %28EL2911%29 - Module 1 %28FSOE%29.sds" />
+    <None Include="RobotSafety\Alias Devices\StandardData\FromSafetyPLC\oFbEdmError.sds" />
+    <None Include="RobotSafety\Alias Devices\StandardData\FromSafetyPLC\oFbEstopError.sds" />
+    <None Include="RobotSafety\Alias Devices\StandardData\FromSafetyPLC\oInRun.sds" />
+    <None Include="RobotSafety\Alias Devices\StandardData\ToSafetyPLC\iEL2911InputToggle.sds" />
+    <None Include="RobotSafety\Alias Devices\StandardData\ToSafetyPLC\iEStopEDM.sds" />
+    <None Include="RobotSafety\Alias Devices\StandardData\ToSafetyPLC\iFbEStopReset.sds" />
+    <None Include="RobotSafety\Alias Devices\StandardData\ToSafetyPLC\iSafetyErrAck.sds" />
+    <None Include="RobotSafety\Alias Devices\StandardData\ToSafetyPLC\iSafetyRun_Stop.sds" />
     <None Include="RobotSafety\RobotSafety.sal" />
     <None Include="RobotSafety\RobotSafety.sal.diagram">
       <DependentUpon>RobotSafety\RobotSafety.sal</DependentUpon>
@@ -50,14 +53,31 @@
     <None Include="TargetSystemConfig.xml">
       <Visible>false</Visible>
     </None>
+    <None Include="User FBs\AlwaysTrue.ufb" />
+    <None Include="User FBs\AlwaysTrue.ufb.diagram">
+      <Visible>false</Visible>
+      <DependentUpon>User FBs\AlwaysTrue.ufb</DependentUpon>
+    </None>
+    <None Include="User FBs\NoEstop.ufb" />
+    <None Include="User FBs\NoEstop.ufb.diagram">
+      <Visible>false</Visible>
+      <DependentUpon>User FBs\NoEstop.ufb</DependentUpon>
+    </None>
+    <None Include="User FBs\Watchdog100ms.ufb" />
+    <None Include="User FBs\Watchdog100ms.ufb.diagram">
+      <Visible>false</Visible>
+      <DependentUpon>User FBs\Watchdog100ms.ufb</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GVLs" />
     <Folder Include="RobotSafety" />
     <Folder Include="RobotSafety\Alias Devices" />
+    <Folder Include="RobotSafety\Alias Devices\FSoE" />
+    <Folder Include="RobotSafety\Alias Devices\StandardData" />
+    <Folder Include="RobotSafety\Alias Devices\StandardData\FromSafetyPLC" />
+    <Folder Include="RobotSafety\Alias Devices\StandardData\ToSafetyPLC" />
     <Folder Include="User FBs" />
-    <None Include="RobotSafety\Alias Devices\bSafetyErrAck.sds" />
-    <None Include="RobotSafety\Alias Devices\bSafetyRun_Stop.sds" />
   </ItemGroup>
   <ProjectExtensions>
     <DocumentationProperty>

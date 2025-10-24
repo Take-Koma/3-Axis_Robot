@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="E_787Status" Id="{e7756522-6330-45fd-b2b5-c0c9ee552a9a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_787Status :
+(
+	InitializationDevice				:=0,	//Status0
+	SwitchedOn							:=1,	//Status1
+	SwitchedOnOverloadOver90Percent		:=2,	//Status2
+	SwitchedOnOverloadOver100Percent	:=3,	//Status3
+	switchedOffLocalOrRemote			:=4,	//Status4
+	TrippedThermalRelease				:=5,	//Status5
+	Tripped								:=6,	//Status6
+	TrippedHardwareError				:=7		//Status7
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

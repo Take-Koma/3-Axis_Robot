@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <Itf Name="I_Patlite" Id="{8503a6b5-cfb3-4e34-822b-289fe1aa92eb}">
+    <Declaration><![CDATA[INTERFACE I_Patlite
+]]></Declaration>
+    <Property Name="bBuzzerStop" Id="{debee066-b477-418b-8539-daba95734d85}">
+      <Declaration><![CDATA[PROPERTY bBuzzerStop : BOOL]]></Declaration>
+      <Set Name="Set" Id="{1a1894ce-67b4-42a8-866f-3f50341604eb}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="eMachineState" Id="{6420d867-462d-4471-98d3-951b3d1ec600}">
+      <Declaration><![CDATA[PROPERTY eMachineState : E_MachineState]]></Declaration>
+      <Set Name="Set" Id="{707c826a-b2b1-4cc7-9e79-2bfe47087be7}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
   <POU Name="P_Vision" Id="{01db0ff9-afb1-4980-a0cc-1cc5a7f8bb47}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Vision
 VAR
@@ -119,8 +119,8 @@ TCVN_CS_ACQUIRING:
 	6:
 		// ブロブ検出パラメータをセット
 		stBlobParams.bFilterByArea := TRUE;
-		stBlobParams.fMinArea := 30000;
-		stBlobParams.fMaxArea := 60000;
+		stBlobParams.fMinArea := 1200;
+		stBlobParams.fMaxArea := 2500;
 		
 		// 円形度判別
 		stBlobParams.bFilterByCircularity := TRUE;
@@ -182,15 +182,15 @@ TCVN_CS_ACQUIRING:
 				hrTemp := F_VN_PutText(	sText, 
 										ipImageRes, 
 										aDrawPos[0] - 50, aDrawPos[1] + 20, 
-										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, aColorRed, 0);
+										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 0.5, aColorRed, 0);
 				
 				// 座標情報を結果画像に対して出力
 				fbFormatString(	sFormat := '(X, Y) = (%0.3f, %0.3f)', 
 								arg1 := F_LREAL(GVL.aMassCenter[iImageCount][0]), arg2 := F_LREAL(GVL.aMassCenter[iImageCount][1]), sOut => sText);
 				hrTemp := F_VN_PutText(	sText, 
 										ipImageRes, 
-										aDrawPos[0] - 110, aDrawPos[1] + 80, 
-										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 1.5, aColorRed, 0);
+										aDrawPos[0] - 110, aDrawPos[1] + 40, 
+										ETcVnFontType.TCVN_FT_HERSHEY_TRIPLEX, 0.5, aColorRed, 0);
 			END_WHILE
 			
 			FW_SafeRelease(ADR(ipContour));		// ループの外で開放するほうが効率的なので、ここで開放する

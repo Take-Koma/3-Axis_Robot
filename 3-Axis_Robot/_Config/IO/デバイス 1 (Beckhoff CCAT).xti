@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.16" ClassName="CDeviceDef" SubType="124">
+	<Device Id="1" DevType="124" DevFlags="#x0004">
+		<Name>__FILENAME__</Name>
+		<ImageId>230</ImageId>
+		<AddressInfo>
+			<Pci>
+				<Address>-251658240</Address>
+				<Size>16777216</Size>
+				<BusNo>3</BusNo>
+				<SlotNo>0</SlotNo>
+				<VendorId>5612</VendorId>
+				<DeviceId>20480</DeviceId>
+				<Dma>
+					<Offset>4096</Offset>
+					<Size>16777216</Size>
+					<BaseAddr>2</BaseAddr>
+				</Dma>
+			</Pci>
+		</AddressInfo>
+		<CCat>
+			<Slot Id="#x03010011">
+				<Name>Slot 1 (MAC-DMA)</Name>
+				<ImageId>231</ImageId>
+				<CCatSlot SlotType="15001100030200000000010000400000" SlotData="00000000000000000001059e04ab0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" SlotName="Slot 1 (MAC-DMA)" Ports="1" MacOids="1200010300000000000000000000000000000000000000000000000000000000" SlotNo="1"/>
+			</Slot>
+			<Slot Id="#x03010012">
+				<Name>Slot 2 (MAC-DMA)</Name>
+				<ImageId>231</ImageId>
+				<CCatSlot SlotType="15001100050400000000030000400000" SlotData="00000000000000000001059e04ac0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" SlotName="Slot 2 (MAC-DMA)" Ports="1" MacOids="1300010300000000000000000000000000000000000000000000000000000000" SlotNo="2"/>
+			</Slot>
+			<Slot Id="#x03010014">
+				<Name>Slot 5 (GPIO)</Name>
+				<ImageId>231</ImageId>
+				<CCatSlot SlotType="0d000000150000000003000020000000" SlotName="Slot 5 (GPIO)" SlotNo="5"/>
+			</Slot>
+			<Slot Id="#x03010015">
+				<Name>Slot 6 (System Time)</Name>
+				<ImageId>231</ImageId>
+				<CCatSlot SlotType="10000000000000000004000080000000" SlotName="Slot 6 (System Time)" MacOids="1600010300000000000000000000000000000000000000000000000000000000" SlotNo="6"/>
+			</Slot>
+			<Slot Id="#x03010017">
+				<Name>Slot 10 (EPSC_PROM)</Name>
+				<ImageId>231</ImageId>
+				<CCatSlot SlotType="0f000000000000000008000000080000" SlotName="Slot 10 (EPSC_PROM)" SlotNo="10"/>
+			</Slot>
+			<Slot Id="#x03010018">
+				<Name>Slot 11 (EEPROM)</Name>
+				<ImageId>231</ImageId>
+				<CCatSlot SlotType="12000000000000000002000080000000" SlotName="Slot 11 (EEPROM)" SlotNo="11"/>
+			</Slot>
+			<Slot Id="#x03010019">
+				<Name>Slot 13 (SRAM)</Name>
+				<ImageId>231</ImageId>
+				<CCatSlot SlotType="16000000000000000000100000001000" SlotName="Slot 13 (SRAM)" SlotNo="13"/>
+			</Slot>
+		</CCat>
+	</Device>
+</TcSmItem>

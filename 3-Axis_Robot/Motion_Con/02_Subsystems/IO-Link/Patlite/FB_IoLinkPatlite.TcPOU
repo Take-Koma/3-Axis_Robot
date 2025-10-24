@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <POU Name="FB_IoLinkPatlite" Id="{4e9b2e93-da1e-4356-8935-86acc05a1acf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_IoLinkPatlite EXTENDS FB_IolStdVarSlave IMPLEMENTS I_Patlite
+VAR
+	bBuzzerON			AT %Q*	:BOOL;					//ブザー出力
+	bRedTier			AT %Q*	:BOOL;					//RedLED出力
+	bYellowTier			AT %Q*	:BOOL;					//YellowLED出力
+	bGreenTier			AT %Q*	:BOOL;					//GreenLED出力
+	bBlueTier			AT %Q*	:BOOL;					//BlueLED出力
+	bWhiteTier			AT %Q*	:BOOL;					//WhiteLED出力
+	
+	bBuzzerFlag					:BOOL;					//ブザー停止記憶
+	
+	fbStartupBuzzerREdge		:R_TRIG;
+	
+	hr							:HRESULT;
+	fbhrTon						:ton:=(PT:=T#1S);
+	
+	usiLedPattern				:USINT;
+	usiBuzzerPattern			:USINT;
+
+	iStep						:INT;
+	ePrevMachineState			:E_MachineState;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+パトライトのLB6-20ILWCBW用FB
+
+初期化の際にIO-LinkマスターのAoE Net IDと接続先ポートナンバーとデバイス名を設定して下さい。
+この三項目を設定しないとFB_IolStdVarSlaveのメソッドが使えません。
+
+*)]]></ST>
+    </Implementation>
+    <Property Name="bBuzzerStop" Id="{fba2f8e5-1b13-4c90-b931-e83614d5b6be}">
+      <Declaration><![CDATA[PROPERTY bBuzzerStop : BOOL]]></Declaration>
+      <Set Name="Set" Id="{342385f4-e76c-4fe7-9b79-e4d8db2af8e1}">
+        <Declaration><![CDATA[]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[//---スイッチが押されたらブザー停止---
+	IF bBuzzerStop=TRUE THEN
+		bBuzzerON:=FALSE;
+		bBuzzerFlag:=TRUE;
+	END_IF]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="bStartupBuzzer" Id="{a03f1a37-4527-46a0-b6fa-c76e060636d0}">
+      <Declaration><![CDATA[PROPERTY bStartupBuzzer : BOOL
+]]></Declaration>
+      <Set Name="Set" Id="{7e1b0de0-7d42-4a70-9873-d93682e5d278}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[fbStartupBuzzerREdge(CLK:=bStartupBuzzer);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="eMachineState" Id="{b8041fad-c182-4001-b77a-fee831d6da20}">
+      <Declaration><![CDATA[PROPERTY eMachineState : E_MachineState]]></Declaration>
+      <Set Name="Set" Id="{fb29542b-6c65-4365-80f4-1f4495a514f0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
+
+	IF ePrevMachineState<>eMachineState THEN
+		iStep:=0;
+		bBuzzerON:=FALSE;
+		bBuzzerFlag:=FALSE;
+		ePrevMachineState:=eMachineState;
+	END_IF
+
+	CASE eMachineState OF
+		
+		E_MachineState.Critical:
+			IF bBuzzerFlag=FALSE THEN
+				bBuzzerON:=TRUE;
+			END_IF
+		
+			bRedTier			:=TRUE;
+			bYellowTier			:=FALSE;
+			bGreenTier			:=FALSE;
+			bBlueTier			:=TRUE;
+			bWhiteTier			:=FALSE;
+			
+			usiBuzzerPattern	:=3;		//高低音（ピポピポ）
+		
+		E_MachineState.Error:
+			IF bBuzzerFlag=FALSE THEN
+				bBuzzerON:=TRUE;
+			END_IF
+		
+			bRedTier			:=TRUE;
+			bYellowTier			:=FALSE;
+			bGreenTier			:=FALSE;
+			bBlueTier			:=FALSE;
+			bWhiteTier			:=FALSE;
+
+			usiBuzzerPattern	:=3;		//高低音（ピポピポ）
+
+		E_MachineState.Warning:
+			IF bBuzzerFlag=FALSE THEN
+				bBuzzerON:=TRUE;
+			END_IF
+		
+			bRedTier			:=FALSE;
+			bYellowTier			:=TRUE;
+			bGreenTier			:=FALSE;
+			bBlueTier			:=FALSE;
+			bWhiteTier			:=FALSE;
+
+			usiBuzzerPattern	:=3;		//高低音（ピポピポ）
+			
+		E_MachineState.Stay:
+			bRedTier			:=FALSE;
+			bYellowTier			:=FALSE;
+			bGreenTier			:=FALSE;
+			bBlueTier			:=FALSE;
+			bWhiteTier			:=TRUE;
+		
+		E_MachineState.Stop:
+			bRedTier			:=FALSE;
+			bYellowTier			:=FALSE;
+			bGreenTier			:=TRUE;
+			bBlueTier			:=FALSE;
+			bWhiteTier			:=FALSE;
+		
+			usiLedPattern		:=12;		//グラデーション点滅　低速　30回/分
+			
+			usiBuzzerPattern	:=8;		//スイープ音（ヒューン）500ms ON / 500ms OFF
+			
+			IF fbStartupBuzzerREdge.Q=TRUE THEN
+				bBuzzerON:=TRUE;
+				bBuzzerFlag:=FALSE;
+			ELSIF fbStartupBuzzerREdge.CLK=FALSE THEN
+				bBuzzerON:=FALSE;
+			END_IF
+	
+		E_MachineState.Moving:
+			bRedTier			:=FALSE;
+			bYellowTier			:=FALSE;
+			bGreenTier			:=TRUE;
+			bBlueTier			:=FALSE;
+			bWhiteTier			:=FALSE;
+			
+			usiLedPattern		:=0;		//点灯
+
+	
+	END_CASE;
+	
+	//---パラメーターを書き換え---
+	
+	fbhrTon(IN:= hr=16#203);
+	IF fbhrTon.Q THEN
+		iStep:=iStep +1;
+	END_IF
+	
+	CASE iStep OF
+		0:
+			hr:=SUPER^.Write_UINT8(	nIndex		:=16#07DF,	//Tier Pattern
+									nSubindex	:=16#03,
+									nData		:=usiLedPattern);					
+	
+			IF NOT F_IolIsBusy(hr) THEN
+					iStep:=1;
+			 END_IF
+		
+		1:
+			hr:=SUPER^.Write_UINT8(	nIndex		:=16#07EE,	//Buzzer Pattern
+									nSubindex	:=16#00,
+									nData		:=usiBuzzerPattern);					
+	
+			IF NOT F_IolIsBusy(hr) THEN
+					iStep:=2;
+			 END_IF
+		
+		2:
+			(*NA*)
+
+	END_CASE
+
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_Init" Id="{2606a8d6-f628-4022-8b12-3c6446bb2570}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+	
+	MasterAoeNetId	:T_AmsNetID;
+	port			:E_IolPort;
+	Name			:STRING(255);
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SUPER^.MasterAoeNetId	:=MasterAoeNetId;
+SUPER^.Port				:=port;
+SUPER^.Name				:=Name;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_IoLinkPatlite">
+      <LineId Id="1" Count="6" />
+    </LineIds>
+    <LineIds Name="FB_IoLinkPatlite.bBuzzerStop.Set">
+      <LineId Id="1" Count="4" />
+    </LineIds>
+    <LineIds Name="FB_IoLinkPatlite.bStartupBuzzer.Set">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_IoLinkPatlite.eMachineState.Set">
+      <LineId Id="1" Count="87" />
+      <LineId Id="115" Count="4" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="89" Count="24" />
+    </LineIds>
+    <LineIds Name="FB_IoLinkPatlite.FB_Init">
+      <LineId Id="1" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

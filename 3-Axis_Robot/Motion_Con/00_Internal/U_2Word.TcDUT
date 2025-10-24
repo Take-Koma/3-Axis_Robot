@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+  <DUT Name="U_2Word" Id="{2101b913-9c51-4cba-9a4d-b4cd9c5675c5}">
+    <Declaration><![CDATA[TYPE U_2Word :
+UNION
+	dwDWORD		:DWORD;
+	diDINT		:DINT;
+	udiUDINT	:UDINT;
+	rREAL		:REAL;
+	tTIME		:TIME;
+	
+	wWORD		:ARRAY[1..2] OF WORD;
+	
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
