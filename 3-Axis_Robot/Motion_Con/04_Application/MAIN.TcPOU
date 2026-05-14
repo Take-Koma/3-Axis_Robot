@@ -1,14 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="MAIN" Id="{50158451-d374-4957-970b-65b4e1d88bf2}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	fb3AxisRobot	:FB_3AxisRobot;
-
+	
+	
+	
+	
+	u, v : LREAL;       // 入力: 画像座標 [px]
+    X, Y : LREAL;       // 出力: 盤面座標 [mm]
+    xh, yh, wh : LREAL; // 計算用中間変数
+    
+    // 修正後のMATLAB出力（標準形式）を転記
+    // 1行目:X係数, 2行目:Y係数, 3行目:分母係数
+    H : ARRAY[1..3, 1..3] OF LREAL := [
+        0.4956,  -0.0012,  -56.4406, // h11, h12, h13 (1行目)
+       -0.0038,   0.4965,   -7.3795, // h21, h22, h23 (2行目)
+        0.0000,   0.0000,    1.0000  // h31, h32, h33 (3行目)
+    ];
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[fb3AxisRobot();
 
+
+
+
+
+
+
+
+
+// --- 計算式（標準的な列ベクトル形式に修正） ---
+
+// Xの分子: h11*u + h12*v + h13
+xh := u * H[1,1] + v * H[1,2] + H[1,3];
+
+// Yの分子: h21*u + h22*v + h23
+yh := u * H[2,1] + v * H[2,2] + H[2,3];
+
+// 分母 (Weight): h31*u + h32*v + h33
+wh := u * H[3,1] + v * H[3,2] + H[3,3];
+
+// ゼロ割り算の防止と実座標への変換
+IF wh <> 0.0 THEN
+    X := xh / wh;
+    Y := yh / wh;
+ELSE
+    X := 0.0;
+    Y := 0.0;
+END_IF
 
 
 
@@ -37,7 +78,12 @@ IPCのCPU温度、FAN回転数の確認
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="7" Count="0" />
-      <LineId Id="16" Count="2" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="41" Count="5" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="77" Count="17" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="50" Count="1" />
       <LineId Id="9" Count="3" />
       <LineId Id="31" Count="0" />
       <LineId Id="22" Count="0" />

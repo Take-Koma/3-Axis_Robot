@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TargetSystemConfig Crc="508819209" Version="1.5">
+<TargetSystemConfig Crc="2404717359" Version="1.5">
   <TargetSystemType>HSafetyPLC</TargetSystemType>
   <TargetSystemSubType>EL2911</TargetSystemSubType>
   <IsExternalDevice>false</IsExternalDevice>
   <TargetSystemObjectId>50462730</TargetSystemObjectId>
-  <TargetSystemObjectName>ターミナル 10 (EL2911)</TargetSystemObjectName>
+  <TargetSystemObjectName>ターミナル 12 (EL2911)</TargetSystemObjectName>
   <SoftwareVersion>01 (V01.01)     </SoftwareVersion>
   <SerialNumber>2702367</SerialNumber>
   <ProjectCRC>39006</ProjectCRC>

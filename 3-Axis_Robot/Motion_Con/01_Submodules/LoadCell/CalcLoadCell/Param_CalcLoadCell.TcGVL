@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <GVL Name="Param_CalcLoadCell" Id="{8528ca08-7a21-409e-8634-5db7910475a1}" ParameterList="True">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	iOverSamples							:INT		:=1;													//1スキャン当たりのデータ数
+
+	//------ロードセルの仕様------
+	lrRatedCapacity							:LREAL		:=10.19716(*100N*);										//ロードセル定格容量　R.C. [kg]
+	lrRatedOutput							:LREAL		:=1.59710;												//ロードセル定格出力 R.O. [mV/V]
+	
+	//------ロードセル用入力ターミナルの仕様------
+	diMaxNumber								:DINT		:=2147483647;											//ロードセル入力ターミナル最大値　
+	diBridgeMeasuringRange					:DINT		:=27;													//ロードセルの出力電圧入力ターミナル測定レンジ　[mV]
+	lrSupplyMeasuringRange					:LREAL		:=13.5;													//ロードセルへの印加電圧入力ターミナル測定レンジ [V]
+
+	rEexcitationVoltage						:REAL		:=10;													//ロードセル印加電圧 [V] 推奨印加電圧(5V-10V DC)	許容印加電圧(15V DC）
+
+
+	//------TF3685用の設定------
+	stParamsComboFilter			:ST_WG_ComboFilter		:=(	nOrder					:=4,		(*4次フィルター*)
+															fCutoff					:=20.0,		(*20Hz*)
+															fSamplingRate			:=2000,		(*0.5ms*)
+															nSamplesToFilter		:=100,		(*100サンプル(50ms)の移動平均*)
+															fNotchFrequency			:=0.0,		(*ノッチフィルター一旦無しで0*)
+															bReset					:=TRUE);	(*TRUEは過去値はリセット時消去*)
+																												// Filter用
+	
+	stParamsScale				:ST_WG_Scaling			:=(	fRawLow					:=0.0,
+															fRawHigh				:=1000.0,
+															fReferenceLow			:=0.0,
+															fReferenceHigh			:=1000.0);	(*一旦1:1の設定*)
+																												// Scaling用
+	
+	stParamsWeighing			:ST_WG_Weighing			:=(	nWindowLength			:=200,		(*安定判定は100ms継続で判定*)
+															Validation				:=(	nValidationSamples		:=200, 
+																						fThresholdWeight		:=1.0,		(*1g以上でワークあり*)
+																						fMaxStd					:=0.15,		(*4次フィルターが良く効いているので標準偏差小さめに*)
+																						fMaxWeightDeviation		:=0.4),		(*1g台の判定ミスを防ぐために振れ幅も小さめに*)
+															AutoTare				:=(	nValidationSamples		:=200,
+																						fThresholdWeight		:=0.5,		(*0.5g以下はワークなし*)
+																						fMaxStd					:=0.05,
+																						fMaxWeightDeviation		:=0.2));
+																												// Weighing用
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

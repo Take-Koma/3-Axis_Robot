@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
   <POU Name="FB_IoLinkPatlite" Id="{4e9b2e93-da1e-4356-8935-86acc05a1acf}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_IoLinkPatlite EXTENDS FB_IolStdVarSlave IMPLEMENTS I_Patlite
 VAR
@@ -13,12 +13,13 @@ VAR
 	bBuzzerFlag					:BOOL;					//ブザー停止記憶
 	
 	fbStartupBuzzerREdge		:R_TRIG;
+	fbStartupBuzzerFEdge		:F_TRIG;
 	
 	hr							:HRESULT;
 	fbhrTon						:ton:=(PT:=T#1S);
 	
-	usiLedPattern				:USINT;
 	usiBuzzerPattern			:USINT;
+	usiReadBuzzerPattern		:USINT;
 
 	iStep						:INT;
 	ePrevMachineState			:E_MachineState;
@@ -55,7 +56,59 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[fbStartupBuzzerREdge(CLK:=bStartupBuzzer);]]></ST>
+          <ST><![CDATA[fbStartupBuzzerREdge(CLK:=bStartupBuzzer);
+fbStartupBuzzerFEdge(CLK:=bStartupBuzzer);
+
+IF fbStartupBuzzerREdge.Q=TRUE THEN
+	iStep:=1;
+	usiBuzzerPattern	:=8;		//スイープ音（ヒューン）500ms ON / 500ms OFF
+	bBuzzerON:=TRUE;
+	bBuzzerFlag:=FALSE;
+ELSIF fbStartupBuzzerFEdge.Q=TRUE THEN
+	iStep:=1;
+	usiBuzzerPattern	:=3;		//高低音（ピポピポ）
+	bBuzzerON:=FALSE;
+END_IF
+
+
+//---パラメーターを書き換え---
+
+(*
+fbhrTon(IN:= hr=16#203);
+IF fbhrTon.Q THEN
+	iStep:=iStep +1;
+END_IF
+*)
+
+CASE iStep OF
+	0:
+		(*NA*)
+	1:
+		hr:=SUPER^.Write_UINT8(	nIndex		:=16#07EE,	//Buzzer Pattern
+								nSubindex	:=16#00,
+								nData		:=usiBuzzerPattern);					
+
+		IF NOT F_IolIsBusy(hr) THEN
+				iStep:=2;
+		 END_IF
+	
+	2:
+		hr:=SUPER^.Read_UINT8(	nIndex		:=16#07EE,	//Buzzer Pattern
+								nSubindex	:=16#00,
+								nData		:=usiReadBuzzerPattern);
+								
+		IF NOT F_IolIsBusy(hr) THEN
+			iStep:=3;
+		END_IF
+	
+	3:
+		IF usiReadBuzzerPattern<>usiBuzzerPattern THEN
+			iStep:=1;
+		ELSE
+			iStep:=0;
+		END_IF
+
+END_CASE]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -69,7 +122,6 @@ END_VAR
           <ST><![CDATA[//---マシーンステートごとにパトライトを制御---
 
 	IF ePrevMachineState<>eMachineState THEN
-		iStep:=0;
 		bBuzzerON:=FALSE;
 		bBuzzerFlag:=FALSE;
 		ePrevMachineState:=eMachineState;
@@ -87,8 +139,6 @@ END_VAR
 			bGreenTier			:=FALSE;
 			bBlueTier			:=TRUE;
 			bWhiteTier			:=FALSE;
-			
-			usiBuzzerPattern	:=3;		//高低音（ピポピポ）
 		
 		E_MachineState.Error:
 			IF bBuzzerFlag=FALSE THEN
@@ -101,8 +151,6 @@ END_VAR
 			bBlueTier			:=FALSE;
 			bWhiteTier			:=FALSE;
 
-			usiBuzzerPattern	:=3;		//高低音（ピポピポ）
-
 		E_MachineState.Warning:
 			IF bBuzzerFlag=FALSE THEN
 				bBuzzerON:=TRUE;
@@ -114,7 +162,6 @@ END_VAR
 			bBlueTier			:=FALSE;
 			bWhiteTier			:=FALSE;
 
-			usiBuzzerPattern	:=3;		//高低音（ピポピポ）
 			
 		E_MachineState.Stay:
 			bRedTier			:=FALSE;
@@ -128,18 +175,7 @@ END_VAR
 			bYellowTier			:=FALSE;
 			bGreenTier			:=TRUE;
 			bBlueTier			:=FALSE;
-			bWhiteTier			:=FALSE;
-		
-			usiLedPattern		:=12;		//グラデーション点滅　低速　30回/分
-			
-			usiBuzzerPattern	:=8;		//スイープ音（ヒューン）500ms ON / 500ms OFF
-			
-			IF fbStartupBuzzerREdge.Q=TRUE THEN
-				bBuzzerON:=TRUE;
-				bBuzzerFlag:=FALSE;
-			ELSIF fbStartupBuzzerREdge.CLK=FALSE THEN
-				bBuzzerON:=FALSE;
-			END_IF
+			bWhiteTier			:=TRUE;
 	
 		E_MachineState.Moving:
 			bRedTier			:=FALSE;
@@ -147,44 +183,8 @@ END_VAR
 			bGreenTier			:=TRUE;
 			bBlueTier			:=FALSE;
 			bWhiteTier			:=FALSE;
-			
-			usiLedPattern		:=0;		//点灯
 
-	
-	END_CASE;
-	
-	//---パラメーターを書き換え---
-	
-	fbhrTon(IN:= hr=16#203);
-	IF fbhrTon.Q THEN
-		iStep:=iStep +1;
-	END_IF
-	
-	CASE iStep OF
-		0:
-			hr:=SUPER^.Write_UINT8(	nIndex		:=16#07DF,	//Tier Pattern
-									nSubindex	:=16#03,
-									nData		:=usiLedPattern);					
-	
-			IF NOT F_IolIsBusy(hr) THEN
-					iStep:=1;
-			 END_IF
-		
-		1:
-			hr:=SUPER^.Write_UINT8(	nIndex		:=16#07EE,	//Buzzer Pattern
-									nSubindex	:=16#00,
-									nData		:=usiBuzzerPattern);					
-	
-			IF NOT F_IolIsBusy(hr) THEN
-					iStep:=2;
-			 END_IF
-		
-		2:
-			(*NA*)
-
-	END_CASE
-
-]]></ST>
+	END_CASE;]]></ST>
         </Implementation>
       </Set>
     </Property>
@@ -216,12 +216,29 @@ SUPER^.Name				:=Name;]]></ST>
     </LineIds>
     <LineIds Name="FB_IoLinkPatlite.bStartupBuzzer.Set">
       <LineId Id="1" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="3" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="5" Count="3" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="10" Count="12" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="24" Count="22" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_IoLinkPatlite.eMachineState.Set">
-      <LineId Id="1" Count="87" />
-      <LineId Id="115" Count="4" />
-      <LineId Id="114" Count="0" />
-      <LineId Id="89" Count="24" />
+      <LineId Id="1" Count="2" />
+      <LineId Id="5" Count="16" />
+      <LineId Id="24" Count="10" />
+      <LineId Id="37" Count="10" />
+      <LineId Id="49" Count="14" />
+      <LineId Id="75" Count="6" />
+      <LineId Id="85" Count="1" />
     </LineIds>
     <LineIds Name="FB_IoLinkPatlite.FB_Init">
       <LineId Id="1" Count="2" />

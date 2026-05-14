@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.16" ClassName="CVisionAppDef">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19" ClassName="CVisionAppDef">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{C10B6EE2-EA6E-4FED-AC4E-D3C8366F26C0}">ITcVnData</Name>
@@ -16870,8 +16870,14 @@
 								<Register Address="0x01030018">
 									<RegisterValue>00-00-00-01</RegisterValue>
 								</Register>
+								<Register Address="0x0100000C">
+									<RegisterValue>01-03-00-00</RegisterValue>
+								</Register>
 								<Register Address="0x01030020">
 									<RegisterValue>00-00-05-28</RegisterValue>
+								</Register>
+								<Register Address="0x0100007C">
+									<RegisterValue>01-1F-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x011F0014">
 									<RegisterValue>00-00-02-B0</RegisterValue>
@@ -16881,6 +16887,9 @@
 								</Register>
 								<Register Address="0x011F000C">
 									<RegisterValue>00-01-22-0A</RegisterValue>
+								</Register>
+								<Register Address="0x01000008">
+									<RegisterValue>01-02-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x01020014">
 									<RegisterValue>01-08-00-09</RegisterValue>
@@ -16904,6 +16913,9 @@
 								</Register>
 								<Register Address="0x011F009C">
 									<RegisterValue>00-00-02-B0</RegisterValue>
+								</Register>
+								<Register Address="0x011F0050">
+									<RegisterValue>00-FF-FF-FF</RegisterValue>
 								</Register>
 								<Register Address="0x00000954">
 									<RegisterValue>00-00-00-00</RegisterValue>
@@ -16938,15 +16950,15 @@
 									<RegisterValue>00-00-00-01</RegisterValue>
 								</Register>
 								<Register Address="0x00000D00">
-									<RegisterValue>00-00-E5-20</RegisterValue>
+									<RegisterValue>00-00-C2-AF</RegisterValue>
 								</Register>
 								<Register Address="0x00000D00">
 									<Selector SelectorName="DeviceStreamChannelSelector">0</Selector>
-									<RegisterValue>00-00-E5-20</RegisterValue>
+									<RegisterValue>00-00-C2-AF</RegisterValue>
 								</Register>
 								<Register Address="0x00000D00">
 									<Selector SelectorName="GevStreamChannelSelector">0</Selector>
-									<RegisterValue>00-00-E5-20</RegisterValue>
+									<RegisterValue>00-00-C2-AF</RegisterValue>
 								</Register>
 								<Register Address="0x00000D04">
 									<RegisterValue>40-00-05-DC</RegisterValue>
@@ -16974,17 +16986,14 @@
 								<Register Address="0x01200004">
 									<RegisterValue>05-80-F6-00</RegisterValue>
 								</Register>
-								<Register Address="0x0100007C">
-									<RegisterValue>01-1F-00-00</RegisterValue>
-								</Register>
 								<Register Address="0x011F005C">
-									<RegisterValue>00-00-30-00</RegisterValue>
+									<RegisterValue>00-00-27-00</RegisterValue>
 								</Register>
 								<Register Address="0x00000948">
-									<RegisterValue>00-00-08-A0</RegisterValue>
+									<RegisterValue>00-00-00-AC</RegisterValue>
 								</Register>
 								<Register Address="0x0000094C">
-									<RegisterValue>00-C4-E0-D8</RegisterValue>
+									<RegisterValue>9D-4A-0A-38</RegisterValue>
 								</Register>
 								<Register Address="0x0000093C">
 									<RegisterValue>00-00-00-00</RegisterValue>
@@ -17039,6 +17048,9 @@
 								<Register Address="0x01120008">
 									<RegisterValue>00-00-00-01</RegisterValue>
 								</Register>
+								<Register Address="0x0100004C">
+									<RegisterValue>01-13-00-00</RegisterValue>
+								</Register>
 								<Register Address="0x01130004">
 									<RegisterValue>FF-FF-FF-FF</RegisterValue>
 								</Register>
@@ -17061,6 +17073,9 @@
 								<Register Address="0x0102000C">
 									<Selector SelectorName="RegionSelector">0</Selector>
 									<RegisterValue>00-00-00-00</RegisterValue>
+								</Register>
+								<Register Address="0x01000068">
+									<RegisterValue>01-1A-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x011A0014">
 									<RegisterValue>00-00-00-00</RegisterValue>
@@ -17182,12 +17197,6 @@
 								<Register Address="0x01200030">
 									<RegisterValue>00-00-00-01</RegisterValue>
 								</Register>
-								<Register Address="0x01000068">
-									<RegisterValue>01-1A-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x01000008">
-									<RegisterValue>01-02-00-00</RegisterValue>
-								</Register>
 								<Register Address="0x011F001C">
 									<RegisterValue>00-00-00-08</RegisterValue>
 								</Register>
@@ -17226,9 +17235,6 @@
 									<Selector SelectorName="TestPatternGeneratorSelector">0</Selector>
 									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
-								<Register Address="0x0100000C">
-									<RegisterValue>01-03-00-00</RegisterValue>
-								</Register>
 								<Register Address="0x01030008">
 									<RegisterValue>00-01-00-02</RegisterValue>
 								</Register>
@@ -17237,9 +17243,6 @@
 								</Register>
 								<Register Address="0x01000010">
 									<RegisterValue>01-04-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x011F0050">
-									<RegisterValue>00-FF-FF-FF</RegisterValue>
 								</Register>
 								<Register Address="0x0103002C">
 									<RegisterValue>00-00-00-00</RegisterValue>
@@ -17290,14 +17293,6 @@
 									<Selector SelectorName="UserOutputSelector">1</Selector>
 									<RegisterValue>00-14-00-00</RegisterValue>
 								</Register>
-								<Register Address="0x01050018">
-									<Selector SelectorName="LineSelector">0</Selector>
-									<RegisterValue>00-14-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x01050018">
-									<Selector SelectorName="UserOutputSelector">0</Selector>
-									<RegisterValue>00-14-00-00</RegisterValue>
-								</Register>
 								<Register Address="0x0105001C">
 									<RegisterValue>00-14-00-01</RegisterValue>
 								</Register>
@@ -17316,14 +17311,6 @@
 									<Selector SelectorName="UserOutputSelector">1</Selector>
 									<RegisterValue>00-14-00-01</RegisterValue>
 								</Register>
-								<Register Address="0x0105001C">
-									<Selector SelectorName="LineSelector">1</Selector>
-									<RegisterValue>00-14-00-01</RegisterValue>
-								</Register>
-								<Register Address="0x0105001C">
-									<Selector SelectorName="UserOutputSelector">1</Selector>
-									<RegisterValue>00-14-00-01</RegisterValue>
-								</Register>
 								<Register Address="0x01050020">
 									<RegisterValue>00-14-00-00</RegisterValue>
 								</Register>
@@ -17337,9 +17324,8 @@
 									<Selector SelectorName="UserOutputSelector">0</Selector>
 									<RegisterValue>00-14-00-00</RegisterValue>
 								</Register>
-								<Register Address="0x01050020">
-									<Selector SelectorName="LineSelector">2</Selector>
-									<RegisterValue>00-14-00-00</RegisterValue>
+								<Register Address="0x01200034">
+									<RegisterValue>07-EA-A4-50</RegisterValue>
 								</Register>
 								<Register Address="0x01030038">
 									<RegisterValue>00-00-00-00</RegisterValue>
@@ -17400,19 +17386,11 @@
 									<Selector SelectorName="GainSelector">1</Selector>
 									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
-								<Register Address="0x01040038">
-									<Selector SelectorName="GainSelector">0</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
 								<Register Address="0x01040034">
 									<RegisterValue>00-00-00-D0</RegisterValue>
 								</Register>
 								<Register Address="0x01040034">
 									<Selector SelectorName="GainSelector">1</Selector>
-									<RegisterValue>00-00-00-D0</RegisterValue>
-								</Register>
-								<Register Address="0x01040034">
-									<Selector SelectorName="GainSelector">0</Selector>
 									<RegisterValue>00-00-00-D0</RegisterValue>
 								</Register>
 								<Register Address="0x01040030">
@@ -17780,8 +17758,8 @@
 								<Register Address="0x01040060">
 									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
-								<Register Address="0x01200034">
-									<RegisterValue>07-EA-A4-50</RegisterValue>
+								<Register Address="0x01000028">
+									<RegisterValue>01-0A-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x010A0004">
 									<RegisterValue>00-00-00-00</RegisterValue>
@@ -17789,6 +17767,9 @@
 								<Register Address="0x010A0004">
 									<Selector SelectorName="LUTSelector">0</Selector>
 									<RegisterValue>00-00-00-00</RegisterValue>
+								</Register>
+								<Register Address="0x01200044">
+									<RegisterValue>0F-FF-0F-FF</RegisterValue>
 								</Register>
 								<Register Address="0x010A0008">
 									<RegisterValue>00-00-00-01</RegisterValue>
@@ -17797,15 +17778,6 @@
 									<Selector SelectorName="LUTIndex">0</Selector>
 									<Selector SelectorName="LUTSelector">0</Selector>
 									<RegisterValue>00-00-00-01</RegisterValue>
-								</Register>
-								<Register Address="0x01000028">
-									<RegisterValue>01-0A-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x01200044">
-									<RegisterValue>0F-FF-0F-FF</RegisterValue>
-								</Register>
-								<Register Address="0x0100004C">
-									<RegisterValue>01-13-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x01050030">
 									<RegisterValue>00-00-00-01</RegisterValue>
@@ -18014,288 +17986,40 @@
 								<Register Address="0x01000034">
 									<RegisterValue>01-0D-00-00</RegisterValue>
 								</Register>
-								<Register Address="0x010D0018">
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">0</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">0</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">0</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">1</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">1</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">1</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">2</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">2</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">2</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">3</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">3</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">3</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">4</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">4</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">4</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">5</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">5</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">5</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">6</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">6</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">6</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">7</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">7</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">7</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">8</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">8</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D0018">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">8</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">0</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">0</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">0</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">1</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">1</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">1</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">2</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">2</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">2</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">3</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">3</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">3</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">4</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">4</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">4</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">5</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">5</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">5</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">6</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">6</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">6</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">7</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">7</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">7</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">0</Selector>
-									<Selector SelectorName="FileSelector">8</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">1</Selector>
-									<Selector SelectorName="FileSelector">8</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x010D001C">
-									<Selector SelectorName="FileOperationSelector">2</Selector>
-									<Selector SelectorName="FileSelector">8</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
 								<Register Address="0x01000098">
 									<RegisterValue>01-28-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x0128000C">
 									<RegisterValue>00-00-02-00</RegisterValue>
 								</Register>
+								<Register Address="0x01280010">
+									<RegisterValue>00-00-00-74</RegisterValue>
+								</Register>
+								<Register Address="0x010D0024">
+									<RegisterValue>00-00-00-00</RegisterValue>
+								</Register>
+								<Register Address="0x010D0024">
+									<Selector SelectorName="FileSelector">0</Selector>
+									<RegisterValue>00-00-00-00</RegisterValue>
+								</Register>
+								<Register Address="0x010D001C">
+									<RegisterValue>00-00-00-00</RegisterValue>
+								</Register>
+								<Register Address="0x010D001C">
+									<Selector SelectorName="FileOperationSelector">0</Selector>
+									<Selector SelectorName="FileSelector">0</Selector>
+									<RegisterValue>00-00-00-00</RegisterValue>
+								</Register>
+								<Register Address="0x010D001C">
+									<Selector SelectorName="FileOperationSelector">1</Selector>
+									<Selector SelectorName="FileSelector">0</Selector>
+									<RegisterValue>00-00-00-00</RegisterValue>
+								</Register>
+								<Register Address="0x010D001C">
+									<Selector SelectorName="FileOperationSelector">2</Selector>
+									<Selector SelectorName="FileSelector">0</Selector>
+									<RegisterValue>00-00-00-00</RegisterValue>
+								</Register>
 								<Register Address="0x010D0020">
 									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
@@ -18314,15 +18038,23 @@
 									<Selector SelectorName="FileSelector">0</Selector>
 									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
-								<Register Address="0x010D0024">
+								<Register Address="0x010D0018">
 									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
-								<Register Address="0x010D0024">
+								<Register Address="0x010D0018">
+									<Selector SelectorName="FileOperationSelector">0</Selector>
 									<Selector SelectorName="FileSelector">0</Selector>
 									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
-								<Register Address="0x01280010">
-									<RegisterValue>00-00-00-74</RegisterValue>
+								<Register Address="0x010D0018">
+									<Selector SelectorName="FileOperationSelector">1</Selector>
+									<Selector SelectorName="FileSelector">0</Selector>
+									<RegisterValue>00-00-00-00</RegisterValue>
+								</Register>
+								<Register Address="0x010D0018">
+									<Selector SelectorName="FileOperationSelector">2</Selector>
+									<Selector SelectorName="FileSelector">0</Selector>
+									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x01280074">
 									<RegisterValue>00-00-00-00</RegisterValue>
@@ -18789,7 +18521,7 @@
 									<RegisterValue>00-00-00-02</RegisterValue>
 								</Register>
 								<Register Address="0x00000A04">
-									<RegisterValue>00-00-E5-1F</RegisterValue>
+									<RegisterValue>00-00-C2-AE</RegisterValue>
 								</Register>
 								<Register Address="0x00000A14">
 									<RegisterValue>A9-FE-2D-7F</RegisterValue>
@@ -18865,35 +18597,19 @@
 									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x01040004">
-									<RegisterValue>00-00-00-63</RegisterValue>
+									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x01040004">
 									<Selector SelectorName="GainSelector">0</Selector>
-									<RegisterValue>00-00-00-63</RegisterValue>
+									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
 								<Register Address="0x01040018">
-									<RegisterValue>00-00-00-05</RegisterValue>
-								</Register>
-								<Register Address="0x01040018">
-									<Selector SelectorName="BalanceRatioSelector">1</Selector>
-									<RegisterValue>00-00-00-05</RegisterValue>
-								</Register>
-								<Register Address="0x01040018">
-									<Selector SelectorName="BalanceRatioSelector">4</Selector>
 									<RegisterValue>00-00-00-05</RegisterValue>
 								</Register>
 								<Register Address="0x0104001C">
 									<RegisterValue>00-00-00-05</RegisterValue>
 								</Register>
-								<Register Address="0x0104001C">
-									<Selector SelectorName="BalanceRatioSelector">2</Selector>
-									<RegisterValue>00-00-00-05</RegisterValue>
-								</Register>
 								<Register Address="0x01040020">
-									<RegisterValue>00-00-00-5A</RegisterValue>
-								</Register>
-								<Register Address="0x01040020">
-									<Selector SelectorName="BalanceRatioSelector">3</Selector>
 									<RegisterValue>00-00-00-5A</RegisterValue>
 								</Register>
 								<Register Address="0x01050038">
@@ -18936,13 +18652,6 @@
 								</Register>
 								<Register Address="0x01090080">
 									<Selector SelectorName="TimerSelector">1</Selector>
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x01030090">
-									<RegisterValue>00-00-00-00</RegisterValue>
-								</Register>
-								<Register Address="0x01030090">
-									<Selector SelectorName="TriggerSelector">4</Selector>
 									<RegisterValue>00-00-00-00</RegisterValue>
 								</Register>
 							</RegisterValues>

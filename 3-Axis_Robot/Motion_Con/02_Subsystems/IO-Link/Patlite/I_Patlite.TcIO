@@ -11,6 +11,12 @@ END_VAR
 ]]></Declaration>
       </Set>
     </Property>
+    <Property Name="bStartupBuzzer" Id="{6ea3a3d8-41c0-4e95-93e6-9d603328cdeb}">
+      <Declaration><![CDATA[PROPERTY bStartupBuzzer : BOOL]]></Declaration>
+      <Set Name="Set" Id="{9be3250a-9098-4865-b2fe-8b923ef239d3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
     <Property Name="eMachineState" Id="{6420d867-462d-4471-98d3-951b3d1ec600}">
       <Declaration><![CDATA[PROPERTY eMachineState : E_MachineState]]></Declaration>
       <Set Name="Set" Id="{707c826a-b2b1-4cc7-9e79-2bfe47087be7}">

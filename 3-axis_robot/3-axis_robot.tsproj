@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.22">
 	<Translations>
 		<Text TxtId="MachineAlarmEvent">
 			<Text LcId="1041"><![CDATA[装置アラームイベント]]></Text>
@@ -1690,8 +1690,8 @@
 			</Settings>
 			<Licenses>
 				<Target>
-					<ManualSelect>{6952449D-F68C-49A2-ADE4-8639D85B33A4}</ManualSelect>
 					<ManualSelect>{B1065A48-8131-4608-A378-D67FA8BD826E}</ManualSelect>
+					<ManualSelect>{6952449D-F68C-49A2-ADE4-8639D85B33A4}</ManualSelect>
 				</Target>
 			</Licenses>
 			<Tasks>
@@ -1771,6 +1771,68 @@
 			</JobPool>
 			<App File="Application1.xti"/>
 		</Vision>
+		<Analytics ConfigVersion="1.5">
+			<Name>ANALYTICS</Name>
+			<ImageId>437</ImageId>
+			<Config>
+				<StreamTargets>
+					<StreamTargetItem Id="6da0fe4e-6260-4ba7-bea3-4ccc6291bb2a">
+						<Name>Boot Project Path</Name>
+						<Type>FILE</Type>
+						<Directory>%TC_BOOTPRJPATH%</Directory>
+						<MqttConnectionSettings>
+							<Broker>127.0.0.1</Broker>
+							<BrokerPort>1883</BrokerPort>
+							<UserID/>
+							<WithCertificates>false</WithCertificates>
+							<CA_Certificate/>
+							<Cert_Certificate/>
+							<Key_Certificate/>
+							<CommunicationTimeout>30000000</CommunicationTimeout>
+							<KeepAlivePeriod>600000000</KeepAlivePeriod>
+							<TcpBufferSize>32768</TcpBufferSize>
+							<SecurityType>NO_SECURITY</SecurityType>
+							<Insecure>false</Insecure>
+							<IgnoreExpiration>false</IgnoreExpiration>
+							<IsPskIdCaseSensitive>false</IsPskIdCaseSensitive>
+							<IgnoreCnMismatch>false</IgnoreCnMismatch>
+							<TargetPaths>false</TargetPaths>
+							<PskMode>HexKey</PskMode>
+						</MqttConnectionSettings>
+						<TimeType>None</TimeType>
+					</StreamTargetItem>
+				</StreamTargets>
+				<ActivateAlyLogger>false</ActivateAlyLogger>
+			</Config>
+			<StreamContext AdiOid="#x08502000" CallerOid="#x08502005" Category="0" Hide="true">
+				<Name>Motion_Con Instance - PlcTask (PLC)</Name>
+				<ImageId>438</ImageId>
+				<Config>
+					<StreamContextProps/>
+				</Config>
+			</StreamContext>
+			<StreamContext AdiOid="#x00000000" CallerOid="#x03000011" Category="5" Hide="true">
+				<Name>IPC Diagnosis</Name>
+				<ImageId>438</ImageId>
+				<Config>
+					<StreamContextProps/>
+				</Config>
+			</StreamContext>
+			<StreamContext AdiOid="#x03040020" CallerOid="#x03040020" Category="1" Hide="true">
+				<Name>デバイス 2 (EtherCAT) - イメージ</Name>
+				<ImageId>438</ImageId>
+				<Config>
+					<StreamContextProps/>
+				</Config>
+			</StreamContext>
+			<StreamContext AdiOid="#x03040070" CallerOid="#x03040070" Category="1" Hide="true">
+				<Name>デバイス 6 (EtherCAT) - イメージ</Name>
+				<ImageId>438</ImageId>
+				<Config>
+					<StreamContextProps/>
+				</Config>
+			</StreamContext>
+		</Analytics>
 		<Io>
 			<Device File="デバイス 1 (Beckhoff CCAT).xti" Id="1"/>
 			<Device File="デバイス 2 (EtherCAT).xti" Id="2"/>

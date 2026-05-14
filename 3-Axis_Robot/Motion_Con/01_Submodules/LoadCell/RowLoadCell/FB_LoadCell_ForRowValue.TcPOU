@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
-  <POU Name="FB_LoadCell" Id="{0956b8bf-68cc-43c5-8995-ef78b567874c}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_LoadCell
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="FB_LoadCell_ForRowValue" Id="{0956b8bf-68cc-43c5-8995-ef78b567874c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_LoadCell_ForRowValue
 VAR_INPUT
 	diBridgeInputs			AT %I*	:DINT;			//ロードセルの出力電圧生値
 	diSupplyInputs			AT %I*	:DINT;			//ロードセルへの印加電圧生値
+	
 END_VAR
 VAR_OUTPUT
 END_VAR
@@ -26,7 +27,7 @@ VAR
 	
 	diMaxNumber						:DINT;			//ロードセル入力ターミナル最大値　
 	diBridgeMeasuringRange			:DINT;			//ロードセルの出力電圧入力ターミナル測定レンジ　[mV]
-	diSupplyMeasuringRange			:DINT;			//ロードセルへの印加電圧入力ターミナル測定レンジ [V]
+	lrSupplyMeasuringRange			:LREAL;			//ロードセルへの印加電圧入力ターミナル測定レンジ [V]
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -44,7 +45,7 @@ END_VAR]]></Declaration>
 		
 		//今のグロスウェイト確認[kg]
 		IF diSupplyInputs<>0 AND diBridgeMeasuringRange<>0  AND lrRatedOutput<>0 THEN
-			lrNowGrossWeight:=((DINT_TO_LREAL(diBridgeInputs)*DINT_TO_LREAL(diBridgeMeasuringRange))/(DINT_TO_LREAL(diSupplyInputs)*DINT_TO_LREAL(diSupplyMeasuringRange)))*(lrRatedCapacity/lrRatedOutput);
+			lrNowGrossWeight:=((DINT_TO_LREAL(diBridgeInputs)*DINT_TO_LREAL(diBridgeMeasuringRange))/(DINT_TO_LREAL(diSupplyInputs)*lrSupplyMeasuringRange))*(lrRatedCapacity/lrRatedOutput);
 		END_IF
 		
 		//今のグロスウェイトが風袋重量より重いことを確認
@@ -72,7 +73,7 @@ VAR_INPUT
 	
 	diMaxNumber					:DINT;			//ロードセル入力ターミナル最大値　
 	diBridgeMeasuringRange		:DINT;			//ロードセルの出力電圧入力ターミナル測定レンジ　[mV]
-	diSupplyMeasuringRange		:DINT;			//ロードセルへの印加電圧入力ターミナル測定レンジ [V]
+	lrSupplyMeasuringRange		:LREAL;			//ロードセルへの印加電圧入力ターミナル測定レンジ [V]
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.lrRatedCapacity			:=lrRatedCapacity;
@@ -80,7 +81,7 @@ THIS^.lrRatedOutput				:=lrRatedOutput;
 
 THIS^.diMaxNumber				:=diMaxNumber;
 THIS^.diBridgeMeasuringRange	:=diBridgeMeasuringRange;
-THIS^.diSupplyMeasuringRange	:=diSupplyMeasuringRange;]]></ST>
+THIS^.lrSupplyMeasuringRange	:=lrSupplyMeasuringRange;]]></ST>
       </Implementation>
     </Method>
     <Property Name="lrBridgeVoltage" Id="{e4dc58fe-7b1a-4db2-8ea5-3a4020425ca6}">
@@ -119,7 +120,7 @@ END_VAR
         <Implementation>
           <ST><![CDATA[	//グロスウェイト計算[kg]
 	IF diSupplyInputs<>0 and diBridgeMeasuringRange<>0  AND lrRatedOutput<>0 THEN
-		_lrGrossWeight:=((DINT_TO_LREAL(diBridgeInputs)*DINT_TO_LREAL(diBridgeMeasuringRange))/(DINT_TO_LREAL(diSupplyInputs)*DINT_TO_LREAL(diSupplyMeasuringRange)))*(lrRatedCapacity/lrRatedOutput);
+		_lrGrossWeight:=((DINT_TO_LREAL(diBridgeInputs)*DINT_TO_LREAL(diBridgeMeasuringRange))/(DINT_TO_LREAL(diSupplyInputs)*lrSupplyMeasuringRange))*(lrRatedCapacity/lrRatedOutput);
 	END_IF
 	
 	lrGrossWeight:=_lrGrossWeight;]]></ST>
@@ -149,7 +150,7 @@ END_VAR
         <Implementation>
           <ST><![CDATA[	//ロードセルへの印加電圧計算[V]
 	IF diMaxNumber<>0 THEN
-		_lrSupplyVoltage:=DINT_TO_LREAL(diSupplyInputs)*(DINT_TO_LREAL(diSupplyMeasuringRange)/diMaxNumber);
+		_lrSupplyVoltage:=DINT_TO_LREAL(diSupplyInputs)*(lrSupplyMeasuringRange/diMaxNumber);
 	END_IF
 	
 	lrSupplyVoltage:=_lrSupplyVoltage;]]></ST>
@@ -178,7 +179,7 @@ END_VAR]]></Declaration>
 	IF bTareWeightSet=TRUE THEN
 		
 		IF diSupplyInputs<>0 AND diBridgeMeasuringRange<>0  AND lrRatedOutput<>0 THEN
-			_lrTareWeight:=((DINT_TO_LREAL(diBridgeInputs)*DINT_TO_LREAL(diBridgeMeasuringRange))/(DINT_TO_LREAL(diSupplyInputs)*DINT_TO_LREAL(diSupplyMeasuringRange)))*(lrRatedCapacity/lrRatedOutput);
+			_lrTareWeight:=((DINT_TO_LREAL(diBridgeInputs)*DINT_TO_LREAL(diBridgeMeasuringRange))/(DINT_TO_LREAL(diSupplyInputs)*lrSupplyMeasuringRange))*(lrRatedCapacity/lrRatedOutput);
 			
 			bPersistentDataWriteRequest:=TRUE;
 			
@@ -189,44 +190,35 @@ END_VAR]]></Declaration>
 	END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_LoadCell">
+    <LineIds Name="FB_LoadCell_ForRowValue">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_LoadCell.CalibrationWeightSet">
-      <LineId Id="3" Count="15" />
+    <LineIds Name="FB_LoadCell_ForRowValue.CalibrationWeightSet">
+      <LineId Id="1" Count="15" />
     </LineIds>
-    <LineIds Name="FB_LoadCell.FB_Init">
-      <LineId Id="1" Count="1" />
-      <LineId Id="4" Count="2" />
-      <LineId Id="3" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_LoadCell.lrBridgeVoltage.Get">
+    <LineIds Name="FB_LoadCell_ForRowValue.FB_Init">
       <LineId Id="1" Count="5" />
     </LineIds>
-    <LineIds Name="FB_LoadCell.lrCalibrationWeight.Set">
+    <LineIds Name="FB_LoadCell_ForRowValue.lrBridgeVoltage.Get">
+      <LineId Id="1" Count="5" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell_ForRowValue.lrCalibrationWeight.Set">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_LoadCell.lrGrossWeight.Get">
+    <LineIds Name="FB_LoadCell_ForRowValue.lrGrossWeight.Get">
       <LineId Id="1" Count="5" />
     </LineIds>
-    <LineIds Name="FB_LoadCell.lrNetWeight.Get">
+    <LineIds Name="FB_LoadCell_ForRowValue.lrNetWeight.Get">
       <LineId Id="1" Count="3" />
     </LineIds>
-    <LineIds Name="FB_LoadCell.lrSupplyVoltage.Get">
+    <LineIds Name="FB_LoadCell_ForRowValue.lrSupplyVoltage.Get">
       <LineId Id="1" Count="5" />
     </LineIds>
-    <LineIds Name="FB_LoadCell.lrTareWeight.Get">
+    <LineIds Name="FB_LoadCell_ForRowValue.lrTareWeight.Get">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_LoadCell.TareWeightSet">
-      <LineId Id="1" Count="0" />
-      <LineId Id="4" Count="3" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="26" Count="2" />
-      <LineId Id="22" Count="0" />
+    <LineIds Name="FB_LoadCell_ForRowValue.TareWeightSet">
+      <LineId Id="1" Count="12" />
     </LineIds>
   </POU>
 </TcPlcObject>

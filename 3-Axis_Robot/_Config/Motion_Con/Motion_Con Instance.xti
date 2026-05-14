@@ -1,8 +1,22 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.19" ClassName="CTComPlcObjDef">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.22" ClassName="CTComPlcObjDef">
 	<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" XtvPath="Motion_Con\Motion_Con Instance.xtv" TmcPath="Motion_Con\Motion_Con.tmc">
 		<Name>__FILENAME__</Name>
 		<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+		<UnrestoredVarLinks ImportTime="2026-02-02T10:47:49">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL3356-0010)">
+					<Link VarA="MAIN.fb3AxisRobot.fbLoadCell.rRMBValueInput" TypeA="REAL" InOutA="0" GuidA="{18071995-0000-0000-0000-00000000000D}" VarB="RMB Value (Real)^Value (Real)" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2026-02-08T18:02:50">
+			<OwnerA Name="OutputSrc" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="2">
+				<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL9501)">
+					<Link VarA="MAIN.fb3AxisRobot.rEexcitationVoltage" TypeA="REAL" InOutA="1" GuidA="{18071995-0000-0000-0000-00000000000D}" VarB="AO Output Compact (Real32)^Value (Real32)" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
 		<Contexts>
 			<Context>
 				<Id>0</Id>
@@ -116,10 +130,14 @@
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL9501)">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[3].bWcState[0]" VarB="WcState^WcState" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[3].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbLoadCellForCalcValue._rEexcitationVoltage" VarB="AO Output Compact (Real32)^Value (Real32)"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL3356-0010)">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[4].bWcState[0]" VarB="WcState^WcState" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[4].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbLoadCellForCalcValue.rRMBValueInput[1]" VarB="RMB Value (Real)^Value (Real)"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbLoadCellForCalcValue.tTimestamp" VarB="RMB Timestamp^Timestamp"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbLoadCellForCalcValue.bSampleMode" VarB="RMB Control^Ctrl^Sample mode" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 5 (EL3202)">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[5].bWcState[0]" VarB="WcState^WcState" Size="1"/>

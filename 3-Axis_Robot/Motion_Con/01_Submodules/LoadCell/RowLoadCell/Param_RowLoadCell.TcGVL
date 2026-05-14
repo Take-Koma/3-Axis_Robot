@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <GVL Name="Param_RowLoadCell" Id="{eab291d4-c4d0-434f-9922-bdfe22d49cdd}" ParameterList="True">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	//------ロードセルの仕様------
+	lrRatedCapacity							:LREAL		:=10.19716(*100N*);										//ロードセル定格容量　R.C. [kg]
+	lrRatedOutput							:LREAL		:=1.59710;												//ロードセル定格出力 R.O. [mV/V]
+	
+	//------ロードセル用入力ターミナルの仕様------
+	diMaxNumber								:DINT		:=2147483647;											//ロードセル入力ターミナル最大値　
+	diBridgeMeasuringRange					:DINT		:=27;													//ロードセルの出力電圧入力ターミナル測定レンジ　[mV]
+	lrSupplyMeasuringRange					:LREAL		:=13.5;													//ロードセルへの印加電圧入力ターミナル測定レンジ [V]
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

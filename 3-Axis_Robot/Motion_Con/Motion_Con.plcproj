@@ -8,7 +8,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>Motion_Con</Name>
-    <ProgramVersion>3.1.4026.19</ProgramVersion>
+    <ProgramVersion>3.1.4026.22</ProgramVersion>
     <Application>{3e578fbf-8593-4971-a049-a334d40a2de2}</Application>
     <TypeSystem>{06c75c1e-0f40-44c5-a8bf-ddc4f0ae36a3}</TypeSystem>
     <Implicit_Task_Info>{558334a8-64b5-43ad-807e-2d9c9d5c9ec6}</Implicit_Task_Info>
@@ -60,8 +60,19 @@
     <Compile Include="01_Submodules\FB_PersistentDataManagement.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="01_Submodules\LoadCell\FB_LoadCell.TcPOU">
+    <Compile Include="01_Submodules\LoadCell\CalcLoadCell\FB_LoadCell_ForCalcValue.TcPOU">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\LoadCell\CalcLoadCell\Param_CalcLoadCell.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="01_Submodules\LoadCell\RowLoadCell\FB_LoadCell_ForRowValue.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\LoadCell\RowLoadCell\Param_RowLoadCell.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="01_Submodules\MachineState\E_MachineState.TcDUT">
       <SubType>Code</SubType>
@@ -162,14 +173,13 @@
     <Compile Include="VisionTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ビジュアリゼーション マネージャ.TcVMO">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="01_Submodules\Axis" />
     <Folder Include="01_Submodules\LoadCell" />
     <Folder Include="01_Submodules\Diagnosis" />
+    <Folder Include="01_Submodules\LoadCell\CalcLoadCell" />
+    <Folder Include="01_Submodules\LoadCell\RowLoadCell" />
     <Folder Include="01_Submodules\MachineState" />
     <Folder Include="01_Submodules\PcManagement" />
     <Folder Include="01_Submodules\PcManagement\1sUPS" />
@@ -190,6 +200,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PlaceholderReference Include="Tc2_EtherCAT">
+      <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_EtherCAT</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_MC2">
       <DefaultResolution>Tc2_MC2, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_MC2</Namespace>
@@ -233,6 +247,10 @@
     <PlaceholderReference Include="Tc3_Vision">
       <DefaultResolution>Tc3_Vision, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Vision</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Weighing">
+      <DefaultResolution>Tc3_Weighing, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Weighing</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ProjectExtensions>
@@ -306,6 +324,12 @@
             <v>DisabledWarningIds</v>
             <v>5410</v>
           </d>
+        </o>
+        <v>{eeeeeeee-3909-4298-8022-501ac3238667}</v>
+        <o>
+          <v n="Name">"{eeeeeeee-3909-4298-8022-501ac3238667}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" />
         </o>
         <v>{F66C7017-BDD8-4114-926C-81D6D687E35F}</v>
         <o>
