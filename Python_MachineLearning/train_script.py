@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+﻿
 """
 Robot Workpiece Detection - Training & ONNX Export Script
 Target: NVIDIA T600 GPU & TwinCAT Vision (TF7810)
@@ -20,7 +20,7 @@ IMAGE_DIR = './train_images'      # 学習用画像フォルダ
 MODEL_NAME = "WorkpieceCenterModel.onnx"
 INPUT_SIZE = 224                  # AIモデルの入力サイズ (224x224)
 BATCH_SIZE = 4                    # 一度に学習する画像数 (T600なら4〜8程度)
-NUM_EPOCHS = 50                   # 学習の繰り返し回数
+NUM_EPOCHS = 500                  # 学習の繰り返し回数
 LEARNING_RATE = 0.001             # 学習率
 
 # ==========================================

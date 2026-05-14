@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>27ebfd05-a1a7-4de2-8c6c-eb083be16d70</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>train_script.py</StartupFile>
+    <StartupFile>test_onnx.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Python_MachineLearning.py" />
+    <Compile Include="test_onnx.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="train_script.py" />
   </ItemGroup>
   <ItemGroup>
