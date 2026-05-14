@@ -7,7 +7,7 @@ from torchvision import transforms
 
 # --- 設定（学習時と合わせる） ---
 MODEL_PATH = "WorkpieceCenterModel.onnx"
-TEST_IMAGE = "./train_images/work_550_269.jpg" # 確認したい画像パス
+TEST_IMAGE = "./train_images/work_622_91.jpg" # 確認したい画像パス
 INPUT_SIZE = 224
 
 # 1. ONNXモデルの読み込み
