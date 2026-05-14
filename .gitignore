@@ -49,5 +49,17 @@ LineIDs.dbg.bak
 *.suo
 
 
+# Pythonのキャッシュ
+__pycache__/
+*.pyc
+
+train_images/
+
+# 万が一プロジェクト内に環境を作った場合の保険
+env/
+venv/
+.venv/
+
+
 
 2911.txt
