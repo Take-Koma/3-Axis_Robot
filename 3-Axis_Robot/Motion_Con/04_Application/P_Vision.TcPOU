@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
-  <POU Name="P_Vision" Id="{01db0ff9-afb1-4980-a0cc-1cc5a7f8bb47}" SpecialFunc="None">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="P_Vision" Id="{0174ef10-5390-4cfe-975d-92401b326291}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Vision
 VAR
 	hr					: HRESULT;					// Vision関数の戻り値を表す変数
@@ -142,7 +142,7 @@ TCVN_CS_ACQUIRING:
 	7:
 		IF GVL.nDetectedNum > 0 THEN
 			// 検出したブロブの輪郭を描画
-			hr := F_VN_DrawContours(ipContourList, -1, ipImageRes,  P_Vision.aColorGreen, 3, hr);
+			hr := F_VN_DrawContours(ipContourList, -1, ipImageRes,  aColorGreen, 3, hr);
 			
 			// 各ブロブ情報が格納されたコンテナ(ContourList)から、最初の要素へのイテレータを取得
 			hr := F_VN_GetForwardIterator(ipContourList, ipIterator, hr);
@@ -213,7 +213,8 @@ TCVN_CS_ACQUIRING:
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="P_Vision">
-      <LineId Id="1" Count="161" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="2" Count="160" />
     </LineIds>
   </POU>
 </TcPlcObject>

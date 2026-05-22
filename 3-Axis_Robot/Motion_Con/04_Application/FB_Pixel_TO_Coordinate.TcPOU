@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_Pixel_TO_Coordinate" Id="{a64a6a61-c9e4-4ed2-a3fe-c97e290dc16b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Pixel_TO_Coordinate
+VAR_INPUT
+	lrUPixel		:LREAL;		// 入力: 画像座標 [px]
+	lrVPixel		:LREAL;		// 入力: 画像座標 [px]
+END_VAR
+VAR_OUTPUT
+	lrXCoordinate	:LREAL;		// 出力: 盤面座標 [mm]
+	lrYCoordinate	:LREAL;		// 出力: 盤面座標 [mm]
+	
+	bError			:bool;		// エラー
+END_VAR
+VAR
+	xh				:LREAL;		// 計算用中間変数
+	yh				:LREAL;		// 計算用中間変数
+	wh				:LREAL;		// 計算用中間変数
+    
+    // 1行目:X係数, 2行目:Y係数, 3行目:分母係数
+    H				:ARRAY[1..3, 1..3] OF LREAL:=	[
+													0.4956,  -0.0012,  -56.4406,	// h11, h12, h13 (1行目)
+													-0.0038,   0.4965,   -7.3795,	// h21, h22, h23 (2行目)
+													0.0000,   0.0000,    1.0000		// h31, h32, h33 (3行目)
+													];
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Xの分子: h11*u + h12*v + h13
+xh := lrUPixel * H[1,1] + lrVPixel * H[1,2] + H[1,3];
+
+// Yの分子: h21*u + h22*v + h23
+yh := lrUPixel * H[2,1] + lrVPixel * H[2,2] + H[2,3];
+
+// 分母 (Weight): h31*u + h32*v + h33
+wh := lrUPixel * H[3,1] + lrVPixel * H[3,2] + H[3,3];
+
+
+// ゼロ割り算の防止と実座標への変換
+IF wh <> 0.0 THEN
+    lrXCoordinate := xh / wh;
+    lrYCoordinate := yh / wh;
+	
+	bError:=FALSE;
+ELSE
+    lrXCoordinate := 0.0;
+    lrYCoordinate := 0.0;
+	
+	bError:=TRUE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Pixel_TO_Coordinate">
+      <LineId Id="4" Count="7" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="12" Count="4" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

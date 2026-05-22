@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_DetectedWork" Id="{914e294a-bcd6-4c83-a961-83a8b6ba8a06}">
+    <Declaration><![CDATA[TYPE ST_DetectedWork :
+STRUCT
+    fCenterX  : REAL;    // 元のカメラ解像度(816x624)での中心X座標 [pixel]
+    fCenterY  : REAL;    // 元のカメラ解像度(816x624)での中心Y座標 [pixel]
+    fScore    : REAL;    // AIの自信度 (0.0 ～ 1.0)
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

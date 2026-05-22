@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="P_DNNVision" Id="{01db0ff9-afb1-4980-a0cc-1cc5a7f8bb47}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM P_DNNVision
+VAR CONSTANT
+    // 画像とモデルの解像度定義
+    cModelInputWidth					:UDINT := 640;					// ONNXモデルが要求する幅
+    cModelInputHeight					:UDINT := 640;					// ONNXモデルが要求する高さ
+    cMaxPixelValue						:UDINT := 255;					// 画素の最大値（REAL化のスケール用）
+END_VAR
+VAR
+	//Vision必須関数
+    hr									:HRESULT;						// Vision関数の戻り値を表す変数
+    fbCameraControl						:FB_VN_SimpleCameraControl;		// Cameraオブジェクト or File Sourceオブジェクト
+    eCameraState						:ETcVnCameraState;				// Cameraオブジェクト (or FileSourceオブジェクト) の状態を表す
+    
+    // --- DNNモデルロード用 ---
+	sFolderPath							:STRING(255) := 'C:\TF7xxx_NeuralNetwork\';		//ONNXファイルのディレクトリ
+	sFilePath							:STRING(255);					//ONNXファイルのファイルパス
+	fbReadDnn							:FB_VN_ReadNeuralNetwork;		//ONNXファイル読み込みFB
+	ipDnnModel							:ITcVnNeuralNetwork;			//ONNXのインターフェースポインター
+	bDnnModelInitialized				:BOOL := FALSE;					//読み込み制御___後々はFB_Initにする
+	nReturnCode							:UDINT;							//リターンコード
+	
+	// ---DNNモデルインフォメーション---
+	sFileName							:STRING(255) := 'WorkDetectTopK.onnx';		//ONNXファイル名
+	eInterpolationType					:ETcVnInterpolationType := TCVN_IT_BILINEAR;
+	
+    // --- TwinCAT Vision 内部テンソル（ポインタ型） ---
+    ipImageIn							:ITcVnImage;					//カメラからの生画像（816x624）
+    ipTensorImage						:ITcVnImage;					//前処理（リサイズやREAL化）を施すテンソル
+    ipDestImages						:ITcVnContainer;				//推論結果がまとめてドサッと返ってくる特大の箱
+	
+    ipOutBoxesImg           : ITcVnImage;       // コンテナから個別に分離した boxes(50,4) の箱
+    ipOutScoresImg          : ITcVnImage;       // コンテナから個別に分離した scores(50) の箱
+    ipOutLabelsImg          : ITcVnImage;       // コンテナから個別に分離した labels(50) の箱
+
+    // --- PLC側で数値計算を行うための生配列バッファ ---
+    aOutBoxes               : ARRAY[0..49, 0..3] OF REAL; // 50個×4隅座標 [x1, y1, x2, y2]
+    aOutScores              : ARRAY[0..49] OF REAL;       // 50個の自信度
+    aOutLabels              : ARRAY[0..49] OF REAL;       // 50個のクラスラベル
+    
+    // --- 最終結果格納・フィルタ用 ---
+    iWorkCount              : INT := 0;         // 画面内で見つかった本物のワーク合計数
+    aValidWorks             : ARRAY[1..9] OF ST_DetectedWork; // 上位最大9個までの確定座標
+    fScoreTh                : REAL := 0.7;      // ★自信度しきい値（70%以上を間引く）
+    
+    // --- ループ・計算用の一時変数 ---
+    i                       : INT;
+    fTmpX1, fTmpY1          : REAL;
+    fTmpX2, fTmpY2          : REAL;
+    aBlack                  : TcVnVector4_LREAL := [0, 0, 0]; // リサイズ時の背景色（黒）
+ 
+
+
+
+
+
+
+// その他ローカル変数
+	bSoftWareTrigger	: BOOL;						// ソフトウェアトリガー
+	fbR_TRIG			: R_TRIG;					// ボタンスイッチの立ち上がりエッジを検出
+	fbTon				: ton;						// LEDライト点灯安定待ち
+	iStep				: INT:=0;					// 画像処理のステップ進行用
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//---ONNXモデルのロード（起動時に1回だけ実行）---
+IF NOT bDnnModelInitialized THEN
+    sFilePath := CONCAT(sFolderPath, sFileName);
+    FW_SafeRelease(ADR(ipDnnModel)); // 初期化前に念のためメモリ解放
+    fbReadDnn(sFilePath := sFilePath, ipDestNeuralNetwork := ipDnnModel, bRead := TRUE, nTimeout:=T#60S);
+    
+    IF NOT fbReadDnn.bBusy THEN
+        fbReadDnn(sFilePath:='', bRead := FALSE);
+        IF NOT fbReadDnn.bError THEN
+            bDnnModelInitialized := TRUE; // ロード大成功
+        END_IF
+		nReturnCode := fbReadDnn.nErrorId AND 16#FFF;
+    END_IF
+END_IF
+
+//---カメラのストリーミング制御と画像取得---
+eCameraState := fbCameraControl.GetState();
+
+CASE eCameraState OF
+TCVN_CS_ERROR:
+	hr := fbCameraControl.Reset();	// エラーの時はリセットを実行
+
+TCVN_CS_TRIGGERING:
+	hr := fbCameraControl.TriggerImage();	// ソフトウェアトリガー
+
+TCVN_CS_INITIAL..TCVN_CS_STARTACQUISITION:
+	hr := fbCameraControl.StartAcquisition();	// 取込開始状態に移行させる
+
+TCVN_CS_ACQUIRING:
+
+	CASE iStep OF
+	0:
+		fbR_TRIG(CLK := GVL.bAutoCameraTriger, Q => );	// ボタンスイッチを押すとソフトウェアトリガーを発行する
+		
+		IF fbR_TRIG.Q=TRUE THEN
+			GVL.bLedLight:=TRUE;
+		END_IF
+
+		fbTon(IN:=GVL.bLedLight,PT:=T#500MS,Q=>,ET=>);	//LEDの照度安定待ち
+		
+		IF fbTon.Q=TRUE THEN
+			bSoftWareTrigger:=TRUE;
+			iStep := 1;
+		END_IF
+		
+	1:
+		IF bSoftwareTrigger=TRUE THEN
+			hr := fbCameraControl.TriggerImage();
+			IF SUCCEEDED(hr)=TRUE THEN
+				bSoftwareTrigger := FALSE;
+			END_IF
+		ELSE
+			hr := fbCameraControl.GetCurrentImage(ipImageIn);	// 最新画像を取得			
+			// new image was received.
+			IF SUCCEEDED(hr)=TRUE AND ipImageIn <> 0 THEN
+				iStep := 2;
+			END_IF
+		END_IF
+		
+	2:
+		GVL.bLedLight:=FALSE;
+		iStep:=3;
+	
+	3:
+	//---プリプロセッシング---
+		
+		//1 ONNX入力に合わせて画像をリサイズ
+		hr := F_VN_ResizeImage(ipImageIn, ipTensorImage, cModelInputWidth, cModelInputHeight, eInterpolationType, hr);
+		
+		//2 ONNX入力に合わせてfloat32(REAL)の(0.0,,1.0)にスケーリング
+		hr := F_VN_ConvertElementTypeExp(ipTensorImage, ipTensorImage, TCVN_ET_REAL, 1.0 / UDINT_TO_REAL(cMaxPixelValue), 0, hr);
+	
+		//3 ONNX入力に合わせて4D Tensorの(バッチ, チャンネル, 縦, 横)に変換
+		hr := F_VN_ConvertDataLayout(ipTensorImage, ipTensorImage, TCVN_DL_DEFAULT, TCVN_DL_4D_NCHW, hr);
+	
+		iStep:=4;
+	
+	4:
+	//---ONNXに入力---
+	
+        hr := F_VN_ExecuteNeuralNetwork_MO(ipDnnModel, ipTensorImage, ipDestImages, 0, hr );
+		
+		IF SUCCEEDED(hr) THEN
+			iStep:=5;
+		END_IF
+		
+	5:
+	//---ポストプロセッシング---
+	
+		//1 特大コンテナから、インデックス指定（0, 1, 2）で各テンソルを「ITcVnImage型」として抽出
+		hr := F_VN_GetAt_ITcVnImage(ipDestImages, ipOutBoxesImg,  0, hr); // 0番目: boxes_xyxy
+		hr := F_VN_GetAt_ITcVnImage(ipDestImages, ipOutScoresImg, 1, hr); // 1番目: scores
+		hr := F_VN_GetAt_ITcVnImage(ipDestImages, ipOutLabelsImg, 2, hr); // 2番目: labels
+		
+		// ② 「画像オブジェクト」のフリをした数表メモリを、PLCの生配列へ一気になだれ込ませる（ダンプ）
+		hr := F_VN_ExportImage(ipOutBoxesImg,  ADR(aOutBoxes),  SIZEOF(aOutBoxes),  hr);
+		hr := F_VN_ExportImage(ipOutScoresImg, ADR(aOutScores), SIZEOF(aOutScores), hr);
+		hr := F_VN_ExportImage(ipOutLabelsImg, ADR(aOutLabels), SIZEOF(aOutLabels), hr);
+		
+		// ------------------------------------------------------------------------------
+		// ◆ ステップ4：データの間引き ＆ 元カメラ解像度（816x624）への中心座標換算
+		// ------------------------------------------------------------------------------
+		iWorkCount := 0; // カウンタをリセット
+		MEMSET(ADR(aValidWorks), 0, SIZEOF(aValidWorks)); // 過去の結果配列をクリア
+		
+		// ONNXから出てきた50個の固定データを上から順番に高速スキャン
+		FOR i := 0 TO 49 DO
+			
+			// 条件1：AIの自信度（Score）が設定したしきい値（例: 0.7）以上か？
+			// 条件2：ラベルが「1.0」（本物のワーク）か？（背景0.0のゴミを徹底排除）
+			// 条件3：ロボットが一度に扱える最大数「9個」未満か？
+			IF aOutScores[i] >= fScoreTh AND aOutLabels[i] = 1.0 AND iWorkCount < 9 THEN
+				
+				iWorkCount := iWorkCount + 1; // 有効なワークとしてカウント
+				
+				// 640x640の世界における検出四角枠の4隅 [左上X, 左上Y, 右下X, 右下Y] を取得
+				fTmpX1 := aOutBoxes[i, 0];
+				fTmpY1 := aOutBoxes[i, 1];
+				fTmpX2 := aOutBoxes[i, 2];
+				fTmpY2 := aOutBoxes[i, 3];
+				
+				// 自信度を格納
+				aValidWorks[iWorkCount].fScore := aOutScores[i];
+				
+				// ① 640の世界での「四角のジャスト中心点」を計算： (左上 ＋ 右下) ／ 2
+				fTmpX1 := (fTmpX1 + fTmpX2) / 2.0; 
+				fTmpY1 := (fTmpY1 + fTmpY2) / 2.0;
+				
+				// ② 【超重要】押しつぶされていた640世界から、元のカメラ解像度(816x624)へ引き延ばして復元！
+				aValidWorks[iWorkCount].fCenterX := fTmpX1 * (816.0 / 640.0);
+				aValidWorks[iWorkCount].fCenterY := fTmpY1 * (624.0 / 640.0);
+				
+			ELSIF aOutScores[i] < fScoreTh THEN
+				// ONNXの出力は「自信度が高い順」に綺麗にソートされて出てきます。
+				// つまり、上から見ていって1回でも70%未満の箱にぶち当たったら、それ以降の箱（i=35〜49など）に
+				// 70%以上のデータが入っている可能性は「100%絶対にありません」。
+				// 無駄なループを回さず、ここで即座にFOR文を抜ける（EXIT）のが、PLCのCPU負荷を跳ね上げないプロのコツです。
+				EXIT;
+			END_IF
+		END_FOR
+
+        
+        // ----------------------------------------------------------------------------------
+        // ◆ ステップ5：メモリ解放（リーク対策）
+        //   ※これを怠ると、24時間稼働させた時にPLCのメモリがじわじわ食いつぶされて最後は設備が止まります！
+        // ----------------------------------------------------------------------------------
+        FW_SafeRelease(ADR(ipTensorImage)); // 前処理テンソルの解放
+        FW_SafeRelease(ADR(ipDestImages));  // 3つの出力が詰まっていた大箱コンテナの解放
+        FW_SafeRelease(ADR(ipOutBoxesImg)); // バラした個々の箱を解放
+        FW_SafeRelease(ADR(ipOutScoresImg));
+        FW_SafeRelease(ADR(ipOutLabelsImg));
+        
+    END_CASE
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="P_DNNVision">
+      <LineId Id="165" Count="0" />
+      <LineId Id="167" Count="9" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="177" Count="1" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="307" Count="13" />
+      <LineId Id="337" Count="45" />
+      <LineId Id="386" Count="1" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="384" Count="1" />
+      <LineId Id="388" Count="3" />
+      <LineId Id="239" Count="65" />
+      <LineId Id="162" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
