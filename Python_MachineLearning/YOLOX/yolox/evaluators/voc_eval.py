@@ -13,6 +13,13 @@ import numpy as np
 
 def parse_rec(filename):
     """Parse a PASCAL VOC xml file"""
+
+    # ★ここから追加
+    import os
+    if not os.path.isabs(filename):
+        filename = os.path.join(r"C:\Python_Venvs\env_YOLOX\YOLOX\datasets\VOCdevkit\VOC2007\Annotations", filename)
+    # ★ここまで追加
+
     tree = ET.parse(filename)
     objects = []
     for obj in tree.findall("object"):

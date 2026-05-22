@@ -134,7 +134,6 @@
     <Compile Include="YOLOX\yolox\utils\visualize.py" />
     <Compile Include="YOLOX\yolox\utils\__init__.py" />
     <Compile Include="YOLOX\yolox\__init__.py" />
-    <Compile Include="YOLO\convert_to_yolo.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="..\..\..\..\..\..\..\..\..\Python_Venvs\env_anomalib\">
@@ -226,7 +225,6 @@
     <Folder Include="YOLOX\yolox\models\" />
     <Folder Include="YOLOX\yolox\tools\" />
     <Folder Include="YOLOX\yolox\utils\" />
-    <Folder Include="YOLO\" />
     <Folder Include="OneWork_ONNX\" />
   </ItemGroup>
   <ItemGroup>

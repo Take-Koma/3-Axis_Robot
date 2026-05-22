@@ -135,8 +135,8 @@ class VOCDetection(CacheDataset):
         self.annotations = self._load_coco_annotations()
 
         path_filename = [
-            (self._imgpath % self.ids[i]).split(self.root + "/")[1]
-            for i in range(self.num_imgs)
+            (self._imgpath % self.ids[i]).replace('\\', '/').split(self.root.replace('\\', '/') + "/")[1]
+            for i in range(len(self.ids))
         ]
         super().__init__(
             input_dimension=img_size,
@@ -261,7 +261,7 @@ class VOCDetection(CacheDataset):
                 for im_ind, index in enumerate(self.ids):
                     index = index[1]
                     dets = all_boxes[cls_ind][im_ind]
-                    if dets == []:
+                    if len(dets) == 0:  # 💡 ここを len(dets) == 0: に修正
                         continue
                     for k in range(dets.shape[0]):
                         f.write(
