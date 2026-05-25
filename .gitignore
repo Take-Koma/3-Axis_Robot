@@ -317,11 +317,18 @@ LineIDs.dbg.bak
 ### Python ###
 
 # 自分のデータセットや学習結果は公開リポジトリに上げない
+#---YOLOX---
 Python_MachineLearning/YOLOX/datasets/
 Python_MachineLearning/YOLOX/YOLOX_outputs/
 Python_MachineLearning/YOLOX/*.pth
 Python_MachineLearning/YOLOX/*.onnx
 Python_MachineLearning/Annotated_Data/
+
+#---OCR---
+Python_MachineLearning/OCR_Test/dataset/
+Python_MachineLearning/OCR_Test/data/
+Python_MachineLearning/OCR_Test/*.onnx
+
 
 # 万が一プロジェクト内に環境を作った場合の保険
 env/
