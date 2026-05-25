@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>27ebfd05-a1a7-4de2-8c6c-eb083be16d70</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>convert_labelme_to_voc.py</StartupFile>
+    <StartupFile>YOLOX_CALL\4_Test_AI_Model.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -32,7 +32,7 @@
     <Compile Include="ALotWork_ONNX\1_labelme_to_coco_bbox.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="0_Python_MachineLearning.py" />
+    <Compile Include="0_CUDA_Availability_Check.py" />
     <Compile Include="OneWork_ONNX\2_test_onnx.py">
       <SubType>Code</SubType>
     </Compile>
@@ -40,7 +40,8 @@
     <Compile Include="ALotWork_ONNX\2_train_torchvision_frcnn.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="convert_labelme_to_voc.py">
+    <Compile Include="YOLOX\exps\default\yolox_nano_work.py" />
+    <Compile Include="YOLOX_CALL\1_convert_labelme_to_voc.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="YOLOX\demo\MegEngine\python\build.py" />
@@ -134,6 +135,16 @@
     <Compile Include="YOLOX\yolox\utils\visualize.py" />
     <Compile Include="YOLOX\yolox\utils\__init__.py" />
     <Compile Include="YOLOX\yolox\__init__.py" />
+    <Compile Include="YOLOX_CALL\2_train_launcher.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="YOLOX_CALL\5_export_onnx.py" />
+    <Compile Include="YOLOX_CALL\3_train_continue_launcher.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="YOLOX_CALL\4_Test_AI_Model.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="..\..\..\..\..\..\..\..\..\Python_Venvs\env_anomalib\">
@@ -166,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ALotWork_ONNX\" />
+    <Folder Include="YOLOX_CALL\" />
     <Folder Include="YOLOX\" />
     <Folder Include="YOLOX\.github\" />
     <Folder Include="YOLOX\.github\workflows\" />

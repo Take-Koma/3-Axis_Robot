@@ -132,10 +132,21 @@ def convert_and_arrange(json_dir_path, output_dir_path):
     print(f"・データセット保存先: {voc_base.resolve()}")
 
 if __name__ == '__main__':
-    # 💡 修正ポイント: 文字列の前に `r` を付与し、生文字列（Raw String）として扱います
-    # これにより \t がタブ文字に変換されるのを防ぎます。
+    # 💡 1. このスクリプトがある場所（YOLOX_CALLフォルダ）の絶対パスを自動取得
+    current_dir = os.path.dirname(os.path.abspath(__file__))
     
-    JSON_INPUT_DIR = r"C:\Python_Venvs\train_images"
-    VOC_OUTPUT_DIR = r"C:\Python_Venvs\env_YOLOX\YOLOX\datasets"
+    # 💡 2. 1つ上の階層（Python_MachineLearning）に上がり、そこからの相対参照でパスを作成
+    # ➔ ".../Python_MachineLearning/Annotated_Data" になります
+    JSON_INPUT_DIR = os.path.abspath(os.path.join(current_dir, "..", "Annotated_Data"))
     
+    # ➔ ".../Python_MachineLearning/YOLOX/datasets" になります
+    VOC_OUTPUT_DIR = os.path.abspath(os.path.join(current_dir, "..", "YOLOX", "datasets"))
+    
+    # 💡 3. 安全確認用のプリント文（パスがズレていないか画面で見える化）
+    print("=" * 60)
+    print(f"📁 JSON Input : {JSON_INPUT_DIR}")
+    print(f"📁 VOC Output : {VOC_OUTPUT_DIR}")
+    print("=" * 60)
+    
+    # 変換処理を実行
     convert_and_arrange(JSON_INPUT_DIR, VOC_OUTPUT_DIR)
