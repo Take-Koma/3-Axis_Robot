@@ -48,42 +48,48 @@ def main():
     # ② データの準備（MNISTデータセットの読み込み）
     # ==================================================================================
 
-    # -----MNISTデータセットの読み込み用のコード-----
-    # 画像の変形ルール（PyTorchのテンソルに変換 ＆ 0.0〜1.0 に正規化）
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.5,), (0.5,))
-    ])
+    dataSet_Select = input("データセットを選択してください（1: MNIST, 2: 実データセット）: ")
 
-    # 訓練用データとテスト用データのダウンロード・読み込み
-    train_set = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-    # DataLoaderを使うことで、データを指定したバッチサイズ（例: 64枚ずつ）に小分けにしてモデルに投入できます
-    train_loader = torch.utils.data.DataLoader(train_set, batch_size=64, shuffle=True)
+    if dataSet_Select == "1":
 
-    test_set = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
-    test_loader = torch.utils.data.DataLoader(test_set, batch_size=1000, shuffle=False)
-    # -----MNISTデータセットの読み込み用のコードここまで-----
+        # -----MNISTデータセットの読み込み用のコード-----
+        # 画像の変形ルール（PyTorchのテンソルに変換 ＆ 0.0〜1.0 に正規化）
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize((0.5,), (0.5,))
+        ])
 
+        # 訓練用データとテスト用データのダウンロード・読み込み
+        train_set = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+        # DataLoaderを使うことで、データを指定したバッチサイズ（例: 64枚ずつ）に小分けにしてモデルに投入できます
+        train_loader = torch.utils.data.DataLoader(train_set, batch_size=64, shuffle=True)
 
-    # -----実データセットの読み込み用のコード-----
-    # 白黒（1チャンネル）で読み込み、28x28にリサイズする変形ルール
-    transform = transforms.Compose([
-        transforms.Grayscale(num_output_channels=1), 
-        transforms.Resize((28, 28)),
+        test_set = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+        test_loader = torch.utils.data.DataLoader(test_set, batch_size=1000, shuffle=False)
+        # -----MNISTデータセットの読み込み用のコードここまで-----
 
-        # 👇 ここが水増しの魔法
-        transforms.RandomRotation(degrees=10),               # 💡 ワークの傾き対策（±10度のランダム回転）
-        transforms.RandomPerspective(distortion_scale=0.1), # 💡 カメラのあおり角対策（斜めからの歪み）
-        transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 2.0)), # 💡 ピントボケ・油汚れ対策（ブラー）
+    elif dataSet_Select == "2":
 
-        transforms.ToTensor(),
-        transforms.Normalize((0.5,), (0.5,))
-    ])
+        # -----実データセットの読み込み用のコード-----
+        # 白黒（1チャンネル）で読み込み、28x28にリサイズする変形ルール
+        transform = transforms.Compose([
+            transforms.Grayscale(num_output_channels=1), 
+            transforms.Resize((28, 28)),
 
-    # 自分で用意したフォルダを指定するだけ！
-    train_set = torchvision.datasets.ImageFolder(root='./dataset', transform=transform)
-    train_loader = torch.utils.data.DataLoader(train_set, batch_size=32, shuffle=True)
-    # -----実データセットの読み込み用のコードここまで-----
+            # 👇 ここが水増しの魔法
+            transforms.RandomRotation(degrees=10),               # 💡 ワークの傾き対策（±10度のランダム回転）
+            transforms.RandomPerspective(distortion_scale=0.1), # 💡 カメラのあおり角対策（斜めからの歪み）
+            transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 2.0)), # 💡 ピントボケ・油汚れ対策（ブラー）
+
+            transforms.ToTensor(),
+            transforms.Normalize((0.5,), (0.5,))
+        ])
+
+        # 自分で用意したフォルダを指定するだけ！
+        train_set = torchvision.datasets.ImageFolder(root='./dataset', transform=transform)
+        train_loader = torch.utils.data.DataLoader(train_set, batch_size=32, shuffle=True)
+        # -----実データセットの読み込み用のコードここまで-----
+
 
 
     # ==================================================================================
@@ -125,18 +131,22 @@ def main():
     # ==================================================================================
     # ⑤ 簡易テスト（精度の確認）
     # ==================================================================================
-    model.eval()  # 🚨モデルを「評価モード」に設定
-    correct = 0
-    total = 0
-    with torch.no_grad(): # テスト時はメモリ節約のため勾配計算をオフにする
-        for images, labels in test_loader:
-            images, labels = images.to(device), labels.to(device)
-            outputs = model(images)
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-            
-    print(f"テスト精度: {100 * correct / total:.2f} %")
+    # 💡 修正箇所：MNIST（1）を選択したときだけテストを実行する（実データのときはスキップ）
+    if dataSet_Select == "1":
+        model.eval()  # 🚨モデルを「評価モード」に設定
+        correct = 0
+        total = 0
+        with torch.no_grad(): # テスト時はメモリ節約のため勾配計算をオフにする
+            for images, labels in test_loader:
+                images, labels = images.to(device), labels.to(device)
+                outputs = model(images)
+                _, predicted = torch.max(outputs.data, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+                
+        print(f"テスト精度: {100 * correct / total:.2f} %")
+    else:
+        print("実データセットのため、簡易テストをスキップしてONNX出力へ進みます。")
 
     # ==================================================================================
     # ⑥ TwinCAT用 ONNXエクスポート
