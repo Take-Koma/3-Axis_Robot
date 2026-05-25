@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>27ebfd05-a1a7-4de2-8c6c-eb083be16d70</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>YOLOX_CALL\4_Test_AI_Model.py</StartupFile>
+    <StartupFile>OCR_Test\OCR_Test.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -33,6 +33,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="0_CUDA_Availability_Check.py" />
+    <Compile Include="OCR_Test\OCR_Test.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="OneWork_ONNX\2_test_onnx.py">
       <SubType>Code</SubType>
     </Compile>
@@ -177,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ALotWork_ONNX\" />
+    <Folder Include="OCR_Test\" />
     <Folder Include="YOLOX_CALL\" />
     <Folder Include="YOLOX\" />
     <Folder Include="YOLOX\.github\" />
