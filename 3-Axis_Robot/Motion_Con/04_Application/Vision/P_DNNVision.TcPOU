@@ -220,22 +220,7 @@ TCVN_CS_ACQUIRING:
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="P_DNNVision">
-      <LineId Id="165" Count="0" />
-      <LineId Id="167" Count="9" />
-      <LineId Id="305" Count="0" />
-      <LineId Id="177" Count="1" />
-      <LineId Id="196" Count="0" />
-      <LineId Id="198" Count="0" />
-      <LineId Id="307" Count="13" />
-      <LineId Id="337" Count="45" />
-      <LineId Id="386" Count="1" />
-      <LineId Id="206" Count="0" />
-      <LineId Id="383" Count="0" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="384" Count="1" />
-      <LineId Id="388" Count="3" />
-      <LineId Id="239" Count="65" />
-      <LineId Id="162" Count="0" />
+      <LineId Id="1" Count="153" />
     </LineIds>
   </POU>
 </TcPlcObject>

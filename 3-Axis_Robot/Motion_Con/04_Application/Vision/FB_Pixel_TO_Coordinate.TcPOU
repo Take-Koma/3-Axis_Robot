@@ -50,13 +50,7 @@ ELSE
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="FB_Pixel_TO_Coordinate">
-      <LineId Id="4" Count="7" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="12" Count="4" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="17" Count="2" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="20" Count="0" />
+      <LineId Id="1" Count="21" />
     </LineIds>
   </POU>
 </TcPlcObject>

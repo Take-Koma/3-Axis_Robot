@@ -213,8 +213,7 @@ TCVN_CS_ACQUIRING:
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="P_Vision">
-      <LineId Id="163" Count="0" />
-      <LineId Id="2" Count="160" />
+      <LineId Id="1" Count="161" />
     </LineIds>
   </POU>
 </TcPlcObject>

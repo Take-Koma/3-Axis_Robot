@@ -126,23 +126,23 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="04_Application\ST_DetectedWork.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="04_Application\FB_Pixel_TO_Coordinate.TcPOU">
+    <Compile Include="04_Application\Robot\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="04_Application\GVL.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="04_Application\MAIN.TcPOU">
+    <Compile Include="04_Application\Vision\FB_Pixel_TO_Coordinate.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="04_Application\P_DNNVision.TcPOU">
+    <Compile Include="04_Application\Vision\P_DNNVision.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="04_Application\P_Vision.TcPOU">
+    <Compile Include="04_Application\Vision\P_Vision.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="04_Application\Vision\ST_DetectedWork.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
@@ -200,6 +200,8 @@
     <Folder Include="02_Subsystems" />
     <Folder Include="04_Application" />
     <Folder Include="00_Internal" />
+    <Folder Include="04_Application\Robot" />
+    <Folder Include="04_Application\Vision" />
     <Folder Include="POUs" />
     <Folder Include="POUs\ゴミ箱" />
   </ItemGroup>

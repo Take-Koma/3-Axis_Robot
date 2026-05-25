@@ -29,23 +29,7 @@ IPCのCPU温度、FAN回転数の確認
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="7" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="10" Count="2" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="28" Count="2" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="233" Count="0" />
-      <LineId Id="232" Count="0" />
+      <LineId Id="1" Count="20" />
     </LineIds>
   </POU>
 </TcPlcObject>
