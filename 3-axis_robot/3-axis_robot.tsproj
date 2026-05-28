@@ -1690,6 +1690,7 @@
 			</Settings>
 			<Licenses>
 				<Target>
+					<ManualSelect>{7141DE01-F769-4354-9738-D7453BC0876F}</ManualSelect>
 					<ManualSelect>{B1065A48-8131-4608-A378-D67FA8BD826E}</ManualSelect>
 					<ManualSelect>{6952449D-F68C-49A2-ADE4-8639D85B33A4}</ManualSelect>
 				</Target>

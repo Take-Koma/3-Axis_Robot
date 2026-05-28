@@ -52,7 +52,7 @@ VAR
 	//DNNモデルインフォメーション
 	eInterpolationType					:ETcVnInterpolationType	:=TCVN_IT_BILINEAR;
 	ePaddingMode						:ETcVnPaddingMode	:=TCVN_PM_LETTERBOX;
-	aGray								:TcVnVector4_LREAL	:=[114, 114, 114];				//グレー(レターボックス塗りつぶし色)
+	aGray								:TcVnVector4_LREAL	:=[114, 114, 114, 0];			//グレー(レターボックス塗りつぶし色)
 	
     //イメージ
     ipImageIn							:ITcVnImage;										//カメラからの生画像（816x624）
@@ -150,23 +150,26 @@ END_VAR]]></Declaration>
 	
 	3:
 	//---プリプロセッシング---
+		
+		//1 BAYER_RGからRGBに変換
+		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageIn, TCVN_CST_BAYER_RG_TO_RGB, hr);
 	
-		//0 出力用画像に入力画像をコピー
+		//2 出力用画像に入力画像をコピー
 		hr := F_VN_CopyImage(ipImageIn, ipimageOut, hr);
 		
-		//1 逆変換用の倍率とパディング（余白）を自動計算
+		//3 逆変換用の倍率とパディング（余白）を自動計算
 		fScale:=MIN(UDINT_TO_REAL(cModelInputWidth)/cImageWidth, UDINT_TO_REAL(cModelInputHeight)/cImageHeight);		//アスペクト比を維持するため、縦横で縮小率のきつい方（小さい方）を基準倍率にする
 		
 		fPadX:=(UDINT_TO_REAL(cModelInputWidth)-(cImageWidth*fScale))/2.0;			//640x640 の中で、画像が中央配置されたときに発生する左右のグレー余白の幅を計算
 		fPadY:=(UDINT_TO_REAL(cModelInputHeight)-(cImageHeight*fScale))/2.0;		//640x640 の中で、画像が中央配置されたときに発生する上下のグレー余白の幅を計算
 		
-		//2 ONNX入力に合わせて画像をリサイズ
+		//4 ONNX入力に合わせて画像をリサイズ
 		hr := F_VN_ResizeImageExp(ipImageIn, ipTensorImage, cModelInputWidth, cModelInputHeight, eInterpolationType, ePaddingMode, aGray, hr);
 		
-		//3 ONNX入力に合わせてfloat32(REAL)の(0.0,,1.0)にスケーリング
+		//5 ONNX入力に合わせてfloat32(REAL)の(0.0,,1.0)にスケーリング
 		hr := F_VN_ConvertElementTypeExp(ipTensorImage, ipTensorImage, TCVN_ET_REAL, 1.0 / UDINT_TO_REAL(cMaxPixelValue), 0, hr);
 	
-		//4 ONNX入力に合わせて4D Tensorの(バッチ, チャンネル, 縦, 横)に変換
+		//6 ONNX入力に合わせて4D Tensorの(バッチ, チャンネル, 縦, 横)に変換
 		hr := F_VN_ConvertDataLayout(ipTensorImage, ipTensorImage, TCVN_DL_DEFAULT, TCVN_DL_4D_NCHW, hr);
 
 
@@ -336,7 +339,7 @@ NMS処理の引数説明
 ]]></ST>
     </Implementation>
     <LineIds Name="P_DNNVision">
-      <LineId Id="1" Count="242" />
+      <LineId Id="1" Count="245" />
     </LineIds>
   </POU>
 </TcPlcObject>
