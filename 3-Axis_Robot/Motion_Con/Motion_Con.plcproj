@@ -139,10 +139,16 @@
     <Compile Include="04_Application\Vision\P_DNNVision.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="04_Application\Vision\P_BlobVision.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="04_Application\Vision\P_Vision.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="04_Application\Vision\ST_DetectedWork.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="04_Application\Vision\F_VN_ApplicationSoftwareTrigger.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">

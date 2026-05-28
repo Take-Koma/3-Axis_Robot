@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="F_VN_ApplicationSoftwareTrigger" Id="{8e21d269-9480-4fea-a857-c924f9ef1b21}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_VN_ApplicationSoftwareTrigger	:ETcVnCameraState
+VAR_INPUT
+	fbCameraControl							:FB_VN_SimpleCameraControl;		// Cameraオブジェクト or File Sourceオブジェクト
+END_VAR
+VAR
+	hr										:HRESULT;						// Vision関数の戻り値を表す変数
+	eCameraState							:ETcVnCameraState;				// Cameraオブジェクト (or FileSourceオブジェクト) の状態を表す
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// カメラのステータスを取得
+eCameraState := fbCameraControl.GetState();
+
+CASE eCameraState OF
+TCVN_CS_ERROR:
+	hr := fbCameraControl.Reset();					// エラーの時はリセットを実行
+
+TCVN_CS_INITIAL..TCVN_CS_STARTACQUISITION:
+	hr := fbCameraControl.StartAcquisition();		// 取込開始状態に移行させる
+
+TCVN_CS_TRIGGERING:
+	hr := fbCameraControl.TriggerImage();			// ソフトウェアトリガー
+	
+END_CASE
+
+F_VN_ApplicationSoftwareTrigger := eCameraState;
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_VN_ApplicationSoftwareTrigger">
+      <LineId Id="1" Count="16" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

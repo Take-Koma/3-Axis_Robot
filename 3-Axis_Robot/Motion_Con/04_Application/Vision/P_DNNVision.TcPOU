@@ -3,109 +3,131 @@
   <POU Name="P_DNNVision" Id="{01db0ff9-afb1-4980-a0cc-1cc5a7f8bb47}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_DNNVision
 VAR CONSTANT
-    // 画像とモデルの解像度定義
-    cModelInputWidth					:UDINT := 640;					// ONNXモデルが要求する幅
-    cModelInputHeight					:UDINT := 640;					// ONNXモデルが要求する高さ
-    cMaxPixelValue						:UDINT := 255;					// 画素の最大値（REAL化のスケール用）
+	//カメラの画素数
+	cImageWidth							:REAL	:=816.0;									//カメラ生画像の幅
+    cImageHeight						:REAL	:=624.0;									//カメラ生画像の高さ
+	
+	//DNNモデルロード用
+	cFolderPath							:STRING(255)	:='C:\TF7xxx_NeuralNetwork\';		//ONNXファイルのディレクトリ
+	cFileName							:STRING(255)	:='model_InDecode.onnx';			//ONNXファイル名
+
+    //画像とモデルの解像度定義
+    cModelInputWidth					:UDINT	:=640;										//ONNXモデルが要求する幅
+    cModelInputHeight					:UDINT	:=640;										//ONNXモデルが要求する高さ
+    cMaxPixelValue						:UDINT	:=255;										//画素の最大値（REAL化のスケール用）
+	
+	//ONNXモデルリターン
+	cBatchSize							:UDINT	:=1;										//バッチ数
+    cNumBox								:UDINT	:=8400;										//ボックス数
+    cElementPerBox						:UDINT	:=6;										//要素数	[cx, cy, w, h, obj_score, class_score]
 END_VAR
 VAR
+	//制御変数
+	nIdx								:UDINT;												//ループ用
+	iStep								:INT	:=0;										//画像処理のステップ進行用
+
+	//カメラ・ライト制御
+	bSoftWareTrigger					:BOOL;												//ソフトウェアトリガー
+	fbR_TRIG							:R_TRIG;											//ボタンスイッチの立ち上がりエッジを検出
+	fbTon								:ton;												//LEDライト点灯安定待ち
+
 	//Vision必須関数
-    hr									:HRESULT;						// Vision関数の戻り値を表す変数
-    fbCameraControl						:FB_VN_SimpleCameraControl;		// Cameraオブジェクト or File Sourceオブジェクト
-    eCameraState						:ETcVnCameraState;				// Cameraオブジェクト (or FileSourceオブジェクト) の状態を表す
-    
-    // --- DNNモデルロード用 ---
-	sFolderPath							:STRING(255) := 'C:\TF7xxx_NeuralNetwork\';		//ONNXファイルのディレクトリ
-	sFilePath							:STRING(255);					//ONNXファイルのファイルパス
-	fbReadDnn							:FB_VN_ReadNeuralNetwork;		//ONNXファイル読み込みFB
-	ipDnnModel							:ITcVnNeuralNetwork;			//ONNXのインターフェースポインター
-	bDnnModelInitialized				:BOOL := FALSE;					//読み込み制御___後々はFB_Initにする
-	nReturnCode							:UDINT;							//リターンコード
+    hr									:HRESULT;											//Vision関数の戻り値を表す変数
+    fbCameraControl						:FB_VN_SimpleCameraControl;							//Cameraオブジェクト or FileSourceオブジェクト
+    eCameraState						:ETcVnCameraState;									//Cameraオブジェクト or FileSourceオブジェクト の状態
 	
-	// ---DNNモデルインフォメーション---
-	sFileName							:STRING(255) := 'WorkDetectTopK.onnx';		//ONNXファイル名
-	eInterpolationType					:ETcVnInterpolationType := TCVN_IT_BILINEAR;
+	//ポストプロセッシングで使用する倍率
+	fScale								:REAL;												//レターボックスの縮小倍率
+    fPadX								:REAL;												//X方向の余白（ピクセル）
+    fPadY								:REAL;												//Y方向の余白（ピクセル）
 	
-    // --- TwinCAT Vision 内部テンソル（ポインタ型） ---
-    ipImageIn							:ITcVnImage;					//カメラからの生画像（816x624）
-    ipTensorImage						:ITcVnImage;					//前処理（リサイズやREAL化）を施すテンソル
-    ipDestImages						:ITcVnContainer;				//推論結果がまとめてドサッと返ってくる特大の箱
+    //DNNモデルロード用
+	sFilePath							:STRING(255);										//ONNXファイルのファイルパス
+	fbReadDnn							:FB_VN_ReadNeuralNetwork;							//ONNXファイル読み込みFB
+	ipDnnModel							:ITcVnNeuralNetwork;								//ONNXのインターフェースポインター
+	bDnnModelInitialized				:BOOL	:=FALSE;									//読み込み制御__________________________________後々はFB_Initにする
+	nReturnCode							:UDINT;												//リターンコード
 	
-    ipOutBoxesImg           : ITcVnImage;       // コンテナから個別に分離した boxes(50,4) の箱
-    ipOutScoresImg          : ITcVnImage;       // コンテナから個別に分離した scores(50) の箱
-    ipOutLabelsImg          : ITcVnImage;       // コンテナから個別に分離した labels(50) の箱
+	
+	//DNNモデルインフォメーション
+	eInterpolationType					:ETcVnInterpolationType	:=TCVN_IT_BILINEAR;
+	ePaddingMode						:ETcVnPaddingMode	:=TCVN_PM_LETTERBOX;
+	aGray								:TcVnVector4_LREAL	:=[114, 114, 114];				//グレー(レターボックス塗りつぶし色)
+	
+    //イメージ
+    ipImageIn							:ITcVnImage;										//カメラからの生画像（816x624）
+    ipTensorImage						:ITcVnImage;										//前処理（リサイズやREAL化）を施すテンソル
+    ipDnnOutputImage	  				:ITcVnImage;										//ONNX実行結果
+	ipImageOut							:ITcVnImage;										//結果の画像
+	
+	//表示用イメージ
+	ipImageInDisp						:ITcVnDisplayableImage;								//入力画像の画面表示用変数
+	ipImageOutDisp						:ITcVnDisplayableImage;								//結果画像の画面表示用変数
 
-    // --- PLC側で数値計算を行うための生配列バッファ ---
-    aOutBoxes               : ARRAY[0..49, 0..3] OF REAL; // 50個×4隅座標 [x1, y1, x2, y2]
-    aOutScores              : ARRAY[0..49] OF REAL;       // 50個の自信度
-    aOutLabels              : ARRAY[0..49] OF REAL;       // 50個のクラスラベル
-    
-    // --- 最終結果格納・フィルタ用 ---
-    iWorkCount              : INT := 0;         // 画面内で見つかった本物のワーク合計数
-    aValidWorks             : ARRAY[1..9] OF ST_DetectedWork; // 上位最大9個までの確定座標
-    fScoreTh                : REAL := 0.7;      // ★自信度しきい値（70%以上を間引く）
-    
-    // --- ループ・計算用の一時変数 ---
-    i                       : INT;
-    fTmpX1, fTmpY1          : REAL;
-    fTmpX2, fTmpY2          : REAL;
-    aBlack                  : TcVnVector4_LREAL := [0, 0, 0]; // リサイズ時の背景色（黒）
- 
+    //Row Data
+    aDnnRawOutput						:ARRAY[0..cBatchSize-1, 0..cNumBox-1, 0..cElementPerBox-1] OF REAL;
+																							//ONNX生出力受け取り用配列
+	//RowData書き込みコンテナ
+	ipBoundingBoxes     				:ITcVnContainer;									//座標用コンテナ	(ContainerType_Vector_TcVnRectangle_DINT)
+    ipScores            				:ITcVnContainer;									//スコア用コンテナ	(ContainerType_Vector_REAL)
 
+    //コンテナアクセス用
+    ipIterator							:ITcVnForwardIterator;								//イテレータ
+    ipAccessTcVnRectangleDINT			:ITcVnAccess_TcVnRectangle_DINT;					//アクセスインターフェース(TcVnRectangle_DINT)
+	ipAccessREAL						:ITcVnAccess_REAL;									//アクセスインターフェース(REAL)
+	stRectangle							:TcVnRectangle_DINT;								//アクセスインターフェースに書き込む中間バッファ
+	nIteratorIdx						:DINT;												//イテレータと一緒にカウント
+	
+	//NMS処理用
+	ipDestIndices						:ITcVnContainer;									//NMSで残ったインデックス番号用コンテナ	(ContainerType_Vector_DINT)
+	nElementsFound						:ULINT;												//NMSで生き残った確定ワーク数
+	
+	//結果の出力用
+	nTargetIndex						:DINT;												//NMSで生き残った元のインデックス番号
+	stFinalRect							:TcVnRectangle_DINT;								//最終確定したワークの座標
+	stCenterPoint						:TcVnVector2_DINT;									//ワークの中心座標格納用
+	aGreen								:TcVnVector4_LREAL	:=[0, 255, 0, 0];				//緑色 (結果の描画用色)
+	fbFormatString						:FB_FormatString;									//XY座標出力用
 
-
-
-
-
-// その他ローカル変数
-	bSoftWareTrigger	: BOOL;						// ソフトウェアトリガー
-	fbR_TRIG			: R_TRIG;					// ボタンスイッチの立ち上がりエッジを検出
-	fbTon				: ton;						// LEDライト点灯安定待ち
-	iStep				: INT:=0;					// 画像処理のステップ進行用
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//---ONNXモデルのロード（起動時に1回だけ実行）---
-IF NOT bDnnModelInitialized THEN
-    sFilePath := CONCAT(sFolderPath, sFileName);
-    FW_SafeRelease(ADR(ipDnnModel)); // 初期化前に念のためメモリ解放
-    fbReadDnn(sFilePath := sFilePath, ipDestNeuralNetwork := ipDnnModel, bRead := TRUE, nTimeout:=T#60S);
-    
-    IF NOT fbReadDnn.bBusy THEN
-        fbReadDnn(sFilePath:='', bRead := FALSE);
-        IF NOT fbReadDnn.bError THEN
-            bDnnModelInitialized := TRUE; // ロード大成功
-        END_IF
-		nReturnCode := fbReadDnn.nErrorId AND 16#FFF;
-    END_IF
-END_IF
+	IF NOT bDnnModelInitialized THEN
+		sFilePath := CONCAT(cFolderPath, cFileName);
+		FW_SafeRelease(ADR(ipDnnModel)); //初期化前に念のためメモリ解放
+		fbReadDnn(sFilePath := sFilePath, ipDestNeuralNetwork := ipDnnModel, bRead := TRUE, nTimeout:=T#10S);
+		
+		IF NOT fbReadDnn.bBusy THEN
+			fbReadDnn(sFilePath:='', bRead := FALSE);
+			IF NOT fbReadDnn.bError THEN
+				bDnnModelInitialized := TRUE; //ロード大成功
+			END_IF
+			nReturnCode := fbReadDnn.nErrorId AND 16#FFF;
+		END_IF
+	END_IF
 
-//---カメラのストリーミング制御と画像取得---
-eCameraState := fbCameraControl.GetState();
 
-CASE eCameraState OF
-TCVN_CS_ERROR:
-	hr := fbCameraControl.Reset();	// エラーの時はリセットを実行
+//---画像取得開始状態へ---
+	eCameraState := F_VN_ApplicationSoftwareTrigger(fbCameraControl:=fbCameraControl);
+	
+	IF eCameraState <> TCVN_CS_ACQUIRING THEN
+		RETURN;		//画像取込状態でなければ抜ける
+	END_IF
 
-TCVN_CS_TRIGGERING:
-	hr := fbCameraControl.TriggerImage();	// ソフトウェアトリガー
 
-TCVN_CS_INITIAL..TCVN_CS_STARTACQUISITION:
-	hr := fbCameraControl.StartAcquisition();	// 取込開始状態に移行させる
-
-TCVN_CS_ACQUIRING:
-
+//---画像取得後推論実施---
 	CASE iStep OF
 	0:
-		fbR_TRIG(CLK := GVL.bAutoCameraTriger, Q => );	// ボタンスイッチを押すとソフトウェアトリガーを発行する
+		fbR_TRIG(CLK := GVL.bAutoCameraTriger, Q => );
 		
 		IF fbR_TRIG.Q=TRUE THEN
 			GVL.bLedLight:=TRUE;
 		END_IF
-
+	
 		fbTon(IN:=GVL.bLedLight,PT:=T#500MS,Q=>,ET=>);	//LEDの照度安定待ち
 		
 		IF fbTon.Q=TRUE THEN
-			bSoftWareTrigger:=TRUE;
+			bSoftWareTrigger:=TRUE;	//ソフトウェアトリガー
 			iStep := 1;
 		END_IF
 		
@@ -117,110 +139,204 @@ TCVN_CS_ACQUIRING:
 			END_IF
 		ELSE
 			hr := fbCameraControl.GetCurrentImage(ipImageIn);	// 最新画像を取得			
-			// new image was received.
 			IF SUCCEEDED(hr)=TRUE AND ipImageIn <> 0 THEN
-				iStep := 2;
+				GVL.bLedLight:=FALSE;
+				iStep:=3;
 			END_IF
 		END_IF
 		
 	2:
-		GVL.bLedLight:=FALSE;
-		iStep:=3;
+		//NA
 	
 	3:
 	//---プリプロセッシング---
+	
+		//0 出力用画像に入力画像をコピー
+		hr := F_VN_CopyImage(ipImageIn, ipimageOut, hr);
 		
-		//1 ONNX入力に合わせて画像をリサイズ
-		hr := F_VN_ResizeImage(ipImageIn, ipTensorImage, cModelInputWidth, cModelInputHeight, eInterpolationType, hr);
+		//1 逆変換用の倍率とパディング（余白）を自動計算
+		fScale:=MIN(UDINT_TO_REAL(cModelInputWidth)/cImageWidth, UDINT_TO_REAL(cModelInputHeight)/cImageHeight);		//アスペクト比を維持するため、縦横で縮小率のきつい方（小さい方）を基準倍率にする
 		
-		//2 ONNX入力に合わせてfloat32(REAL)の(0.0,,1.0)にスケーリング
+		fPadX:=(UDINT_TO_REAL(cModelInputWidth)-(cImageWidth*fScale))/2.0;			//640x640 の中で、画像が中央配置されたときに発生する左右のグレー余白の幅を計算
+		fPadY:=(UDINT_TO_REAL(cModelInputHeight)-(cImageHeight*fScale))/2.0;		//640x640 の中で、画像が中央配置されたときに発生する上下のグレー余白の幅を計算
+		
+		//2 ONNX入力に合わせて画像をリサイズ
+		hr := F_VN_ResizeImageExp(ipImageIn, ipTensorImage, cModelInputWidth, cModelInputHeight, eInterpolationType, ePaddingMode, aGray, hr);
+		
+		//3 ONNX入力に合わせてfloat32(REAL)の(0.0,,1.0)にスケーリング
 		hr := F_VN_ConvertElementTypeExp(ipTensorImage, ipTensorImage, TCVN_ET_REAL, 1.0 / UDINT_TO_REAL(cMaxPixelValue), 0, hr);
 	
-		//3 ONNX入力に合わせて4D Tensorの(バッチ, チャンネル, 縦, 横)に変換
+		//4 ONNX入力に合わせて4D Tensorの(バッチ, チャンネル, 縦, 横)に変換
 		hr := F_VN_ConvertDataLayout(ipTensorImage, ipTensorImage, TCVN_DL_DEFAULT, TCVN_DL_4D_NCHW, hr);
-	
+
+
 		iStep:=4;
 	
 	4:
 	//---ONNXに入力---
 	
-        hr := F_VN_ExecuteNeuralNetwork_MO(ipDnnModel, ipTensorImage, ipDestImages, 0, hr );
+		hr := F_VN_ExecuteNeuralNetwork(ipDnnModel, ipTensorImage, ipDnnOutputImage, hr );
 		
-		IF SUCCEEDED(hr) THEN
-			iStep:=5;
-		END_IF
+		iStep:=5;
 		
 	5:
 	//---ポストプロセッシング---
 	
-		//1 特大コンテナから、インデックス指定（0, 1, 2）で各テンソルを「ITcVnImage型」として抽出
-		hr := F_VN_GetAt_ITcVnImage(ipDestImages, ipOutBoxesImg,  0, hr); // 0番目: boxes_xyxy
-		hr := F_VN_GetAt_ITcVnImage(ipDestImages, ipOutScoresImg, 1, hr); // 1番目: scores
-		hr := F_VN_GetAt_ITcVnImage(ipDestImages, ipOutLabelsImg, 2, hr); // 2番目: labels
+		//0 コンテナ初期化
+		hr := F_VN_CreateContainer(ipBoundingBoxes, ContainerType_Vector_TcVnRectangle_DINT, cNumBox, hr);		//NMS関数座標用
+        hr := F_VN_CreateContainer(ipScores, ContainerType_Vector_REAL, cNumBox, hr);							//NMS関数スコア用
 		
-		// ② 「画像オブジェクト」のフリをした数表メモリを、PLCの生配列へ一気になだれ込ませる（ダンプ）
-		hr := F_VN_ExportImage(ipOutBoxesImg,  ADR(aOutBoxes),  SIZEOF(aOutBoxes),  hr);
-		hr := F_VN_ExportImage(ipOutScoresImg, ADR(aOutScores), SIZEOF(aOutScores), hr);
-		hr := F_VN_ExportImage(ipOutLabelsImg, ADR(aOutLabels), SIZEOF(aOutLabels), hr);
+		hr := FW_SafeRelease(ADR(GVL.ipResultPoints));															//GVLにあるXY座標入力用コンテナをリリース(初回はコンテナ無いけど、大丈夫な関数)
+		hr := F_VN_CreateContainer(GVL.ipResultPoints, ContainerType_Vector_TcVnPoint2_DINT, 0, hr);			//GVLにあるXY座標入力用コンテナ作成
 		
-		// ------------------------------------------------------------------------------
-		// ◆ ステップ4：データの間引き ＆ 元カメラ解像度（816x624）への中心座標換算
-		// ------------------------------------------------------------------------------
-		iWorkCount := 0; // カウンタをリセット
-		MEMSET(ADR(aValidWorks), 0, SIZEOF(aValidWorks)); // 過去の結果配列をクリア
-		
-		// ONNXから出てきた50個の固定データを上から順番に高速スキャン
-		FOR i := 0 TO 49 DO
-			
-			// 条件1：AIの自信度（Score）が設定したしきい値（例: 0.7）以上か？
-			// 条件2：ラベルが「1.0」（本物のワーク）か？（背景0.0のゴミを徹底排除）
-			// 条件3：ロボットが一度に扱える最大数「9個」未満か？
-			IF aOutScores[i] >= fScoreTh AND aOutLabels[i] = 1.0 AND iWorkCount < 9 THEN
-				
-				iWorkCount := iWorkCount + 1; // 有効なワークとしてカウント
-				
-				// 640x640の世界における検出四角枠の4隅 [左上X, 左上Y, 右下X, 右下Y] を取得
-				fTmpX1 := aOutBoxes[i, 0];
-				fTmpY1 := aOutBoxes[i, 1];
-				fTmpX2 := aOutBoxes[i, 2];
-				fTmpY2 := aOutBoxes[i, 3];
-				
-				// 自信度を格納
-				aValidWorks[iWorkCount].fScore := aOutScores[i];
-				
-				// ① 640の世界での「四角のジャスト中心点」を計算： (左上 ＋ 右下) ／ 2
-				fTmpX1 := (fTmpX1 + fTmpX2) / 2.0; 
-				fTmpY1 := (fTmpY1 + fTmpY2) / 2.0;
-				
-				// ② 【超重要】押しつぶされていた640世界から、元のカメラ解像度(816x624)へ引き延ばして復元！
-				aValidWorks[iWorkCount].fCenterX := fTmpX1 * (816.0 / 640.0);
-				aValidWorks[iWorkCount].fCenterY := fTmpY1 * (624.0 / 640.0);
-				
-			ELSIF aOutScores[i] < fScoreTh THEN
-				// ONNXの出力は「自信度が高い順」に綺麗にソートされて出てきます。
-				// つまり、上から見ていって1回でも70%未満の箱にぶち当たったら、それ以降の箱（i=35〜49など）に
-				// 70%以上のデータが入っている可能性は「100%絶対にありません」。
-				// 無駄なループを回さず、ここで即座にFOR文を抜ける（EXIT）のが、PLCのCPU負荷を跳ね上げないプロのコツです。
-				EXIT;
-			END_IF
-		END_FOR
 
-        
-        // ----------------------------------------------------------------------------------
-        // ◆ ステップ5：メモリ解放（リーク対策）
-        //   ※これを怠ると、24時間稼働させた時にPLCのメモリがじわじわ食いつぶされて最後は設備が止まります！
-        // ----------------------------------------------------------------------------------
-        FW_SafeRelease(ADR(ipTensorImage)); // 前処理テンソルの解放
-        FW_SafeRelease(ADR(ipDestImages));  // 3つの出力が詰まっていた大箱コンテナの解放
-        FW_SafeRelease(ADR(ipOutBoxesImg)); // バラした個々の箱を解放
-        FW_SafeRelease(ADR(ipOutScoresImg));
-        FW_SafeRelease(ADR(ipOutLabelsImg));
-        
-    END_CASE
-END_CASE]]></ST>
+        //1 ONNX実行結果の出力テンソル画像から、PLC上のREAL配列へコピー
+        hr := F_VN_ExportImage(ipDnnOutputImage, ADR(aDnnRawOutput), SIZEOF(aDnnRawOutput), hr);
+		
+		//2 Row Dataを座標用コンテナに書き込み
+		nIteratorIdx:=0;		//インデックスリセット
+		hr := F_VN_GetForwardIterator(ipBoundingBoxes, ipIterator, hr);		//座標用コンテナから前方走査イテレータを取得
+		IF SUCCEEDED(hr) AND ipIterator <> 0 THEN
+			hr := ipIterator.TcQueryInterface(IID_ITcVnAccess_TcVnRectangle_DINT, ADR(ipAccessTcVnRectangleDINT));		//TcVnRectangle_DINT型アクセス用のアクセスインターフェースをクエリ
+			IF SUCCEEDED(hr) AND ipAccessTcVnRectangleDINT <> 0 THEN
+				WHILE SUCCEEDED(hr) AND ipIterator.CheckIfEnd() <> S_OK DO		//コンテナの終端に達するまで高速ループ
+					
+					stRectangle.nX			:=REAL_TO_DINT(aDnnRawOutput[0, nIteratorIdx, 0]-(aDnnRawOutput[0, nIteratorIdx, 2]/2.0));		// 計算式： 左上X ＝ 中心X － (幅 ÷ 2)
+					stRectangle.nY			:=REAL_TO_DINT(aDnnRawOutput[0, nIteratorIdx, 1]-(aDnnRawOutput[0, nIteratorIdx, 3]/2.0));		// 計算式： 左上Y ＝ 中心Y － (高さ ÷ 2)
+					stRectangle.nWidth		:=REAL_TO_DINT(aDnnRawOutput[0, nIteratorIdx, 2]);
+					stRectangle.nHeight		:=REAL_TO_DINT(aDnnRawOutput[0, nIteratorIdx, 3]);		//YOLOXセンター座標（cx, cy）から、TwinCAT左上座標（x, y）に変換して中間バッファのストラクトに書き込み
+				
+					hr := ipAccessTcVnRectangleDINT.Set(stRectangle);		//アクセスインターフェース経由でデータをコンテナに書き込み
+					
+					IF SUCCEEDED(hr) THEN
+						hr := ipIterator.Increment();
+						nIteratorIdx:=nIteratorIdx+1;
+					END_IF
+					
+				END_WHILE
+			END_IF
+			hr := FW_SafeRelease(ADR(ipAccessTcVnRectangleDINT));		//アクセスインターフェースを解放
+		END_IF 
+		hr := FW_SafeRelease(ADR(ipIterator));		//イテレータを解放
+
+
+		//3 Row Dataをスコア用コンテナに書き込み
+		nIteratorIdx:=0;		//インデックスリセット
+		hr := F_VN_GetForwardIterator(ipScores, ipIterator, hr);		//スコア用コンテナから前方走査イテレータを取得
+		IF SUCCEEDED(hr) AND ipIterator <> 0 THEN
+			hr := ipIterator.TcQueryInterface(IID_ITcVnAccess_REAL, ADR(ipAccessREAL));		//REAL型アクセス用のアクセスインターフェースをクエリ
+			IF SUCCEEDED(hr) AND ipAccessREAL <> 0 THEN
+				WHILE SUCCEEDED(hr) AND ipIterator.CheckIfEnd() <> S_OK DO		//コンテナの終端に達するまで高速ループ
+					
+					hr := ipAccessREAL.Set(aDnnRawOutput[0, nIteratorIdx, 4] * aDnnRawOutput[0, nIteratorIdx, 5]);		//アクセスインターフェース経由でデータをコンテナに書き込み
+																														//スコアはobj_score（物体らしさスコア）× class_score（クラススコア）					
+					IF SUCCEEDED(hr) THEN
+						hr := ipIterator.Increment();
+						nIteratorIdx:=nIteratorIdx+1;
+					END_IF
+					
+				END_WHILE
+			END_IF
+			hr := FW_SafeRelease(ADR(ipAccessREAL));		//アクセスインターフェースを解放
+		END_IF 
+		hr := FW_SafeRelease(ADR(ipIterator));		//イテレータを解放
+		
+
+		//4 Non-Maximum Suppression (NMS) の実行
+        hr := F_VN_NonMaxSuppression(ipBoundingBoxes, ipScores, ipDestIndices, 0.3, 0.45, hr);		// 第4引数 (0.3)  : スコア閾値（30%未満の低い候補を足切り）
+
+		//NMS生存結果の抽出・描画・GVL出力
+		hr := F_VN_GetNumberOfElements(ipDestIndices, nElementsFound, hr);		//NMSで生き残った（＝検出確定した）ワークの総数をカウント
+		
+		//1個以上ワークが検出された場合のみ、ループで1個ずつ処理を回す
+		IF SUCCEEDED(hr) AND nElementsFound > 0 THEN
+			
+			FOR nIdx := 0 TO (ULINT_TO_UDINT(nElementsFound) - 1) DO
+							
+				hr := F_VN_GetAt_DINT(ipDestIndices, nTargetIndex, UDINT_TO_ULINT(nIdx), hr);		//NMSコンテナから、生き残った「元のRowDataのインデックス番号」を抽出
+
+				hr := F_VN_GetAt_TcVnRectangle_DINT(ipBoundingBoxes, stFinalRect, DINT_TO_ULINT(nTargetIndex), hr);		//抽出したインデックスを使って、元の座標コンテナから長方形（Rect）データを取得
+
+				// ONNXの座標から余白を引いて、縮小倍率で割り戻すことで、元画像のピクセル位置に戻す
+				stFinalRect.nX      :=REAL_TO_DINT((DINT_TO_REAL(stFinalRect.nX) - fPadX) / fScale);
+				stFinalRect.nY      :=REAL_TO_DINT((DINT_TO_REAL(stFinalRect.nY) - fPadY) / fScale);
+				stFinalRect.nWidth  :=REAL_TO_DINT(DINT_TO_REAL(stFinalRect.nWidth) / fScale);
+				stFinalRect.nHeight :=REAL_TO_DINT(DINT_TO_REAL(stFinalRect.nHeight) / fScale);
+				
+				//ワークの中心座標 (cx, cy) を計算し、DINT型構造体に落とし込む
+				stCenterPoint[0]:=stFinalRect.nX + (stFinalRect.nWidth / 2);
+				stCenterPoint[1]:=stFinalRect.nY + (stFinalRect.nHeight / 2);
+
+
+				//5 出力画像にワークの位置を画像に書き込み
+				hr := F_VN_DrawRectangle(stFinalRect.nX, stFinalRect.nY, stFinalRect.nX+stFinalRect.nWidth, stFinalRect.nY + stFinalRect.nHeight,ipImageOut, aGreen, 2, hr);		//ワークを囲む長方形を描画
+				
+				hr := F_VN_DrawPoint(stCenterPoint[0], stCenterPoint[1], ipImageOut, TCVN_DS_PLUS, aGreen, hr);		//中心点に十字マークを描画
+
+
+				//6 ワークのxy座標を画像に書き込み
+				fbFormatString(	sFormat	:='(X, Y) = (%0.3d, %0.3d)', 
+								arg1	:=F_DINT(stCenterPoint[0]),
+								arg2	:=F_DINT(stCenterPoint[1]));		//書き込み文字列生成
+				
+				hr := F_VN_PutText(fbFormatString.sOut, ipImageOut, stFinalRect.nX, stFinalRect.nY, TCVN_FT_HERSHEY_TRIPLEX, 0.5, aGreen, hr);		//XY座標を描画
+				
+				//7 GVLにあるコンテナにxy座標を書き込み
+				hr := F_VN_AppendToContainer_TcVnVector2_DINT(stCenterPoint, GVL.ipResultPoints, hr);
+
+				
+			END_FOR
+		END_IF
+		
+		iStep:=11;
+	6..10:
+		//NA
+
+	11:
+		//画面表示イメージを作成する
+		hr := F_VN_TransformIntoDisplayableImage(ipImageIn, ipImageInDisp, hr);
+        hr := F_VN_TransformIntoDisplayableImage(ipImageOut, ipImageOutDisp, hr);
+
+		//ポインターの開放
+		FW_SafeRelease(ADR(ipTensorImage));
+		FW_SafeRelease(ADR(ipDnnOutputImage));
+		FW_SafeRelease(ADR(ipBoundingBoxes));
+		FW_SafeRelease(ADR(ipScores));
+		FW_SafeRelease(ADR(ipDestIndices));
+		
+        iStep := 0;
+		
+	END_CASE
+
+
+
+
+
+
+
+(*ワンポイントメモ
+
+NMS処理の引数説明
+0.3 ＝ スコアの閾値（足切りライン）正式な引数名はfScoreThreshold
+意味：
+*直前で計算した「obj_score × class_score」の最終スコアが、「0.3（30%）未満のゴミ候補は、重なりを調べる前に最初から全部切り捨てる」という設定です。
+現場での調整イメージ：
+*誤検出（ワークがないのに背景を誤認識する）が多いとき			:この値を 0.4 や 0.5 に上げます。より自信のある候補しか残らなくなります。
+*見落とし（あるはずのワークをスルーしてしまう）が多いとき		:この値を 0.2 や 0.15 に下げます。少し自信がなくても候補として拾うようになります。
+
+2. 0.45 ＝ 重複の閾値（ダブり判定の基準）正式な引数名は fOverlapThreshold
+意味：
+*1つのワークに対して、AIが何個もダブって四角枠（ボックス）を出してしまったときに、「面積の45%以上が重なっていたら、それは同じワークを二重検出しているとみなして、スコアが低い方を消す」という設定です。
+※この重なりの割合をAIの世界では「IoU（Intersection over Union）」と呼びます。
+現場での調整イメージ：
+*1つのワークに四角枠が2個も3個も重なって残ってしまうとき								:この値を 0.3 や 0.35 に下げます（重なりの判定を厳しくして、ちょっとでも重なっていたら容赦なく1個にまとめます）。
+*ワーク同士が実際に近くに密集していて、隣のワークの枠まで巻き添えで消されてしまうとき	:この値を 0.55 や 0.6 に上げます（かなりガッツリ重なっていない限り、別々のワークとして認めるようになります）。
+
+*)
+]]></ST>
     </Implementation>
     <LineIds Name="P_DNNVision">
-      <LineId Id="1" Count="153" />
+      <LineId Id="1" Count="242" />
     </LineIds>
   </POU>
 </TcPlcObject>

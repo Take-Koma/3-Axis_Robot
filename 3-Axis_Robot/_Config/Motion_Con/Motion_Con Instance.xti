@@ -39,7 +39,7 @@
 		</Contexts>
 		<InitSymbols>
 			<InitSymbol>
-				<Name>P_Vision.fbCamera.oidITcVnImageProvider</Name>
+				<Name>P_DNNVision.fbCameraControl.oidITcVnImageProvider</Name>
 				<Type GUID="{18071995-0000-0000-0000-00000000000F}">OTCID</Type>
 				<Comment><![CDATA[ Internal reference to the corresponding TcVnImageProvider TcCOM module ID, which needs to be set via TC init symbol. ]]></Comment>
 				<AreaNo>#x00000013</AreaNo>
