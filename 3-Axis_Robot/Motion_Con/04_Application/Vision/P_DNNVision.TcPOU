@@ -14,7 +14,6 @@ VAR CONSTANT
     //画像とモデルの解像度定義
     cModelInputWidth					:UDINT	:=640;										//ONNXモデルが要求する幅
     cModelInputHeight					:UDINT	:=640;										//ONNXモデルが要求する高さ
-    cMaxPixelValue						:UDINT	:=255;										//画素の最大値（REAL化のスケール用）
 	
 	//ONNXモデルリターン
 	cBatchSize							:UDINT	:=1;										//バッチ数
@@ -85,6 +84,7 @@ VAR
 	//結果の出力用
 	nTargetIndex						:DINT;												//NMSで生き残った元のインデックス番号
 	stFinalRect							:TcVnRectangle_DINT;								//最終確定したワークの座標
+	fFinalScore							:REAL;												//最終確定したワークのスコア
 	stCenterPoint						:TcVnVector2_DINT;									//ワークの中心座標格納用
 	aGreen								:TcVnVector4_LREAL	:=[0, 255, 0, 0];				//緑色 (結果の描画用色)
 	fbFormatString						:FB_FormatString;									//XY座標出力用
@@ -151,8 +151,8 @@ END_VAR]]></Declaration>
 	3:
 	//---プリプロセッシング---
 		
-		//1 BAYER_RGからRGBに変換
-		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageIn, TCVN_CST_BAYER_RG_TO_RGB, hr);
+		//1 BAYER_RGからBGRに変換
+		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageIn, TCVN_CST_BAYER_RG_TO_BGR, hr);
 	
 		//2 出力用画像に入力画像をコピー
 		hr := F_VN_CopyImage(ipImageIn, ipimageOut, hr);
@@ -166,8 +166,8 @@ END_VAR]]></Declaration>
 		//4 ONNX入力に合わせて画像をリサイズ
 		hr := F_VN_ResizeImageExp(ipImageIn, ipTensorImage, cModelInputWidth, cModelInputHeight, eInterpolationType, ePaddingMode, aGray, hr);
 		
-		//5 ONNX入力に合わせてfloat32(REAL)の(0.0,,1.0)にスケーリング
-		hr := F_VN_ConvertElementTypeExp(ipTensorImage, ipTensorImage, TCVN_ET_REAL, 1.0 / UDINT_TO_REAL(cMaxPixelValue), 0, hr);
+		//5 ONNX入力に合わせてfloat32(REAL)コンバート
+		hr := F_VN_ConvertElementType(ipTensorImage, ipTensorImage, TCVN_ET_REAL, hr);
 	
 		//6 ONNX入力に合わせて4D Tensorの(バッチ, チャンネル, 縦, 横)に変換
 		hr := F_VN_ConvertDataLayout(ipTensorImage, ipTensorImage, TCVN_DL_DEFAULT, TCVN_DL_4D_NCHW, hr);
@@ -246,7 +246,7 @@ END_VAR]]></Declaration>
 		
 
 		//4 Non-Maximum Suppression (NMS) の実行
-        hr := F_VN_NonMaxSuppression(ipBoundingBoxes, ipScores, ipDestIndices, 0.3, 0.45, hr);		// 第4引数 (0.3)  : スコア閾値（30%未満の低い候補を足切り）
+        hr := F_VN_NonMaxSuppression(ipBoundingBoxes, ipScores, ipDestIndices, 0.3, 0.45, hr);		// 第4引数 (0.3)、第5引数（0.45）の説明コードの末尾にあり
 
 		//NMS生存結果の抽出・描画・GVL出力
 		hr := F_VN_GetNumberOfElements(ipDestIndices, nElementsFound, hr);		//NMSで生き残った（＝検出確定した）ワークの総数をカウント
@@ -259,6 +259,8 @@ END_VAR]]></Declaration>
 				hr := F_VN_GetAt_DINT(ipDestIndices, nTargetIndex, UDINT_TO_ULINT(nIdx), hr);		//NMSコンテナから、生き残った「元のRowDataのインデックス番号」を抽出
 
 				hr := F_VN_GetAt_TcVnRectangle_DINT(ipBoundingBoxes, stFinalRect, DINT_TO_ULINT(nTargetIndex), hr);		//抽出したインデックスを使って、元の座標コンテナから長方形（Rect）データを取得
+				
+				hr := F_VN_GetAt_REAL(ipScores, fFinalScore, DINT_TO_ULINT(nTargetIndex), hr);		//抽出したインデックスを使って、元のスコアコンテナから確率データを取得
 
 				// ONNXの座標から余白を引いて、縮小倍率で割り戻すことで、元画像のピクセル位置に戻す
 				stFinalRect.nX      :=REAL_TO_DINT((DINT_TO_REAL(stFinalRect.nX) - fPadX) / fScale);
@@ -269,7 +271,9 @@ END_VAR]]></Declaration>
 				//ワークの中心座標 (cx, cy) を計算し、DINT型構造体に落とし込む
 				stCenterPoint[0]:=stFinalRect.nX + (stFinalRect.nWidth / 2);
 				stCenterPoint[1]:=stFinalRect.nY + (stFinalRect.nHeight / 2);
-
+				
+				//確率表示にしたいので100倍
+				fFinalScore:=fFinalScore*100.0;
 
 				//5 出力画像にワークの位置を画像に書き込み
 				hr := F_VN_DrawRectangle(stFinalRect.nX, stFinalRect.nY, stFinalRect.nX+stFinalRect.nWidth, stFinalRect.nY + stFinalRect.nHeight,ipImageOut, aGreen, 2, hr);		//ワークを囲む長方形を描画
@@ -278,9 +282,10 @@ END_VAR]]></Declaration>
 
 
 				//6 ワークのxy座標を画像に書き込み
-				fbFormatString(	sFormat	:='(X, Y) = (%0.3d, %0.3d)', 
-								arg1	:=F_DINT(stCenterPoint[0]),
-								arg2	:=F_DINT(stCenterPoint[1]));		//書き込み文字列生成
+				fbFormatString(	sFormat	:='( %2.1f ) = (%.3d, %.3d)', 
+								arg1	:=F_REAL(fFinalScore),
+								arg2	:=F_DINT(stCenterPoint[0]),
+								arg3	:=F_DINT(stCenterPoint[1]));		//書き込み文字列生成
 				
 				hr := F_VN_PutText(fbFormatString.sOut, ipImageOut, stFinalRect.nX, stFinalRect.nY, TCVN_FT_HERSHEY_TRIPLEX, 0.5, aGreen, hr);		//XY座標を描画
 				
@@ -339,7 +344,16 @@ NMS処理の引数説明
 ]]></ST>
     </Implementation>
     <LineIds Name="P_DNNVision">
-      <LineId Id="1" Count="245" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="2" Count="166" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="169" Count="9" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="180" Count="8" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="189" Count="57" />
     </LineIds>
   </POU>
 </TcPlcObject>
