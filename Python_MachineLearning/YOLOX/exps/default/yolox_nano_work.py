@@ -28,17 +28,10 @@ class Exp(MyExp):
         self.eval_interval = 10
         
         # YOLOXが探すのは「VOCdevkit」の「親フォルダ」です
-
-        #OneDriveのパスは二バイト文字を含むため、Cの絶対パスを書く
-
-        # 💡 【修正】OneDrive（日本語パス）を回避するため、Cドライブ直下の安全なパスを直接指定
-        self.data_dir = r"C:\Python_Venvs\datasets\VOCdevkit"
-
-        # 💡 【修正】絶対パスをやめて、このファイルの位置から自動で逆算する
         # このファイル（yolox_nano_work.py）があるフォルダの絶対パスを取得
-        #current_dir = os.path.dirname(os.path.abspath(__file__))
+        current_dir = os.path.dirname(os.path.abspath(__file__))
         # exps/default/ の2つ上の階層（YOLOXフォルダ）に上がり、そこから datasets/VOCdevkit を指定
-        #self.data_dir = os.path.abspath(os.path.join(current_dir, "..", "..", "datasets", "VOCdevkit"))
+        self.data_dir = os.path.abspath(os.path.join(current_dir, "..", "..", "datasets", "VOCdevkit"))
 
     def get_dataset(self, cache=False, cache_type="ram"):
         """学習用データセットを準備するメソッド"""
