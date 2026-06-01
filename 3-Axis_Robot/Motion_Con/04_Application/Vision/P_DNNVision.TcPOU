@@ -88,6 +88,16 @@ VAR
 	stCenterPoint						:TcVnVector2_DINT;									//ワークの中心座標格納用
 	aGreen								:TcVnVector4_LREAL	:=[0, 255, 0, 0];				//緑色 (結果の描画用色)
 	fbFormatString						:FB_FormatString;									//XY座標出力用
+	
+	//各実行時間を取得
+	aPreprocessingDcTime				:ARRAY[0..1] OF T_DCTIME64;
+	aInferenceDcTime					:ARRAY[0..1] OF T_DCTIME64;
+	aPostprocessingDcTime				:ARRAY[0..1] OF T_DCTIME64;
+	
+	lrPreprocessingTime					:LREAL;
+	lrInferenceTime						:LREAL;
+	lrPostprocessingTime				:LREAL;
+	
 
 END_VAR]]></Declaration>
     <Implementation>
@@ -150,6 +160,9 @@ END_VAR]]></Declaration>
 	
 	3:
 	//---プリプロセッシング---
+	
+		//DCタイムをゲット
+		aPreprocessingDcTime[0]:=F_GetActualDcTime64();
 		
 		//1 BAYER_RGからBGRに変換
 		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageIn, TCVN_CST_BAYER_RG_TO_BGR, hr);
@@ -172,18 +185,29 @@ END_VAR]]></Declaration>
 		//6 ONNX入力に合わせて4D Tensorの(バッチ, チャンネル, 縦, 横)に変換
 		hr := F_VN_ConvertDataLayout(ipTensorImage, ipTensorImage, TCVN_DL_DEFAULT, TCVN_DL_4D_NCHW, hr);
 
+		//DCタイムをゲット
+		aPreprocessingDcTime[1]:=F_GetActualDcTime64();
 
 		iStep:=4;
 	
 	4:
 	//---ONNXに入力---
 	
+		//DCタイムをゲット
+		aInferenceDcTime[0]:=F_GetActualDcTime64();
+	
 		hr := F_VN_ExecuteNeuralNetwork(ipDnnModel, ipTensorImage, ipDnnOutputImage, hr );
+		
+		//DCタイムをゲット
+		aInferenceDcTime[1]:=F_GetActualDcTime64();
 		
 		iStep:=5;
 		
 	5:
 	//---ポストプロセッシング---
+	
+		//DCタイムをゲット
+		aPostprocessingDcTime[0]:=F_GetActualDcTime64();
 	
 		//0 コンテナ初期化
 		hr := F_VN_CreateContainer(ipBoundingBoxes, ContainerType_Vector_TcVnRectangle_DINT, cNumBox, hr);		//NMS関数座標用
@@ -296,7 +320,11 @@ END_VAR]]></Declaration>
 			END_FOR
 		END_IF
 		
+		//DCタイムをゲット
+		aPostprocessingDcTime[1]:=F_GetActualDcTime64();
+		
 		iStep:=11;
+		
 	6..10:
 		//NA
 
@@ -311,6 +339,11 @@ END_VAR]]></Declaration>
 		FW_SafeRelease(ADR(ipBoundingBoxes));
 		FW_SafeRelease(ADR(ipScores));
 		FW_SafeRelease(ADR(ipDestIndices));
+		
+		//各実行時間を計算[ms]
+		lrPreprocessingTime		:=ULINT_TO_LREAL(aPreprocessingDcTime[1]-aPreprocessingDcTime[0]) / 1000000.0;
+		lrInferenceTime			:=ULINT_TO_LREAL(aInferenceDcTime[1]-aInferenceDcTime[0]) / 1000000.0;
+		lrPostprocessingTime	:=ULINT_TO_LREAL(aPostprocessingDcTime[1]-aPostprocessingDcTime[0]) / 1000000.0;
 		
         iStep := 0;
 		
@@ -345,7 +378,23 @@ NMS処理の引数説明
     </Implementation>
     <LineIds Name="P_DNNVision">
       <LineId Id="247" Count="0" />
-      <LineId Id="2" Count="166" />
+      <LineId Id="2" Count="57" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="60" Count="20" />
+      <LineId Id="258" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="82" Count="4" />
+      <LineId Id="260" Count="2" />
+      <LineId Id="87" Count="2" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="265" Count="0" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="90" Count="3" />
+      <LineId Id="266" Count="2" />
+      <LineId Id="94" Count="74" />
       <LineId Id="249" Count="1" />
       <LineId Id="169" Count="9" />
       <LineId Id="252" Count="0" />
@@ -353,7 +402,18 @@ NMS処理の引数説明
       <LineId Id="253" Count="0" />
       <LineId Id="180" Count="8" />
       <LineId Id="251" Count="0" />
-      <LineId Id="189" Count="57" />
+      <LineId Id="189" Count="11" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="202" Count="14" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="276" Count="1" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="274" Count="0" />
+      <LineId Id="217" Count="29" />
     </LineIds>
   </POU>
 </TcPlcObject>
