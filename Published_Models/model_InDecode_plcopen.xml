@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+	<fileHeader companyName="Beckhoff Automation" productName="Beckhoff MLlib" productVersion="3.1.251201.0" creationDateTime="2026-06-04T05:12:43.2676280" />
+	<contentHeader name="model_InDecode" modificationDateTime="2026-06-04T05:12:43.2676280">
+		<coordinateInfo>
+			<fbd>
+				<scaling x="1" y="1" />
+			</fbd>
+			<ld>
+				<scaling x="1" y="1" />
+			</ld>
+			<sfc>
+				<scaling x="1" y="1" />
+			</sfc>
+		</coordinateInfo>
+		<addData>
+			<data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+				<ProjectInformation />
+			</data>
+		</addData>
+	</contentHeader>
+	<types>
+		<dataTypes>
+			<dataType name="ST_model_InDecodeInput">
+				<baseType>
+					<struct>
+						<variable name="_header_DO_NOT_CHANGE">
+							<type>
+								<array>
+									<dimension lower="0" upper="63" />
+									<baseType>
+										<SINT />
+									</baseType>
+								</array>
+							</type>
+							<initialValue>
+								<arrayValue>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="-112" />
+									</value>
+									<value>
+										<simpleValue value="120" />
+									</value>
+									<value>
+										<simpleValue value="86" />
+									</value>
+									<value>
+										<simpleValue value="52" />
+									</value>
+									<value>
+										<simpleValue value="18" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="1" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="-112" />
+									</value>
+									<value>
+										<simpleValue value="-112" />
+									</value>
+									<value>
+										<simpleValue value="-98" />
+									</value>
+									<value>
+										<simpleValue value="30" />
+									</value>
+									<value>
+										<simpleValue value="108" />
+									</value>
+									<value>
+										<simpleValue value="37" />
+									</value>
+									<value>
+										<simpleValue value="-121" />
+									</value>
+									<value>
+										<simpleValue value="74" />
+									</value>
+									<value>
+										<simpleValue value="-126" />
+									</value>
+									<value>
+										<simpleValue value="76" />
+									</value>
+									<value>
+										<simpleValue value="-75" />
+									</value>
+									<value>
+										<simpleValue value="77" />
+									</value>
+									<value>
+										<simpleValue value="-89" />
+									</value>
+									<value>
+										<simpleValue value="33" />
+									</value>
+									<value>
+										<simpleValue value="-107" />
+									</value>
+									<value>
+										<simpleValue value="61" />
+									</value>
+									<value>
+										<simpleValue value="4" />
+									</value>
+									<value>
+										<simpleValue value="-86" />
+									</value>
+									<value>
+										<simpleValue value="-123" />
+									</value>
+									<value>
+										<simpleValue value="62" />
+									</value>
+									<value>
+										<simpleValue value="115" />
+									</value>
+									<value>
+										<simpleValue value="41" />
+									</value>
+									<value>
+										<simpleValue value="123" />
+									</value>
+									<value>
+										<simpleValue value="-85" />
+									</value>
+									<value>
+										<simpleValue value="-72" />
+									</value>
+									<value>
+										<simpleValue value="-46" />
+									</value>
+									<value>
+										<simpleValue value="-70" />
+									</value>
+									<value>
+										<simpleValue value="-45" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="87" />
+									</value>
+									<value>
+										<simpleValue value="2" />
+									</value>
+									<value>
+										<simpleValue value="-106" />
+									</value>
+									<value>
+										<simpleValue value="-29" />
+									</value>
+									<value>
+										<simpleValue value="-87" />
+									</value>
+									<value>
+										<simpleValue value="64" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="75" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+								</arrayValue>
+							</initialValue>
+						</variable>
+						<variable name="in_images">
+							<type>
+								<array>
+									<dimension lower="0" upper="0" />
+									<dimension lower="0" upper="2" />
+									<dimension lower="0" upper="639" />
+									<dimension lower="0" upper="639" />
+									<baseType>
+										<REAL />
+									</baseType>
+								</array>
+							</type>
+						</variable>
+					</struct>
+				</baseType>
+				<addData>
+					<data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+						<InterfaceAsPlainText>
+							<xhtml xmlns="http://www.w3.org/1999/xhtml">TYPE ST_model_InDecodeInput :
+STRUCT
+
+	{attribute 'hide'} _header_DO_NOT_CHANGE : ARRAY[0..63] OF SINT := [-1,-112,120,86,52,18,-1,-1,1,-1,0,0,-1,-1,-112,-112,-98,30,108,37,-121,74,-126,76,-75,77,-89,33,-107,61,4,-86,-123,62,115,41,123,-85,-72,-46,-70,-45,0,87,2,-106,-29,-87,64,0,75,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	in_images : ARRAY[0..0,0..2,0..639,0..639] OF REAL;
+
+END_STRUCT
+END_TYPE
+</xhtml>
+						</InterfaceAsPlainText>
+					</data>
+					<data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+						<ObjectId>1301BC58-50B8-4198-8A9D-5B8F2B5CADC9</ObjectId>
+					</data>
+				</addData>
+			</dataType>
+			<dataType name="ST_model_InDecodeOutput">
+				<baseType>
+					<struct>
+						<variable name="_header_DO_NOT_CHANGE">
+							<type>
+								<array>
+									<dimension lower="0" upper="63" />
+									<baseType>
+										<SINT />
+									</baseType>
+								</array>
+							</type>
+							<initialValue>
+								<arrayValue>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="-112" />
+									</value>
+									<value>
+										<simpleValue value="120" />
+									</value>
+									<value>
+										<simpleValue value="86" />
+									</value>
+									<value>
+										<simpleValue value="52" />
+									</value>
+									<value>
+										<simpleValue value="18" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="1" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="-1" />
+									</value>
+									<value>
+										<simpleValue value="-112" />
+									</value>
+									<value>
+										<simpleValue value="-112" />
+									</value>
+									<value>
+										<simpleValue value="-97" />
+									</value>
+									<value>
+										<simpleValue value="-47" />
+									</value>
+									<value>
+										<simpleValue value="126" />
+									</value>
+									<value>
+										<simpleValue value="-66" />
+									</value>
+									<value>
+										<simpleValue value="90" />
+									</value>
+									<value>
+										<simpleValue value="56" />
+									</value>
+									<value>
+										<simpleValue value="100" />
+									</value>
+									<value>
+										<simpleValue value="-109" />
+									</value>
+									<value>
+										<simpleValue value="-99" />
+									</value>
+									<value>
+										<simpleValue value="-74" />
+									</value>
+									<value>
+										<simpleValue value="-40" />
+									</value>
+									<value>
+										<simpleValue value="-64" />
+									</value>
+									<value>
+										<simpleValue value="48" />
+									</value>
+									<value>
+										<simpleValue value="11" />
+									</value>
+									<value>
+										<simpleValue value="33" />
+									</value>
+									<value>
+										<simpleValue value="45" />
+									</value>
+									<value>
+										<simpleValue value="-41" />
+									</value>
+									<value>
+										<simpleValue value="-24" />
+									</value>
+									<value>
+										<simpleValue value="68" />
+									</value>
+									<value>
+										<simpleValue value="80" />
+									</value>
+									<value>
+										<simpleValue value="115" />
+									</value>
+									<value>
+										<simpleValue value="94" />
+									</value>
+									<value>
+										<simpleValue value="-74" />
+									</value>
+									<value>
+										<simpleValue value="-30" />
+									</value>
+									<value>
+										<simpleValue value="85" />
+									</value>
+									<value>
+										<simpleValue value="-101" />
+									</value>
+									<value>
+										<simpleValue value="111" />
+									</value>
+									<value>
+										<simpleValue value="-94" />
+									</value>
+									<value>
+										<simpleValue value="20" />
+									</value>
+									<value>
+										<simpleValue value="-24" />
+									</value>
+									<value>
+										<simpleValue value="42" />
+									</value>
+									<value>
+										<simpleValue value="26" />
+									</value>
+									<value>
+										<simpleValue value="-64" />
+									</value>
+									<value>
+										<simpleValue value="19" />
+									</value>
+									<value>
+										<simpleValue value="3" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+									<value>
+										<simpleValue value="0" />
+									</value>
+								</arrayValue>
+							</initialValue>
+						</variable>
+						<variable name="out_output">
+							<type>
+								<array>
+									<dimension lower="0" upper="0" />
+									<dimension lower="0" upper="8399" />
+									<dimension lower="0" upper="5" />
+									<baseType>
+										<REAL />
+									</baseType>
+								</array>
+							</type>
+						</variable>
+					</struct>
+				</baseType>
+				<addData>
+					<data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+						<InterfaceAsPlainText>
+							<xhtml xmlns="http://www.w3.org/1999/xhtml">TYPE ST_model_InDecodeOutput :
+STRUCT
+
+	{attribute 'hide'} _header_DO_NOT_CHANGE : ARRAY[0..63] OF SINT := [-1,-112,120,86,52,18,-1,-1,1,-1,0,0,-1,-1,-112,-112,-97,-47,126,-66,90,56,100,-109,-99,-74,-40,-64,48,11,33,45,-41,-24,68,80,115,94,-74,-30,85,-101,111,-94,20,-24,42,26,-64,19,3,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	out_output : ARRAY[0..0,0..8399,0..5] OF REAL;
+
+END_STRUCT
+END_TYPE
+</xhtml>
+						</InterfaceAsPlainText>
+					</data>
+					<data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+						<ObjectId>620E0D4C-65E2-4DF1-9541-C450999B271B</ObjectId>
+					</data>
+				</addData>
+			</dataType>
+		</dataTypes>
+		<pous />
+	</types>
+	<instances>
+		<configurations />
+	</instances>
+	<addData>
+		<data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+			<ProjectStructure>
+				<Object Name="ST_model_InDecodeInput" ObjectId="1301BC58-50B8-4198-8A9D-5B8F2B5CADC9" />
+				<Object Name="ST_model_InDecodeOutput" ObjectId="620E0D4C-65E2-4DF1-9541-C450999B271B" />
+			</ProjectStructure>
+		</data>
+	</addData>
+</project>
