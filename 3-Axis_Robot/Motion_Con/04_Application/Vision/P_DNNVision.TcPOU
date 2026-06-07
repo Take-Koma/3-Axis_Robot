@@ -19,6 +19,10 @@ VAR CONSTANT
 	cBatchSize							:UDINT	:=1;										//バッチ数
     cNumBox								:UDINT	:=8400;										//ボックス数
     cElementPerBox						:UDINT	:=6;										//要素数	[cx, cy, w, h, obj_score, class_score]
+	
+	//ワーク幅
+	cWorkWidthMin						:DINT	:=35;										//ワーク幅下限
+	cWorkWidthMax						:DINT	:=50;										//ワーク幅上限
 END_VAR
 VAR
 	//制御変数
@@ -164,8 +168,8 @@ END_VAR]]></Declaration>
 		//DCタイムをゲット
 		aPreprocessingDcTime[0]:=F_GetActualDcTime64();
 		
-		//1 BAYER_RGからBGRに変換
-		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageIn, TCVN_CST_BAYER_RG_TO_BGR, hr);
+		//1 BAYER_RGからRGBに変換
+		hr := F_VN_ConvertColorSpace(ipImageIn, ipImageIn, TCVN_CST_BAYER_RG_TO_RGB, hr);
 	
 		//2 出力用画像に入力画像をコピー
 		hr := F_VN_CopyImage(ipImageIn, ipimageOut, hr);
@@ -299,24 +303,29 @@ END_VAR]]></Declaration>
 				//確率表示にしたいので100倍
 				fFinalScore:=fFinalScore*100.0;
 
-				//5 出力画像にワークの位置を画像に書き込み
-				hr := F_VN_DrawRectangle(stFinalRect.nX, stFinalRect.nY, stFinalRect.nX+stFinalRect.nWidth, stFinalRect.nY + stFinalRect.nHeight,ipImageOut, aGreen, 2, hr);		//ワークを囲む長方形を描画
+				//ワーク幅から外れた物は無視
+				IF (cWorkWidthMin<stFinalRect.nWidth AND stFinalRect.nWidth<cWorkWidthMax) AND (cWorkWidthMin<stFinalRect.nHeight AND stFinalRect.nHeight<cWorkWidthMax)  THEN
 				
-				hr := F_VN_DrawPoint(stCenterPoint[0], stCenterPoint[1], ipImageOut, TCVN_DS_PLUS, aGreen, hr);		//中心点に十字マークを描画
+					//5 出力画像にワークの位置を画像に書き込み
+					hr := F_VN_DrawRectangle(stFinalRect.nX, stFinalRect.nY, stFinalRect.nX+stFinalRect.nWidth, stFinalRect.nY + stFinalRect.nHeight,ipImageOut, aGreen, 2, hr);		//ワークを囲む長方形を描画
+					
+					hr := F_VN_DrawPoint(stCenterPoint[0], stCenterPoint[1], ipImageOut, TCVN_DS_PLUS, aGreen, hr);		//中心点に十字マークを描画
+	
+	
+					//6 ワークのxy座標を画像に書き込み
+					fbFormatString(	sFormat	:='( %2.1f ) = (%.3d, %.3d)', 
+									arg1	:=F_REAL(fFinalScore),
+									arg2	:=F_DINT(stCenterPoint[0]),
+									arg3	:=F_DINT(stCenterPoint[1]));		//書き込み文字列生成
+					
+					hr := F_VN_PutText(fbFormatString.sOut, ipImageOut, stFinalRect.nX, stFinalRect.nY, TCVN_FT_HERSHEY_TRIPLEX, 0.5, aGreen, hr);		//XY座標を描画
+					
+					//7 GVLにあるコンテナにxy座標を書き込み
+					hr := F_VN_AppendToContainer_TcVnVector2_DINT(stCenterPoint, GVL.ipResultPoints, hr);
+		
+				END_IF
 
 
-				//6 ワークのxy座標を画像に書き込み
-				fbFormatString(	sFormat	:='( %2.1f ) = (%.3d, %.3d)', 
-								arg1	:=F_REAL(fFinalScore),
-								arg2	:=F_DINT(stCenterPoint[0]),
-								arg3	:=F_DINT(stCenterPoint[1]));		//書き込み文字列生成
-				
-				hr := F_VN_PutText(fbFormatString.sOut, ipImageOut, stFinalRect.nX, stFinalRect.nY, TCVN_FT_HERSHEY_TRIPLEX, 0.5, aGreen, hr);		//XY座標を描画
-				
-				//7 GVLにあるコンテナにxy座標を書き込み
-				hr := F_VN_AppendToContainer_TcVnVector2_DINT(stCenterPoint, GVL.ipResultPoints, hr);
-
-				
 			END_FOR
 		END_IF
 		
@@ -400,9 +409,14 @@ NMS処理の引数説明
       <LineId Id="252" Count="0" />
       <LineId Id="254" Count="0" />
       <LineId Id="253" Count="0" />
-      <LineId Id="180" Count="8" />
-      <LineId Id="251" Count="0" />
-      <LineId Id="189" Count="11" />
+      <LineId Id="278" Count="2" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="283" Count="14" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="301" Count="0" />
+      <LineId Id="197" Count="3" />
       <LineId Id="269" Count="0" />
       <LineId Id="271" Count="0" />
       <LineId Id="270" Count="0" />
