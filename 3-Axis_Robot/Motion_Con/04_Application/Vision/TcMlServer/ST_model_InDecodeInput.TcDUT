@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_model_InDecodeInput" Id="{1301bc58-50b8-4198-8a9d-5b8f2b5cadc9}">
+    <Declaration><![CDATA[TYPE ST_model_InDecodeInput :
+STRUCT
+
+	{attribute 'hide'} _header_DO_NOT_CHANGE : ARRAY[0..63] OF SINT := [-1,-112,120,86,52,18,-1,-1,1,-1,0,0,-1,-1,-112,-112,-98,30,108,37,-121,74,-126,76,-75,77,-89,33,-107,61,4,-86,-123,62,115,41,123,-85,-72,-46,-70,-45,0,87,2,-106,-29,-87,64,0,75,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	in_images : ARRAY[0..0,0..2,0..639,0..639] OF REAL;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

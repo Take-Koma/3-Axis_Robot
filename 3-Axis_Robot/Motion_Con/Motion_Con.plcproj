@@ -8,7 +8,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>Motion_Con</Name>
-    <ProgramVersion>3.1.4026.22</ProgramVersion>
+    <ProgramVersion>3.1.4026.23</ProgramVersion>
     <Application>{3e578fbf-8593-4971-a049-a334d40a2de2}</Application>
     <TypeSystem>{06c75c1e-0f40-44c5-a8bf-ddc4f0ae36a3}</TypeSystem>
     <Implicit_Task_Info>{558334a8-64b5-43ad-807e-2d9c9d5c9ec6}</Implicit_Task_Info>
@@ -151,6 +151,15 @@
     <Compile Include="04_Application\Vision\F_VN_ApplicationSoftwareTrigger.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="04_Application\Vision\TcMlServer\P_MLSVision.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="04_Application\Vision\TcMlServer\ST_model_InDecodeInput.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="04_Application\Vision\TcMlServer\ST_model_InDecodeOutput.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -208,6 +217,7 @@
     <Folder Include="00_Internal" />
     <Folder Include="04_Application\Robot" />
     <Folder Include="04_Application\Vision" />
+    <Folder Include="04_Application\Vision\TcMlServer" />
     <Folder Include="POUs" />
     <Folder Include="POUs\ゴミ箱" />
   </ItemGroup>
@@ -257,6 +267,10 @@
       <DefaultResolution>Tc3_IPCDiag, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_IPCDiag</Namespace>
     </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_MlServer">
+      <DefaultResolution>Tc3_MlServer, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_MlServer</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc3_Module">
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
@@ -273,8 +287,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -357,15 +371,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="Int32">System.Int32</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="Int32">System.Int32</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

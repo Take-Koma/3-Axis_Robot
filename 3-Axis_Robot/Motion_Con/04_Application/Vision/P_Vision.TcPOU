@@ -3,13 +3,27 @@
   <POU Name="P_Vision" Id="{12aa390b-17e5-4f54-a4d0-60c6f0bb99e7}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM P_Vision
 VAR
+	bBlobExecution		:BOOL	:=FALSE;
+
+	bTF7820Execution	:BOOL	:=FALSE;
+	bTF3820Execution	:BOOL	:=FALSE;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[P_DNNVision();]]></ST>
+      <ST><![CDATA[IF bBlobExecution=TRUE AND bTF7820Execution=FALSE AND bTF3820Execution=FALSE THEN
+	P_BlobVision();
+ELSIF bBlobExecution=FALSE AND bTF7820Execution=TRUE AND bTF3820Execution=FALSE THEN
+	P_DNNVision();
+ELSIF bBlobExecution=FALSE and bTF7820Execution=FALSE AND bTF3820Execution=TRUE THEN
+	P_MLSVision();
+END_IF]]></ST>
     </Implementation>
     <LineIds Name="P_Vision">
-      <LineId Id="1" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="8" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

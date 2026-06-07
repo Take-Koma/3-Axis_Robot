@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.22">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.23">
 	<Translations>
 		<Text TxtId="MachineAlarmEvent">
 			<Text LcId="1041"><![CDATA[装置アラームイベント]]></Text>
@@ -1691,6 +1691,7 @@
 			<Licenses>
 				<Target>
 					<ManualSelect>{7141DE01-F769-4354-9738-D7453BC0876F}</ManualSelect>
+					<ManualSelect>{E0BE463B-AC1C-4966-A617-286B6222D736}</ManualSelect>
 					<ManualSelect>{B1065A48-8131-4608-A378-D67FA8BD826E}</ManualSelect>
 					<ManualSelect>{6952449D-F68C-49A2-ADE4-8639D85B33A4}</ManualSelect>
 				</Target>
