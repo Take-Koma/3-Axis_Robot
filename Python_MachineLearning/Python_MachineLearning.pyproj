@@ -23,24 +23,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ALotWork_ONNX\4_check_onnx_bbox.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ALotWork_ONNX\3_export_topk_onnx.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ALotWork_ONNX\1_labelme_to_coco_bbox.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="0_CUDA_Availability_Check.py" />
     <Compile Include="OCR_Test\OCR_Test.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OneWork_ONNX\2_test_onnx.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="OneWork_ONNX\1_train_script.py" />
-    <Compile Include="ALotWork_ONNX\2_train_torchvision_frcnn.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="YOLOX\exps\default\yolox_nano_work.py" />
@@ -179,7 +163,6 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ALotWork_ONNX\" />
     <Folder Include="OCR_Test\" />
     <Folder Include="YOLOX_CALL\" />
     <Folder Include="YOLOX\" />
@@ -241,7 +224,6 @@
     <Folder Include="YOLOX\yolox\models\" />
     <Folder Include="YOLOX\yolox\tools\" />
     <Folder Include="YOLOX\yolox\utils\" />
-    <Folder Include="OneWork_ONNX\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="YOLOX\.github\workflows\ci.yaml" />
