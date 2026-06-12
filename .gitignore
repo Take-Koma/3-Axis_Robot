@@ -332,6 +332,7 @@ Python_MachineLearning/OCR_Test/*.onnx
 #---Anomalib---
 Python_MachineLearning/my_dataset
 Python_MachineLearning/results
+Python_MachineLearning/exported_onnx
 
 
 # 万が一プロジェクト内に環境を作った場合の保険
