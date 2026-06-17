@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="F_LinkAlarm" Id="{04abd3c1-b47e-4d4d-9b1c-983b50802c95}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_LinkAlarm : BOOL
+VAR_INPUT
+//	bRaise				:BOOL;							//アラーム発生			インターフェースポインターが空だと困るのでコメントアウト
+	bConfirm			:BOOL;							//アラーム確認
+	bClear				:BOOL;							//アラームクリア
+	bTrigger			:BOOL;							//アラーム発報条件
+	ipResultMessage		:I_TcMessage;					//アラームメッセージ(I_TcMessage)
+	fbAlarm				:REFERENCE TO FB_Alarm;			//アラーム(REFERENCE)
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bTrigger=TRUE AND ipResultMessage<>0 AND fbAlarm.bRaised=FALSE THEN
+	
+	fbAlarm.CreateEx(stEventEntry := ipResultMessage.stEventEntry,TRUE, ipSourceInfo := ipResultMessage.ipSourceInfo);
+	fbAlarm.bRaise:=TRUE;
+
+ELSIF bTrigger=FALSE AND fbAlarm.bRaised=TRUE THEN
+
+	fbAlarm.bConfirm:=bConfirm;
+	
+	fbAlarm.bClear:=bClear;
+
+END_IF
+
+fbAlarm();]]></ST>
+    </Implementation>
+    <LineIds Name="F_LinkAlarm">
+      <LineId Id="15" Count="0" />
+      <LineId Id="2" Count="12" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
