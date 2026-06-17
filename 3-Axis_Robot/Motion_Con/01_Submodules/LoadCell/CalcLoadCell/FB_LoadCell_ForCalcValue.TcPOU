@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_LoadCell_ForCalcValue" Id="{d9f382fb-d7be-402c-819f-8abf17c52f28}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_LoadCell_ForCalcValue
 VAR PERSISTENT
@@ -18,8 +18,8 @@ VAR
 	_lrZAxisSetAcc					:LREAL;													//Z軸の設定加速度[mm/s2]
 	i								:INT;													//演算用
 
-	bError							:BOOL;
-	ipResultMessage					:I_TCMessage;
+	_bError							:BOOL;
+	_ipResultMessage				:I_TCMessage;
 
 	// --- TF3685：設定構造体 ---
     _stParamsComboFilter			:ST_WG_ComboFilter;
@@ -129,6 +129,17 @@ lrCompValue := (_lrGripperWeight * lrTargetAcc / 9.80665);
 fCorrectedWeight := fbWeighing.fWeight + lrCompValue;]]></ST>
       </Implementation>
     </Method>
+    <Property Name="bError" Id="{0cdc9bc5-aa8f-42a0-ae11-5ca9c897b478}">
+      <Declaration><![CDATA[PROPERTY bError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ef05628c-fc54-42ac-8db2-7543f2d86856}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bError:=_bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="CalibrationWeightSet" Id="{1695b396-fe9a-44fc-8db5-e624d46ba147}">
       <Declaration><![CDATA[METHOD CalibrationWeightSet
 VAR_INPUT
@@ -191,6 +202,17 @@ END_VAR
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="ipResultMessage" Id="{2f5515d7-f549-48e0-bed5-d5048eaba2c2}">
+      <Declaration><![CDATA[PROPERTY ipResultMessage : I_TcMessage]]></Declaration>
+      <Get Name="Get" Id="{28b4ced7-5e61-4a45-aab4-ded1020463f9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ipResultMessage:=_ipResultMessage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="lrCalibrationWeight" Id="{4bf87394-09e2-47c4-b296-25bafb6057b5}">
       <Declaration><![CDATA[PROPERTY lrCalibrationWeight : LREAL]]></Declaration>
       <Set Name="Set" Id="{a39ddbb3-6f4a-45ae-bba6-d652ae469b1b}">
@@ -255,19 +277,34 @@ END_VAR
     <Method Name="Reconfigure" Id="{024d9474-a773-4548-b0c3-9a9413c1073e}">
       <Declaration><![CDATA[METHOD Reconfigure
 VAR_INPUT
+	bReconfigureExe			:REFERENCE TO BOOL;	
+
   	stParamsComboFilter		:ST_WG_ComboFilter;
 	stParamsScale			:ST_WG_Scaling;
   	stParamsWeighing		:ST_WG_Weighing;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[	_stParamsComboFilter	:=stParamsComboFilter;
+        <ST><![CDATA[IF bReconfigureExe= TRUE THEN
+
+	_stParamsComboFilter	:=stParamsComboFilter;
 	_stParamsScale			:=stParamsScale;
 	_stParamsWeighing		:=stParamsWeighing;
 	
-	fbComboFilter.Configure(stConfig:=_stParamsComboFilter);
-	fbScale.Configure(stConfig:=_stParamsScale);
-	fbWeighing.Configure(stConfig:=_stParamsWeighing);]]></ST>
+	IF fbComboFilter.Configure(stConfig:=_stParamsComboFilter)=FALSE THEN
+		SetError(fbComboFilter);
+	ELSIF fbScale.Configure(stConfig:=_stParamsScale)=FALSE THEN
+		SetError(fbScale);
+	ELSIF fbWeighing.Configure(stConfig:=_stParamsWeighing)=FALSE THEN
+		SetError(fbWeighing);
+	ELSE
+		;
+	END_IF
+	
+	bReconfigureExe:=FALSE;
+	
+END_IF
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetError" Id="{505b0742-9aaf-4cd9-b34c-4a783691ae12}">
@@ -277,8 +314,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.bError := fb.bError;
-THIS^.ipResultMessage := fb.ipResultMessage;]]></ST>
+        <ST><![CDATA[THIS^._bError := fb.bError;
+THIS^._ipResultMessage := fb.ipResultMessage;]]></ST>
       </Implementation>
     </Method>
     <Method Name="TareWeightSet" Id="{3e7a9559-43a7-4c84-b4b8-5c882b849358}">
@@ -312,6 +349,9 @@ END_VAR]]></Declaration>
       <LineId Id="76" Count="33" />
       <LineId Id="17" Count="0" />
     </LineIds>
+    <LineIds Name="FB_LoadCell_ForCalcValue.bError.Get">
+      <LineId Id="1" Count="0" />
+    </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.CalibrationWeightSet">
       <LineId Id="1" Count="15" />
     </LineIds>
@@ -319,6 +359,9 @@ END_VAR]]></Declaration>
       <LineId Id="1" Count="8" />
       <LineId Id="12" Count="2" />
       <LineId Id="10" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell_ForCalcValue.ipResultMessage.Get">
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.lrCalibrationWeight.Set">
       <LineId Id="1" Count="0" />
@@ -336,10 +379,16 @@ END_VAR]]></Declaration>
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.Reconfigure">
-      <LineId Id="1" Count="6" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="1" Count="4" />
+      <LineId Id="15" Count="9" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="11" Count="1" />
     </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.SetError">
-      <LineId Id="1" Count="1" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.TareWeightSet">
       <LineId Id="1" Count="7" />
