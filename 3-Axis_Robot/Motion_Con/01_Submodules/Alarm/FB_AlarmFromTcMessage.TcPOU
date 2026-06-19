@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_AlarmFromTcMessage" Id="{6df0d6c9-b5c7-48cf-85e4-507a5a5762d3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AlarmFromTcMessage EXTENDS FB_TcAlarm
+VAR_INPUT
+	bRaise				:BOOL;				//アラーム発生
+	bClear				:BOOL;				//アラームクリア
+	bConfirm			:BOOL;				//アラーム確認
+	ipResultMessage		:I_TcMessage;		//アラームメッセージ(I_TcMessage)
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	h					:HRESULT;
+	hError				:HRESULT;
+	
+	REdge				:R_TRIG;			//アラーム発生の立ち上がりエッジ
+	bRaiseMem			:BOOL;				//アラーム発生を保持
+	bLinked				:BOOL;				//アラームメッセージのCreateEx済みフラグ
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//アラーム発生の立ち上がりエッジ検出
+REdge(CLK := bRaise);
+
+IF REdge.Q THEN
+	bRaiseMem	:=TRUE;
+	bLinked		:=FALSE;
+END_IF
+ 
+//CreateEx
+IF bRaiseMem AND (NOT bLinked) AND (ipResultMessage <> 0) THEN
+	SUPER^.CreateEx(stEventEntry:=ipResultMessage.stEventEntry,	TRUE, ipSourceInfo := ipResultMessage.ipSourceInfo);
+	bLinked:=TRUE;
+END_IF
+ 
+//Raise
+IF bRaiseMem AND bLinked AND (NOT SUPER^.bRaised) THEN
+	h:=SUPER^.Raise(0);
+	IF FAILED(h) THEN
+		hError := h;
+	END_IF
+	bRaiseMem:=FALSE;	//Raiseの連打防止
+END_IF
+ 
+//Confirm
+IF bConfirm AND (SUPER^.eConfirmationState = TCEVENTCONFIRMATIONSTATE.WaitForConfirmation) THEN
+	h:=SUPER^.Confirm(0);
+	IF FAILED(h) THEN
+		hError := h;
+	END_IF
+END_IF
+ 
+//Clear
+IF (NOT bRaise) AND bClear AND SUPER^.bRaised THEN
+	h:=SUPER^.Clear(0 ,FALSE);
+	IF FAILED(h) THEN
+		hError := h;
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_AlarmFromTcMessage">
+      <LineId Id="1" Count="37" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

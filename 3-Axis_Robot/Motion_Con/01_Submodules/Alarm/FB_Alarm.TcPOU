@@ -12,24 +12,38 @@ END_VAR
 VAR
 	h					:HRESULT;
 	hError				:HRESULT;
+	
+	REdge				:R_TRIG;			//アラーム発生の立ち上がりエッジ
+	bRaiseMem			:BOOL;				//アラーム発生を保持
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF bRaise=TRUE AND SUPER^.bRaised=FALSE THEN
+      <ST><![CDATA[//アラーム発生の立ち上がりエッジ検出
+REdge(CLK := bRaise);
+
+IF REdge.Q THEN
+	bRaiseMem	:=TRUE;
+END_IF
+
+//Raise
+IF bRaiseMem AND (NOT SUPER^.bRaised) THEN
 	h:=SUPER^.Raise(0);
 	IF FAILED(h) THEN
 		hError := h;
 	END_IF
+	bRaiseMem:=FALSE;	//Raiseの連打防止
 END_IF
 
-IF bConfirm=TRUE AND SUPER^.eConfirmationState=TCEVENTCONFIRMATIONSTATE.WaitForConfirmation THEN
+//Confirm
+IF bConfirm AND SUPER^.eConfirmationState=TCEVENTCONFIRMATIONSTATE.WaitForConfirmation THEN
 	h:=SUPER^.Confirm(0);
 	IF FAILED(h) THEN
 		hError := h;
 	END_IF
 END_IF
 
-IF bRaise=FALSE AND bClear=TRUE AND SUPER^.bRaised=TRUE THEN
+//Clear
+IF (NOT bRaise) AND bClear AND SUPER^.bRaised THEN
 	h:=SUPER^.Clear(0 ,FALSE);
 	IF FAILED(h) THEN
 		hError := h;
@@ -49,8 +63,18 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_Alarm">
+      <LineId Id="24" Count="4" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="23" Count="0" />
       <LineId Id="21" Count="0" />
-      <LineId Id="2" Count="18" />
+      <LineId Id="2" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="14" Count="6" />
     </LineIds>
     <LineIds Name="FB_Alarm.FB_init">
       <LineId Id="1" Count="0" />
