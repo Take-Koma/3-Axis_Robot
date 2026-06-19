@@ -30,6 +30,12 @@
     <Compile Include="00_Internal\U_Word.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="01_Submodules\Alarm\FB_Alarm.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Alarm\FB_AlarmFromTcMessage.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="01_Submodules\Diagnosis\FB_DiagnosisEtherCAT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -49,9 +55,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Submodules\E_Terminal.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="01_Submodules\FB_Alarm.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Submodules\FB_FanControl.TcPOU">
@@ -205,6 +208,7 @@
     <Folder Include="01_Submodules\LoadCell\CalcLoadCell" />
     <Folder Include="01_Submodules\LoadCell\RowLoadCell" />
     <Folder Include="01_Submodules\MachineState" />
+    <Folder Include="01_Submodules\Alarm" />
     <Folder Include="01_Submodules\PcManagement" />
     <Folder Include="01_Submodules\PcManagement\1sUPS" />
     <Folder Include="02_Subsystems\IO-Link\787" />
@@ -283,6 +287,11 @@
       <DefaultResolution>Tc3_Weighing, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Weighing</Namespace>
     </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ExternalTypes.tmc">
+      <SubType>Content</SubType>
+    </None>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>

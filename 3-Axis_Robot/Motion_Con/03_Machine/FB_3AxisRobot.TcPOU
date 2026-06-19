@@ -37,26 +37,27 @@
 		fbMachineState							:FB_MachineState;															//マシンステートFB
 		
 		//アラーム(アラーム詳細はユーザーイベントクラスを参照)
-		//!!!!!アラームのファンクションブロックを追加したらパラメーターのアラーム数を変更すること!!!!!
-		fbAlarmSafetyNotRun						:FB_Alarm(TC_Events.UserEventClass.SafetyNotRun ,fbMachineState);
-		fbAlarmSafetyFbError					:FB_Alarm(TC_Events.UserEventClass.SafetyFbError ,fbMachineState);
-		fbAlarmEmergencyStop					:FB_Alarm(TC_Events.UserEventClass.EmergencyStop ,fbMachineState);
-		fbAlarmXAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.XAxisMovingGripSwichNotOn ,fbMachineState);	
-		fbAlarmYAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.YAxisMovingGripSwichNotOn ,fbMachineState);	
-		fbAlarmZAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.ZAxisMovingGripSwichNotOn ,fbMachineState);	
-		fbAlarmGripperMovingGripSwichNotOn		:FB_Alarm(TC_Events.UserEventClass.GripperMovingGripSwichNotOn ,fbMachineState);	
-		fbAlarmMITSUBISHIError					:FB_Alarm(TC_Events.UserEventClass.MITSUBISHIError ,fbMachineState);
-		fbAlarmXAxisError						:FB_Alarm(TC_Events.UserEventClass.XAxisError ,fbMachineState);
-		fbAlarmYAxisError						:FB_Alarm(TC_Events.UserEventClass.YAxisError ,fbMachineState);
-		fbAlarmZAxisError						:FB_Alarm(TC_Events.UserEventClass.ZAxisError ,fbMachineState);
-		fbAlarmGripperError						:FB_Alarm(TC_Events.UserEventClass.GripperError ,fbMachineState);
-		fbAlarmEtherCATError					:FB_Alarm(TC_Events.UserEventClass.EtherCATError ,fbMachineState);
-		fbAlarmTerminalError					:FB_Alarm(TC_Events.UserEventClass.TerminalError ,fbMachineState);
-		fbAlarmParsistentDataInit				:FB_Alarm(TC_Events.UserEventClass.ParsistentDataInitialization,fbMachineState);
-		fbAlarmPersistentDataLoadFault			:FB_Alarm(TC_Events.UserEventClass.PersistentDataLoadFault,fbMachineState);
-		fbAlarmOldPersistentDataLoad			:FB_Alarm(TC_Events.UserEventClass.OldPersistentDataLoad,fbMachineState);
-		fbAlarmPersistentDataWriteError			:FB_Alarm(TC_Events.UserEventClass.PersistentDataWriteError,fbMachineState);
-		fbAlarmCycleTimeExceeded				:FB_Alarm(TC_Events.UserEventClass.CycleTimeExceeded,fbMachineState);
+		fbAlarmSafetyNotRun						:FB_Alarm(TC_Events.MachineAlarmEventClass.SafetyNotRun);
+		fbAlarmSafetyFbError					:FB_Alarm(TC_Events.MachineAlarmEventClass.SafetyFbError);
+		fbAlarmEmergencyStop					:FB_Alarm(TC_Events.MachineAlarmEventClass.EmergencyStop);
+		fbAlarmXAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.MachineAlarmEventClass.XAxisMovingGripSwichNotOn);	
+		fbAlarmYAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.MachineAlarmEventClass.YAxisMovingGripSwichNotOn);	
+		fbAlarmZAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.MachineAlarmEventClass.ZAxisMovingGripSwichNotOn);	
+		fbAlarmGripperMovingGripSwichNotOn		:FB_Alarm(TC_Events.MachineAlarmEventClass.GripperMovingGripSwichNotOn);	
+		fbAlarmMITSUBISHIError					:FB_Alarm(TC_Events.MachineAlarmEventClass.MITSUBISHIError);
+		fbAlarmXAxisError						:FB_Alarm(TC_Events.MachineAlarmEventClass.XAxisError);
+		fbAlarmYAxisError						:FB_Alarm(TC_Events.MachineAlarmEventClass.YAxisError);
+		fbAlarmZAxisError						:FB_Alarm(TC_Events.MachineAlarmEventClass.ZAxisError);
+		fbAlarmGripperError						:FB_Alarm(TC_Events.MachineAlarmEventClass.GripperError);
+		fbAlarmEtherCATError					:FB_Alarm(TC_Events.MachineAlarmEventClass.EtherCATError);
+		fbAlarmTerminalError					:FB_Alarm(TC_Events.MachineAlarmEventClass.TerminalError);
+		fbAlarmParsistentDataInit				:FB_Alarm(TC_Events.MachineAlarmEventClass.ParsistentDataInitialization);
+		fbAlarmPersistentDataLoadFault			:FB_Alarm(TC_Events.MachineAlarmEventClass.PersistentDataLoadFault);
+		fbAlarmOldPersistentDataLoad			:FB_Alarm(TC_Events.MachineAlarmEventClass.OldPersistentDataLoad);
+		fbAlarmPersistentDataWriteError			:FB_Alarm(TC_Events.MachineAlarmEventClass.PersistentDataWriteError);
+		fbAlarmCycleTimeExceeded				:FB_Alarm(TC_Events.MachineAlarmEventClass.CycleTimeExceeded);
+		fbAlarmLoadCellError					:FB_AlarmFromTcMessage;
+		fbAlarmWagoCp787Error					:ARRAY[0..4] OF FB_AlarmFromTcMessage;
 
 
 //------パーシステントデータ管理------
@@ -524,7 +525,39 @@ END_IF
 		bRaise		:=_TaskInfo[GETCURTASKINDEXEX()].CycleTimeExceeded, //	_TaskInfo[1].CycleTimeExceeded OR _TaskInfo[2].CycleTimeExceeded, //Vision TaskはPCのスペック的にサイクルタイム超過してしまうのでオミット
 		bConfirm	:=bBuzzerStop,
 		bClear		:=bAlarmReset
-	);]]></ST>
+	);
+
+	fbAlarmLoadCellError(
+		bRaise				:=fbLoadCellForCalcValue.bError,
+		bConfirm			:=bBuzzerStop,
+		bClear				:=bAlarmReset,
+		ipResultMessage		:=fbLoadCellForCalcValue.ipResultMessage
+	);
+
+	fbAlarmWagoCp787Error[0](
+		bRaise				:=fb787.bError[0],
+		bConfirm			:=bBuzzerStop,
+		bClear				:=bAlarmReset,
+		ipResultMessage		:=fb787.ipResultMessage[0]
+	);
+
+	FOR i:=1 TO 4 BY 1 DO
+		fbAlarmWagoCp787Error[i](
+			bRaise				:=fb787.bError[i] OR fb787.bWarning[i] OR fb787.bImfo[i],
+			bConfirm			:=bBuzzerStop,
+			bClear				:=bAlarmReset,
+			ipResultMessage		:=fb787.ipResultMessage[i]
+		);
+	END_FOR
+
+
+
+
+
+
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="General_AxisOrganization" Id="{85097ed6-20b1-4fc0-bd82-f0831168740c}">
@@ -730,12 +763,12 @@ END_VAR
 	fbLoadCellForCalcValue.lrGrossWeight;
 	
 	fbLoadCellForCalcValue.lrZAxisSetAcc:=fbZAxis.fZAxisAcc;
-	
-	IF bTest=TRUE THEN
-		fbLoadCellForCalcValue.Reconfigure(	stParamsComboFilter		:=Param_CalcLoadCell.stParamsComboFilter,
-											stParamsScale			:=Param_CalcLoadCell.stParamsScale,
-											stParamsWeighing		:=Param_CalcLoadCell.stParamsWeighing);
-	END_IF
+
+	fbLoadCellForCalcValue.Reconfigure(	bReconfigureExe			:=bTest,
+										stParamsComboFilter		:=Param_CalcLoadCell.stParamsComboFilter,
+										stParamsScale			:=Param_CalcLoadCell.stParamsScale,
+										stParamsWeighing		:=Param_CalcLoadCell.stParamsWeighing);
+
 	]]></ST>
       </Implementation>
     </Method>
@@ -752,11 +785,11 @@ END_VAR]]></Declaration>
 	bToPowerSupplyOk				:=bPowerSupplyOk;
 
 //サーキットプロテクター
-	fb787.GetAllState();	//CPのステータスを読み込みたいので、ステータスゲットのメソッド呼び出し
+	fb787();	//CPのステータスを読み込みたいので呼び出し
 	
 	//エラーとワーニングチェック
-	bToCPError			:=fb787.bError;
-	bToCPWarning		:=fb787.bWarning;
+	bToCPError			:=fb787.bError[0] OR fb787.bError[1] OR fb787.bError[2] OR fb787.bError[3] OR fb787.bError[4];
+	bToCPWarning		:=fb787.bWarning[1] OR fb787.bWarning[2] OR fb787.bWarning[3] OR fb787.bWarning[4];
 	
 	//CPの入力電圧
 	uInputVoltage.rREAL	:=LREAL_TO_REAL(fb787.lrInputVoltage);
@@ -858,6 +891,12 @@ END_VAR]]></Declaration>
 	GVL.mb_Input_Coils[66]			:=fbAlarmOldPersistentDataLoad.bRaised;
 	GVL.mb_Input_Coils[67]			:=fbAlarmPersistentDataWriteError.bRaised;
 	GVL.mb_Input_Coils[68]			:=fbAlarmCycleTimeExceeded.bRaised;
+	GVL.mb_Input_Coils[69]			:=fbAlarmLoadCellError.bRaised;
+	GVL.mb_Input_Coils[70]			:=fbAlarmWagoCp787Error[0].bRaised;
+	GVL.mb_Input_Coils[71]			:=fbAlarmWagoCp787Error[1].bRaised;
+	GVL.mb_Input_Coils[72]			:=fbAlarmWagoCp787Error[2].bRaised;
+	GVL.mb_Input_Coils[73]			:=fbAlarmWagoCp787Error[3].bRaised;
+	GVL.mb_Input_Coils[74]			:=fbAlarmWagoCp787Error[4].bRaised;
 	//---アラームここまで---
 
 
@@ -1815,22 +1854,8 @@ END_CASE;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_3AxisRobot">
-      <LineId Id="131" Count="6" />
-      <LineId Id="189" Count="0" />
-      <LineId Id="138" Count="2" />
-      <LineId Id="193" Count="1" />
-      <LineId Id="145" Count="2" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="154" Count="1" />
-      <LineId Id="157" Count="0" />
-      <LineId Id="166" Count="3" />
-      <LineId Id="180" Count="0" />
-      <LineId Id="188" Count="0" />
-      <LineId Id="173" Count="2" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="198" Count="0" />
-      <LineId Id="202" Count="1" />
-      <LineId Id="200" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="2" Count="32" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Alarm">
       <LineId Id="128" Count="8" />
@@ -1839,6 +1864,24 @@ END_CASE;]]></ST>
       <LineId Id="255" Count="0" />
       <LineId Id="189" Count="64" />
       <LineId Id="127" Count="0" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="276" Count="0" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="277" Count="1" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="291" Count="0" />
+      <LineId Id="283" Count="1" />
+      <LineId Id="286" Count="0" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="292" Count="1" />
+      <LineId Id="296" Count="4" />
+      <LineId Id="294" Count="1" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="264" Count="6" />
+      <LineId Id="259" Count="0" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_AxisOrganization">
       <LineId Id="20" Count="37" />
@@ -1899,9 +1942,10 @@ END_CASE;]]></ST>
       <LineId Id="24" Count="0" />
       <LineId Id="38" Count="0" />
       <LineId Id="37" Count="0" />
-      <LineId Id="27" Count="0" />
       <LineId Id="32" Count="0" />
-      <LineId Id="35" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="36" Count="0" />
       <LineId Id="33" Count="1" />
       <LineId Id="31" Count="0" />
     </LineIds>
@@ -1910,7 +1954,9 @@ END_CASE;]]></ST>
       <LineId Id="36" Count="0" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_MitsubishiCom">
-      <LineId Id="76" Count="43" />
+      <LineId Id="76" Count="20" />
+      <LineId Id="163" Count="5" />
+      <LineId Id="97" Count="22" />
       <LineId Id="143" Count="0" />
       <LineId Id="162" Count="0" />
       <LineId Id="161" Count="0" />
