@@ -1,15 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <GVL Name="Param_3AxisRobot" Id="{886d77ee-fee3-4fe8-862e-0e42223480e0}" ParameterList="True">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
 //------全体の設定値------
-	uiAlarmMaxCount					:UINT					:=100;					//アラーム総数!!!アラームのファンクションブロックより多い数字にすること！！！
 	PcAmsNetId						:AMSNETID				:=[192,168,15,2,1,1];	//PC AMS Net ID	
 	IoLinkMasterAmsNetId			:AMSNETID				:=[192,168,15,2,3,4];	//IO-Link Mater AMS Net ID
 	bEnabledPort					:ARRAY[1..8] OF BOOL	:=[TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE];		//EL6224の有効にするIO-Linkポート
-
-
 
 //------軸関係の設定値------
 	lrXYAxisMaxPosition				:LREAL					:=300;					//XY軸の最大位置［mm］
