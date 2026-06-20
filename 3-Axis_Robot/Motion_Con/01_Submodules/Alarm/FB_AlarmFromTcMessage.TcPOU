@@ -23,7 +23,7 @@ END_VAR
       <ST><![CDATA[//アラーム発生の立ち上がりエッジ検出
 REdge(CLK := bRaise);
 
-IF REdge.Q THEN
+IF REdge.Q AND (NOT SUPER^.bRaised) THEN
 	bRaiseMem	:=TRUE;
 	bLinked		:=FALSE;
 END_IF
@@ -40,7 +40,7 @@ IF bRaiseMem AND bLinked AND (NOT SUPER^.bRaised) THEN
 	IF FAILED(h) THEN
 		hError := h;
 	END_IF
-	bRaiseMem:=FALSE;	//Raiseの連打防止
+	bRaiseMem:=FALSE;
 END_IF
  
 //Confirm
@@ -60,7 +60,8 @@ IF (NOT bRaise) AND bClear AND SUPER^.bRaised THEN
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="FB_AlarmFromTcMessage">
-      <LineId Id="1" Count="37" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="2" Count="36" />
     </LineIds>
   </POU>
 </TcPlcObject>

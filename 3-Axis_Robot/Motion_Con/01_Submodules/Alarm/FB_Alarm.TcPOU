@@ -21,7 +21,7 @@ END_VAR
       <ST><![CDATA[//アラーム発生の立ち上がりエッジ検出
 REdge(CLK := bRaise);
 
-IF REdge.Q THEN
+IF REdge.Q AND (NOT SUPER^.bRaised) THEN
 	bRaiseMem	:=TRUE;
 END_IF
 
@@ -31,7 +31,7 @@ IF bRaiseMem AND (NOT SUPER^.bRaised) THEN
 	IF FAILED(h) THEN
 		hError := h;
 	END_IF
-	bRaiseMem:=FALSE;	//Raiseの連打防止
+	bRaiseMem:=FALSE;
 END_IF
 
 //Confirm
