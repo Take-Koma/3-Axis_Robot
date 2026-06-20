@@ -543,7 +543,7 @@ END_IF
 
 	FOR i:=1 TO 4 BY 1 DO
 		fbAlarmWagoCp787Error[i](
-			bRaise				:=fb787.bError[i] OR fb787.bWarning[i] OR fb787.bImfo[i],
+			bRaise				:=fb787.bError[i] OR fb787.bWarning[i] OR fb787.bInfo[i],
 			bConfirm			:=bBuzzerStop,
 			bClear				:=bAlarmReset,
 			ipResultMessage		:=fb787.ipResultMessage[i]
@@ -1858,29 +1858,7 @@ END_CASE;]]></ST>
       <LineId Id="2" Count="32" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Alarm">
-      <LineId Id="128" Count="8" />
-      <LineId Id="257" Count="1" />
-      <LineId Id="139" Count="48" />
-      <LineId Id="255" Count="0" />
-      <LineId Id="189" Count="64" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="260" Count="0" />
-      <LineId Id="276" Count="0" />
-      <LineId Id="290" Count="0" />
-      <LineId Id="277" Count="1" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="275" Count="0" />
-      <LineId Id="288" Count="0" />
-      <LineId Id="282" Count="0" />
-      <LineId Id="291" Count="0" />
-      <LineId Id="283" Count="1" />
-      <LineId Id="286" Count="0" />
-      <LineId Id="263" Count="0" />
-      <LineId Id="292" Count="1" />
-      <LineId Id="296" Count="4" />
-      <LineId Id="294" Count="1" />
-      <LineId Id="289" Count="0" />
-      <LineId Id="264" Count="6" />
+      <LineId Id="301" Count="157" />
       <LineId Id="259" Count="0" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_AxisOrganization">

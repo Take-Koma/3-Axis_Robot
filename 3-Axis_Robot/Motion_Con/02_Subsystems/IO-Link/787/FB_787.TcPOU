@@ -9,7 +9,7 @@
 	VAR_OUTPUT
 		bError								:ARRAY[0..iNumberChannel] OF BOOL;
 		bWarning							:ARRAY[1..iNumberChannel] OF BOOL;
-		bImfo								:ARRAY[1..iNumberChannel] OF BOOL;
+		bInfo								:ARRAY[1..iNumberChannel] OF BOOL;
 		
 		ipResultMessage						:ARRAY[0..iNumberChannel] OF I_TcMessage;
 	END_VAR
@@ -305,19 +305,19 @@ FOR iForIndex := 1 TO iNumberChannel BY 1 DO
 	
 	//スイッチ状態
 	IF bOff=TRUE AND bSwitchedOffRemote[iForIndex]=TRUE THEN
-		bImfo[iForIndex]:=TRUE;
+		bInfo[iForIndex]:=TRUE;
 		fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.SwitchedOffRemote);
 		fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
 		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
 
 	ELSIF bLocalOff=TRUE AND bSwitchedOffLocal[iForIndex]=TRUE THEN
-		bImfo[iForIndex]:=TRUE;
+		bInfo[iForIndex]:=TRUE;
 		fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.SwitchedOffLocal);
 		fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
 		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
 		
 	ELSIF bSwitchedOffRemote[iForIndex]=FALSE AND bSwitchedOffLocal[iForIndex]=FALSE THEN
-		bImfo[iForIndex]:=FALSE;
+		bInfo[iForIndex]:=FALSE;
 	END_IF
 	
 END_FOR
@@ -347,7 +347,8 @@ END_VAR
       </Get>
     </Property>
     <LineIds Name="FB_787">
-      <LineId Id="1" Count="14" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="2" Count="13" />
     </LineIds>
     <LineIds Name="FB_787.ActualCurrent">
       <LineId Id="1" Count="0" />
@@ -362,55 +363,7 @@ END_VAR
       <LineId Id="1" Count="2" />
     </LineIds>
     <LineIds Name="FB_787.GetAllState">
-      <LineId Id="123" Count="0" />
-      <LineId Id="1" Count="109" />
-      <LineId Id="150" Count="0" />
-      <LineId Id="146" Count="1" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="151" Count="1" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="155" Count="1" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="173" Count="0" />
-      <LineId Id="145" Count="0" />
-      <LineId Id="153" Count="0" />
-      <LineId Id="114" Count="0" />
-      <LineId Id="175" Count="0" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="176" Count="0" />
-      <LineId Id="196" Count="0" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="178" Count="2" />
-      <LineId Id="118" Count="0" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="181" Count="1" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="183" Count="0" />
-      <LineId Id="193" Count="0" />
-      <LineId Id="188" Count="1" />
-      <LineId Id="198" Count="1" />
-      <LineId Id="195" Count="0" />
-      <LineId Id="200" Count="0" />
-      <LineId Id="190" Count="1" />
-      <LineId Id="201" Count="1" />
-      <LineId Id="192" Count="0" />
-      <LineId Id="205" Count="0" />
-      <LineId Id="203" Count="1" />
-      <LineId Id="184" Count="0" />
-      <LineId Id="186" Count="1" />
-      <LineId Id="206" Count="0" />
-      <LineId Id="212" Count="0" />
-      <LineId Id="218" Count="1" />
-      <LineId Id="213" Count="0" />
-      <LineId Id="211" Count="0" />
-      <LineId Id="210" Count="0" />
-      <LineId Id="220" Count="2" />
-      <LineId Id="216" Count="1" />
-      <LineId Id="214" Count="1" />
-      <LineId Id="209" Count="0" />
-      <LineId Id="185" Count="0" />
-      <LineId Id="122" Count="0" />
-      <LineId Id="126" Count="10" />
+      <LineId Id="223" Count="184" />
       <LineId Id="112" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.lrInputVoltage.Get">
