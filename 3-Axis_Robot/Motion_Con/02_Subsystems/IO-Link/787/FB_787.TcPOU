@@ -61,6 +61,7 @@
 		iGetStateStep						:INT;
 		
 		//OutputAllError用
+		fbInputVoltageAlarmREdge			:R_TRIG;
 		fbMessage							:ARRAY[0..iNumberChannel] OF FB_TcMessage;
 		
 		eNow787Status						:E_787Status;
@@ -302,11 +303,22 @@ END_VAR
         <ST><![CDATA[//---ステータスの状態を出力---
 
 //入力電圧異常
-IF bInputVoltageAlarm=TRUE THEN
-	bError[0]:=TRUE;
+fbInputVoltageAlarmREdge(CLK:=bInputVoltageAlarm);	//異常発生の立ち上がりエッジ検出
+
+bError[0]:=bInputVoltageAlarm;	//ステータスをoutput
+
+//異常発生が立ち上がったらイベントをクリエイト
+IF fbInputVoltageAlarmREdge.Q THEN
 	fbMessage[0].CreateEx(TC_EVENTS.WagoCp787EventClass.InputVoltageAlarm);
-	ipResultMessage[0]:=fbMessage[0];
 END_IF
+
+//ステータスoutputがTRUEならメッセージを出力、FALSEはメッセージ消去
+IF bError[0] THEN
+	ipResultMessage[0]:=fbMessage[0];
+ELSE
+	ipResultMessage[0]:=0;
+END_IF
+
 
 //各チャンネル状態出力
 FOR iForIndex := 1 TO iNumberChannel BY 1 DO
@@ -392,7 +404,20 @@ END_FOR
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.OutputAllError">
-      <LineId Id="186" Count="14" />
+      <LineId Id="186" Count="2" />
+      <LineId Id="413" Count="0" />
+      <LineId Id="420" Count="1" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="422" Count="0" />
+      <LineId Id="424" Count="1" />
+      <LineId Id="423" Count="0" />
+      <LineId Id="429" Count="0" />
+      <LineId Id="416" Count="0" />
+      <LineId Id="414" Count="0" />
+      <LineId Id="419" Count="0" />
+      <LineId Id="427" Count="1" />
+      <LineId Id="418" Count="0" />
+      <LineId Id="193" Count="7" />
       <LineId Id="348" Count="0" />
       <LineId Id="357" Count="0" />
       <LineId Id="360" Count="0" />
