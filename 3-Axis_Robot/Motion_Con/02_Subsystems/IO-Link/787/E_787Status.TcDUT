@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <DUT Name="E_787Status" Id="{e7756522-6330-45fd-b2b5-c0c9ee552a9a}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}

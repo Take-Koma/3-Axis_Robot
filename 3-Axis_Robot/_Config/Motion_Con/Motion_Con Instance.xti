@@ -172,7 +172,6 @@
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFanControl._iOutAirTemp" VarB="RTD Inputs Channel 2^Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 6 (EL6224)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.ControlByteDump" VarB="IO-Link Port1_in^08 PD_Control_Byte_Dump"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.bHardwareFuse" VarB="IO-Link Port1_in^04 Collective Message Hardware Error"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.bInputVoltageAlarm" VarB="IO-Link Port1_in^06 Input Voltage Alarm"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.bLocalOff" VarB="IO-Link Port1_in^05 Collective Message Local Off"/>
@@ -180,6 +179,7 @@
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.bOver100" VarB="IO-Link Port1_in^03 Collective Message &gt;100%"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.bOver90" VarB="IO-Link Port1_in^02 Collective Message &gt;90%"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.bTrippedCollective" VarB="IO-Link Port1_in^01 Collective Message Tripped"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.byControlByteDump" VarB="IO-Link Port1_in^08 PD_Control_Byte_Dump"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.byPdByte3" VarB="IO-Link Port1_in^09 PD_Byte_3"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.byPdByte4" VarB="IO-Link Port1_in^10 PD_Byte_4"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.byPdByte5" VarB="IO-Link Port1_in^11 PD_Byte_5"/>

@@ -23,7 +23,7 @@
 		bHardwareFuse				AT %I*	:BIT;
 		bLocalOff					AT %I*	:BIT;
 		bInputVoltageAlarm			AT %I*	:BIT;
-		ControlByteDump				AT %I*	:BYTE;
+		byControlByteDump			AT %I*	:BYTE;
 		byPdByte3					AT %I*	:BYTE;
 		byPdByte4					AT %I*	:BYTE;
 		byPdByte5					AT %I*	:BYTE;
@@ -54,10 +54,29 @@
 		lrActualCurrent						:ARRAY[1..iNumberChannel] OF LREAL;
 
 //---変数---
+		//For loop用
 		iForIndex							:INT;
+		
+		//GetAllState用
 		iGetStateStep						:INT;
+		
+		//OutputAllError用
 		fbMessage							:ARRAY[0..iNumberChannel] OF FB_TcMessage;
-	END_VAR]]></Declaration>
+		
+		eNow787Status						:E_787Status;
+		ePrev787State						:ARRAY[1..iNumberChannel] OF E_787Status;
+	END_VAR
+
+
+
+
+
+
+
+
+
+
+]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*
 wagoの787-1664/0000-0080で使用するFBです。
@@ -73,7 +92,8 @@ wagoの787-1664/0000-0080で使用するFBです。
 各チャンネルのONとOFF、トリップ時のリセットは、ハードのボタンから実施して下さい。
 *)
 
-GetAllState();]]></ST>
+GetAllState();
+OutputAllError();]]></ST>
     </Implementation>
     <Method Name="ActualCurrent" Id="{553df845-9041-41a0-9228-ca37b26b6587}">
       <Declaration><![CDATA[METHOD ActualCurrent : LREAL
@@ -96,29 +116,37 @@ END_VAR
         <ST><![CDATA[BreakerCurrentSetting:=lrBreakerCurrentSetting[iChannel];]]></ST>
       </Implementation>
     </Method>
-    <Method Name="ChannelState" Id="{436de512-7f05-4a41-8e37-aa4e41f83e5a}">
-      <Declaration><![CDATA[METHOD ChannelState: E_787Status
+    <Method Name="ChannelStatus" Id="{436de512-7f05-4a41-8e37-aa4e41f83e5a}">
+      <Declaration><![CDATA[METHOD INTERNAL ChannelStatus: E_787Status
 VAR_INPUT
 	iChannel		:INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF bTrippedHardwareError[iChannel]=TRUE THEN
-	ChannelState:=E_787Status.TrippedHardwareError;
+	ChannelStatus:=E_787Status.TrippedHardwareError;
+
 ELSIF bTripped[iChannel]=TRUE THEN
-	ChannelState:=E_787Status.Tripped;
+	ChannelStatus:=E_787Status.Tripped;
+
 ELSIF bTrippedThermalRelease[iChannel]=TRUE THEN
-	ChannelState:=E_787Status.TrippedThermalRelease;
+	ChannelStatus:=E_787Status.TrippedThermalRelease;
+		
 ELSIF bWarningOverloadOver100Percent[iChannel]=TRUE THEN
-	ChannelState:=E_787Status.SwitchedOnOverloadOver100Percent;
+	ChannelStatus:=E_787Status.SwitchedOnOverloadOver100Percent;
+	
 ELSIF bWarningOverloadOver90Percent[iChannel]=TRUE THEN
-	ChannelState:=E_787Status.SwitchedOnOverloadOver90Percent;
+	ChannelStatus:=E_787Status.SwitchedOnOverloadOver90Percent;
+	
 ELSIF bSwitchedOn[iChannel]=TRUE THEN
-	ChannelState:=E_787Status.SwitchedOn;
+	ChannelStatus:=E_787Status.SwitchedOn;
+	
 ELSIF bSwitchedOffLocal[iChannel]=TRUE OR bSwitchedOffRemote[iChannel]=TRUE THEN
-	ChannelState:=E_787Status.switchedOffLocalOrRemote;
+	ChannelStatus:=E_787Status.switchedOffLocalOrRemote;
+	
 ELSE
-	ChannelState:=E_787Status.InitializationDevice;
+	ChannelStatus:=E_787Status.InitializationDevice;
+	
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -143,16 +171,14 @@ SUPER^.Name				:=Name;]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetAllState" Id="{9ff98ed8-917d-4375-9bfb-f071b6b9592a}">
-      <Declaration><![CDATA[METHOD GetAllState
-VAR_INPUT
-END_VAR]]></Declaration>
+      <Declaration><![CDATA[METHOD INTERNAL GetAllState]]></Declaration>
       <Implementation>
         <ST><![CDATA[//---ステータスの読み出し---
 CASE iGetStateStep OF
 	0:	iGetStateStep:=1;//ステイする必要が出来たら追加する
 	
 	1:	byControllByte:=1;
-		IF ControlByteDump = byControllByte THEN
+		IF byControlByteDump = byControllByte THEN
 			bWarningOverloadOver100Percent[1]	:=byPdByte3.0;
 			bWarningOverloadOver100Percent[2]	:=byPdByte3.1;
 			bWarningOverloadOver100Percent[3]	:=byPdByte3.2;
@@ -172,7 +198,7 @@ CASE iGetStateStep OF
 		END_IF
 
 	3:	byControllByte:=3;
-		IF ControlByteDump = byControllByte THEN
+		IF byControlByteDump = byControllByte THEN
 			bWarningOverloadOver90Percent[1]	:=byPdByte3.0;
 			bWarningOverloadOver90Percent[2]	:=byPdByte3.1;
 			bWarningOverloadOver90Percent[3]	:=byPdByte3.2;
@@ -189,7 +215,7 @@ CASE iGetStateStep OF
 		END_IF
 	
 	6:	byControllByte:=6;
-		IF ControlByteDump = byControllByte THEN
+		IF byControlByteDump = byControllByte THEN
 			bSwitchedOffRemote[1]				:=byPdByte4.0;
 			bSwitchedOffRemote[2]				:=byPdByte4.1;
 			bSwitchedOffRemote[3]				:=byPdByte4.2;
@@ -199,7 +225,7 @@ CASE iGetStateStep OF
 		END_IF
 	
 	13:	byControllByte:=13;
-		IF ControlByteDump = byControllByte THEN
+		IF byControlByteDump = byControllByte THEN
 			bSwitchedOn[1]						:=byPdByte3.0;
 			bSwitchedOn[2]						:=byPdByte3.1;
 			bSwitchedOn[3]						:=byPdByte3.2;
@@ -212,7 +238,7 @@ CASE iGetStateStep OF
 		END_IF
 	
 	14:	byControllByte:=14;
-		IF ControlByteDump = byControllByte THEN
+		IF byControlByteDump = byControllByte THEN
 			lrActualCurrent[3]					:=byPdByte4/10.0;
 			lrActualCurrent[4]					:=byPdByte5/10.0;
 			
@@ -220,7 +246,7 @@ CASE iGetStateStep OF
 		END_IF
 		
 	17:	byControllByte:=17;
-		IF ControlByteDump = byControllByte THEN
+		IF byControlByteDump = byControllByte THEN
 			bTrippedThermalRelease[1]			:=byPdByte4.0;
 			bTrippedThermalRelease[2]			:=byPdByte4.1;
 			bTrippedThermalRelease[3]			:=byPdByte4.2;
@@ -230,7 +256,7 @@ CASE iGetStateStep OF
 		END_IF
 
 	18:	byControllByte:=18;
-		IF ControlByteDump = byControllByte THEN
+		IF byControlByteDump = byControllByte THEN
 			lrBreakerCurrentSetting[1]			:=byPdByte4/10.0;
 			lrBreakerCurrentSetting[2]			:=byPdByte5/10.0;
 			
@@ -238,7 +264,7 @@ CASE iGetStateStep OF
 		END_IF
 
 	19:	byControllByte:=19;
-		IF ControlByteDump = byControllByte THEN
+		IF byControlByteDump = byControllByte THEN
 			lrBreakerCurrentSetting[3]			:=byPdByte4/10.0;
 			lrBreakerCurrentSetting[4]			:=byPdByte5/10.0;
 		
@@ -246,7 +272,7 @@ CASE iGetStateStep OF
 		END_IF
 		
 	22:	byControllByte:=22;
-		IF ControlByteDump = byControllByte THEN
+		IF byControlByteDump = byControllByte THEN
 			bBreakerRemoteControlSetting[1]		:=byPdByte4.0;
 			bBreakerRemoteControlSetting[2]		:=byPdByte4.1;
 			bBreakerRemoteControlSetting[3]		:=byPdByte4.2;
@@ -256,82 +282,6 @@ CASE iGetStateStep OF
 		END_IF
 
 END_CASE
-
-//---ステータスの状態を出力---
-//入力電圧異常
-IF bInputVoltageAlarm=TRUE THEN
-	bError[0]:=TRUE;
-	fbMessage[0].CreateEx(TC_EVENTS.WagoCp787EventClass.InputVoltageAlarm);
-	fbMessage[0].ipArguments.Clear().AddLReal(_lrInputVoltage);
-	ipResultMessage[0]:=fbMessage[0];
-END_IF
-
-
-FOR iForIndex := 1 TO iNumberChannel BY 1 DO
-	
-	//トリップ状態
-	IF bHardwareFuse=TRUE AND bTrippedHardwareError[iForIndex]=TRUE THEN
-		bError[iForIndex]:=TRUE;
-		fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.TrippedHardwareError);
-		fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
-		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
-		
-	ELSIF bTrippedCollective=TRUE AND (bTripped[iForIndex]=TRUE OR bTrippedThermalRelease[iForIndex]=TRUE) THEN
-		bError[iForIndex]:=TRUE;
-		fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.Tripped);
-		fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
-		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
-		
-	ELSIF bTrippedHardwareError[iForIndex]=FALSE AND bTripped[iForIndex]=FALSE AND bTrippedThermalRelease[iForIndex]=FALSE THEN
-		bError[iForIndex]:=FALSE;
-	END_IF
-	
-	//負荷状態
-	IF bOver100=TRUE AND bWarningOverloadOver100Percent[iForIndex]=TRUE THEN
-		bWarning[iForIndex]:=TRUE;
-		fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.OverloadOver100Percent);
-		fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
-		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
-		
-	ELSIF bOver90=TRUE AND bWarningOverloadOver90Percent[iForIndex]=TRUE THEN
-		bWarning[iForIndex]:=TRUE;
-		fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.OverloadOver90Percent);
-		fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
-		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
-		
-	ELSIF bWarningOverloadOver90Percent[iForIndex]=FALSE AND bWarningOverloadOver100Percent[iForIndex]=FALSE THEN
-		bWarning[iForIndex]:=FALSE;
-	END_IF	
-	
-	//スイッチ状態
-	IF bOff=TRUE AND bSwitchedOffRemote[iForIndex]=TRUE THEN
-		bInfo[iForIndex]:=TRUE;
-		fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.SwitchedOffRemote);
-		fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
-		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
-
-	ELSIF bLocalOff=TRUE AND bSwitchedOffLocal[iForIndex]=TRUE THEN
-		bInfo[iForIndex]:=TRUE;
-		fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.SwitchedOffLocal);
-		fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
-		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
-		
-	ELSIF bSwitchedOffRemote[iForIndex]=FALSE AND bSwitchedOffLocal[iForIndex]=FALSE THEN
-		bInfo[iForIndex]:=FALSE;
-	END_IF
-	
-END_FOR
-
-
-
-
-
-
-
-
-
-
-
 ]]></ST>
       </Implementation>
     </Method>
@@ -346,9 +296,80 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="OutputAllError" Id="{374cbe5f-5688-41d0-b89d-60682b1a3037}">
+      <Declaration><![CDATA[METHOD INTERNAL OutputAllError]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//---ステータスの状態を出力---
+
+//入力電圧異常
+IF bInputVoltageAlarm=TRUE THEN
+	bError[0]:=TRUE;
+	fbMessage[0].CreateEx(TC_EVENTS.WagoCp787EventClass.InputVoltageAlarm);
+	ipResultMessage[0]:=fbMessage[0];
+END_IF
+
+//各チャンネル状態出力
+FOR iForIndex := 1 TO iNumberChannel BY 1 DO
+	
+	//チャンネルのステータスを読み出し
+	eNow787Status:=ChannelStatus(iChannel:=iForIndex);
+	
+	//チャンネルステータスをoutput
+	bError[iForIndex]	:=(eNow787Status=E_787Status.TrippedHardwareError) OR (eNow787Status=E_787Status.TrippedThermalRelease) OR (eNow787Status=E_787Status.Tripped);
+	
+	bWarning[iForIndex]	:=(eNow787Status=E_787Status.SwitchedOnOverloadOver100Percent) OR (eNow787Status=E_787Status.SwitchedOnOverloadOver90Percent);
+	
+	bInfo[iForIndex]	:=(eNow787Status=E_787Status.switchedOffLocalOrRemote);
+	
+	//ステータスが切り替わったらイベントをクリエイト
+	IF eNow787Status <> ePrev787State[iForIndex] THEN
+		
+		CASE eNow787Status OF
+		//トリップ状態
+		E_787Status.TrippedHardwareError:
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.TrippedHardwareError);
+			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+		
+		E_787Status.Tripped,E_787Status.TrippedThermalRelease:
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.Tripped);
+			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+		
+		//負荷状態
+		E_787Status.SwitchedOnOverloadOver100Percent:
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.OverloadOver100Percent);
+			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+		
+		E_787Status.SwitchedOnOverloadOver90Percent:
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.OverloadOver90Percent);
+			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+		
+		//スイッチ状態
+		E_787Status.switchedOffLocalOrRemote:
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.SwitchedOffLocalOrRemote);
+			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+
+		END_CASE
+		
+	END_IF
+	
+	//チャンネルステータスoutputがTRUEならメッセージを出力、FALSEはメッセージ消去
+	IF bError[iForIndex] OR bWarning[iForIndex] OR bInfo[iForIndex] THEN
+		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
+	ELSE
+		ipResultMessage[iForIndex]:=0;
+	END_IF
+	
+	//現在のチャンネルステータスを保存
+	ePrev787State[iForIndex]:=eNow787Status;
+	
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_787">
       <LineId Id="16" Count="0" />
       <LineId Id="2" Count="13" />
+      <LineId Id="17" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.ActualCurrent">
       <LineId Id="1" Count="0" />
@@ -356,18 +377,53 @@ END_VAR
     <LineIds Name="FB_787.BreakerCurrentSetting">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_787.ChannelState">
-      <LineId Id="1" Count="16" />
+    <LineIds Name="FB_787.ChannelStatus">
+      <LineId Id="32" Count="23" />
+      <LineId Id="17" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.FB_Init">
       <LineId Id="1" Count="2" />
     </LineIds>
     <LineIds Name="FB_787.GetAllState">
-      <LineId Id="223" Count="184" />
+      <LineId Id="332" Count="108" />
       <LineId Id="112" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.lrInputVoltage.Get">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_787.OutputAllError">
+      <LineId Id="186" Count="14" />
+      <LineId Id="348" Count="0" />
+      <LineId Id="357" Count="0" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="350" Count="0" />
+      <LineId Id="397" Count="0" />
+      <LineId Id="366" Count="0" />
+      <LineId Id="398" Count="0" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="401" Count="0" />
+      <LineId Id="368" Count="2" />
+      <LineId Id="372" Count="1" />
+      <LineId Id="376" Count="2" />
+      <LineId Id="402" Count="0" />
+      <LineId Id="379" Count="7" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="387" Count="2" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="400" Count="0" />
+      <LineId Id="351" Count="1" />
+      <LineId Id="408" Count="0" />
+      <LineId Id="404" Count="3" />
+      <LineId Id="353" Count="1" />
+      <LineId Id="410" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="411" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="113" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

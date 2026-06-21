@@ -59,7 +59,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[super^.CreateEx(TcEvtEntry, TRUE, 0);]]></ST>
+        <ST><![CDATA[SUPER^.CreateEx(TcEvtEntry, TRUE, 0);]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_Alarm">
