@@ -85,6 +85,12 @@
 		<Text TxtId="SwitchedOffLocal ( {0} ch)">
 			<Text LcId="1041"><![CDATA[ローカルOFF ( {0} ch)]]></Text>
 		</Text>
+		<Text TxtId="InputVoltageAlarm">
+			<Text LcId="1041"><![CDATA[入力電圧異常]]></Text>
+		</Text>
+		<Text TxtId="SwitchedOffLocalOrRemote ( {0} ch)">
+			<Text LcId="1041"><![CDATA[ローカルまたはリモートOFF ( {0} ch)]]></Text>
+		</Text>
 	</Translations>
 	<DataTypes>
 		<DataType>
@@ -1743,6 +1749,64 @@
 			<Hides>
 				<Hide GUID="{B4A8F2D9-1756-4BC3-A81A-85D22039D5B5}"/>
 				<Hide GUID="{EC11165F-C04B-47AA-8D7E-35283CE92190}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{CB9AD64E-2270-4DCB-92B4-6C44869E5D1E}" PersistentType="true">WagoCp787EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[WagoCp787EventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">InputVoltageAlarm</Name>
+				<DisplayName TxtId=""><![CDATA[InputVoltageAlarm]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">TrippedHardwareError</Name>
+				<DisplayName TxtId=""><![CDATA[TrippedHardwareError ( {0} ch)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">Tripped</Name>
+				<DisplayName TxtId=""><![CDATA[Tripped ( {0} ch)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">OverloadOver100Percent</Name>
+				<DisplayName TxtId=""><![CDATA[OverloadOver100Percent ( {0} ch)]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">OverloadOver90Percent</Name>
+				<DisplayName TxtId=""><![CDATA[OverloadOver90Percent ( {0} ch)]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">SwitchedOffLocalOrRemote</Name>
+				<DisplayName TxtId=""><![CDATA[SwitchedOffLocalOrRemote ( {0} ch)]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<Translations>
+				<Text TxtId="WagoCp787EventClass">
+					<Text LcId="1041"><![CDATA[WagoCp787EventClass]]></Text>
+				</Text>
+				<Text TxtId="TrippedHardwareError ( {0} ch)">
+					<Text LcId="1041"><![CDATA[ハードウェアヒューズ異常 ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="Tripped ( {0} ch)">
+					<Text LcId="1041"><![CDATA[トリップ ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="OverloadOver100Percent ( {0} ch)">
+					<Text LcId="1041"><![CDATA[負荷100%超え ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="OverloadOver90Percent ( {0} ch)">
+					<Text LcId="1041"><![CDATA[負荷90%超え ( {0} ch)]]></Text>
+				</Text>
+			</Translations>
+			<Hides>
+				<Hide GUID="{B4A8F2D9-1756-4BC3-A81A-85D22039D5B5}"/>
+				<Hide GUID="{EC11165F-C04B-47AA-8D7E-35283CE92190}"/>
+				<Hide GUID="{1B58B559-14B5-45B1-A076-F2F7671E117E}"/>
+				<Hide GUID="{7831230E-5F6A-49E9-8479-9A043E9A120C}"/>
+				<Hide GUID="{2F2ED372-BA59-4CCD-A011-A674D4B8EE03}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
