@@ -59,6 +59,7 @@
 		iGetStateStep						:INT;
 		fbGetStateTimeOut					:TON	:=(PT:=T#2S);
 		_bImmediatelyGetInputVoltage		:BOOL;
+		bVoltageMsgSent						:BOOL;
 		
 		//OutputAllError用
 		fbInputVoltageAlarmREdge			:R_TRIG;
@@ -133,25 +134,25 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF bTrippedHardwareError[iChannel]=TRUE THEN
+        <ST><![CDATA[IF bTrippedHardwareError[iChannel] THEN
 	ChannelStatus:=E_787Status.TrippedHardwareError;
 
-ELSIF bTripped[iChannel]=TRUE THEN
+ELSIF bTripped[iChannel] THEN
 	ChannelStatus:=E_787Status.Tripped;
 
-ELSIF bTrippedThermalRelease[iChannel]=TRUE THEN
+ELSIF bTrippedThermalRelease[iChannel] THEN
 	ChannelStatus:=E_787Status.TrippedThermalRelease;
 		
-ELSIF bWarningOverloadOver100Percent[iChannel]=TRUE THEN
+ELSIF bWarningOverloadOver100Percent[iChannel] THEN
 	ChannelStatus:=E_787Status.SwitchedOnOverloadOver100Percent;
 	
-ELSIF bWarningOverloadOver90Percent[iChannel]=TRUE THEN
+ELSIF bWarningOverloadOver90Percent[iChannel] THEN
 	ChannelStatus:=E_787Status.SwitchedOnOverloadOver90Percent;
 	
-ELSIF bSwitchedOn[iChannel]=TRUE THEN
+ELSIF bSwitchedOn[iChannel] THEN
 	ChannelStatus:=E_787Status.SwitchedOn;
 	
-ELSIF bSwitchedOffLocal[iChannel]=TRUE OR bSwitchedOffRemote[iChannel]=TRUE THEN
+ELSIF bSwitchedOffLocal[iChannel] OR bSwitchedOffRemote[iChannel] THEN
 	ChannelStatus:=E_787Status.switchedOffLocalOrRemote;
 	
 ELSE
@@ -242,6 +243,10 @@ CASE iGetStateStep OF
 			bTrippedHardwareError[4]			:=byPdByte4.3;
 			
 			_lrInputVoltage						:=(byPdByte5/10.0)+15;
+			
+			IF __ISVALIDREF(bImmediatelyGetInputVoltage) AND_THEN bImmediatelyGetInputVoltage THEN
+				bImmediatelyGetInputVoltage:=FALSE;
+			END_IF
 			
 			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=6;
@@ -341,6 +346,11 @@ END_CASE
 fbGetStateTimeOut();
 
 IF fbGetStateTimeOut.Q THEN
+	
+	IF __ISVALIDREF(bImmediatelyGetInputVoltage) AND_THEN bImmediatelyGetInputVoltage THEN
+		bImmediatelyGetInputVoltage:=FALSE;
+	END_IF
+
 	fbGetStateTimeOut.IN:=FALSE;
 	iGetStateStep:=0;
 END_IF
@@ -348,7 +358,6 @@ END_IF
 //電圧異常発生時
 IF __ISVALIDREF(bImmediatelyGetInputVoltage) AND_THEN bImmediatelyGetInputVoltage THEN
 	iGetStateStep:=3;
-	bImmediatelyGetInputVoltage:=FALSE;
 END_IF
 
 
@@ -382,11 +391,13 @@ IF fbInputVoltageAlarmREdge.Q THEN
 	_bImmediatelyGetInputVoltage:=TRUE;
 END_IF
 
-IF 	bInputVoltageAlarm AND NOT _bImmediatelyGetInputVoltage THEN
+IF 	bInputVoltageAlarm AND NOT _bImmediatelyGetInputVoltage AND NOT bVoltageMsgSent THEN
 	fbMessage[0].ipArguments.Clear().AddLReal(_lrInputVoltage);
 	fbMessage[0].Send();
+	bVoltageMsgSent:=TRUE;
 ELSIF NOT bInputVoltageAlarm THEN
 	fbMessage[0].Release();
+	bVoltageMsgSent:=FALSE;
 END_IF
 
 //各チャンネル状態出力
@@ -479,6 +490,9 @@ END_FOR
       <LineId Id="462" Count="3" />
       <LineId Id="576" Count="1" />
       <LineId Id="466" Count="12" />
+      <LineId Id="601" Count="0" />
+      <LineId Id="603" Count="0" />
+      <LineId Id="599" Count="1" />
       <LineId Id="566" Count="0" />
       <LineId Id="479" Count="3" />
       <LineId Id="578" Count="1" />
@@ -512,14 +526,17 @@ END_FOR
       <LineId Id="551" Count="0" />
       <LineId Id="550" Count="0" />
       <LineId Id="552" Count="0" />
-      <LineId Id="554" Count="2" />
+      <LineId Id="554" Count="1" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="607" Count="1" />
+      <LineId Id="606" Count="0" />
+      <LineId Id="605" Count="0" />
+      <LineId Id="556" Count="0" />
       <LineId Id="560" Count="0" />
       <LineId Id="557" Count="0" />
       <LineId Id="553" Count="0" />
       <LineId Id="592" Count="0" />
-      <LineId Id="595" Count="1" />
-      <LineId Id="598" Count="0" />
-      <LineId Id="597" Count="0" />
+      <LineId Id="595" Count="2" />
       <LineId Id="593" Count="1" />
       <LineId Id="558" Count="1" />
       <LineId Id="112" Count="0" />
@@ -535,7 +552,9 @@ END_FOR
       <LineId Id="97" Count="0" />
       <LineId Id="94" Count="0" />
       <LineId Id="93" Count="0" />
+      <LineId Id="101" Count="0" />
       <LineId Id="85" Count="1" />
+      <LineId Id="100" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="21" Count="5" />
       <LineId Id="34" Count="8" />
