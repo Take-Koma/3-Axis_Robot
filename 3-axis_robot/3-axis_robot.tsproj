@@ -40,27 +40,6 @@
 		<Text TxtId="GripperError">
 			<Text LcId="1041"><![CDATA[グリッパーエラー]]></Text>
 		</Text>
-		<Text TxtId="EtherCATError">
-			<Text LcId="1041"><![CDATA[イーサキャットエラー]]></Text>
-		</Text>
-		<Text TxtId="TerminalError">
-			<Text LcId="1041"><![CDATA[ターミナルエラー]]></Text>
-		</Text>
-		<Text TxtId="ParsistentDataInitialization">
-			<Text LcId="1041"><![CDATA[パーシステントデータ初期化]]></Text>
-		</Text>
-		<Text TxtId="PersistentDataLoadFault">
-			<Text LcId="1041"><![CDATA[パーシステントデータ読み込み失敗]]></Text>
-		</Text>
-		<Text TxtId="OldPersistentDataLoad">
-			<Text LcId="1041"><![CDATA[古いパーシステントデータ読み込み]]></Text>
-		</Text>
-		<Text TxtId="PersistentDataWriteError">
-			<Text LcId="1041"><![CDATA[パーシステントデータ書き込み失敗]]></Text>
-		</Text>
-		<Text TxtId="CycleTimeExceeded">
-			<Text LcId="1041"><![CDATA[サイクルタイム超過]]></Text>
-		</Text>
 		<Text TxtId="WagoCp787EventClass">
 			<Text LcId="1041"><![CDATA[WagoCp787EventClass]]></Text>
 		</Text>
@@ -85,8 +64,35 @@
 		<Text TxtId="SwitchedOffLocal ( {0} ch)">
 			<Text LcId="1041"><![CDATA[ローカルOFF ( {0} ch)]]></Text>
 		</Text>
-		<Text TxtId="InputVoltageAlarm">
-			<Text LcId="1041"><![CDATA[入力電圧異常]]></Text>
+		<Text TxtId="MachineAlarmEventClass">
+			<Text LcId="1041"><![CDATA[装置アラームイベントクラス]]></Text>
+		</Text>
+		<Text TxtId="EtherCATError">
+			<Text LcId="1041"><![CDATA[イーサキャットエラー]]></Text>
+		</Text>
+		<Text TxtId="TerminalError">
+			<Text LcId="1041"><![CDATA[ターミナルエラー]]></Text>
+		</Text>
+		<Text TxtId="ParsistentDataInitialization">
+			<Text LcId="1041"><![CDATA[パーシステントデータ初期化]]></Text>
+		</Text>
+		<Text TxtId="PersistentDataLoadFault">
+			<Text LcId="1041"><![CDATA[パーシステントデータ読み込み失敗]]></Text>
+		</Text>
+		<Text TxtId="OldPersistentDataLoad">
+			<Text LcId="1041"><![CDATA[古いパーシステントデータ読み込み]]></Text>
+		</Text>
+		<Text TxtId="PersistentDataWriteError">
+			<Text LcId="1041"><![CDATA[パーシステントデータ書き込み失敗]]></Text>
+		</Text>
+		<Text TxtId="CycleTimeExceeded">
+			<Text LcId="1041"><![CDATA[サイクルタイム超過]]></Text>
+		</Text>
+		<Text TxtId="CircuitProtectorError">
+			<Text LcId="1041"><![CDATA[サーキットプロテクターエラー]]></Text>
+		</Text>
+		<Text TxtId="InputVoltageAlarm( {0} V)">
+			<Text LcId="1041"><![CDATA[入力電圧異常( {0} V)]]></Text>
 		</Text>
 		<Text TxtId="SwitchedOffLocalOrRemote ( {0} ch)">
 			<Text LcId="1041"><![CDATA[ローカルまたはリモートOFF ( {0} ch)]]></Text>
@@ -1558,7 +1564,50 @@
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{75F5C208-848B-4163-98CC-36DD5035109A}" PersistentType="true">MachineAlarmEventClass</Name>
+			<Name GUID="{1B58B559-14B5-45B1-A076-F2F7671E117E}" PersistentType="true">WagoCp787EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[WagoCp787EventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">InputVoltageAlarm</Name>
+				<DisplayName TxtId=""><![CDATA[InputVoltageAlarm ( {0} V)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">TrippedHardwareError</Name>
+				<DisplayName TxtId=""><![CDATA[TrippedHardwareError ( {0} ch)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">Tripped</Name>
+				<DisplayName TxtId=""><![CDATA[Tripped ( {0} ch)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">OverloadOver100Percent</Name>
+				<DisplayName TxtId=""><![CDATA[OverloadOver100Percent ( {0} ch)]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">OverloadOver90Percent</Name>
+				<DisplayName TxtId=""><![CDATA[OverloadOver90Percent ( {0} ch)]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">SwitchedOffRemote</Name>
+				<DisplayName TxtId=""><![CDATA[SwitchedOffRemote ( {0} ch)]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">SwitchedOffLocal</Name>
+				<DisplayName TxtId=""><![CDATA[SwitchedOffLocal ( {0} ch)]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{B4A8F2D9-1756-4BC3-A81A-85D22039D5B5}"/>
+				<Hide GUID="{EC11165F-C04B-47AA-8D7E-35283CE92190}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{7B824859-8556-4510-B078-2FBD5276D8DE}" PersistentType="true">MachineAlarmEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[MachineAlarmEventClass]]></DisplayName>
 			<EventId>
 				<Name Id="1">SafetyNotRun</Name>
@@ -1655,6 +1704,11 @@
 				<DisplayName TxtId=""><![CDATA[CycleTimeExceeded]]></DisplayName>
 				<Severity>Warning</Severity>
 			</EventId>
+			<EventId>
+				<Name Id="20">CircuitProtectorError</Name>
+				<DisplayName TxtId=""><![CDATA[CircuitProtectorError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
 			<Translations>
 				<Text TxtId="SafetyNotRun">
 					<Text LcId="1041"><![CDATA[セフティー未起動]]></Text>
@@ -1706,57 +1760,15 @@
 				<Hide GUID="{1EC8A248-8BAB-43F0-BA41-73CFFA3AF4AF}"/>
 				<Hide GUID="{DF7C4704-ABC7-4E02-85EA-66B676040BD5}"/>
 				<Hide GUID="{714AB463-6698-454B-8F4E-C2B09C58256A}"/>
+				<Hide GUID="{75F5C208-848B-4163-98CC-36DD5035109A}"/>
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{1B58B559-14B5-45B1-A076-F2F7671E117E}" PersistentType="true">WagoCp787EventClass</Name>
+			<Name GUID="{63B17D0E-1819-49B4-8073-F1562B82FF9A}" PersistentType="true">WagoCp787EventClass</Name>
 			<DisplayName TxtId=""><![CDATA[WagoCp787EventClass]]></DisplayName>
 			<EventId>
 				<Name Id="1">InputVoltageAlarm</Name>
-				<DisplayName TxtId=""><![CDATA[InputVoltageAlarm ( {0} V)]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="2">TrippedHardwareError</Name>
-				<DisplayName TxtId=""><![CDATA[TrippedHardwareError ( {0} ch)]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="3">Tripped</Name>
-				<DisplayName TxtId=""><![CDATA[Tripped ( {0} ch)]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="4">OverloadOver100Percent</Name>
-				<DisplayName TxtId=""><![CDATA[OverloadOver100Percent ( {0} ch)]]></DisplayName>
-				<Severity>Warning</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="5">OverloadOver90Percent</Name>
-				<DisplayName TxtId=""><![CDATA[OverloadOver90Percent ( {0} ch)]]></DisplayName>
-				<Severity>Warning</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="6">SwitchedOffRemote</Name>
-				<DisplayName TxtId=""><![CDATA[SwitchedOffRemote ( {0} ch)]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="7">SwitchedOffLocal</Name>
-				<DisplayName TxtId=""><![CDATA[SwitchedOffLocal ( {0} ch)]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<Hides>
-				<Hide GUID="{B4A8F2D9-1756-4BC3-A81A-85D22039D5B5}"/>
-				<Hide GUID="{EC11165F-C04B-47AA-8D7E-35283CE92190}"/>
-			</Hides>
-		</DataType>
-		<DataType>
-			<Name GUID="{CB9AD64E-2270-4DCB-92B4-6C44869E5D1E}" PersistentType="true">WagoCp787EventClass</Name>
-			<DisplayName TxtId=""><![CDATA[WagoCp787EventClass]]></DisplayName>
-			<EventId>
-				<Name Id="1">InputVoltageAlarm</Name>
-				<DisplayName TxtId=""><![CDATA[InputVoltageAlarm]]></DisplayName>
+				<DisplayName TxtId=""><![CDATA[InputVoltageAlarm( {0} V)]]></DisplayName>
 				<Severity>Error</Severity>
 			</EventId>
 			<EventId>
@@ -1807,6 +1819,7 @@
 				<Hide GUID="{1B58B559-14B5-45B1-A076-F2F7671E117E}"/>
 				<Hide GUID="{7831230E-5F6A-49E9-8479-9A043E9A120C}"/>
 				<Hide GUID="{2F2ED372-BA59-4CCD-A011-A674D4B8EE03}"/>
+				<Hide GUID="{CB9AD64E-2270-4DCB-92B4-6C44869E5D1E}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>
