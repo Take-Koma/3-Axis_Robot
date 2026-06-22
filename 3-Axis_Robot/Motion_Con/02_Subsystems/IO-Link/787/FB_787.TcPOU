@@ -7,11 +7,9 @@
 		iNumberChannel						:INT	:=4;
 	END_VAR
 	VAR_OUTPUT
-		bError								:ARRAY[0..iNumberChannel] OF BOOL;
-		bWarning							:ARRAY[1..iNumberChannel] OF BOOL;
-		bInfo								:ARRAY[1..iNumberChannel] OF BOOL;
-		
-		ipResultMessage						:ARRAY[0..iNumberChannel] OF I_TcMessage;
+		bError								:BOOL;
+		bWarning							:BOOL;
+		bInfo								:BOOL;
 	END_VAR
 	VAR	
 //---プロセスデータとリンク--
@@ -60,6 +58,7 @@
 		//GetAllState用
 		iGetStateStep						:INT;
 		fbGetStateTimeOut					:TON	:=(PT:=T#2S);
+		_bImmediatelyGetInputVoltage		:BOOL;
 		
 		//OutputAllError用
 		fbInputVoltageAlarmREdge			:R_TRIG;
@@ -94,7 +93,8 @@ wagoの787-1664/0000-0080で使用するFBです。
 各チャンネルのONとOFF、トリップ時のリセットは、ハードのボタンから実施して下さい。
 *)
 
-GetAllState();
+CollectiveMessage();
+GetAllState(_bImmediatelyGetInputVoltage);
 OutputAllStatus();]]></ST>
     </Implementation>
     <Method Name="ActualCurrent" Id="{553df845-9041-41a0-9228-ca37b26b6587}">
@@ -160,6 +160,16 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Method Name="CollectiveMessage" Id="{849ccbb9-9fe7-46c3-8686-f69cec0d5d1f}">
+      <Declaration><![CDATA[METHOD INTERNAL CollectiveMessage]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bError:=bInputVoltageAlarm OR bHardwareFuse OR bTrippedCollective;
+
+bWarning:=bOver100 OR bOver90;
+
+bInfo:=bOff OR bLocalOff;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="FB_Init" Id="{7e410fde-38c5-4b7f-9cdf-d418c5c47be1}">
       <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
 //戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
@@ -185,7 +195,10 @@ byValidByte		:=7;]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetAllState" Id="{9ff98ed8-917d-4375-9bfb-f071b6b9592a}">
-      <Declaration><![CDATA[METHOD INTERNAL GetAllState]]></Declaration>
+      <Declaration><![CDATA[METHOD INTERNAL GetAllState
+VAR_INPUT
+	bImmediatelyGetInputVoltage		:REFERENCE TO BOOL;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//---ステータスの読み出し---
 CASE iGetStateStep OF
@@ -332,6 +345,13 @@ IF fbGetStateTimeOut.Q THEN
 	iGetStateStep:=0;
 END_IF
 
+//電圧異常発生時
+IF __ISVALIDREF(bImmediatelyGetInputVoltage) AND_THEN bImmediatelyGetInputVoltage THEN
+	iGetStateStep:=3;
+	bImmediatelyGetInputVoltage:=FALSE;
+END_IF
+
+
 
 
 ]]></ST>
@@ -356,33 +376,24 @@ END_VAR
 //入力電圧異常
 fbInputVoltageAlarmREdge(CLK:=bInputVoltageAlarm);	//異常発生の立ち上がりエッジ検出
 
-bError[0]:=bInputVoltageAlarm;	//ステータスをoutput
-
 //異常発生が立ち上がったらイベントをクリエイト
 IF fbInputVoltageAlarmREdge.Q THEN
 	fbMessage[0].CreateEx(TC_EVENTS.WagoCp787EventClass.InputVoltageAlarm);
+	_bImmediatelyGetInputVoltage:=TRUE;
 END_IF
 
-//ステータスoutputがTRUEならメッセージを出力、FALSEはメッセージ消去
-IF bError[0] THEN
-	ipResultMessage[0]:=fbMessage[0];
-ELSE
-	ipResultMessage[0]:=0;
+IF 	bInputVoltageAlarm AND NOT _bImmediatelyGetInputVoltage THEN
+	fbMessage[0].ipArguments.Clear().AddLReal(_lrInputVoltage);
+	fbMessage[0].Send();
+ELSIF NOT bInputVoltageAlarm THEN
+	fbMessage[0].Release();
 END_IF
-
 
 //各チャンネル状態出力
 FOR iForIndex := 1 TO iNumberChannel BY 1 DO
 	
 	//チャンネルのステータスを読み出し
 	eNow787Status:=ChannelStatus(iChannel:=iForIndex);
-	
-	//チャンネルステータスをoutput
-	bError[iForIndex]	:=(eNow787Status=E_787Status.TrippedHardwareError) OR (eNow787Status=E_787Status.TrippedThermalRelease) OR (eNow787Status=E_787Status.Tripped);
-	
-	bWarning[iForIndex]	:=(eNow787Status=E_787Status.SwitchedOnOverloadOver100Percent) OR (eNow787Status=E_787Status.SwitchedOnOverloadOver90Percent);
-	
-	bInfo[iForIndex]	:=(eNow787Status=E_787Status.switchedOffLocalOrRemote);
 	
 	//ステータスが切り替わったらイベントをクリエイト
 	IF eNow787Status <> ePrev787State[iForIndex] THEN
@@ -392,24 +403,29 @@ FOR iForIndex := 1 TO iNumberChannel BY 1 DO
 		E_787Status.TrippedHardwareError:
 			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.TrippedHardwareError);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+			fbMessage[iForIndex].Send();
 		
 		E_787Status.Tripped,E_787Status.TrippedThermalRelease:
 			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.Tripped);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+			fbMessage[iForIndex].Send();
 		
 		//負荷状態
 		E_787Status.SwitchedOnOverloadOver100Percent:
 			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.OverloadOver100Percent);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+			fbMessage[iForIndex].Send();
 		
 		E_787Status.SwitchedOnOverloadOver90Percent:
 			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.OverloadOver90Percent);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+			fbMessage[iForIndex].Send();
 		
 		//スイッチ状態
 		E_787Status.switchedOffLocalOrRemote:
 			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.SwitchedOffLocalOrRemote);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
+			fbMessage[iForIndex].Send();
 
 		//スイッチ状態ON(正常)
 		E_787Status.SwitchedOn:
@@ -417,13 +433,6 @@ FOR iForIndex := 1 TO iNumberChannel BY 1 DO
 
 		END_CASE
 		
-	END_IF
-	
-	//チャンネルステータスoutputがTRUEならメッセージを出力、FALSEはメッセージ消去
-	IF bError[iForIndex] OR bWarning[iForIndex] OR bInfo[iForIndex] THEN
-		ipResultMessage[iForIndex]:=fbMessage[iForIndex];
-	ELSE
-		ipResultMessage[iForIndex]:=0;
 	END_IF
 	
 	//現在のチャンネルステータスを保存
@@ -434,7 +443,9 @@ END_FOR
       </Implementation>
     </Method>
     <LineIds Name="FB_787">
-      <LineId Id="18" Count="14" />
+      <LineId Id="18" Count="12" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="31" Count="1" />
       <LineId Id="17" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.ActualCurrent">
@@ -451,6 +462,9 @@ END_FOR
     <LineIds Name="FB_787.ChannelStatus">
       <LineId Id="32" Count="23" />
       <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_787.CollectiveMessage">
+      <LineId Id="1" Count="4" />
     </LineIds>
     <LineIds Name="FB_787.FB_Init">
       <LineId Id="1" Count="2" />
@@ -502,6 +516,11 @@ END_FOR
       <LineId Id="560" Count="0" />
       <LineId Id="557" Count="0" />
       <LineId Id="553" Count="0" />
+      <LineId Id="592" Count="0" />
+      <LineId Id="595" Count="1" />
+      <LineId Id="598" Count="0" />
+      <LineId Id="597" Count="0" />
+      <LineId Id="593" Count="1" />
       <LineId Id="558" Count="1" />
       <LineId Id="112" Count="0" />
     </LineIds>
@@ -509,11 +528,31 @@ END_FOR
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.OutputAllStatus">
-      <LineId Id="2" Count="58" />
+      <LineId Id="2" Count="3" />
+      <LineId Id="8" Count="3" />
+      <LineId Id="95" Count="1" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="21" Count="5" />
+      <LineId Id="34" Count="8" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="43" Count="3" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="47" Count="4" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="52" Count="3" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="56" Count="4" />
+      <LineId Id="92" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="81" Count="0" />
       <LineId Id="83" Count="1" />
-      <LineId Id="61" Count="12" />
+      <LineId Id="61" Count="3" />
+      <LineId Id="72" Count="1" />
       <LineId Id="80" Count="0" />
       <LineId Id="75" Count="2" />
     </LineIds>

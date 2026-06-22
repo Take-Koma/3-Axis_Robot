@@ -57,7 +57,7 @@
 		fbAlarmPersistentDataWriteError			:FB_Alarm(TC_Events.MachineAlarmEventClass.PersistentDataWriteError);
 		fbAlarmCycleTimeExceeded				:FB_Alarm(TC_Events.MachineAlarmEventClass.CycleTimeExceeded);
 		fbAlarmLoadCellError					:FB_AlarmFromTcMessage;
-		fbAlarmWagoCp787Error					:ARRAY[0..4] OF FB_AlarmFromTcMessage;
+		fbAlarmWagoCp787Error					:FB_Alarm(TC_Events.MachineAlarmEventClass.CircuitProtectorError);
 
 
 //------パーシステントデータ管理------
@@ -534,21 +534,12 @@ END_IF
 		ipResultMessage		:=fbLoadCellForCalcValue.ipResultMessage
 	);
 
-	fbAlarmWagoCp787Error[0](
-		bRaise				:=fb787.bError[0],
+	fbAlarmWagoCp787Error(
+		bRaise				:=fb787.bError OR fb787.bWarning OR fb787.bInfo,
 		bConfirm			:=bBuzzerStop,
 		bClear				:=bAlarmReset,
-		ipResultMessage		:=fb787.ipResultMessage[0]
 	);
 
-	FOR i:=1 TO 4 BY 1 DO
-		fbAlarmWagoCp787Error[i](
-			bRaise				:=fb787.bError[i] OR fb787.bWarning[i] OR fb787.bInfo[i],
-			bConfirm			:=bBuzzerStop,
-			bClear				:=bAlarmReset,
-			ipResultMessage		:=fb787.ipResultMessage[i]
-		);
-	END_FOR
 
 
 
@@ -788,8 +779,8 @@ END_VAR]]></Declaration>
 	fb787();	//CPのステータスを読み込みたいので呼び出し
 	
 	//エラーとワーニングチェック
-	bToCPError			:=fb787.bError[0] OR fb787.bError[1] OR fb787.bError[2] OR fb787.bError[3] OR fb787.bError[4];
-	bToCPWarning		:=fb787.bWarning[1] OR fb787.bWarning[2] OR fb787.bWarning[3] OR fb787.bWarning[4];
+	bToCPError			:=fb787.bError;
+	bToCPWarning		:=fb787.bWarning;
 	
 	//CPの入力電圧
 	uInputVoltage.rREAL	:=LREAL_TO_REAL(fb787.lrInputVoltage);
@@ -892,11 +883,7 @@ END_VAR]]></Declaration>
 	GVL.mb_Input_Coils[67]			:=fbAlarmPersistentDataWriteError.bRaised;
 	GVL.mb_Input_Coils[68]			:=fbAlarmCycleTimeExceeded.bRaised;
 	GVL.mb_Input_Coils[69]			:=fbAlarmLoadCellError.bRaised;
-	GVL.mb_Input_Coils[70]			:=fbAlarmWagoCp787Error[0].bRaised;
-	GVL.mb_Input_Coils[71]			:=fbAlarmWagoCp787Error[1].bRaised;
-	GVL.mb_Input_Coils[72]			:=fbAlarmWagoCp787Error[2].bRaised;
-	GVL.mb_Input_Coils[73]			:=fbAlarmWagoCp787Error[3].bRaised;
-	GVL.mb_Input_Coils[74]			:=fbAlarmWagoCp787Error[4].bRaised;
+	GVL.mb_Input_Coils[70]			:=fbAlarmWagoCp787Error.bRaised;
 	//---アラームここまで---
 
 
@@ -1858,7 +1845,9 @@ END_CASE;]]></ST>
       <LineId Id="2" Count="32" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Alarm">
-      <LineId Id="301" Count="157" />
+      <LineId Id="301" Count="138" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="450" Count="8" />
       <LineId Id="259" Count="0" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_AxisOrganization">
@@ -1933,7 +1922,7 @@ END_CASE;]]></ST>
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_MitsubishiCom">
       <LineId Id="76" Count="20" />
-      <LineId Id="163" Count="5" />
+      <LineId Id="163" Count="1" />
       <LineId Id="97" Count="22" />
       <LineId Id="143" Count="0" />
       <LineId Id="162" Count="0" />
