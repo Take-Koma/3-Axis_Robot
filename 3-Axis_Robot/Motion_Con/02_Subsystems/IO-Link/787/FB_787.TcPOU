@@ -29,7 +29,7 @@
 		byPdByte5					AT %I*	:BYTE;
 		//アプトプットデータ
 		byChOnOffReset				AT %Q*	:BYTE:=0;
-		byControllByte				AT %Q*	:BYTE;
+		byControlByte				AT %Q*	:BYTE;
 		byValidByte					AT %Q*	:BYTE:=7;
 
 //---サーキットプロテクターの状態確認---
@@ -94,7 +94,7 @@ wagoの787-1664/0000-0080で使用するFBです。
 *)
 
 GetAllState();
-OutputAllError();]]></ST>
+OutputAllStatus();]]></ST>
     </Implementation>
     <Method Name="ActualCurrent" Id="{553df845-9041-41a0-9228-ca37b26b6587}">
       <Declaration><![CDATA[METHOD ActualCurrent : LREAL
@@ -104,7 +104,11 @@ END_VAR
 
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[ActualCurrent:=lrActualCurrent[iChannel];]]></ST>
+        <ST><![CDATA[IF iChannel<1 OR iNumberChannel<iChannel THEN
+	ActualCurrent:=99.99;
+ELSE
+	ActualCurrent:=lrActualCurrent[iChannel];
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="BreakerCurrentSetting" Id="{41d92651-31e9-48b9-bfe0-df965b31220d}">
@@ -114,7 +118,11 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[BreakerCurrentSetting:=lrBreakerCurrentSetting[iChannel];]]></ST>
+        <ST><![CDATA[IF iChannel<1 OR iNumberChannel<iChannel THEN
+	BreakerCurrentSetting:=99.99;
+ELSE
+	BreakerCurrentSetting:=lrBreakerCurrentSetting[iChannel];
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="ChannelStatus" Id="{436de512-7f05-4a41-8e37-aa4e41f83e5a}">
@@ -178,8 +186,8 @@ SUPER^.Name				:=Name;]]></ST>
 CASE iGetStateStep OF
 	0:	iGetStateStep:=1;//ステイする必要が出来たら追加する
 	
-	1:	byControllByte:=1;
-		IF byControlByteDump = byControllByte THEN
+	1:	byControlByte:=1;
+		IF byControlByteDump = byControlByte THEN
 			bWarningOverloadOver100Percent[1]	:=byPdByte3.0;
 			bWarningOverloadOver100Percent[2]	:=byPdByte3.1;
 			bWarningOverloadOver100Percent[3]	:=byPdByte3.2;
@@ -198,8 +206,8 @@ CASE iGetStateStep OF
 			iGetStateStep:=3;
 		END_IF
 
-	3:	byControllByte:=3;
-		IF byControlByteDump = byControllByte THEN
+	3:	byControlByte:=3;
+		IF byControlByteDump = byControlByte THEN
 			bWarningOverloadOver90Percent[1]	:=byPdByte3.0;
 			bWarningOverloadOver90Percent[2]	:=byPdByte3.1;
 			bWarningOverloadOver90Percent[3]	:=byPdByte3.2;
@@ -215,8 +223,8 @@ CASE iGetStateStep OF
 			iGetStateStep:=6;
 		END_IF
 	
-	6:	byControllByte:=6;
-		IF byControlByteDump = byControllByte THEN
+	6:	byControlByte:=6;
+		IF byControlByteDump = byControlByte THEN
 			bSwitchedOffRemote[1]				:=byPdByte4.0;
 			bSwitchedOffRemote[2]				:=byPdByte4.1;
 			bSwitchedOffRemote[3]				:=byPdByte4.2;
@@ -225,8 +233,8 @@ CASE iGetStateStep OF
 			iGetStateStep:=13;
 		END_IF
 	
-	13:	byControllByte:=13;
-		IF byControlByteDump = byControllByte THEN
+	13:	byControlByte:=13;
+		IF byControlByteDump = byControlByte THEN
 			bSwitchedOn[1]						:=byPdByte3.0;
 			bSwitchedOn[2]						:=byPdByte3.1;
 			bSwitchedOn[3]						:=byPdByte3.2;
@@ -238,16 +246,16 @@ CASE iGetStateStep OF
 			iGetStateStep:=14;
 		END_IF
 	
-	14:	byControllByte:=14;
-		IF byControlByteDump = byControllByte THEN
+	14:	byControlByte:=14;
+		IF byControlByteDump = byControlByte THEN
 			lrActualCurrent[3]					:=byPdByte4/10.0;
 			lrActualCurrent[4]					:=byPdByte5/10.0;
 			
 			iGetStateStep:=17;
 		END_IF
 		
-	17:	byControllByte:=17;
-		IF byControlByteDump = byControllByte THEN
+	17:	byControlByte:=17;
+		IF byControlByteDump = byControlByte THEN
 			bTrippedThermalRelease[1]			:=byPdByte4.0;
 			bTrippedThermalRelease[2]			:=byPdByte4.1;
 			bTrippedThermalRelease[3]			:=byPdByte4.2;
@@ -256,24 +264,24 @@ CASE iGetStateStep OF
 			iGetStateStep:=18;
 		END_IF
 
-	18:	byControllByte:=18;
-		IF byControlByteDump = byControllByte THEN
+	18:	byControlByte:=18;
+		IF byControlByteDump = byControlByte THEN
 			lrBreakerCurrentSetting[1]			:=byPdByte4/10.0;
 			lrBreakerCurrentSetting[2]			:=byPdByte5/10.0;
 			
 			iGetStateStep:=19;
 		END_IF
 
-	19:	byControllByte:=19;
-		IF byControlByteDump = byControllByte THEN
+	19:	byControlByte:=19;
+		IF byControlByteDump = byControlByte THEN
 			lrBreakerCurrentSetting[3]			:=byPdByte4/10.0;
 			lrBreakerCurrentSetting[4]			:=byPdByte5/10.0;
 		
 			iGetStateStep:=22;
 		END_IF
 		
-	22:	byControllByte:=22;
-		IF byControlByteDump = byControllByte THEN
+	22:	byControlByte:=22;
+		IF byControlByteDump = byControlByte THEN
 			bBreakerRemoteControlSetting[1]		:=byPdByte4.0;
 			bBreakerRemoteControlSetting[2]		:=byPdByte4.1;
 			bBreakerRemoteControlSetting[3]		:=byPdByte4.2;
@@ -297,8 +305,8 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="OutputAllError" Id="{374cbe5f-5688-41d0-b89d-60682b1a3037}">
-      <Declaration><![CDATA[METHOD INTERNAL OutputAllError]]></Declaration>
+    <Method Name="OutputAllStatus" Id="{374cbe5f-5688-41d0-b89d-60682b1a3037}">
+      <Declaration><![CDATA[METHOD INTERNAL OutputAllStatus]]></Declaration>
       <Implementation>
         <ST><![CDATA[//---ステータスの状態を出力---
 
@@ -379,15 +387,19 @@ END_FOR
       </Implementation>
     </Method>
     <LineIds Name="FB_787">
-      <LineId Id="16" Count="0" />
-      <LineId Id="2" Count="13" />
+      <LineId Id="18" Count="14" />
       <LineId Id="17" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.ActualCurrent">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="1" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.BreakerCurrentSetting">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.ChannelStatus">
       <LineId Id="32" Count="23" />
@@ -397,58 +409,16 @@ END_FOR
       <LineId Id="1" Count="2" />
     </LineIds>
     <LineIds Name="FB_787.GetAllState">
-      <LineId Id="332" Count="108" />
+      <LineId Id="441" Count="108" />
       <LineId Id="112" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.lrInputVoltage.Get">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_787.OutputAllError">
-      <LineId Id="186" Count="2" />
-      <LineId Id="413" Count="0" />
-      <LineId Id="420" Count="1" />
-      <LineId Id="426" Count="0" />
-      <LineId Id="422" Count="0" />
-      <LineId Id="424" Count="1" />
-      <LineId Id="423" Count="0" />
-      <LineId Id="429" Count="0" />
-      <LineId Id="416" Count="0" />
-      <LineId Id="414" Count="0" />
-      <LineId Id="419" Count="0" />
-      <LineId Id="427" Count="1" />
-      <LineId Id="418" Count="0" />
-      <LineId Id="193" Count="7" />
-      <LineId Id="348" Count="0" />
-      <LineId Id="357" Count="0" />
-      <LineId Id="360" Count="0" />
-      <LineId Id="364" Count="0" />
-      <LineId Id="356" Count="0" />
-      <LineId Id="365" Count="0" />
-      <LineId Id="350" Count="0" />
-      <LineId Id="397" Count="0" />
-      <LineId Id="366" Count="0" />
-      <LineId Id="398" Count="0" />
-      <LineId Id="367" Count="0" />
-      <LineId Id="401" Count="0" />
-      <LineId Id="368" Count="2" />
-      <LineId Id="372" Count="1" />
-      <LineId Id="376" Count="2" />
-      <LineId Id="402" Count="0" />
-      <LineId Id="379" Count="7" />
-      <LineId Id="403" Count="0" />
-      <LineId Id="387" Count="2" />
-      <LineId Id="399" Count="0" />
-      <LineId Id="396" Count="0" />
-      <LineId Id="400" Count="0" />
-      <LineId Id="351" Count="1" />
-      <LineId Id="408" Count="0" />
-      <LineId Id="404" Count="3" />
-      <LineId Id="353" Count="1" />
-      <LineId Id="410" Count="0" />
-      <LineId Id="252" Count="0" />
-      <LineId Id="411" Count="0" />
-      <LineId Id="253" Count="0" />
-      <LineId Id="113" Count="0" />
+    <LineIds Name="FB_787.OutputAllStatus">
+      <LineId Id="2" Count="71" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="75" Count="2" />
     </LineIds>
   </POU>
 </TcPlcObject>

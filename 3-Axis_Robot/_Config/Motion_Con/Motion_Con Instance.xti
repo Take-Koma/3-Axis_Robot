@@ -192,7 +192,7 @@
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbIoLinkMaster.byStatus[3]" VarB="DeviceState Inputs^State Ch3"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbIoLinkMaster.byStatus[4]" VarB="DeviceState Inputs^State Ch4"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fb787.byChOnOffReset" VarB="IO-Link Port1_out^00 CH ON/OFF/RESET"/>
-				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fb787.byControllByte" VarB="IO-Link Port1_out^01 PD_Controll_Byte"/>
+				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fb787.byControlByte" VarB="IO-Link Port1_out^01 PD_Controll_Byte"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fb787.byValidByte" VarB="IO-Link Port1_out^02 PD_Valid_Byte"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbIoLinkPatlite.bBlueTier" VarB="IO-Link Port2^4th Tier On/Off" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbIoLinkPatlite.bBuzzerON" VarB="IO-Link Port2^Buzzer On/Off" Size="1"/>
