@@ -59,6 +59,7 @@
 		
 		//GetAllState用
 		iGetStateStep						:INT;
+		fbGetStateTimeOut					:TON	:=(PT:=T#2S);
 		
 		//OutputAllError用
 		fbInputVoltageAlarmREdge			:R_TRIG;
@@ -105,7 +106,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF iChannel<1 OR iNumberChannel<iChannel THEN
-	ActualCurrent:=99.99;
+	ActualCurrent:=-1.0;
 ELSE
 	ActualCurrent:=lrActualCurrent[iChannel];
 END_IF]]></ST>
@@ -119,7 +120,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF iChannel<1 OR iNumberChannel<iChannel THEN
-	BreakerCurrentSetting:=99.99;
+	BreakerCurrentSetting:=-1.0;
 ELSE
 	BreakerCurrentSetting:=lrBreakerCurrentSetting[iChannel];
 END_IF]]></ST>
@@ -176,7 +177,11 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[SUPER^.MasterAoeNetId	:=MasterAoeNetId;
 SUPER^.Port				:=port;
-SUPER^.Name				:=Name;]]></ST>
+SUPER^.Name				:=Name;
+
+//アプトプットデータに念のため書き込み実行
+byChOnOffReset	:=0;
+byValidByte		:=7;]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetAllState" Id="{9ff98ed8-917d-4375-9bfb-f071b6b9592a}">
@@ -187,6 +192,8 @@ CASE iGetStateStep OF
 	0:	iGetStateStep:=1;//ステイする必要が出来たら追加する
 	
 	1:	byControlByte:=1;
+		fbGetStateTimeOut.IN:=TRUE;
+		
 		IF byControlByteDump = byControlByte THEN
 			bWarningOverloadOver100Percent[1]	:=byPdByte3.0;
 			bWarningOverloadOver100Percent[2]	:=byPdByte3.1;
@@ -203,10 +210,13 @@ CASE iGetStateStep OF
 			bSwitchedOffLocal[3]				:=byPdByte5.2;
 			bSwitchedOffLocal[4]				:=byPdByte5.3;
 			
+			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=3;
 		END_IF
 
 	3:	byControlByte:=3;
+		fbGetStateTimeOut.IN:=TRUE;
+		
 		IF byControlByteDump = byControlByte THEN
 			bWarningOverloadOver90Percent[1]	:=byPdByte3.0;
 			bWarningOverloadOver90Percent[2]	:=byPdByte3.1;
@@ -220,77 +230,110 @@ CASE iGetStateStep OF
 			
 			_lrInputVoltage						:=(byPdByte5/10.0)+15;
 			
+			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=6;
 		END_IF
 	
 	6:	byControlByte:=6;
+		fbGetStateTimeOut.IN:=TRUE;
+		
 		IF byControlByteDump = byControlByte THEN
 			bSwitchedOffRemote[1]				:=byPdByte4.0;
 			bSwitchedOffRemote[2]				:=byPdByte4.1;
 			bSwitchedOffRemote[3]				:=byPdByte4.2;
 			bSwitchedOffRemote[4]				:=byPdByte4.3;
 			
+			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=13;
 		END_IF
 	
 	13:	byControlByte:=13;
+		fbGetStateTimeOut.IN:=TRUE;
+		
 		IF byControlByteDump = byControlByte THEN
 			bSwitchedOn[1]						:=byPdByte3.0;
 			bSwitchedOn[2]						:=byPdByte3.1;
 			bSwitchedOn[3]						:=byPdByte3.2;
 			bSwitchedOn[4]						:=byPdByte3.3;
 			
-			lrActualCurrent[1]					:=byPdByte4/10.0;
-			lrActualCurrent[2]					:=byPdByte5/10.0;
+			lrActualCurrent[1]					:=BYTE_TO_LREAL(byPdByte4)/10.0;
+			lrActualCurrent[2]					:=BYTE_TO_LREAL(byPdByte5)/10.0;
 			
+			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=14;
 		END_IF
 	
 	14:	byControlByte:=14;
+		fbGetStateTimeOut.IN:=TRUE;
+		
 		IF byControlByteDump = byControlByte THEN
-			lrActualCurrent[3]					:=byPdByte4/10.0;
-			lrActualCurrent[4]					:=byPdByte5/10.0;
+			lrActualCurrent[3]					:=BYTE_TO_LREAL(byPdByte4)/10.0;
+			lrActualCurrent[4]					:=BYTE_TO_LREAL(byPdByte5)/10.0;
 			
+			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=17;
 		END_IF
 		
 	17:	byControlByte:=17;
+		fbGetStateTimeOut.IN:=TRUE;
+		
 		IF byControlByteDump = byControlByte THEN
 			bTrippedThermalRelease[1]			:=byPdByte4.0;
 			bTrippedThermalRelease[2]			:=byPdByte4.1;
 			bTrippedThermalRelease[3]			:=byPdByte4.2;
 			bTrippedThermalRelease[4]			:=byPdByte4.3;
-		
+			
+			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=18;
 		END_IF
 
 	18:	byControlByte:=18;
+		fbGetStateTimeOut.IN:=TRUE;
+		
 		IF byControlByteDump = byControlByte THEN
-			lrBreakerCurrentSetting[1]			:=byPdByte4/10.0;
-			lrBreakerCurrentSetting[2]			:=byPdByte5/10.0;
+			lrBreakerCurrentSetting[1]			:=BYTE_TO_LREAL(byPdByte4)/10.0;
+			lrBreakerCurrentSetting[2]			:=BYTE_TO_LREAL(byPdByte5)/10.0;
 			
+			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=19;
 		END_IF
 
 	19:	byControlByte:=19;
-		IF byControlByteDump = byControlByte THEN
-			lrBreakerCurrentSetting[3]			:=byPdByte4/10.0;
-			lrBreakerCurrentSetting[4]			:=byPdByte5/10.0;
+		fbGetStateTimeOut.IN:=TRUE;
 		
+		IF byControlByteDump = byControlByte THEN
+			lrBreakerCurrentSetting[3]			:=BYTE_TO_LREAL(byPdByte4)/10.0;
+			lrBreakerCurrentSetting[4]			:=BYTE_TO_LREAL(byPdByte5)/10.0;
+			
+			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=22;
 		END_IF
 		
 	22:	byControlByte:=22;
+		fbGetStateTimeOut.IN:=TRUE;
+		
 		IF byControlByteDump = byControlByte THEN
 			bBreakerRemoteControlSetting[1]		:=byPdByte4.0;
 			bBreakerRemoteControlSetting[2]		:=byPdByte4.1;
 			bBreakerRemoteControlSetting[3]		:=byPdByte4.2;
 			bBreakerRemoteControlSetting[4]		:=byPdByte4.3;
 			
+			fbGetStateTimeOut.IN:=FALSE;
 			iGetStateStep:=0;
 		END_IF
 
 END_CASE
+
+//タイムアウト検出
+fbGetStateTimeOut();
+
+IF fbGetStateTimeOut.Q THEN
+	fbGetStateTimeOut.IN:=FALSE;
+	iGetStateStep:=0;
+END_IF
+
+
+
 ]]></ST>
       </Implementation>
     </Method>
@@ -368,6 +411,10 @@ FOR iForIndex := 1 TO iNumberChannel BY 1 DO
 			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.SwitchedOffLocalOrRemote);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
 
+		//スイッチ状態ON(正常)
+		E_787Status.SwitchedOn:
+			fbMessage[iForIndex].Release();
+
 		END_CASE
 		
 	END_IF
@@ -407,16 +454,66 @@ END_FOR
     </LineIds>
     <LineIds Name="FB_787.FB_Init">
       <LineId Id="1" Count="2" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.GetAllState">
-      <LineId Id="441" Count="108" />
+      <LineId Id="441" Count="4" />
+      <LineId Id="574" Count="1" />
+      <LineId Id="446" Count="15" />
+      <LineId Id="565" Count="0" />
+      <LineId Id="462" Count="3" />
+      <LineId Id="576" Count="1" />
+      <LineId Id="466" Count="12" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="479" Count="3" />
+      <LineId Id="578" Count="1" />
+      <LineId Id="483" Count="5" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="489" Count="3" />
+      <LineId Id="580" Count="1" />
+      <LineId Id="493" Count="8" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="502" Count="3" />
+      <LineId Id="582" Count="1" />
+      <LineId Id="506" Count="3" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="510" Count="3" />
+      <LineId Id="584" Count="1" />
+      <LineId Id="514" Count="5" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="520" Count="3" />
+      <LineId Id="586" Count="1" />
+      <LineId Id="524" Count="3" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="528" Count="3" />
+      <LineId Id="588" Count="1" />
+      <LineId Id="532" Count="3" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="536" Count="3" />
+      <LineId Id="590" Count="1" />
+      <LineId Id="540" Count="5" />
+      <LineId Id="573" Count="0" />
+      <LineId Id="546" Count="3" />
+      <LineId Id="551" Count="0" />
+      <LineId Id="550" Count="0" />
+      <LineId Id="552" Count="0" />
+      <LineId Id="554" Count="2" />
+      <LineId Id="560" Count="0" />
+      <LineId Id="557" Count="0" />
+      <LineId Id="553" Count="0" />
+      <LineId Id="558" Count="1" />
       <LineId Id="112" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.lrInputVoltage.Get">
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.OutputAllStatus">
-      <LineId Id="2" Count="71" />
+      <LineId Id="2" Count="58" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="61" Count="12" />
       <LineId Id="80" Count="0" />
       <LineId Id="75" Count="2" />
     </LineIds>
