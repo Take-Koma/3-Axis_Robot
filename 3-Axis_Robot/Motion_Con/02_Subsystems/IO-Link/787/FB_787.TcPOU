@@ -201,7 +201,28 @@ VAR_INPUT
 	bImmediatelyGetInputVoltage		:REFERENCE TO BOOL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[//---ステータスの読み出し---
+        <ST><![CDATA[//タイムアウト検出
+fbGetStateTimeOut();
+
+IF fbGetStateTimeOut.Q THEN
+	
+	IF __ISVALIDREF(bImmediatelyGetInputVoltage) AND_THEN bImmediatelyGetInputVoltage THEN
+		bImmediatelyGetInputVoltage:=FALSE;
+	END_IF
+
+	fbGetStateTimeOut.IN:=FALSE;
+	iGetStateStep:=0;
+END_IF
+
+
+//電圧異常発生時
+IF __ISVALIDREF(bImmediatelyGetInputVoltage) AND_THEN bImmediatelyGetInputVoltage THEN
+	fbGetStateTimeOut.IN:=FALSE;
+	iGetStateStep:=3;
+END_IF
+
+
+//---ステータスの読み出し---
 CASE iGetStateStep OF
 	0:	iGetStateStep:=1;//ステイする必要が出来たら追加する
 	
@@ -342,23 +363,7 @@ CASE iGetStateStep OF
 
 END_CASE
 
-//タイムアウト検出
-fbGetStateTimeOut();
 
-IF fbGetStateTimeOut.Q THEN
-	
-	IF __ISVALIDREF(bImmediatelyGetInputVoltage) AND_THEN bImmediatelyGetInputVoltage THEN
-		bImmediatelyGetInputVoltage:=FALSE;
-	END_IF
-
-	fbGetStateTimeOut.IN:=FALSE;
-	iGetStateStep:=0;
-END_IF
-
-//電圧異常発生時
-IF __ISVALIDREF(bImmediatelyGetInputVoltage) AND_THEN bImmediatelyGetInputVoltage THEN
-	iGetStateStep:=3;
-END_IF
 
 
 
@@ -383,22 +388,23 @@ END_VAR
         <ST><![CDATA[//---ステータスの状態を出力---
 
 //入力電圧異常
-fbInputVoltageAlarmREdge(CLK:=bInputVoltageAlarm);	//異常発生の立ち上がりエッジ検出
-
-//異常発生が立ち上がったらイベントをクリエイト
-IF fbInputVoltageAlarmREdge.Q THEN
-	fbMessage[0].CreateEx(TC_EVENTS.WagoCp787EventClass.InputVoltageAlarm);
-	_bImmediatelyGetInputVoltage:=TRUE;
-END_IF
-
-IF 	bInputVoltageAlarm AND NOT _bImmediatelyGetInputVoltage AND NOT bVoltageMsgSent THEN
-	fbMessage[0].ipArguments.Clear().AddLReal(_lrInputVoltage);
-	fbMessage[0].Send();
-	bVoltageMsgSent:=TRUE;
-ELSIF NOT bInputVoltageAlarm THEN
-	fbMessage[0].Release();
-	bVoltageMsgSent:=FALSE;
-END_IF
+	fbInputVoltageAlarmREdge(CLK:=bInputVoltageAlarm);	//異常発生の立ち上がりエッジ検出
+	
+	//異常発生が立ち上がったらイベントをクリエイト
+	IF fbInputVoltageAlarmREdge.Q THEN
+		fbMessage[0].CreateEx(TC_EVENTS.WagoCp787EventClass.InputVoltageAlarm);
+		_bImmediatelyGetInputVoltage:=TRUE;
+	END_IF
+	
+	//
+	IF 	bInputVoltageAlarm AND NOT _bImmediatelyGetInputVoltage AND NOT bVoltageMsgSent THEN
+		fbMessage[0].ipArguments.Clear().AddLReal(_lrInputVoltage);
+		fbMessage[0].Send();
+		bVoltageMsgSent:=TRUE;
+	ELSIF NOT bInputVoltageAlarm THEN
+		fbMessage[0].Release();
+		bVoltageMsgSent:=FALSE;
+	END_IF
 
 //各チャンネル状態出力
 FOR iForIndex := 1 TO iNumberChannel BY 1 DO
@@ -483,6 +489,12 @@ END_FOR
       <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.GetAllState">
+      <LineId Id="606" Count="11" />
+      <LineId Id="623" Count="0" />
+      <LineId Id="618" Count="4" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="605" Count="0" />
       <LineId Id="441" Count="4" />
       <LineId Id="574" Count="1" />
       <LineId Id="446" Count="15" />
@@ -524,19 +536,7 @@ END_FOR
       <LineId Id="573" Count="0" />
       <LineId Id="546" Count="3" />
       <LineId Id="551" Count="0" />
-      <LineId Id="550" Count="0" />
-      <LineId Id="552" Count="0" />
-      <LineId Id="554" Count="1" />
-      <LineId Id="604" Count="0" />
-      <LineId Id="607" Count="1" />
-      <LineId Id="606" Count="0" />
-      <LineId Id="605" Count="0" />
-      <LineId Id="556" Count="0" />
-      <LineId Id="560" Count="0" />
-      <LineId Id="557" Count="0" />
-      <LineId Id="553" Count="0" />
-      <LineId Id="592" Count="0" />
-      <LineId Id="595" Count="2" />
+      <LineId Id="597" Count="0" />
       <LineId Id="593" Count="1" />
       <LineId Id="558" Count="1" />
       <LineId Id="112" Count="0" />
@@ -549,6 +549,7 @@ END_FOR
       <LineId Id="8" Count="3" />
       <LineId Id="95" Count="1" />
       <LineId Id="98" Count="0" />
+      <LineId Id="102" Count="0" />
       <LineId Id="97" Count="0" />
       <LineId Id="94" Count="0" />
       <LineId Id="93" Count="0" />
