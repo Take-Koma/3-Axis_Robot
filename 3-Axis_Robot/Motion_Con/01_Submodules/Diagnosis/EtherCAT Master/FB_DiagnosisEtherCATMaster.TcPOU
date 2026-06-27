@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_DiagnosisEtherCATMaster" Id="{de43cf2f-fd79-46c9-9b8b-af34aac85cac}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisEtherCATMaster
+VAR_OUTPUT
+	bError						:BOOL;								//エラー発生を出力
+END_VAR
+VAR_IN_OUT
+	fbFrmWcStateDiagnosis		:ARRAY[*] OF FB_FrmWcStateDiagnosis;
+	fbFrmStateDiagnosis			:ARRAY[*] OF FB_FrmStateDiagnosis;
+END_VAR
+VAR
+	fbDevStateDiagnosis			:FB_DevStateDiagnosis;
+	i							:DINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//診断用FBを呼び出し
+fbDevStateDiagnosis(bError=>bError);
+
+//可変長のアレイを診断と出力
+FOR i := LOWER_BOUND(fbFrmWcStateDiagnosis,1) TO UPPER_BOUND(fbFrmWcStateDiagnosis,1) DO
+	fbFrmWcStateDiagnosis[i]();
+	bError:=bError OR fbFrmWcStateDiagnosis[i].bError;
+END_FOR
+
+FOR i := LOWER_BOUND(fbFrmStateDiagnosis,1) TO UPPER_BOUND(fbFrmStateDiagnosis,1) DO
+	fbFrmStateDiagnosis[i]();
+	bError:=bError OR fbFrmStateDiagnosis[i].bError;
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="FB_DiagnosisEtherCATMaster">
+      <LineId Id="19" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

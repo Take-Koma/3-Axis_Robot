@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_DiagnosisEtherCAT" Id="{4d69465a-f2cd-4c79-b6d9-39d89729a3d3}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisEtherCAT
 VAR

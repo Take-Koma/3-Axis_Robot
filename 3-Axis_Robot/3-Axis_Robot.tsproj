@@ -97,6 +97,156 @@
 		<Text TxtId="SwitchedOffLocalOrRemote ( {0} ch)">
 			<Text LcId="1041"><![CDATA[ローカルまたはリモートOFF ( {0} ch)]]></Text>
 		</Text>
+		<Text TxtId="EtherCATMasterDevStateEventClass">
+			<Text LcId="1041"><![CDATA[EtherCATマスタ DevState イベントクラス]]></Text>
+		</Text>
+		<Text TxtId="Link error">
+			<Text LcId="1041"><![CDATA[リンクエラー]]></Text>
+		</Text>
+		<Text TxtId="I/O locked after link error (I/O reset required)">
+			<Text LcId="1041"><![CDATA[リンクエラー後のI/Oロック（I/Oリセットが必要）]]></Text>
+		</Text>
+		<Text TxtId="Link error (redundancy adapter)">
+			<Text LcId="1041"><![CDATA[リンクエラー（冗長化アダプタ）]]></Text>
+		</Text>
+		<Text TxtId="Missing one frame (redundancy mode)">
+			<Text LcId="1041"><![CDATA[フレームの欠落（冗長化モード）]]></Text>
+		</Text>
+		<Text TxtId="Out of send resources (I/O reset required)">
+			<Text LcId="1041"><![CDATA[送信リソース不足（I/Oリセットが必要）]]></Text>
+		</Text>
+		<Text TxtId="Watchdog triggered">
+			<Text LcId="1041"><![CDATA[ウォッチドッグ作動]]></Text>
+		</Text>
+		<Text TxtId="Ethernet driver (miniport) not found">
+			<Text LcId="1041"><![CDATA[イーサネットドライバ（ミニポート）未検出]]></Text>
+		</Text>
+		<Text TxtId="I/O reset active">
+			<Text LcId="1041"><![CDATA[I/Oリセット実行中]]></Text>
+		</Text>
+		<Text TxtId="At least one device in ҅INIT҆ state">
+			<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「INIT」状態]]></Text>
+		</Text>
+		<Text TxtId="At least one device in ҅PRE-OP҆ state">
+			<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「PRE-OP」状態]]></Text>
+		</Text>
+		<Text TxtId="At least one device in ҅SAFE-OP҆ state">
+			<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「SAFE-OP」状態]]></Text>
+		</Text>
+		<Text TxtId="At least one device indicates an error state">
+			<Text LcId="1041"><![CDATA[少なくとも1つのデバイスがエラー状態を示している]]></Text>
+		</Text>
+		<Text TxtId="DC not in sync">
+			<Text LcId="1041"><![CDATA[DC非同期]]></Text>
+		</Text>
+		<Text TxtId="Bit13 NA">
+			<Text LcId="1041"><![CDATA[ビット13 未使用]]></Text>
+		</Text>
+		<Text TxtId="Bit14 NA">
+			<Text LcId="1041"><![CDATA[ビット14 未使用]]></Text>
+		</Text>
+		<Text TxtId="Bit15 NA">
+			<Text LcId="1041"><![CDATA[ビット15 未使用]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 1 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド1のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 2 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド2のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 3 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド3のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 4 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド4のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 5 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド5のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 6 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド6のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 7 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド7のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 8 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド8のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 9 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド9のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 10 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド10のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 11 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド11のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 12 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド12のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 13 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド13のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 14 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド14のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of 15 EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド15のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="Complete frame missing!">
+			<Text LcId="1041"><![CDATA[フレームが完全に欠落しています]]></Text>
+		</Text>
+		<Text TxtId="EtherCATMasterFrmStateEventClass">
+			<Text LcId="1041"><![CDATA[EtherCATマスタ FrmStateイベントクラス]]></Text>
+		</Text>
+		<Text TxtId="1.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[1.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="2.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[2.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="3.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[3.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="4.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[4.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="5.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[5.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="6.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[6.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="7.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[7.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="8.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[8.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="9.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[9.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="10.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[10.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="11.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[11.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="12.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[12.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="13.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[13.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="14.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[14.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="15.  EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[15.  EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="Complete frame not sent.">
+			<Text LcId="1041"><![CDATA[フレームは完全に送信されませんでした。]]></Text>
+		</Text>
 	</Translations>
 	<DataTypes>
 		<DataType>
@@ -1820,6 +1970,282 @@
 				<Hide GUID="{7831230E-5F6A-49E9-8479-9A043E9A120C}"/>
 				<Hide GUID="{2F2ED372-BA59-4CCD-A011-A674D4B8EE03}"/>
 				<Hide GUID="{CB9AD64E-2270-4DCB-92B4-6C44869E5D1E}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{72FD2FE9-703A-469B-8F94-39E272147AC4}" PersistentType="true">EtherCATMasterDevStateEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[EtherCATMasterDevStateEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="0">LinkError</Name>
+				<DisplayName TxtId=""><![CDATA[Link error]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="1">IOLockedAfterLinkErrorIOResetRequired</Name>
+				<DisplayName TxtId=""><![CDATA[I/O locked after link error (I/O reset required)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">LinkErrorRedundancyAdapter</Name>
+				<DisplayName TxtId=""><![CDATA[Link error (redundancy adapter)]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">MissingOneFrameRedundancyAdapter</Name>
+				<DisplayName TxtId=""><![CDATA[Missing one frame (redundancy mode)]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">OutOfSendResourcesIOResetRequired</Name>
+				<DisplayName TxtId=""><![CDATA[Out of send resources (I/O reset required)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">WatchdogTriggered</Name>
+				<DisplayName TxtId=""><![CDATA[Watchdog triggered]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">EthernetDriverMiniportNotFound</Name>
+				<DisplayName TxtId=""><![CDATA[Ethernet driver (miniport) not found]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">IOResetActive</Name>
+				<DisplayName TxtId=""><![CDATA[I/O reset active]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">AtLeastOneDeviceInINITState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device in ҅INIT҆ state]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">AtLeastOneDeviceInPREOPState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device in ҅PRE-OP҆ state]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">AtLeastOneDeviceInSAFEOPState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device in ҅SAFE-OP҆ state]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">AtLeastOneDeviceInERRORState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device indicates an error state]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">DCNotInSync</Name>
+				<DisplayName TxtId=""><![CDATA[DC not in sync]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="13">Bit13</Name>
+				<DisplayName TxtId=""><![CDATA[Bit13 NA]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="14">Bit14</Name>
+				<DisplayName TxtId=""><![CDATA[Bit14 NA]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="15">Bit15</Name>
+				<DisplayName TxtId=""><![CDATA[Bit15 NA]]></DisplayName>
+				<Severity>Verbose</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{D3D4213D-0BCE-473D-8C76-EBE81B56DC80}"/>
+				<Hide GUID="{AE45003A-2E67-48B4-89CE-EEC39DF21801}"/>
+				<Hide GUID="{90E095E7-9F24-47F7-8716-033F9E1E8B6C}"/>
+				<Hide GUID="{E045CD6C-34AA-43B8-9829-2CB7702B273E}"/>
+				<Hide GUID="{2BF9C66A-5194-4DF6-B7E8-6E0CE77A1D2A}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{754FCF86-CFC2-421D-B858-34D3752D55AA}" PersistentType="true">EtherCATMasterFrmWcStateEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[EtherCATMasterFrmWcStateEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="0">WrongWorkingCounterOf1EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 1 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="1">WrongWorkingCounterOf2EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 2 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">WrongWorkingCounterOf3EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 3 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">WrongWorkingCounterOf4EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 4 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">WrongWorkingCounterOf5EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 5 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">WrongWorkingCounterOf6EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 6 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">WrongWorkingCounterOf7EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 7 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">WrongWorkingCounterOf8EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 8 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">WrongWorkingCounterOf9EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 9 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">WrongWorkingCounterOf10EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 10 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">WrongWorkingCounterOf11EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 11 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">WrongWorkingCounterOf12EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 12 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">WrongWorkingCounterOf13EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 13 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="13">WrongWorkingCounterOf14EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 14 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="14">WrongWorkingCounterOf15EtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of 15 EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="15">CompleteFrameMissing</Name>
+				<DisplayName TxtId=""><![CDATA[Complete frame missing!]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{CBBB59F8-F583-4EA6-98B5-C5E3C4C3B0BD}"/>
+				<Hide GUID="{9CF21FE3-095E-4AD5-AAE7-D3F3263948B6}"/>
+				<Hide GUID="{73710521-1015-4CD1-98BE-3CFE3C09BBEF}"/>
+				<Hide GUID="{35916267-BC3B-4409-9174-C78472950A3C}"/>
+				<Hide GUID="{83F33E4D-0B46-4381-95DB-EDB967560DD4}"/>
+				<Hide GUID="{99146C25-4058-48D6-82AC-9C28CB72A469}"/>
+				<Hide GUID="{75727AA8-5E1D-4E0D-B013-ADA5846005F3}"/>
+				<Hide GUID="{FCD7C42C-0D76-4927-88EC-356E8C840E3C}"/>
+				<Hide GUID="{AF69B4BD-1AC9-4205-B99B-66C440D0FE4F}"/>
+				<Hide GUID="{CBEF9964-BE82-4969-991F-87E7F15E496B}"/>
+				<Hide GUID="{5F0AEB84-EBAC-4C49-9ACF-85235E96F22D}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{A5355015-3B2F-4180-A697-9206F6DCB599}" PersistentType="true">EtherCATMasterFrmStateEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[EtherCATMasterFrmStateEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">EtherCATCommand1NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[1.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">EtherCATCommand2NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[2.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">EtherCATCommand3NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[3.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">EtherCATCommand4NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[4.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">EtherCATCommand5NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[5.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">EtherCATCommand6NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[6.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">EtherCATCommand7NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[7.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">EtherCATCommand8NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[8.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">EtherCATCommand9NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[9.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">EtherCATCommand10NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[10.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">EtherCATCommand11NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[11.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">EtherCATCommand12NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[12.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="13">EtherCATCommand13NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[13.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="14">EtherCATCommand14NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[14.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="15">EtherCATCommand15NotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[15.  EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="16">CompleteFrameNotSent</Name>
+				<DisplayName TxtId=""><![CDATA[Complete frame not sent.]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{190E3431-A73A-49D5-B295-1CA4364278E1}"/>
+				<Hide GUID="{CB3EE669-2365-441F-9CFA-870234526CCB}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

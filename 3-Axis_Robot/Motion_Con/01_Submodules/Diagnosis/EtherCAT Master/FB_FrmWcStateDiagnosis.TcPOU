@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_FrmWcStateDiagnosis" Id="{4e91cd08-8953-4bd4-ae28-be45cc439d43}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_FrmWcStateDiagnosis
+VAR_OUTPUT
+	bError						:BOOL;								//エラー発生を出力
+END_VAR
+VAR
+	uiFrmWcState 		AT%I*	:UINT;								//PDデータとリンク
+	
+	bErrorState					:ARRAY[0..15] OF BOOL;				//各ステートエラー
+	fbErrorStateREdge			:ARRAY[0..15] OF R_TRIG;
+	fbMessage					:ARRAY[0..15] OF FB_TcMessage;
+	i							:INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//エラー状態を出力
+	bError:= uiFrmWcState<>0 ;
+	
+//サイクリックフレームごとのワーキングカウンターチェック、エラーは複数発生する可能性があるので全bitチェック
+	bErrorState[0]:=uiFrmWcState.0;
+	bErrorState[1]:=uiFrmWcState.1;
+	bErrorState[2]:=uiFrmWcState.2;
+	bErrorState[3]:=uiFrmWcState.3;
+	bErrorState[4]:=uiFrmWcState.4;
+	bErrorState[5]:=uiFrmWcState.5;
+	bErrorState[6]:=uiFrmWcState.6;
+	bErrorState[7]:=uiFrmWcState.7;
+	bErrorState[8]:=uiFrmWcState.8;
+	bErrorState[9]:=uiFrmWcState.9;
+	bErrorState[10]:=uiFrmWcState.10;
+	bErrorState[11]:=uiFrmWcState.11;
+	bErrorState[12]:=uiFrmWcState.12;
+	bErrorState[13]:=uiFrmWcState.13;
+	bErrorState[14]:=uiFrmWcState.14;
+	bErrorState[15]:=uiFrmWcState.15;
+	
+//結果をEventloggerへ
+	FOR i := 0 TO 15 BY 1 DO
+		fbErrorStateREdge[i](CLK:=bErrorState[i]);
+		
+		IF fbErrorStateREdge[i].Q THEN
+			fbMessage[i].Send();
+		END_IF
+		
+	END_FOR
+]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{7a56f216-0586-4f04-a2eb-3842cf2c6d30}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMessage[0].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf1EtherCATCommandReceived);
+fbMessage[1].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf2EtherCATCommandReceived);
+fbMessage[2].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf3EtherCATCommandReceived);
+fbMessage[3].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf4EtherCATCommandReceived);
+fbMessage[4].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf5EtherCATCommandReceived);
+fbMessage[5].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf6EtherCATCommandReceived);
+fbMessage[6].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf7EtherCATCommandReceived);
+fbMessage[7].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf8EtherCATCommandReceived);
+fbMessage[8].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf9EtherCATCommandReceived);
+fbMessage[9].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf10EtherCATCommandReceived);
+fbMessage[10].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf11EtherCATCommandReceived);
+fbMessage[11].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf12EtherCATCommandReceived);
+fbMessage[12].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf13EtherCATCommandReceived);
+fbMessage[13].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf14EtherCATCommandReceived);
+fbMessage[14].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf15EtherCATCommandReceived);
+fbMessage[15].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.CompleteFrameMissing);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_FrmWcStateDiagnosis">
+      <LineId Id="195" Count="26" />
+      <LineId Id="224" Count="2" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_FrmWcStateDiagnosis.FB_Init">
+      <LineId Id="1" Count="15" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -27,10 +27,19 @@
 
 
 //------診断-------
-		fbDiagnosisEtherCAT						:ARRAY[1..2] OF FB_DiagnosisEtherCAT;										//EtherCAT診断用FB
 		fbDiagnosisTerminal						:ARRAY[E_Terminal.EL9410..E_Terminal.AZD4A_KED] OF FB_DiagnosisTerminal;	//Terminal診断用FB
 		bEtherCATOK								:BOOL;																		//EtherCAT診断結果
 		bTerminalOK								:BOOL;																		//Terminal診断結果
+
+		//デバイス2
+		fbFrmWcStateDiagnosis2					:ARRAY[0..0] OF FB_FrmWcStateDiagnosis;										//EtherCAt Master診断用FB
+		fbFrmStateDiagnosis2					:ARRAY[0..0] OF FB_FrmStateDiagnosis;										//EtherCAt Master診断用FB
+		fbDiagnosisEtherCATMaster2				:FB_DiagnosisEtherCATMaster;												//EtherCAt Master診断用FB
+
+		//デバイス6
+		fbFrmWcStateDiagnosis6					:ARRAY[0..0] OF FB_FrmWcStateDiagnosis;										//EtherCAt Master診断用FB
+		fbFrmStateDiagnosis6					:ARRAY[0..0] OF FB_FrmStateDiagnosis;										//EtherCAt Master診断用FB
+		fbDiagnosisEtherCATMaster6				:FB_DiagnosisEtherCATMaster;												//EtherCAt Master診断用FB
 
 
 //------アラーム------
@@ -650,33 +659,17 @@ END_VAR
 
 //EtherCATマスター診断
 	//デバイス2
-	IF fbDiagnosisEtherCAT[1].DevState_Diagnosis()=FALSE THEN
-		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT[1].FrmState_Diagnosis(0)=FALSE THEN
-		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT[1].FrmWcState_Diagnosis(0)=FALSE THEN
-		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT[1].SlaveCount_Diagnosis()=FALSE THEN
-		bEtherCATOK:=FALSE;
-	
-	//デバイス6	
-	ELSIF fbDiagnosisEtherCAT[2].DevState_Diagnosis()=FALSE THEN
-		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT[2].FrmState_Diagnosis(0)=FALSE THEN
-		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT[2].FrmWcState_Diagnosis(0)=FALSE THEN
-		bEtherCATOK:=FALSE;
-	ELSIF fbDiagnosisEtherCAT[2].SlaveCount_Diagnosis()=FALSE THEN
-		bEtherCATOK:=FALSE;
-		
-	//すべて問題なしで出力
-	ELSE
-		bEtherCATOK:=TRUE;
-	END_IF
+	fbDiagnosisEtherCATMaster2(	fbFrmWcStateDiagnosis	:=fbFrmWcStateDiagnosis2,
+								fbFrmStateDiagnosis		:=fbFrmStateDiagnosis2);
 
-	
-	
-						
+	//デバイス6
+	fbDiagnosisEtherCATMaster6(	fbFrmWcStateDiagnosis	:=fbFrmWcStateDiagnosis6,
+								fbFrmStateDiagnosis		:=fbFrmStateDiagnosis6);
+
+	//すべて問題なしで出力
+	bEtherCATOK:= NOT fbDiagnosisEtherCATMaster2.bError AND NOT fbDiagnosisEtherCATMaster6.bError;
+
+
 //ターミナル診断
 	//診断用変数リセット
 	bTerminalOK:=TRUE;
@@ -1877,18 +1870,11 @@ END_CASE;]]></ST>
       <LineId Id="55" Count="0" />
       <LineId Id="53" Count="1" />
       <LineId Id="1" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="2" Count="3" />
-      <LineId Id="10" Count="1" />
-      <LineId Id="16" Count="1" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="61" Count="7" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="69" Count="1" />
-      <LineId Id="18" Count="2" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="58" Count="0" />
+      <LineId Id="73" Count="2" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="81" Count="3" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="85" Count="0" />
       <LineId Id="22" Count="30" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Init">

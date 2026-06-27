@@ -86,11 +86,9 @@
 	<Mappings>
 		<OwnerA>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[1].uiCfgSlaveCount" VarB="InfoData^CfgSlaveCount"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[1].uiDevState" VarB="Inputs^DevState"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[1].uiFrmState[0]" VarB="Inputs^Frm0State"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[1].uiFrmWcState[0]" VarB="Inputs^Frm0WcState"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[1].uiSlaveCount" VarB="Inputs^SlaveCount"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCATMaster2.fbDevStateDiagnosis.uiDevState" VarB="Inputs^DevState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmStateDiagnosis2[0].uiFrmState" VarB="Inputs^Frm0State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmWcStateDiagnosis2[0].uiFrmWcState" VarB="Inputs^Frm0WcState"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 10 (EL1258-0010)">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[10].bWcState[0]" VarB="WcState^WcState" Size="1"/>
@@ -221,11 +219,9 @@
 				<Link VarA="VisionTask Outputs^GVL.bLedLight" VarB="Channel 3^Output" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 6 (EtherCAT)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[2].uiCfgSlaveCount" VarB="InfoData^CfgSlaveCount"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[2].uiDevState" VarB="Inputs^DevState"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[2].uiFrmState[0]" VarB="Inputs^Frm0State"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[2].uiFrmWcState[0]" VarB="Inputs^Frm0WcState"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCAT[2].uiSlaveCount" VarB="Inputs^SlaveCount"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCATMaster6.fbDevStateDiagnosis.uiDevState" VarB="Inputs^DevState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmStateDiagnosis6[0].uiFrmState" VarB="Inputs^Frm0State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmWcStateDiagnosis6[0].uiFrmWcState" VarB="Inputs^Frm0WcState"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 6 (EtherCAT)^Drive 14 (AZD4A-KED)">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[14].uiState" VarB="InfoData^State"/>

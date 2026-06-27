@@ -36,10 +36,19 @@
     <Compile Include="01_Submodules\Alarm\FB_AlarmFromTcMessage.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="01_Submodules\Diagnosis\FB_DiagnosisEtherCAT.TcPOU">
+    <Compile Include="01_Submodules\Diagnosis\EtherCAT Master\FB_DevStateDiagnosis.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="01_Submodules\Diagnosis\FB_DiagnosisTerminal.TcPOU">
+    <Compile Include="01_Submodules\Diagnosis\EtherCAT Master\FB_DiagnosisEtherCATMaster.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Diagnosis\EtherCAT Master\FB_FrmWcStateDiagnosis.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Diagnosis\EtherCAT Master\FB_FrmStateDiagnosis.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Diagnosis\EtherCAT Slave\FB_DiagnosisTerminal.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Submodules\Axis\FB_AxisVelocity.TcPOU">
@@ -178,6 +187,9 @@
     <Compile Include="POUs\ゴミ箱\FB_3AxisAbs.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\ゴミ箱\FB_DiagnosisEtherCAT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\ゴミ箱\FB_Gripper_GripAngle.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -203,6 +215,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="01_Submodules\Axis" />
+    <Folder Include="01_Submodules\Diagnosis\EtherCAT Master" />
+    <Folder Include="01_Submodules\Diagnosis\EtherCAT Slave" />
     <Folder Include="01_Submodules\LoadCell" />
     <Folder Include="01_Submodules\Diagnosis" />
     <Folder Include="01_Submodules\LoadCell\CalcLoadCell" />

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_FrmStateDiagnosis" Id="{874fb46a-bc03-45e1-8741-c06e07e08e47}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_FrmStateDiagnosis
+VAR_OUTPUT
+	bError						:BOOL;								//エラー発生を出力
+END_VAR
+VAR
+	uiFrmState 			AT%I*	:UINT;								//PDデータとリンク
+	
+	bErrorState					:ARRAY[0..15] OF BOOL;				//各ステートエラー
+	fbErrorStateREdge			:ARRAY[0..15] OF R_TRIG;
+	fbMessage					:ARRAY[0..15] OF FB_TcMessage;
+	i							:INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//エラー状態を出力
+	bError:= uiFrmState<>0 ;
+	
+//サイクリックフレームごとのワーキングカウンターチェック、エラーは複数発生する可能性があるので全bitチェック
+	bErrorState[0]:=uiFrmState.0;
+	bErrorState[1]:=uiFrmState.1;
+	bErrorState[2]:=uiFrmState.2;
+	bErrorState[3]:=uiFrmState.3;
+	bErrorState[4]:=uiFrmState.4;
+	bErrorState[5]:=uiFrmState.5;
+	bErrorState[6]:=uiFrmState.6;
+	bErrorState[7]:=uiFrmState.7;
+	bErrorState[8]:=uiFrmState.8;
+	bErrorState[9]:=uiFrmState.9;
+	bErrorState[10]:=uiFrmState.10;
+	bErrorState[11]:=uiFrmState.11;
+	bErrorState[12]:=uiFrmState.12;
+	bErrorState[13]:=uiFrmState.13;
+	bErrorState[14]:=uiFrmState.14;
+	bErrorState[15]:=uiFrmState.15;
+	
+//結果をEventloggerへ
+	FOR i := 0 TO 15 BY 1 DO
+		fbErrorStateREdge[i](CLK:=bErrorState[i]);
+		
+		IF fbErrorStateREdge[i].Q THEN
+			fbMessage[i].Send();
+		END_IF
+		
+	END_FOR
+]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{f52b71fb-981f-440f-b23d-8b1e52125746}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMessage[0].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand1NotSentNOPRequested);
+fbMessage[1].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand2NotSentNOPRequested);
+fbMessage[2].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand3NotSentNOPRequested);
+fbMessage[3].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand4NotSentNOPRequested);
+fbMessage[4].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand5NotSentNOPRequested);
+fbMessage[5].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand6NotSentNOPRequested);
+fbMessage[6].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand7NotSentNOPRequested);
+fbMessage[7].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand8NotSentNOPRequested);
+fbMessage[8].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand9NotSentNOPRequested);
+fbMessage[9].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand10NotSentNOPRequested);
+fbMessage[10].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand11NotSentNOPRequested);
+fbMessage[11].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand12NotSentNOPRequested);
+fbMessage[12].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand13NotSentNOPRequested);
+fbMessage[13].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand14NotSentNOPRequested);
+fbMessage[14].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.EtherCATCommand15NotSentNOPRequested);
+fbMessage[15].CreateEx(TC_EVENTS.EtherCATMasterFrmStateEventClass.CompleteFrameNotSent);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_FrmStateDiagnosis">
+      <LineId Id="34" Count="0" />
+      <LineId Id="2" Count="25" />
+      <LineId Id="30" Count="3" />
+    </LineIds>
+    <LineIds Name="FB_FrmStateDiagnosis.FB_Init">
+      <LineId Id="1" Count="15" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
