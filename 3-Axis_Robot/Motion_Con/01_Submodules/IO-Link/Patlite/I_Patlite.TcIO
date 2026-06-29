@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <Itf Name="I_Patlite" Id="{8503a6b5-cfb3-4e34-822b-289fe1aa92eb}">
     <Declaration><![CDATA[INTERFACE I_Patlite
 ]]></Declaration>

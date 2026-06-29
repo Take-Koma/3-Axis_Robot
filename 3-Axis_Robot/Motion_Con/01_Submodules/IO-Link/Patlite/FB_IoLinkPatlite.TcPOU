@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_IoLinkPatlite" Id="{4e9b2e93-da1e-4356-8935-86acc05a1acf}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_IoLinkPatlite EXTENDS FB_IolStdVarSlave IMPLEMENTS I_Patlite
 VAR
@@ -215,30 +215,10 @@ SUPER^.Name				:=Name;]]></ST>
       <LineId Id="1" Count="4" />
     </LineIds>
     <LineIds Name="FB_IoLinkPatlite.bStartupBuzzer.Set">
-      <LineId Id="1" Count="0" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="3" Count="1" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="5" Count="3" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="10" Count="12" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="24" Count="22" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="9" Count="0" />
+      <LineId Id="1" Count="52" />
     </LineIds>
     <LineIds Name="FB_IoLinkPatlite.eMachineState.Set">
-      <LineId Id="1" Count="2" />
-      <LineId Id="5" Count="16" />
-      <LineId Id="24" Count="10" />
-      <LineId Id="37" Count="10" />
-      <LineId Id="49" Count="14" />
-      <LineId Id="75" Count="6" />
-      <LineId Id="85" Count="1" />
+      <LineId Id="1" Count="65" />
     </LineIds>
     <LineIds Name="FB_IoLinkPatlite.FB_Init">
       <LineId Id="1" Count="2" />

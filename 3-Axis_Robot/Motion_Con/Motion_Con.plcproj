@@ -48,7 +48,7 @@
     <Compile Include="01_Submodules\Diagnosis\EtherCAT Master\FB_FrmStateDiagnosis.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="01_Submodules\Diagnosis\EtherCAT Slave\FB_DiagnosisTerminal.TcPOU">
+    <Compile Include="01_Submodules\Diagnosis\EtherCAT Master\FB_SlaveCountDiagnosis.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Submodules\Axis\FB_AxisVelocity.TcPOU">
@@ -63,13 +63,34 @@
     <Compile Include="01_Submodules\Axis\FB_ZAxisAbsolute.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="01_Submodules\E_Terminal.TcDUT">
+    <Compile Include="01_Submodules\Diagnosis\EtherCAT Slave\FB_DiagnosisEtherCATSlave.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Diagnosis\EtherCAT Slave\FB_StateDiagnosis.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\Diagnosis\EtherCAT Slave\FB_WcStateDiagnosis.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Submodules\FB_FanControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Submodules\FB_PersistentDataManagement.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\IO-Link\787\E_787Status.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\IO-Link\787\FB_787.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\IO-Link\FB_IoLinkMasterDiagnosis.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\IO-Link\Patlite\FB_IoLinkPatlite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="01_Submodules\IO-Link\Patlite\I_Patlite.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Submodules\LoadCell\CalcLoadCell\FB_LoadCell_ForCalcValue.TcPOU">
@@ -104,6 +125,12 @@
     <Compile Include="01_Submodules\PcManagement\FB_PcPowerManagement.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="02_Subsystems\Diagnosis\E_Terminal.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="02_Subsystems\Diagnosis\FB_EtherCATTopologyDiagnosis.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="02_Subsystems\E_Axis.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -111,21 +138,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="02_Subsystems\E_WriteStep.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="02_Subsystems\IO-Link\787\E_787Status.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="02_Subsystems\IO-Link\787\FB_787.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="02_Subsystems\IO-Link\FB_IoLinkMasterDiagnosis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="02_Subsystems\IO-Link\Patlite\FB_IoLinkPatlite.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="02_Subsystems\IO-Link\Patlite\I_Patlite.TcIO">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="02_Subsystems\ST_CircleSettings.TcDUT">
@@ -190,6 +202,9 @@
     <Compile Include="POUs\ゴミ箱\FB_DiagnosisEtherCAT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\ゴミ箱\FB_DiagnosisTerminal.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\ゴミ箱\FB_Gripper_GripAngle.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -217,6 +232,9 @@
     <Folder Include="01_Submodules\Axis" />
     <Folder Include="01_Submodules\Diagnosis\EtherCAT Master" />
     <Folder Include="01_Submodules\Diagnosis\EtherCAT Slave" />
+    <Folder Include="01_Submodules\IO-Link" />
+    <Folder Include="01_Submodules\IO-Link\787" />
+    <Folder Include="01_Submodules\IO-Link\Patlite" />
     <Folder Include="01_Submodules\LoadCell" />
     <Folder Include="01_Submodules\Diagnosis" />
     <Folder Include="01_Submodules\LoadCell\CalcLoadCell" />
@@ -225,9 +243,7 @@
     <Folder Include="01_Submodules\Alarm" />
     <Folder Include="01_Submodules\PcManagement" />
     <Folder Include="01_Submodules\PcManagement\1sUPS" />
-    <Folder Include="02_Subsystems\IO-Link\787" />
-    <Folder Include="02_Subsystems\IO-Link\Patlite" />
-    <Folder Include="02_Subsystems\IO-Link" />
+    <Folder Include="02_Subsystems\Diagnosis" />
     <Folder Include="03_Machine" />
     <Folder Include="01_Submodules" />
     <Folder Include="02_Subsystems" />
@@ -310,8 +326,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -394,15 +410,15 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Boolean">System.Boolean</Type>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="Int32">System.Int32</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="Int32">System.Int32</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

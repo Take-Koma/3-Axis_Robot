@@ -460,121 +460,31 @@ END_FOR
       </Implementation>
     </Method>
     <LineIds Name="FB_787">
-      <LineId Id="18" Count="12" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="31" Count="1" />
-      <LineId Id="17" Count="0" />
+      <LineId Id="1" Count="16" />
     </LineIds>
     <LineIds Name="FB_787.ActualCurrent">
-      <LineId Id="2" Count="1" />
-      <LineId Id="5" Count="1" />
-      <LineId Id="4" Count="0" />
+      <LineId Id="1" Count="4" />
     </LineIds>
     <LineIds Name="FB_787.BreakerCurrentSetting">
-      <LineId Id="2" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="6" Count="1" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="4" />
     </LineIds>
     <LineIds Name="FB_787.ChannelStatus">
-      <LineId Id="32" Count="23" />
-      <LineId Id="17" Count="0" />
+      <LineId Id="1" Count="24" />
     </LineIds>
     <LineIds Name="FB_787.CollectiveMessage">
       <LineId Id="1" Count="4" />
     </LineIds>
     <LineIds Name="FB_787.FB_Init">
-      <LineId Id="1" Count="2" />
-      <LineId Id="5" Count="2" />
-      <LineId Id="4" Count="0" />
+      <LineId Id="1" Count="6" />
     </LineIds>
     <LineIds Name="FB_787.GetAllState">
-      <LineId Id="606" Count="11" />
-      <LineId Id="623" Count="0" />
-      <LineId Id="618" Count="4" />
-      <LineId Id="604" Count="0" />
-      <LineId Id="624" Count="0" />
-      <LineId Id="605" Count="0" />
-      <LineId Id="441" Count="4" />
-      <LineId Id="574" Count="1" />
-      <LineId Id="446" Count="15" />
-      <LineId Id="565" Count="0" />
-      <LineId Id="462" Count="3" />
-      <LineId Id="576" Count="1" />
-      <LineId Id="466" Count="12" />
-      <LineId Id="601" Count="0" />
-      <LineId Id="603" Count="0" />
-      <LineId Id="599" Count="1" />
-      <LineId Id="566" Count="0" />
-      <LineId Id="479" Count="3" />
-      <LineId Id="578" Count="1" />
-      <LineId Id="483" Count="5" />
-      <LineId Id="567" Count="0" />
-      <LineId Id="489" Count="3" />
-      <LineId Id="580" Count="1" />
-      <LineId Id="493" Count="8" />
-      <LineId Id="568" Count="0" />
-      <LineId Id="502" Count="3" />
-      <LineId Id="582" Count="1" />
-      <LineId Id="506" Count="3" />
-      <LineId Id="569" Count="0" />
-      <LineId Id="510" Count="3" />
-      <LineId Id="584" Count="1" />
-      <LineId Id="514" Count="5" />
-      <LineId Id="570" Count="0" />
-      <LineId Id="520" Count="3" />
-      <LineId Id="586" Count="1" />
-      <LineId Id="524" Count="3" />
-      <LineId Id="571" Count="0" />
-      <LineId Id="528" Count="3" />
-      <LineId Id="588" Count="1" />
-      <LineId Id="532" Count="3" />
-      <LineId Id="572" Count="0" />
-      <LineId Id="536" Count="3" />
-      <LineId Id="590" Count="1" />
-      <LineId Id="540" Count="5" />
-      <LineId Id="573" Count="0" />
-      <LineId Id="546" Count="3" />
-      <LineId Id="551" Count="0" />
-      <LineId Id="597" Count="0" />
-      <LineId Id="593" Count="1" />
-      <LineId Id="558" Count="1" />
-      <LineId Id="112" Count="0" />
+      <LineId Id="1" Count="167" />
     </LineIds>
     <LineIds Name="FB_787.lrInputVoltage.Get">
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_787.OutputAllStatus">
-      <LineId Id="2" Count="3" />
-      <LineId Id="8" Count="3" />
-      <LineId Id="95" Count="1" />
-      <LineId Id="98" Count="0" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="97" Count="0" />
-      <LineId Id="94" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="85" Count="1" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="21" Count="5" />
-      <LineId Id="34" Count="8" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="43" Count="3" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="47" Count="4" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="52" Count="3" />
-      <LineId Id="91" Count="0" />
-      <LineId Id="56" Count="4" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="83" Count="1" />
-      <LineId Id="61" Count="3" />
-      <LineId Id="72" Count="1" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="75" Count="2" />
+      <LineId Id="1" Count="71" />
     </LineIds>
   </POU>
 </TcPlcObject>

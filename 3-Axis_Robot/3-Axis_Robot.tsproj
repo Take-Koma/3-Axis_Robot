@@ -64,39 +64,6 @@
 		<Text TxtId="SwitchedOffLocal ( {0} ch)">
 			<Text LcId="1041"><![CDATA[ローカルOFF ( {0} ch)]]></Text>
 		</Text>
-		<Text TxtId="MachineAlarmEventClass">
-			<Text LcId="1041"><![CDATA[装置アラームイベントクラス]]></Text>
-		</Text>
-		<Text TxtId="EtherCATError">
-			<Text LcId="1041"><![CDATA[イーサキャットエラー]]></Text>
-		</Text>
-		<Text TxtId="TerminalError">
-			<Text LcId="1041"><![CDATA[ターミナルエラー]]></Text>
-		</Text>
-		<Text TxtId="ParsistentDataInitialization">
-			<Text LcId="1041"><![CDATA[パーシステントデータ初期化]]></Text>
-		</Text>
-		<Text TxtId="PersistentDataLoadFault">
-			<Text LcId="1041"><![CDATA[パーシステントデータ読み込み失敗]]></Text>
-		</Text>
-		<Text TxtId="OldPersistentDataLoad">
-			<Text LcId="1041"><![CDATA[古いパーシステントデータ読み込み]]></Text>
-		</Text>
-		<Text TxtId="PersistentDataWriteError">
-			<Text LcId="1041"><![CDATA[パーシステントデータ書き込み失敗]]></Text>
-		</Text>
-		<Text TxtId="CycleTimeExceeded">
-			<Text LcId="1041"><![CDATA[サイクルタイム超過]]></Text>
-		</Text>
-		<Text TxtId="CircuitProtectorError">
-			<Text LcId="1041"><![CDATA[サーキットプロテクターエラー]]></Text>
-		</Text>
-		<Text TxtId="InputVoltageAlarm( {0} V)">
-			<Text LcId="1041"><![CDATA[入力電圧異常( {0} V)]]></Text>
-		</Text>
-		<Text TxtId="SwitchedOffLocalOrRemote ( {0} ch)">
-			<Text LcId="1041"><![CDATA[ローカルまたはリモートOFF ( {0} ch)]]></Text>
-		</Text>
 		<Text TxtId="EtherCATMasterDevStateEventClass">
 			<Text LcId="1041"><![CDATA[EtherCATマスタ DevState イベントクラス]]></Text>
 		</Text>
@@ -246,6 +213,117 @@
 		</Text>
 		<Text TxtId="Complete frame not sent.">
 			<Text LcId="1041"><![CDATA[フレームは完全に送信されませんでした。]]></Text>
+		</Text>
+		<Text TxtId="EtherCATSlaveStateEventClass">
+			<Text LcId="1041"><![CDATA[EtherCATスレーブ状態イベントクラス]]></Text>
+		</Text>
+		<Text TxtId="INIT">
+			<Text LcId="1041"><![CDATA[INIT（初期化）]]></Text>
+		</Text>
+		<Text TxtId="PREOP">
+			<Text LcId="1041"><![CDATA[PREOP（事前動作）]]></Text>
+		</Text>
+		<Text TxtId="BOOT">
+			<Text LcId="1041"><![CDATA[BOOT（ブート）]]></Text>
+		</Text>
+		<Text TxtId="SAFEOP">
+			<Text LcId="1041"><![CDATA[SAFEOP（安全動作）]]></Text>
+		</Text>
+		<Text TxtId="OP">
+			<Text LcId="1041"><![CDATA[OP（動作）]]></Text>
+		</Text>
+		<Text TxtId="Slave signals error">
+			<Text LcId="1041"><![CDATA[スレーブがエラーを通知]]></Text>
+		</Text>
+		<Text TxtId="Invalid vendorId, productCode... read">
+			<Text LcId="1041"><![CDATA[無効なvendorId、productCode...の読み出し]]></Text>
+		</Text>
+		<Text TxtId="Initialization error occurred">
+			<Text LcId="1041"><![CDATA[初期化エラーが発生]]></Text>
+		</Text>
+		<Text TxtId="Slave disabled">
+			<Text LcId="1041"><![CDATA[スレーブが無効化されています]]></Text>
+		</Text>
+		<Text TxtId="Slave not present">
+			<Text LcId="1041"><![CDATA[スレーブが存在しません]]></Text>
+		</Text>
+		<Text TxtId="Slave signals link error">
+			<Text LcId="1041"><![CDATA[スレーブがリンクエラーを通知]]></Text>
+		</Text>
+		<Text TxtId="Slave signals missing link">
+			<Text LcId="1041"><![CDATA[スレーブがリンク未接続を通知]]></Text>
+		</Text>
+		<Text TxtId="Slave Slave signals unexpected link">
+			<Text LcId="1041"><![CDATA[スレーブが予期しないリンクを通知]]></Text>
+		</Text>
+		<Text TxtId="Communication port A">
+			<Text LcId="1041"><![CDATA[通信ポートA]]></Text>
+		</Text>
+		<Text TxtId="Communication port B">
+			<Text LcId="1041"><![CDATA[通信ポートB]]></Text>
+		</Text>
+		<Text TxtId="Communication port C">
+			<Text LcId="1041"><![CDATA[通信ポートC]]></Text>
+		</Text>
+		<Text TxtId="Communication port D">
+			<Text LcId="1041"><![CDATA[通信ポートD]]></Text>
+		</Text>
+		<Text TxtId="TkWagoCp787EventClass">
+			<Text LcId="1041"><![CDATA[TkWagoサーキットプロテクター787イベントクラス]]></Text>
+		</Text>
+		<Text TxtId="InputVoltageAlarm( {0} V)">
+			<Text LcId="1041"><![CDATA[入力電圧異常( {0} V)]]></Text>
+		</Text>
+		<Text TxtId="SwitchedOffLocalOrRemote ( {0} ch)">
+			<Text LcId="1041"><![CDATA[ローカルまたはリモートOFF ( {0} ch)]]></Text>
+		</Text>
+		<Text TxtId="TkMachineAlarmEventClass">
+			<Text LcId="1041"><![CDATA[Tkマシンアラームイベントクラス]]></Text>
+		</Text>
+		<Text TxtId="EtherCATError">
+			<Text LcId="1041"><![CDATA[イーサキャットエラー]]></Text>
+		</Text>
+		<Text TxtId="TerminalError">
+			<Text LcId="1041"><![CDATA[ターミナルエラー]]></Text>
+		</Text>
+		<Text TxtId="ParsistentDataInitialization">
+			<Text LcId="1041"><![CDATA[パーシステントデータ初期化]]></Text>
+		</Text>
+		<Text TxtId="PersistentDataLoadFault">
+			<Text LcId="1041"><![CDATA[パーシステントデータ読み込み失敗]]></Text>
+		</Text>
+		<Text TxtId="OldPersistentDataLoad">
+			<Text LcId="1041"><![CDATA[古いパーシステントデータ読み込み]]></Text>
+		</Text>
+		<Text TxtId="PersistentDataWriteError">
+			<Text LcId="1041"><![CDATA[パーシステントデータ書き込み失敗]]></Text>
+		</Text>
+		<Text TxtId="CycleTimeExceeded">
+			<Text LcId="1041"><![CDATA[サイクルタイム超過]]></Text>
+		</Text>
+		<Text TxtId="CircuitProtectorError">
+			<Text LcId="1041"><![CDATA[サーキットプロテクターエラー]]></Text>
+		</Text>
+		<Text TxtId="MachineAlarmEventClass">
+			<Text LcId="1041"><![CDATA[装置アラームイベントクラス]]></Text>
+		</Text>
+		<Text TxtId="TkEtherCATMasterDiagnosisEventClass">
+			<Text LcId="1041"><![CDATA[EtherCATマスタ診断イベントクラス]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of {0} EtherCAT command received">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド {0} のワーキングカウンタが不正です]]></Text>
+		</Text>
+		<Text TxtId="{0} EtherCAT command not sent (NOP requested).">
+			<Text LcId="1041"><![CDATA[{0} EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
+		</Text>
+		<Text TxtId="Mismatch brtween SlaveCount and CfgSlaveCount">
+			<Text LcId="1041"><![CDATA[設定したスレーブ数と受信したスレーブ数が不一致]]></Text>
+		</Text>
+		<Text TxtId="TkEtherCATSlaveDiagnosisEventClass">
+			<Text LcId="1041"><![CDATA[EtherCATスレーブ診断イベントクラス]]></Text>
+		</Text>
+		<Text TxtId="Invalid Working Counter">
+			<Text LcId="1041"><![CDATA[無効なワーキングカウンター]]></Text>
 		</Text>
 	</Translations>
 	<DataTypes>
@@ -1757,222 +1835,6 @@
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{7B824859-8556-4510-B078-2FBD5276D8DE}" PersistentType="true">MachineAlarmEventClass</Name>
-			<DisplayName TxtId=""><![CDATA[MachineAlarmEventClass]]></DisplayName>
-			<EventId>
-				<Name Id="1">SafetyNotRun</Name>
-				<DisplayName TxtId=""><![CDATA[SafetyNotRun]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="2">SafetyFbError</Name>
-				<DisplayName TxtId=""><![CDATA[SafetyFbError]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="3">EmergencyStop</Name>
-				<DisplayName TxtId=""><![CDATA[EmergencyStop]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="4">XAxisMovingGripSwichNotOn</Name>
-				<DisplayName TxtId=""><![CDATA[XAxisMovingGripSwichNotOn]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="5">YAxisMovingGripSwichNotOn</Name>
-				<DisplayName TxtId=""><![CDATA[YAxisMovingGripSwichNotOn]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="6">ZAxisMovingGripSwichNotOn</Name>
-				<DisplayName TxtId=""><![CDATA[ZAxisMovingGripSwichNotOn]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="7">GripperMovingGripSwichNotOn</Name>
-				<DisplayName TxtId=""><![CDATA[GripperMovingGripSwichNotOn]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="8">MITSUBISHIError</Name>
-				<DisplayName TxtId=""><![CDATA[MITSUBISHIError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="9">XAxisError</Name>
-				<DisplayName TxtId=""><![CDATA[XAxisError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="10">YAxisError</Name>
-				<DisplayName TxtId=""><![CDATA[YAxisError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="11">ZAxisError</Name>
-				<DisplayName TxtId=""><![CDATA[ZAxisError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="12">GripperError</Name>
-				<DisplayName TxtId=""><![CDATA[GripperError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="13">EtherCATError</Name>
-				<DisplayName TxtId=""><![CDATA[EtherCATError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="14">TerminalError</Name>
-				<DisplayName TxtId=""><![CDATA[TerminalError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="15">ParsistentDataInitialization</Name>
-				<DisplayName TxtId=""><![CDATA[ParsistentDataInitialization]]></DisplayName>
-				<Severity>Warning</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="16">PersistentDataLoadFault</Name>
-				<DisplayName TxtId=""><![CDATA[PersistentDataLoadFault]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="17">OldPersistentDataLoad</Name>
-				<DisplayName TxtId=""><![CDATA[OldPersistentDataLoad]]></DisplayName>
-				<Severity>Warning</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="18">PersistentDataWriteError</Name>
-				<DisplayName TxtId=""><![CDATA[PersistentDataWriteError]]></DisplayName>
-				<Severity>Critical</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="19">CycleTimeExceeded</Name>
-				<DisplayName TxtId=""><![CDATA[CycleTimeExceeded]]></DisplayName>
-				<Severity>Warning</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="20">CircuitProtectorError</Name>
-				<DisplayName TxtId=""><![CDATA[CircuitProtectorError]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<Translations>
-				<Text TxtId="SafetyNotRun">
-					<Text LcId="1041"><![CDATA[セフティー未起動]]></Text>
-				</Text>
-				<Text TxtId="SafetyFbError">
-					<Text LcId="1041"><![CDATA[セーフティーファンクションブロックエラー]]></Text>
-				</Text>
-				<Text TxtId="EmergencyStop">
-					<Text LcId="1041"><![CDATA[非常停止ボタンON]]></Text>
-				</Text>
-				<Text TxtId="XAxisMovingGripSwichNotOn">
-					<Text LcId="1041"><![CDATA[X軸起動時グリップスイッチOFF]]></Text>
-				</Text>
-				<Text TxtId="YAxisMovingGripSwichNotOn">
-					<Text LcId="1041"><![CDATA[Y軸起動時グリップスイッチOFF]]></Text>
-				</Text>
-				<Text TxtId="ZAxisMovingGripSwichNotOn">
-					<Text LcId="1041"><![CDATA[Z軸起動時グリップスイッチOFF]]></Text>
-				</Text>
-				<Text TxtId="GripperMovingGripSwichNotOn">
-					<Text LcId="1041"><![CDATA[グリッパー起動時グリップスイッチOFF]]></Text>
-				</Text>
-				<Text TxtId="MITSUBISHIError">
-					<Text LcId="1041"><![CDATA[シーケンサーエラー（Fx5s無くなったので未使用）]]></Text>
-				</Text>
-				<Text TxtId="XAxisError">
-					<Text LcId="1041"><![CDATA[X軸エラー]]></Text>
-				</Text>
-				<Text TxtId="YAxisError">
-					<Text LcId="1041"><![CDATA[Y軸エラー]]></Text>
-				</Text>
-				<Text TxtId="ZAxisError">
-					<Text LcId="1041"><![CDATA[Z軸エラー]]></Text>
-				</Text>
-				<Text TxtId="GripperError">
-					<Text LcId="1041"><![CDATA[グリッパーエラー]]></Text>
-				</Text>
-			</Translations>
-			<Hides>
-				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
-				<Hide GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}"/>
-				<Hide GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}"/>
-				<Hide GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}"/>
-				<Hide GUID="{85F10369-3066-470C-9109-6B8A334012B3}"/>
-				<Hide GUID="{60B74FB8-927E-462A-9AED-AFB161A35527}"/>
-				<Hide GUID="{BF0E44CE-E43F-44BC-88E3-57225BA59005}"/>
-				<Hide GUID="{EDB6C057-C1BE-4DFC-8F44-C0D3BE174E7E}"/>
-				<Hide GUID="{9FD1487A-DA6D-47D6-854C-F532D872FEF3}"/>
-				<Hide GUID="{1EC8A248-8BAB-43F0-BA41-73CFFA3AF4AF}"/>
-				<Hide GUID="{DF7C4704-ABC7-4E02-85EA-66B676040BD5}"/>
-				<Hide GUID="{714AB463-6698-454B-8F4E-C2B09C58256A}"/>
-				<Hide GUID="{75F5C208-848B-4163-98CC-36DD5035109A}"/>
-			</Hides>
-		</DataType>
-		<DataType>
-			<Name GUID="{63B17D0E-1819-49B4-8073-F1562B82FF9A}" PersistentType="true">WagoCp787EventClass</Name>
-			<DisplayName TxtId=""><![CDATA[WagoCp787EventClass]]></DisplayName>
-			<EventId>
-				<Name Id="1">InputVoltageAlarm</Name>
-				<DisplayName TxtId=""><![CDATA[InputVoltageAlarm( {0} V)]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="2">TrippedHardwareError</Name>
-				<DisplayName TxtId=""><![CDATA[TrippedHardwareError ( {0} ch)]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="3">Tripped</Name>
-				<DisplayName TxtId=""><![CDATA[Tripped ( {0} ch)]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="4">OverloadOver100Percent</Name>
-				<DisplayName TxtId=""><![CDATA[OverloadOver100Percent ( {0} ch)]]></DisplayName>
-				<Severity>Warning</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="5">OverloadOver90Percent</Name>
-				<DisplayName TxtId=""><![CDATA[OverloadOver90Percent ( {0} ch)]]></DisplayName>
-				<Severity>Warning</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="6">SwitchedOffLocalOrRemote</Name>
-				<DisplayName TxtId=""><![CDATA[SwitchedOffLocalOrRemote ( {0} ch)]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<Translations>
-				<Text TxtId="WagoCp787EventClass">
-					<Text LcId="1041"><![CDATA[WagoCp787EventClass]]></Text>
-				</Text>
-				<Text TxtId="TrippedHardwareError ( {0} ch)">
-					<Text LcId="1041"><![CDATA[ハードウェアヒューズ異常 ( {0} ch)]]></Text>
-				</Text>
-				<Text TxtId="Tripped ( {0} ch)">
-					<Text LcId="1041"><![CDATA[トリップ ( {0} ch)]]></Text>
-				</Text>
-				<Text TxtId="OverloadOver100Percent ( {0} ch)">
-					<Text LcId="1041"><![CDATA[負荷100%超え ( {0} ch)]]></Text>
-				</Text>
-				<Text TxtId="OverloadOver90Percent ( {0} ch)">
-					<Text LcId="1041"><![CDATA[負荷90%超え ( {0} ch)]]></Text>
-				</Text>
-			</Translations>
-			<Hides>
-				<Hide GUID="{B4A8F2D9-1756-4BC3-A81A-85D22039D5B5}"/>
-				<Hide GUID="{EC11165F-C04B-47AA-8D7E-35283CE92190}"/>
-				<Hide GUID="{1B58B559-14B5-45B1-A076-F2F7671E117E}"/>
-				<Hide GUID="{7831230E-5F6A-49E9-8479-9A043E9A120C}"/>
-				<Hide GUID="{2F2ED372-BA59-4CCD-A011-A674D4B8EE03}"/>
-				<Hide GUID="{CB9AD64E-2270-4DCB-92B4-6C44869E5D1E}"/>
-			</Hides>
-		</DataType>
-		<DataType>
 			<Name GUID="{72FD2FE9-703A-469B-8F94-39E272147AC4}" PersistentType="true">EtherCATMasterDevStateEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[EtherCATMasterDevStateEventClass]]></DisplayName>
 			<EventId>
@@ -2246,6 +2108,870 @@
 			<Hides>
 				<Hide GUID="{190E3431-A73A-49D5-B295-1CA4364278E1}"/>
 				<Hide GUID="{CB3EE669-2365-441F-9CFA-870234526CCB}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{5C560EB9-BB72-45A9-9161-7A290DAA3B8A}" PersistentType="true">EtherCATSlaveStateEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[EtherCATSlaveStateEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="#x1">INIT</Name>
+				<DisplayName TxtId=""><![CDATA[INIT]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2">PREOP</Name>
+				<DisplayName TxtId=""><![CDATA[PREOP]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x3">BOOT</Name>
+				<DisplayName TxtId=""><![CDATA[BOOT]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x4">SAFEOP</Name>
+				<DisplayName TxtId=""><![CDATA[SAFEOP]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x8">OP</Name>
+				<DisplayName TxtId=""><![CDATA[OP]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x10">SlaveSignalsError</Name>
+				<DisplayName TxtId=""><![CDATA[Slave signals error]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x20">InvalidVendorIdProductCodeRead</Name>
+				<DisplayName TxtId=""><![CDATA[Invalid vendorId, productCode... read]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x40">InitializationErrorOccurred</Name>
+				<DisplayName TxtId=""><![CDATA[Initialization error occurred]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x80">SlaveDisabled</Name>
+				<DisplayName TxtId=""><![CDATA[Slave disabled]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x100">SlaveNotPresent</Name>
+				<DisplayName TxtId=""><![CDATA[Slave not present]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x200">SlaveSignalsLinkError</Name>
+				<DisplayName TxtId=""><![CDATA[Slave signals link error]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x400">SlaveSignalsMissingLink</Name>
+				<DisplayName TxtId=""><![CDATA[Slave signals missing link]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x800">SlaveSlaveSignalsUnexpectedLink</Name>
+				<DisplayName TxtId=""><![CDATA[Slave Slave signals unexpected link]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x1000">CommunicationPortA</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port A]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2000">CommunicationPortB</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port B]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x4000">CommunicationPortC</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port C]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x8000">CommunicationPortD</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port D]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{14A508FE-440C-4053-87A7-B79CB83CF896}"/>
+				<Hide GUID="{6AD295E2-C5B8-4529-9540-06DB72593322}"/>
+				<Hide GUID="{E0CEF3B7-805E-4AC2-AFD8-08F3E20484C2}"/>
+				<Hide GUID="{71D34F6F-B988-40DA-8CFB-A3FCC415B96F}"/>
+				<Hide GUID="{6EF8AA4A-67CC-4ECD-9691-4B280E9CFA6D}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{3C1995E3-0B5E-4563-92BB-C7ECDCE71B69}" PersistentType="true">TkWagoCp787EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[TkWagoCp787EventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">InputVoltageAlarm</Name>
+				<DisplayName TxtId=""><![CDATA[InputVoltageAlarm( {0} V)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">TrippedHardwareError</Name>
+				<DisplayName TxtId=""><![CDATA[TrippedHardwareError ( {0} ch)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">Tripped</Name>
+				<DisplayName TxtId=""><![CDATA[Tripped ( {0} ch)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">OverloadOver100Percent</Name>
+				<DisplayName TxtId=""><![CDATA[OverloadOver100Percent ( {0} ch)]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">OverloadOver90Percent</Name>
+				<DisplayName TxtId=""><![CDATA[OverloadOver90Percent ( {0} ch)]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">SwitchedOffLocalOrRemote</Name>
+				<DisplayName TxtId=""><![CDATA[SwitchedOffLocalOrRemote ( {0} ch)]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<Translations>
+				<Text TxtId="TrippedHardwareError ( {0} ch)">
+					<Text LcId="1041"><![CDATA[ハードウェアヒューズ異常 ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="Tripped ( {0} ch)">
+					<Text LcId="1041"><![CDATA[トリップ ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="OverloadOver100Percent ( {0} ch)">
+					<Text LcId="1041"><![CDATA[負荷100%超え ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="OverloadOver90Percent ( {0} ch)">
+					<Text LcId="1041"><![CDATA[負荷90%超え ( {0} ch)]]></Text>
+				</Text>
+			</Translations>
+			<Hides>
+				<Hide GUID="{B4A8F2D9-1756-4BC3-A81A-85D22039D5B5}"/>
+				<Hide GUID="{EC11165F-C04B-47AA-8D7E-35283CE92190}"/>
+				<Hide GUID="{1B58B559-14B5-45B1-A076-F2F7671E117E}"/>
+				<Hide GUID="{7831230E-5F6A-49E9-8479-9A043E9A120C}"/>
+				<Hide GUID="{2F2ED372-BA59-4CCD-A011-A674D4B8EE03}"/>
+				<Hide GUID="{CB9AD64E-2270-4DCB-92B4-6C44869E5D1E}"/>
+				<Hide GUID="{63B17D0E-1819-49B4-8073-F1562B82FF9A}"/>
+				<Hide GUID="{D7F892AA-90E4-4349-A9AF-DC3C0EDE335E}"/>
+				<Hide GUID="{EA55094E-C604-4DA3-A0FA-4BC4D5DD7AD8}"/>
+				<Hide GUID="{3CAF96C0-A260-4017-842B-C4D438424C6C}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{9A75F45A-6844-4396-B976-A77668D02680}" PersistentType="true">TkMachineAlarmEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[TkMachineAlarmEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">SafetyNotRun</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyNotRun]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">SafetyFbError</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyFbError]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">EmergencyStop</Name>
+				<DisplayName TxtId=""><![CDATA[EmergencyStop]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">XAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[XAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">YAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[YAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">ZAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[ZAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">GripperMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[GripperMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">MITSUBISHIError</Name>
+				<DisplayName TxtId=""><![CDATA[MITSUBISHIError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">XAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[XAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">YAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[YAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">ZAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[ZAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">GripperError</Name>
+				<DisplayName TxtId=""><![CDATA[GripperError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="13">EtherCATError</Name>
+				<DisplayName TxtId=""><![CDATA[EtherCATError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="14">TerminalError</Name>
+				<DisplayName TxtId=""><![CDATA[TerminalError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="15">ParsistentDataInitialization</Name>
+				<DisplayName TxtId=""><![CDATA[ParsistentDataInitialization]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="16">PersistentDataLoadFault</Name>
+				<DisplayName TxtId=""><![CDATA[PersistentDataLoadFault]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="17">OldPersistentDataLoad</Name>
+				<DisplayName TxtId=""><![CDATA[OldPersistentDataLoad]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="18">PersistentDataWriteError</Name>
+				<DisplayName TxtId=""><![CDATA[PersistentDataWriteError]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="19">CycleTimeExceeded</Name>
+				<DisplayName TxtId=""><![CDATA[CycleTimeExceeded]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="20">CircuitProtectorError</Name>
+				<DisplayName TxtId=""><![CDATA[CircuitProtectorError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Translations>
+				<Text TxtId="SafetyNotRun">
+					<Text LcId="1041"><![CDATA[セフティー未起動]]></Text>
+				</Text>
+				<Text TxtId="SafetyFbError">
+					<Text LcId="1041"><![CDATA[セーフティーファンクションブロックエラー]]></Text>
+				</Text>
+				<Text TxtId="EmergencyStop">
+					<Text LcId="1041"><![CDATA[非常停止ボタンON]]></Text>
+				</Text>
+				<Text TxtId="XAxisMovingGripSwichNotOn">
+					<Text LcId="1041"><![CDATA[X軸起動時グリップスイッチOFF]]></Text>
+				</Text>
+				<Text TxtId="YAxisMovingGripSwichNotOn">
+					<Text LcId="1041"><![CDATA[Y軸起動時グリップスイッチOFF]]></Text>
+				</Text>
+				<Text TxtId="ZAxisMovingGripSwichNotOn">
+					<Text LcId="1041"><![CDATA[Z軸起動時グリップスイッチOFF]]></Text>
+				</Text>
+				<Text TxtId="GripperMovingGripSwichNotOn">
+					<Text LcId="1041"><![CDATA[グリッパー起動時グリップスイッチOFF]]></Text>
+				</Text>
+				<Text TxtId="MITSUBISHIError">
+					<Text LcId="1041"><![CDATA[シーケンサーエラー（Fx5s無くなったので未使用）]]></Text>
+				</Text>
+				<Text TxtId="XAxisError">
+					<Text LcId="1041"><![CDATA[X軸エラー]]></Text>
+				</Text>
+				<Text TxtId="YAxisError">
+					<Text LcId="1041"><![CDATA[Y軸エラー]]></Text>
+				</Text>
+				<Text TxtId="ZAxisError">
+					<Text LcId="1041"><![CDATA[Z軸エラー]]></Text>
+				</Text>
+				<Text TxtId="GripperError">
+					<Text LcId="1041"><![CDATA[グリッパーエラー]]></Text>
+				</Text>
+			</Translations>
+			<Hides>
+				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
+				<Hide GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}"/>
+				<Hide GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}"/>
+				<Hide GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}"/>
+				<Hide GUID="{85F10369-3066-470C-9109-6B8A334012B3}"/>
+				<Hide GUID="{60B74FB8-927E-462A-9AED-AFB161A35527}"/>
+				<Hide GUID="{BF0E44CE-E43F-44BC-88E3-57225BA59005}"/>
+				<Hide GUID="{EDB6C057-C1BE-4DFC-8F44-C0D3BE174E7E}"/>
+				<Hide GUID="{9FD1487A-DA6D-47D6-854C-F532D872FEF3}"/>
+				<Hide GUID="{1EC8A248-8BAB-43F0-BA41-73CFFA3AF4AF}"/>
+				<Hide GUID="{DF7C4704-ABC7-4E02-85EA-66B676040BD5}"/>
+				<Hide GUID="{714AB463-6698-454B-8F4E-C2B09C58256A}"/>
+				<Hide GUID="{75F5C208-848B-4163-98CC-36DD5035109A}"/>
+				<Hide GUID="{7B824859-8556-4510-B078-2FBD5276D8DE}"/>
+				<Hide GUID="{4A1E262C-84A7-4B90-B342-0E559BA3247D}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{7B824859-8556-4510-B078-2FBD5276D8DE}" PersistentType="true">MachineAlarmEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[MachineAlarmEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">SafetyNotRun</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyNotRun]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">SafetyFbError</Name>
+				<DisplayName TxtId=""><![CDATA[SafetyFbError]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">EmergencyStop</Name>
+				<DisplayName TxtId=""><![CDATA[EmergencyStop]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">XAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[XAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">YAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[YAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">ZAxisMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[ZAxisMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="7">GripperMovingGripSwichNotOn</Name>
+				<DisplayName TxtId=""><![CDATA[GripperMovingGripSwichNotOn]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="8">MITSUBISHIError</Name>
+				<DisplayName TxtId=""><![CDATA[MITSUBISHIError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="9">XAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[XAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="10">YAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[YAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="11">ZAxisError</Name>
+				<DisplayName TxtId=""><![CDATA[ZAxisError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="12">GripperError</Name>
+				<DisplayName TxtId=""><![CDATA[GripperError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="13">EtherCATError</Name>
+				<DisplayName TxtId=""><![CDATA[EtherCATError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="14">TerminalError</Name>
+				<DisplayName TxtId=""><![CDATA[TerminalError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="15">ParsistentDataInitialization</Name>
+				<DisplayName TxtId=""><![CDATA[ParsistentDataInitialization]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="16">PersistentDataLoadFault</Name>
+				<DisplayName TxtId=""><![CDATA[PersistentDataLoadFault]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="17">OldPersistentDataLoad</Name>
+				<DisplayName TxtId=""><![CDATA[OldPersistentDataLoad]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="18">PersistentDataWriteError</Name>
+				<DisplayName TxtId=""><![CDATA[PersistentDataWriteError]]></DisplayName>
+				<Severity>Critical</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="19">CycleTimeExceeded</Name>
+				<DisplayName TxtId=""><![CDATA[CycleTimeExceeded]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="20">CircuitProtectorError</Name>
+				<DisplayName TxtId=""><![CDATA[CircuitProtectorError]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Translations>
+				<Text TxtId="SafetyNotRun">
+					<Text LcId="1041"><![CDATA[セフティー未起動]]></Text>
+				</Text>
+				<Text TxtId="SafetyFbError">
+					<Text LcId="1041"><![CDATA[セーフティーファンクションブロックエラー]]></Text>
+				</Text>
+				<Text TxtId="EmergencyStop">
+					<Text LcId="1041"><![CDATA[非常停止ボタンON]]></Text>
+				</Text>
+				<Text TxtId="XAxisMovingGripSwichNotOn">
+					<Text LcId="1041"><![CDATA[X軸起動時グリップスイッチOFF]]></Text>
+				</Text>
+				<Text TxtId="YAxisMovingGripSwichNotOn">
+					<Text LcId="1041"><![CDATA[Y軸起動時グリップスイッチOFF]]></Text>
+				</Text>
+				<Text TxtId="ZAxisMovingGripSwichNotOn">
+					<Text LcId="1041"><![CDATA[Z軸起動時グリップスイッチOFF]]></Text>
+				</Text>
+				<Text TxtId="GripperMovingGripSwichNotOn">
+					<Text LcId="1041"><![CDATA[グリッパー起動時グリップスイッチOFF]]></Text>
+				</Text>
+				<Text TxtId="MITSUBISHIError">
+					<Text LcId="1041"><![CDATA[シーケンサーエラー（Fx5s無くなったので未使用）]]></Text>
+				</Text>
+				<Text TxtId="XAxisError">
+					<Text LcId="1041"><![CDATA[X軸エラー]]></Text>
+				</Text>
+				<Text TxtId="YAxisError">
+					<Text LcId="1041"><![CDATA[Y軸エラー]]></Text>
+				</Text>
+				<Text TxtId="ZAxisError">
+					<Text LcId="1041"><![CDATA[Z軸エラー]]></Text>
+				</Text>
+				<Text TxtId="GripperError">
+					<Text LcId="1041"><![CDATA[グリッパーエラー]]></Text>
+				</Text>
+				<Text TxtId="EtherCATError">
+					<Text LcId="1041"><![CDATA[イーサキャットエラー]]></Text>
+				</Text>
+				<Text TxtId="TerminalError">
+					<Text LcId="1041"><![CDATA[ターミナルエラー]]></Text>
+				</Text>
+				<Text TxtId="ParsistentDataInitialization">
+					<Text LcId="1041"><![CDATA[パーシステントデータ初期化]]></Text>
+				</Text>
+				<Text TxtId="PersistentDataLoadFault">
+					<Text LcId="1041"><![CDATA[パーシステントデータ読み込み失敗]]></Text>
+				</Text>
+				<Text TxtId="OldPersistentDataLoad">
+					<Text LcId="1041"><![CDATA[古いパーシステントデータ読み込み]]></Text>
+				</Text>
+				<Text TxtId="PersistentDataWriteError">
+					<Text LcId="1041"><![CDATA[パーシステントデータ書き込み失敗]]></Text>
+				</Text>
+				<Text TxtId="CycleTimeExceeded">
+					<Text LcId="1041"><![CDATA[サイクルタイム超過]]></Text>
+				</Text>
+				<Text TxtId="CircuitProtectorError">
+					<Text LcId="1041"><![CDATA[サーキットプロテクターエラー]]></Text>
+				</Text>
+			</Translations>
+			<Hides>
+				<Hide GUID="{0A7C7CA6-7022-43E9-97B4-94193599028A}"/>
+				<Hide GUID="{76DC2CF1-DECC-48DA-8897-52A461B6C95B}"/>
+				<Hide GUID="{00B3C40A-2AE6-4F35-B835-6C3FF78E1803}"/>
+				<Hide GUID="{0158EF33-3D5F-4E2D-BF43-DF5F4E222578}"/>
+				<Hide GUID="{85F10369-3066-470C-9109-6B8A334012B3}"/>
+				<Hide GUID="{60B74FB8-927E-462A-9AED-AFB161A35527}"/>
+				<Hide GUID="{BF0E44CE-E43F-44BC-88E3-57225BA59005}"/>
+				<Hide GUID="{EDB6C057-C1BE-4DFC-8F44-C0D3BE174E7E}"/>
+				<Hide GUID="{9FD1487A-DA6D-47D6-854C-F532D872FEF3}"/>
+				<Hide GUID="{1EC8A248-8BAB-43F0-BA41-73CFFA3AF4AF}"/>
+				<Hide GUID="{DF7C4704-ABC7-4E02-85EA-66B676040BD5}"/>
+				<Hide GUID="{714AB463-6698-454B-8F4E-C2B09C58256A}"/>
+				<Hide GUID="{75F5C208-848B-4163-98CC-36DD5035109A}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{63B17D0E-1819-49B4-8073-F1562B82FF9A}" PersistentType="true">WagoCp787EventClass</Name>
+			<DisplayName TxtId=""><![CDATA[WagoCp787EventClass]]></DisplayName>
+			<EventId>
+				<Name Id="1">InputVoltageAlarm</Name>
+				<DisplayName TxtId=""><![CDATA[InputVoltageAlarm( {0} V)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">TrippedHardwareError</Name>
+				<DisplayName TxtId=""><![CDATA[TrippedHardwareError ( {0} ch)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">Tripped</Name>
+				<DisplayName TxtId=""><![CDATA[Tripped ( {0} ch)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">OverloadOver100Percent</Name>
+				<DisplayName TxtId=""><![CDATA[OverloadOver100Percent ( {0} ch)]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">OverloadOver90Percent</Name>
+				<DisplayName TxtId=""><![CDATA[OverloadOver90Percent ( {0} ch)]]></DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="6">SwitchedOffLocalOrRemote</Name>
+				<DisplayName TxtId=""><![CDATA[SwitchedOffLocalOrRemote ( {0} ch)]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<Translations>
+				<Text TxtId="WagoCp787EventClass">
+					<Text LcId="1041"><![CDATA[WagoCp787EventClass]]></Text>
+				</Text>
+				<Text TxtId="InputVoltageAlarm( {0} V)">
+					<Text LcId="1041"><![CDATA[入力電圧異常( {0} V)]]></Text>
+				</Text>
+				<Text TxtId="TrippedHardwareError ( {0} ch)">
+					<Text LcId="1041"><![CDATA[ハードウェアヒューズ異常 ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="Tripped ( {0} ch)">
+					<Text LcId="1041"><![CDATA[トリップ ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="OverloadOver100Percent ( {0} ch)">
+					<Text LcId="1041"><![CDATA[負荷100%超え ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="OverloadOver90Percent ( {0} ch)">
+					<Text LcId="1041"><![CDATA[負荷90%超え ( {0} ch)]]></Text>
+				</Text>
+				<Text TxtId="SwitchedOffLocalOrRemote ( {0} ch)">
+					<Text LcId="1041"><![CDATA[ローカルまたはリモートOFF ( {0} ch)]]></Text>
+				</Text>
+			</Translations>
+			<Hides>
+				<Hide GUID="{B4A8F2D9-1756-4BC3-A81A-85D22039D5B5}"/>
+				<Hide GUID="{EC11165F-C04B-47AA-8D7E-35283CE92190}"/>
+				<Hide GUID="{1B58B559-14B5-45B1-A076-F2F7671E117E}"/>
+				<Hide GUID="{7831230E-5F6A-49E9-8479-9A043E9A120C}"/>
+				<Hide GUID="{2F2ED372-BA59-4CCD-A011-A674D4B8EE03}"/>
+				<Hide GUID="{CB9AD64E-2270-4DCB-92B4-6C44869E5D1E}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{E2F96B0F-3054-4967-99AA-BE6EE0CE5254}" PersistentType="true">TkEtherCATMasterDiagnosisEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[TkEtherCATMasterDiagnosisEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="#x0">LinkError</Name>
+				<DisplayName TxtId=""><![CDATA[Link error]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x1">IOLockedAfterLinkErrorIOResetRequired</Name>
+				<DisplayName TxtId=""><![CDATA[I/O locked after link error (I/O reset required)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2">LinkErrorRedundancyAdapter</Name>
+				<DisplayName TxtId=""><![CDATA[Link error (redundancy adapter)]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x3">MissingOneFrameRedundancyAdapter</Name>
+				<DisplayName TxtId=""><![CDATA[Missing one frame (redundancy mode)]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x4">OutOfSendResourcesIOResetRequired</Name>
+				<DisplayName TxtId=""><![CDATA[Out of send resources (I/O reset required)]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x5">WatchdogTriggered</Name>
+				<DisplayName TxtId=""><![CDATA[Watchdog triggered]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x6">EthernetDriverMiniportNotFound</Name>
+				<DisplayName TxtId=""><![CDATA[Ethernet driver (miniport) not found]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x7">IOResetActive</Name>
+				<DisplayName TxtId=""><![CDATA[I/O reset active]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x8">AtLeastOneDeviceInINITState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device in ҅INIT҆ state]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x9">AtLeastOneDeviceInPREOPState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device in ҅PRE-OP҆ state]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#xA">AtLeastOneDeviceInSAFEOPState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device in ҅SAFE-OP҆ state]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#xB">AtLeastOneDeviceInERRORState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device indicates an error state]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#xC">DCNotInSync</Name>
+				<DisplayName TxtId=""><![CDATA[DC not in sync]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x10">WrongWorkingCounterEtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of {0} EtherCAT command received]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x1F">CompleteFrameMissing</Name>
+				<DisplayName TxtId=""><![CDATA[Complete frame missing!]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x20">EtherCATCommandNotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[{0} EtherCAT command not sent (NOP requested).]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2F">CompleteFrameNotSent</Name>
+				<DisplayName TxtId=""><![CDATA[Complete frame not sent.]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x100">MismatchSlaveCountCfgSlaveCount</Name>
+				<DisplayName TxtId=""><![CDATA[Mismatch brtween SlaveCount and CfgSlaveCount]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Translations>
+				<Text TxtId="Link error">
+					<Text LcId="1041"><![CDATA[リンクエラー]]></Text>
+				</Text>
+				<Text TxtId="I/O locked after link error (I/O reset required)">
+					<Text LcId="1041"><![CDATA[リンクエラー後のI/Oロック（I/Oリセットが必要）]]></Text>
+				</Text>
+				<Text TxtId="Link error (redundancy adapter)">
+					<Text LcId="1041"><![CDATA[リンクエラー（冗長化アダプタ）]]></Text>
+				</Text>
+				<Text TxtId="Missing one frame (redundancy mode)">
+					<Text LcId="1041"><![CDATA[フレームの欠落（冗長化モード）]]></Text>
+				</Text>
+				<Text TxtId="Out of send resources (I/O reset required)">
+					<Text LcId="1041"><![CDATA[送信リソース不足（I/Oリセットが必要）]]></Text>
+				</Text>
+				<Text TxtId="Watchdog triggered">
+					<Text LcId="1041"><![CDATA[ウォッチドッグ作動]]></Text>
+				</Text>
+				<Text TxtId="Ethernet driver (miniport) not found">
+					<Text LcId="1041"><![CDATA[イーサネットドライバ（ミニポート）未検出]]></Text>
+				</Text>
+				<Text TxtId="I/O reset active">
+					<Text LcId="1041"><![CDATA[I/Oリセット実行中]]></Text>
+				</Text>
+				<Text TxtId="At least one device in ҅INIT҆ state">
+					<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「INIT」状態]]></Text>
+				</Text>
+				<Text TxtId="At least one device in ҅PRE-OP҆ state">
+					<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「PRE-OP」状態]]></Text>
+				</Text>
+				<Text TxtId="At least one device in ҅SAFE-OP҆ state">
+					<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「SAFE-OP」状態]]></Text>
+				</Text>
+				<Text TxtId="At least one device indicates an error state">
+					<Text LcId="1041"><![CDATA[少なくとも1つのデバイスがエラー状態を示している]]></Text>
+				</Text>
+				<Text TxtId="DC not in sync">
+					<Text LcId="1041"><![CDATA[DC非同期]]></Text>
+				</Text>
+				<Text TxtId="Complete frame missing!">
+					<Text LcId="1041"><![CDATA[フレームが完全に欠落しています]]></Text>
+				</Text>
+				<Text TxtId="Complete frame not sent.">
+					<Text LcId="1041"><![CDATA[フレームは完全に送信されませんでした。]]></Text>
+				</Text>
+			</Translations>
+			<Hides>
+				<Hide GUID="{83B32E6F-80BB-4A6D-B766-D9B3A019FA00}"/>
+				<Hide GUID="{4DB8E233-EF0E-458B-B5CB-C8119B56D9E3}"/>
+				<Hide GUID="{05C25344-9DFE-4E1A-9D7E-33DD70041527}"/>
+				<Hide GUID="{E2CF83D4-1590-4975-B479-8C267E991D45}"/>
+				<Hide GUID="{0958BF37-43ED-493E-A4DD-190C926A84CF}"/>
+				<Hide GUID="{688C85B1-082D-4DC5-BC13-F8C64F39A582}"/>
+				<Hide GUID="{254DFAB1-CF26-4388-8C8C-63ACF3778534}"/>
+				<Hide GUID="{4A99394C-E62B-47E4-8B1E-92321F7F798E}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{CDAB43A8-33C2-4A02-976D-0ACBCFAC5CD4}" PersistentType="true">TkEtherCATSlaveDiagnosisEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[TkEtherCATSlaveDiagnosisEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="#x1">INIT</Name>
+				<DisplayName TxtId=""><![CDATA[INIT]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2">PREOP</Name>
+				<DisplayName TxtId=""><![CDATA[PREOP]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x3">BOOT</Name>
+				<DisplayName TxtId=""><![CDATA[BOOT]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x4">SAFEOP</Name>
+				<DisplayName TxtId=""><![CDATA[SAFEOP]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x8">OP</Name>
+				<DisplayName TxtId=""><![CDATA[OP]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x10">SlaveSignalsError</Name>
+				<DisplayName TxtId=""><![CDATA[Slave signals error]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x20">InvalidVendorIdProductCodeRead</Name>
+				<DisplayName TxtId=""><![CDATA[Invalid vendorId, productCode... read]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x40">InitializationErrorOccurred</Name>
+				<DisplayName TxtId=""><![CDATA[Initialization error occurred]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x80">SlaveDisabled</Name>
+				<DisplayName TxtId=""><![CDATA[Slave disabled]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x100">SlaveNotPresent</Name>
+				<DisplayName TxtId=""><![CDATA[Slave not present]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x200">SlaveSignalsLinkError</Name>
+				<DisplayName TxtId=""><![CDATA[Slave signals link error]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x400">SlaveSignalsMissingLink</Name>
+				<DisplayName TxtId=""><![CDATA[Slave signals missing link]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x800">SlaveSlaveSignalsUnexpectedLink</Name>
+				<DisplayName TxtId=""><![CDATA[Slave Slave signals unexpected link]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x1000">CommunicationPortA</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port A]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2000">CommunicationPortB</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port B]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x4000">CommunicationPortC</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port C]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x8000">CommunicationPortD</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port D]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x10000">InvalidWorkingCounter</Name>
+				<DisplayName TxtId=""><![CDATA[Invalid Working Counter]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Translations>
+				<Text TxtId="INIT">
+					<Text LcId="1041"><![CDATA[INIT（初期化）]]></Text>
+				</Text>
+				<Text TxtId="PREOP">
+					<Text LcId="1041"><![CDATA[PREOP（事前動作）]]></Text>
+				</Text>
+				<Text TxtId="BOOT">
+					<Text LcId="1041"><![CDATA[BOOT（ブート）]]></Text>
+				</Text>
+				<Text TxtId="SAFEOP">
+					<Text LcId="1041"><![CDATA[SAFEOP（安全動作）]]></Text>
+				</Text>
+				<Text TxtId="OP">
+					<Text LcId="1041"><![CDATA[OP（動作）]]></Text>
+				</Text>
+				<Text TxtId="Slave signals error">
+					<Text LcId="1041"><![CDATA[スレーブがエラーを通知]]></Text>
+				</Text>
+				<Text TxtId="Invalid vendorId, productCode... read">
+					<Text LcId="1041"><![CDATA[無効なvendorId、productCode...の読み出し]]></Text>
+				</Text>
+				<Text TxtId="Initialization error occurred">
+					<Text LcId="1041"><![CDATA[初期化エラーが発生]]></Text>
+				</Text>
+				<Text TxtId="Slave disabled">
+					<Text LcId="1041"><![CDATA[スレーブが無効化されています]]></Text>
+				</Text>
+				<Text TxtId="Slave not present">
+					<Text LcId="1041"><![CDATA[スレーブが存在しません]]></Text>
+				</Text>
+				<Text TxtId="Slave signals link error">
+					<Text LcId="1041"><![CDATA[スレーブがリンクエラーを通知]]></Text>
+				</Text>
+				<Text TxtId="Slave signals missing link">
+					<Text LcId="1041"><![CDATA[スレーブがリンク未接続を通知]]></Text>
+				</Text>
+				<Text TxtId="Slave Slave signals unexpected link">
+					<Text LcId="1041"><![CDATA[スレーブが予期しないリンクを通知]]></Text>
+				</Text>
+				<Text TxtId="Communication port A">
+					<Text LcId="1041"><![CDATA[通信ポートA]]></Text>
+				</Text>
+				<Text TxtId="Communication port B">
+					<Text LcId="1041"><![CDATA[通信ポートB]]></Text>
+				</Text>
+				<Text TxtId="Communication port C">
+					<Text LcId="1041"><![CDATA[通信ポートC]]></Text>
+				</Text>
+				<Text TxtId="Communication port D">
+					<Text LcId="1041"><![CDATA[通信ポートD]]></Text>
+				</Text>
+			</Translations>
+			<Hides>
+				<Hide GUID="{3B677AA0-89AD-4534-AAD9-3A856DEA8BB4}"/>
+				<Hide GUID="{F457090F-FBA1-462A-9E51-40D8FBBEBEAE}"/>
+				<Hide GUID="{7AE94FCE-E616-4EF0-ADD1-61F99922C888}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

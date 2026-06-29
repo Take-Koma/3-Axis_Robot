@@ -87,6 +87,8 @@
 		<OwnerA>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCATMaster2.fbDevStateDiagnosis.uiDevState" VarB="Inputs^DevState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCATMaster2.fbSlaveCountDiagnosis.uiCfgSlaveCount" VarB="InfoData^CfgSlaveCount"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCATMaster2.fbSlaveCountDiagnosis.uiSlaveCount" VarB="Inputs^SlaveCount"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmStateDiagnosis2[0].uiFrmState" VarB="Inputs^Frm0State"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmWcStateDiagnosis2[0].uiFrmWcState" VarB="Inputs^Frm0WcState"/>
 			</OwnerB>
