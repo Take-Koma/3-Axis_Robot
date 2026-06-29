@@ -11,11 +11,15 @@ VAR_IN_OUT
 END_VAR
 VAR
 	fbDevStateDiagnosis			:FB_DevStateDiagnosis;
+	fbSlaveCountDiagnosis		:FB_SlaveCountDiagnosis;
 	i							:DINT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//診断用FBを呼び出し
-fbDevStateDiagnosis(bError=>bError);
+fbDevStateDiagnosis();
+fbSlaveCountDiagnosis();
+
+bError:=fbDevStateDiagnosis.bError OR fbSlaveCountDiagnosis.bError;
 
 //可変長のアレイを診断と出力
 FOR i := LOWER_BOUND(fbFrmWcStateDiagnosis,1) TO UPPER_BOUND(fbFrmWcStateDiagnosis,1) DO
@@ -31,6 +35,9 @@ END_FOR]]></ST>
     <LineIds Name="FB_DiagnosisEtherCATMaster">
       <LineId Id="19" Count="0" />
       <LineId Id="2" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="52" Count="0" />
       <LineId Id="33" Count="1" />
       <LineId Id="36" Count="0" />
       <LineId Id="38" Count="0" />

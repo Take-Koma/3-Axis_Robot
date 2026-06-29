@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_DiagnosisEtherCATSlave" Id="{e5af8d40-9ba8-4884-bbf0-fd8f1590eb8a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisEtherCATSlave
+VAR_OUTPUT
+	bError						:BOOL;								//エラー発生を出力
+END_VAR
+VAR_IN_OUT
+	fbWcStateDiagnosis			:ARRAY[*] OF FB_WcStateDiagnosis;
+END_VAR
+VAR
+	fbStateDiagnosis			:FB_StateDiagnosis;
+	i							:DINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//診断用FBを呼び出し
+fbStateDiagnosis();
+
+bError:=fbStateDiagnosis.bError;
+
+//可変長のアレイを診断と出力
+FOR i := LOWER_BOUND(fbWcStateDiagnosis,1) TO UPPER_BOUND(fbWcStateDiagnosis,1) DO
+	fbWcStateDiagnosis[i]();
+	bError:=bError OR fbWcStateDiagnosis[i].bError;
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="FB_DiagnosisEtherCATSlave">
+      <LineId Id="1" Count="9" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

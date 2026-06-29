@@ -2,6 +2,9 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_DevStateDiagnosis" Id="{190b1782-5ec4-420d-87aa-52e460bf38f7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_DevStateDiagnosis
+VAR CONSTANT
+	uiFaultMask					:UINT	:=2#0001_1111_1111_0011;	//デバイスエラーのマスク
+END_VAR
 VAR_OUTPUT
 	bError						:BOOL;								//エラー発生を出力
 END_VAR
@@ -9,38 +12,25 @@ VAR
 	uiDevState 			AT%I*	:UINT;								//PDデータとリンク
 	
 	bErrorState					:ARRAY[0..15] OF BOOL;				//各ステートエラー
-	fbStateREdge				:ARRAY[0..15] OF R_TRIG;
+	fbBitREdge					:ARRAY[0..15] OF R_TRIG;
 	fbMessage					:ARRAY[0..15] OF FB_TcMessage;
 	i							:INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//エラー状態を出力
-	bError:= uiDevState<>0 ;
+	bError:= (uiDevState AND uiFaultMask)<>0 ;
 
 //デバイスの状態チェック、エラーは複数発生する可能性があるので全bitチェック
-	bErrorState[0]:=uiDevState.0;
-	bErrorState[1]:=uiDevState.1;
-	bErrorState[2]:=uiDevState.2;
-	bErrorState[3]:=uiDevState.3;
-	bErrorState[4]:=uiDevState.4;
-	bErrorState[5]:=uiDevState.5;
-	bErrorState[6]:=uiDevState.6;
-	bErrorState[7]:=uiDevState.7;
-	bErrorState[8]:=uiDevState.8;
-	bErrorState[9]:=uiDevState.9;
-	bErrorState[10]:=uiDevState.10;
-	bErrorState[11]:=uiDevState.11;
-	bErrorState[12]:=uiDevState.12;
-	bErrorState[13]:=uiDevState.13;
-	bErrorState[14]:=uiDevState.14;
-	bErrorState[15]:=uiDevState.15;
+	FOR i := 0 TO 15 DO
+		bErrorState[i]:=(uiDevState AND SHL(1,i))<>0;
+	END_FOR
 
 //結果をEventloggerへ
 	FOR i := 0 TO 15 BY 1 DO
-		fbStateREdge[i](CLK:=bErrorState[i]);
+		fbBitREdge[i](CLK:=bErrorState[i]);
 		
-		IF fbStateREdge[i].Q THEN
+		IF fbBitREdge[i].Q THEN
 			fbMessage[i].Send();
 		END_IF
 		
@@ -56,31 +46,29 @@ VAR_INPUT
     bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[fbMessage[0].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.LinkError);
-fbMessage[1].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.IOLockedAfterLinkErrorIOResetRequired);
-fbMessage[2].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.LinkErrorRedundancyAdapter);
-fbMessage[3].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.MissingOneFrameRedundancyAdapter);
-fbMessage[4].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.OutOfSendResourcesIOResetRequired);
-fbMessage[5].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.WatchdogTriggered);
-fbMessage[6].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.EthernetDriverMiniportNotFound);
-fbMessage[7].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.IOResetActive);
-fbMessage[8].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.AtLeastOneDeviceInINITState);
-fbMessage[9].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.AtLeastOneDeviceInPREOPState);
-fbMessage[10].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.AtLeastOneDeviceInSAFEOPState);
-fbMessage[11].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.AtLeastOneDeviceInERRORState);
-fbMessage[12].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.DCNotInSync);
-fbMessage[13].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.Bit13);
-fbMessage[14].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.Bit14);
-fbMessage[15].CreateEx(TC_EVENTS.EtherCATMasterDevStateEventClass.Bit15);]]></ST>
+        <ST><![CDATA[fbMessage[0].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.LinkError);
+fbMessage[1].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.IOLockedAfterLinkErrorIOResetRequired);
+fbMessage[2].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.LinkErrorRedundancyAdapter);
+fbMessage[3].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.MissingOneFrameRedundancyAdapter);
+fbMessage[4].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.OutOfSendResourcesIOResetRequired);
+fbMessage[5].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.WatchdogTriggered);
+fbMessage[6].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.EthernetDriverMiniportNotFound);
+fbMessage[7].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.IOResetActive);
+fbMessage[8].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.AtLeastOneDeviceInINITState);
+fbMessage[9].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.AtLeastOneDeviceInPREOPState);
+fbMessage[10].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.AtLeastOneDeviceInSAFEOPState);
+fbMessage[11].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.AtLeastOneDeviceInERRORState);
+fbMessage[12].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.DCNotInSync);
+]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_DevStateDiagnosis">
-      <LineId Id="251" Count="26" />
-      <LineId Id="280" Count="1" />
+      <LineId Id="286" Count="6" />
+      <LineId Id="310" Count="8" />
       <LineId Id="32" Count="0" />
     </LineIds>
     <LineIds Name="FB_DevStateDiagnosis.FB_Init">
-      <LineId Id="1" Count="15" />
+      <LineId Id="1" Count="13" />
     </LineIds>
   </POU>
 </TcPlcObject>

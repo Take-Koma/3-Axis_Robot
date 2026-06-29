@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_SlaveCountDiagnosis" Id="{02ab8264-55ea-46ed-995e-d44a3481583b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SlaveCountDiagnosis
+VAR_OUTPUT
+	bError						:BOOL;								//エラー発生を出力
+END_VAR
+VAR
+	uiSlaveCount 		AT%I*	:UINT;								//PDデータとリンク
+	uiCfgSlaveCount 	AT%I*	:UINT;								//PDデータとリンク
+	
+	fbBitREdge					:R_TRIG;
+	fbMessage					:FB_TcMessage;
+	i							:INT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//エラー状態を出力
+	bError:=uiSlaveCount<>uiCfgSlaveCount OR uiSlaveCount=0 OR uiCfgSlaveCount=0;
+
+//エラーをEventloggerへ
+	fbBitREdge(CLK:=bError);
+	
+	IF fbBitREdge.Q THEN
+		fbMessage.Send();
+	END_IF]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{0370321f-7f5d-475b-838a-b30d147a8230}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMessage.CreateEx(Tc_Events.TkEtherCATMasterDiagnosisEventClass.MismatchSlaveCountCfgSlaveCount);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_SlaveCountDiagnosis">
+      <LineId Id="11" Count="7" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_SlaveCountDiagnosis.FB_Init">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

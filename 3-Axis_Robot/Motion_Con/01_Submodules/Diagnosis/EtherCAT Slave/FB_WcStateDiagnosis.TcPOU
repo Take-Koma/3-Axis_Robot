@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_WcStateDiagnosis" Id="{8fd366b1-8520-4e54-80a1-63a6da6188df}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_WcStateDiagnosis
+VAR_OUTPUT
+	bError						:BOOL;								//エラー発生を出力
+END_VAR
+VAR
+	bWcState			AT%I*	:BOOL;								//PDデータとリンク
+	
+	fbBitREdge					:R_TRIG;
+	fbMessage					:FB_TcMessage;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//エラー状態を出力
+	bError:=bWcState;
+
+//結果をEventloggerへ
+	fbBitREdge(CLK:=bError);
+	
+	IF fbBitREdge.Q THEN
+		fbMessage.Send();
+	END_IF
+]]></ST>
+    </Implementation>
+    <Method Name="FB_Init" Id="{834d237f-7856-4edb-8523-7f013283f047}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbMessage.CreateEx(TC_EVENTS.TkEtherCATSlaveDiagnosisEventClass.InvalidWorkingCounter);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_WcStateDiagnosis">
+      <LineId Id="1" Count="9" />
+    </LineIds>
+    <LineIds Name="FB_WcStateDiagnosis.FB_Init">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

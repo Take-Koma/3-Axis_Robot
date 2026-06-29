@@ -9,8 +9,11 @@ VAR
 	uiFrmWcState 		AT%I*	:UINT;								//PDデータとリンク
 	
 	bErrorState					:ARRAY[0..15] OF BOOL;				//各ステートエラー
-	fbErrorStateREdge			:ARRAY[0..15] OF R_TRIG;
-	fbMessage					:ARRAY[0..15] OF FB_TcMessage;
+	fbBitREdge					:ARRAY[0..15] OF R_TRIG;
+	bSendMsgMem					:ARRAY[0..14] OF BOOL;				//メッセージ送信を記憶	
+	sSendMsgString				:STRING;							//送信メッセージのアーギュメント用
+	bSendMsg					:BOOL;								//メッセージ送信予約
+	fbMessage					:ARRAY[0..1] OF FB_TcMessage;
 	i							:INT;
 END_VAR
 ]]></Declaration>
@@ -19,33 +22,49 @@ END_VAR
 	bError:= uiFrmWcState<>0 ;
 	
 //サイクリックフレームごとのワーキングカウンターチェック、エラーは複数発生する可能性があるので全bitチェック
-	bErrorState[0]:=uiFrmWcState.0;
-	bErrorState[1]:=uiFrmWcState.1;
-	bErrorState[2]:=uiFrmWcState.2;
-	bErrorState[3]:=uiFrmWcState.3;
-	bErrorState[4]:=uiFrmWcState.4;
-	bErrorState[5]:=uiFrmWcState.5;
-	bErrorState[6]:=uiFrmWcState.6;
-	bErrorState[7]:=uiFrmWcState.7;
-	bErrorState[8]:=uiFrmWcState.8;
-	bErrorState[9]:=uiFrmWcState.9;
-	bErrorState[10]:=uiFrmWcState.10;
-	bErrorState[11]:=uiFrmWcState.11;
-	bErrorState[12]:=uiFrmWcState.12;
-	bErrorState[13]:=uiFrmWcState.13;
-	bErrorState[14]:=uiFrmWcState.14;
-	bErrorState[15]:=uiFrmWcState.15;
+	FOR i := 0 TO 15 DO
+		bErrorState[i]:=(uiFrmWcState AND SHL(1,i))<>0;
+	END_FOR
 	
 //結果をEventloggerへ
-	FOR i := 0 TO 15 BY 1 DO
-		fbErrorStateREdge[i](CLK:=bErrorState[i]);
+	bSendMsg:=FALSE;	//メッセージ送信予約をリセット
+
+	FOR i := 0 TO 14 BY 1 DO
+		//エラーの立ち上がりエッジを検出
+		fbBitREdge[i](CLK:=bErrorState[i]);
 		
-		IF fbErrorStateREdge[i].Q THEN
-			fbMessage[i].Send();
+		//まだ送信していなければ、送信用の文字列作成
+		IF NOT bSendMsgMem[i] AND fbBitREdge[i].Q THEN
+			
+			sSendMsgString:=CONCAT(sSendMsgString, CONCAT(INT_TO_STRING(i+1), '. '));	//送信メッセージのアーギュメント作成
+
+			bSendMsg:=TRUE;		//メッセージ送信予約をセット
+			bSendMsgMem[i]:=TRUE;	//メッセージ送信を記憶
+			
+		END_IF
+		
+		//エラーがリセットされたらメッセージ送信気を記憶をリセット
+		IF NOT bErrorState[i] THEN
+			bSendMsgMem[i]:=FALSE;
 		END_IF
 		
 	END_FOR
-]]></ST>
+	
+	IF bSendMsg THEN
+		fbMessage[0].ipArguments.Clear().AddString(sSendMsgString);
+		fbMessage[0].Send();
+		
+		bSendMsg:=FALSE;
+		sSendMsgString:='';
+	END_IF
+	
+	//全体判定用
+	fbBitREdge[15](CLK:=bErrorState[15]);
+	
+	IF fbBitREdge[15].Q THEN
+		fbMessage[1].Send();
+	END_IF
+	]]></ST>
     </Implementation>
     <Method Name="FB_Init" Id="{7a56f216-0586-4f04-a2eb-3842cf2c6d30}">
       <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
@@ -57,31 +76,22 @@ VAR_INPUT
     bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[fbMessage[0].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf1EtherCATCommandReceived);
-fbMessage[1].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf2EtherCATCommandReceived);
-fbMessage[2].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf3EtherCATCommandReceived);
-fbMessage[3].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf4EtherCATCommandReceived);
-fbMessage[4].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf5EtherCATCommandReceived);
-fbMessage[5].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf6EtherCATCommandReceived);
-fbMessage[6].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf7EtherCATCommandReceived);
-fbMessage[7].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf8EtherCATCommandReceived);
-fbMessage[8].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf9EtherCATCommandReceived);
-fbMessage[9].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf10EtherCATCommandReceived);
-fbMessage[10].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf11EtherCATCommandReceived);
-fbMessage[11].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf12EtherCATCommandReceived);
-fbMessage[12].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf13EtherCATCommandReceived);
-fbMessage[13].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf14EtherCATCommandReceived);
-fbMessage[14].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.WrongWorkingCounterOf15EtherCATCommandReceived);
-fbMessage[15].CreateEx(TC_EVENTS.EtherCATMasterFrmWcStateEventClass.CompleteFrameMissing);]]></ST>
+        <ST><![CDATA[fbMessage[0].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.WrongWorkingCounterEtherCATCommandReceived);
+fbMessage[1].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.CompleteFrameMissing);
+]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_FrmWcStateDiagnosis">
-      <LineId Id="195" Count="26" />
-      <LineId Id="224" Count="2" />
-      <LineId Id="33" Count="0" />
+      <LineId Id="228" Count="3" />
+      <LineId Id="260" Count="1" />
+      <LineId Id="247" Count="1" />
+      <LineId Id="262" Count="36" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="227" Count="0" />
     </LineIds>
     <LineIds Name="FB_FrmWcStateDiagnosis.FB_Init">
-      <LineId Id="1" Count="15" />
+      <LineId Id="1" Count="1" />
+      <LineId Id="16" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
