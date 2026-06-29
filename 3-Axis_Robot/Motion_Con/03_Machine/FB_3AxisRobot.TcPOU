@@ -46,27 +46,27 @@
 		fbMachineState							:FB_MachineState;															//マシンステートFB
 		
 		//アラーム(アラーム詳細はユーザーイベントクラスを参照)
-		fbAlarmSafetyNotRun						:FB_Alarm(TC_Events.MachineAlarmEventClass.SafetyNotRun);
-		fbAlarmSafetyFbError					:FB_Alarm(TC_Events.MachineAlarmEventClass.SafetyFbError);
-		fbAlarmEmergencyStop					:FB_Alarm(TC_Events.MachineAlarmEventClass.EmergencyStop);
-		fbAlarmXAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.MachineAlarmEventClass.XAxisMovingGripSwichNotOn);	
-		fbAlarmYAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.MachineAlarmEventClass.YAxisMovingGripSwichNotOn);	
-		fbAlarmZAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.MachineAlarmEventClass.ZAxisMovingGripSwichNotOn);	
-		fbAlarmGripperMovingGripSwichNotOn		:FB_Alarm(TC_Events.MachineAlarmEventClass.GripperMovingGripSwichNotOn);	
-		fbAlarmMITSUBISHIError					:FB_Alarm(TC_Events.MachineAlarmEventClass.MITSUBISHIError);
-		fbAlarmXAxisError						:FB_Alarm(TC_Events.MachineAlarmEventClass.XAxisError);
-		fbAlarmYAxisError						:FB_Alarm(TC_Events.MachineAlarmEventClass.YAxisError);
-		fbAlarmZAxisError						:FB_Alarm(TC_Events.MachineAlarmEventClass.ZAxisError);
-		fbAlarmGripperError						:FB_Alarm(TC_Events.MachineAlarmEventClass.GripperError);
-		fbAlarmEtherCATError					:FB_Alarm(TC_Events.MachineAlarmEventClass.EtherCATError);
-		fbAlarmTerminalError					:FB_Alarm(TC_Events.MachineAlarmEventClass.TerminalError);
-		fbAlarmParsistentDataInit				:FB_Alarm(TC_Events.MachineAlarmEventClass.ParsistentDataInitialization);
-		fbAlarmPersistentDataLoadFault			:FB_Alarm(TC_Events.MachineAlarmEventClass.PersistentDataLoadFault);
-		fbAlarmOldPersistentDataLoad			:FB_Alarm(TC_Events.MachineAlarmEventClass.OldPersistentDataLoad);
-		fbAlarmPersistentDataWriteError			:FB_Alarm(TC_Events.MachineAlarmEventClass.PersistentDataWriteError);
-		fbAlarmCycleTimeExceeded				:FB_Alarm(TC_Events.MachineAlarmEventClass.CycleTimeExceeded);
+		fbAlarmSafetyNotRun						:FB_Alarm(TC_Events.TkMachineAlarmEventClass.SafetyNotRun);
+		fbAlarmSafetyFbError					:FB_Alarm(TC_Events.TkMachineAlarmEventClass.SafetyFbError);
+		fbAlarmEmergencyStop					:FB_Alarm(TC_Events.TkMachineAlarmEventClass.EmergencyStop);
+		fbAlarmXAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.TkMachineAlarmEventClass.XAxisMovingGripSwichNotOn);	
+		fbAlarmYAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.TkMachineAlarmEventClass.YAxisMovingGripSwichNotOn);	
+		fbAlarmZAxisMovingGripSwichNotOn		:FB_Alarm(TC_Events.TkMachineAlarmEventClass.ZAxisMovingGripSwichNotOn);	
+		fbAlarmGripperMovingGripSwichNotOn		:FB_Alarm(TC_Events.TkMachineAlarmEventClass.GripperMovingGripSwichNotOn);	
+		fbAlarmMITSUBISHIError					:FB_Alarm(TC_Events.TkMachineAlarmEventClass.MITSUBISHIError);
+		fbAlarmXAxisError						:FB_Alarm(TC_Events.TkMachineAlarmEventClass.XAxisError);
+		fbAlarmYAxisError						:FB_Alarm(TC_Events.TkMachineAlarmEventClass.YAxisError);
+		fbAlarmZAxisError						:FB_Alarm(TC_Events.TkMachineAlarmEventClass.ZAxisError);
+		fbAlarmGripperError						:FB_Alarm(TC_Events.TkMachineAlarmEventClass.GripperError);
+		fbAlarmEtherCATError					:FB_Alarm(TC_Events.TkMachineAlarmEventClass.EtherCATError);
+		fbAlarmTerminalError					:FB_Alarm(TC_Events.TkMachineAlarmEventClass.TerminalError);
+		fbAlarmParsistentDataInit				:FB_Alarm(TC_Events.TkMachineAlarmEventClass.ParsistentDataInitialization);
+		fbAlarmPersistentDataLoadFault			:FB_Alarm(TC_Events.TkMachineAlarmEventClass.PersistentDataLoadFault);
+		fbAlarmOldPersistentDataLoad			:FB_Alarm(TC_Events.TkMachineAlarmEventClass.OldPersistentDataLoad);
+		fbAlarmPersistentDataWriteError			:FB_Alarm(TC_Events.TkMachineAlarmEventClass.PersistentDataWriteError);
+		fbAlarmCycleTimeExceeded				:FB_Alarm(TC_Events.TkMachineAlarmEventClass.CycleTimeExceeded);
 		fbAlarmLoadCellError					:FB_AlarmFromTcMessage;
-		fbAlarmWagoCp787Error					:FB_Alarm(TC_Events.MachineAlarmEventClass.CircuitProtectorError);
+		fbAlarmWagoCp787Error					:FB_Alarm(TC_Events.TkMachineAlarmEventClass.CircuitProtectorError);
 
 
 //------パーシステントデータ管理------

@@ -392,7 +392,7 @@ END_VAR
 	
 	//異常発生が立ち上がったらイベントをクリエイト
 	IF fbInputVoltageAlarmREdge.Q THEN
-		fbMessage[0].CreateEx(TC_EVENTS.WagoCp787EventClass.InputVoltageAlarm);
+		fbMessage[0].CreateEx(TC_EVENTS.TkWagoCp787EventClass.InputVoltageAlarm);
 		_bImmediatelyGetInputVoltage:=TRUE;
 	END_IF
 	
@@ -418,29 +418,29 @@ FOR iForIndex := 1 TO iNumberChannel BY 1 DO
 		CASE eNow787Status OF
 		//トリップ状態
 		E_787Status.TrippedHardwareError:
-			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.TrippedHardwareError);
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.TkWagoCp787EventClass.TrippedHardwareError);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
 			fbMessage[iForIndex].Send();
 		
 		E_787Status.Tripped,E_787Status.TrippedThermalRelease:
-			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.Tripped);
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.TkWagoCp787EventClass.Tripped);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
 			fbMessage[iForIndex].Send();
 		
 		//負荷状態
 		E_787Status.SwitchedOnOverloadOver100Percent:
-			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.OverloadOver100Percent);
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.TkWagoCp787EventClass.OverloadOver100Percent);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
 			fbMessage[iForIndex].Send();
 		
 		E_787Status.SwitchedOnOverloadOver90Percent:
-			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.OverloadOver90Percent);
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.TkWagoCp787EventClass.OverloadOver90Percent);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
 			fbMessage[iForIndex].Send();
 		
 		//スイッチ状態
 		E_787Status.switchedOffLocalOrRemote:
-			fbMessage[iForIndex].CreateEx(TC_EVENTS.WagoCp787EventClass.SwitchedOffLocalOrRemote);
+			fbMessage[iForIndex].CreateEx(TC_EVENTS.TkWagoCp787EventClass.SwitchedOffLocalOrRemote);
 			fbMessage[iForIndex].ipArguments.Clear().AddInt(iForIndex);
 			fbMessage[iForIndex].Send();
 
