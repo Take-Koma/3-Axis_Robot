@@ -5,15 +5,73 @@
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
+	bError									:BOOL;
 END_VAR
 VAR
+//EtherCATマスター
+	//デバイス2
+	fbFrmWcStateDiagnosis2					:ARRAY[0..0] OF FB_FrmWcStateDiagnosis;										//EtherCAt Master診断用FB
+	fbFrmStateDiagnosis2					:ARRAY[0..0] OF FB_FrmStateDiagnosis;										//EtherCAt Master診断用FB
+	fbDiagnosisEtherCATMaster2				:FB_DiagnosisEtherCATMaster;												//EtherCAt Master診断用FB
+	
+	//デバイス6
+	fbFrmWcStateDiagnosis6					:ARRAY[0..0] OF FB_FrmWcStateDiagnosis;										//EtherCAt Master診断用FB
+	fbFrmStateDiagnosis6					:ARRAY[0..0] OF FB_FrmStateDiagnosis;										//EtherCAt Master診断用FB
+	fbDiagnosisEtherCATMaster6				:FB_DiagnosisEtherCATMaster;												//EtherCAt Master診断用FB
+	
+
+//EtherCATスレーブ
+	eTerminal								:E_Terminal;
+	fbDiagnosisEtherCATSlaveWc1				:ARRAY[E_Terminal.EL9410..E_Terminal.EL1088] OF FB_DiagnosisEtherCATSlaveWc1;
+																														//Terminal診断用FB
+	fbDiagnosisEtherCATSlaveWc2				:FB_DiagnosisEtherCATSlaveWc2;												//Terminal診断用FB EL2911使用
+	fbDiagnosisEtherCATSlaveWc0				:FB_DiagnosisEtherCATSlaveWc0;												//Terminal診断用FB AZD4A_KED使用
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[bError:=EtherCATMasterDiagnosis() OR EtherCATSlaveDiagnosis();]]></ST>
     </Implementation>
+    <Method Name="EtherCATMasterDiagnosis" Id="{056ba304-6a92-4d09-a3ab-062fa6e9fe06}">
+      <Declaration><![CDATA[METHOD INTERNAL EtherCATMasterDiagnosis : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//EtherCATマスター診断
+	//デバイス2
+	fbDiagnosisEtherCATMaster2(	fbFrmWcStateDiagnosis	:=fbFrmWcStateDiagnosis2,
+								fbFrmStateDiagnosis		:=fbFrmStateDiagnosis2);
+
+	//デバイス6
+	fbDiagnosisEtherCATMaster6(	fbFrmWcStateDiagnosis	:=fbFrmWcStateDiagnosis6,
+								fbFrmStateDiagnosis		:=fbFrmStateDiagnosis6);
+
+	//すべて問題なしで出力
+	EtherCATMasterDiagnosis:= fbDiagnosisEtherCATMaster2.bError OR fbDiagnosisEtherCATMaster6.bError;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EtherCATSlaveDiagnosis" Id="{6f58eec1-1263-404f-b437-ca5fae8bfe79}">
+      <Declaration><![CDATA[METHOD INTERNAL EtherCATSlaveDiagnosis : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//EtherCATスレーブ診断
+	fbDiagnosisEtherCATSlaveWc2();
+	fbDiagnosisEtherCATSlaveWc0();
+	
+	EtherCATSlaveDiagnosis:=fbDiagnosisEtherCATSlaveWc2.bError OR fbDiagnosisEtherCATSlaveWc0.bError;
+
+	FOR eTerminal := E_Terminal.EL9410 TO E_Terminal.EL1088 DO
+		fbDiagnosisEtherCATSlaveWc1[eTerminal]();
+		EtherCATSlaveDiagnosis:=EtherCATSlaveDiagnosis OR fbDiagnosisEtherCATSlaveWc1[eTerminal].bError;
+	END_FOR]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_EtherCATTopologyDiagnosis">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EtherCATTopologyDiagnosis.EtherCATMasterDiagnosis">
+      <LineId Id="1" Count="10" />
+    </LineIds>
+    <LineIds Name="FB_EtherCATTopologyDiagnosis.EtherCATSlaveDiagnosis">
+      <LineId Id="1" Count="9" />
     </LineIds>
   </POU>
 </TcPlcObject>

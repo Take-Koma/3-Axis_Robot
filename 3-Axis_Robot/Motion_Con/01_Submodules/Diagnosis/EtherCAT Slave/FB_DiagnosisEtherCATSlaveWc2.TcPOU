@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
-  <POU Name="FB_DiagnosisEtherCATSlave" Id="{e5af8d40-9ba8-4884-bbf0-fd8f1590eb8a}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisEtherCATSlave
+  <POU Name="FB_DiagnosisEtherCATSlaveWc2" Id="{43d062e3-fee5-42c2-9ca9-d2a3a2982dac}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DiagnosisEtherCATSlaveWc2
 VAR_OUTPUT
 	bError						:BOOL;								//エラー発生を出力
 END_VAR
-VAR_IN_OUT
-	fbWcStateDiagnosis			:ARRAY[*] OF FB_WcStateDiagnosis;
-END_VAR
 VAR
 	fbStateDiagnosis			:FB_StateDiagnosis;
-	i							:DINT;
+	fbWcStateDiagnosis			:ARRAY[1..cNumWcState] OF FB_WcStateDiagnosis;
+	i							:INT;
+END_VAR
+VAR CONSTANT
+	cNumWcState					:INT	:=2;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//診断用FBを呼び出し
@@ -18,13 +19,13 @@ fbStateDiagnosis();
 
 bError:=fbStateDiagnosis.bError;
 
-//可変長のアレイを診断と出力
-FOR i := LOWER_BOUND(fbWcStateDiagnosis,1) TO UPPER_BOUND(fbWcStateDiagnosis,1) DO
+
+FOR i := 1 TO cNumWcState DO
 	fbWcStateDiagnosis[i]();
 	bError:=bError OR fbWcStateDiagnosis[i].bError;
 END_FOR]]></ST>
     </Implementation>
-    <LineIds Name="FB_DiagnosisEtherCATSlave">
+    <LineIds Name="FB_DiagnosisEtherCATSlaveWc2">
       <LineId Id="1" Count="9" />
     </LineIds>
   </POU>

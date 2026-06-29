@@ -86,15 +86,15 @@
 	<Mappings>
 		<OwnerA>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCATMaster2.fbDevStateDiagnosis.uiDevState" VarB="Inputs^DevState"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCATMaster2.fbSlaveCountDiagnosis.uiCfgSlaveCount" VarB="InfoData^CfgSlaveCount"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCATMaster2.fbSlaveCountDiagnosis.uiSlaveCount" VarB="Inputs^SlaveCount"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmStateDiagnosis2[0].uiFrmState" VarB="Inputs^Frm0State"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmWcStateDiagnosis2[0].uiFrmWcState" VarB="Inputs^Frm0WcState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATMaster2.fbDevStateDiagnosis.uiDevState" VarB="Inputs^DevState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATMaster2.fbSlaveCountDiagnosis.uiCfgSlaveCount" VarB="InfoData^CfgSlaveCount"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATMaster2.fbSlaveCountDiagnosis.uiSlaveCount" VarB="Inputs^SlaveCount"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbFrmStateDiagnosis2[0].uiFrmState" VarB="Inputs^Frm0State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbFrmWcStateDiagnosis2[0].uiFrmWcState" VarB="Inputs^Frm0WcState"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 10 (EL1258-0010)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[10].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[10].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[10].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[10].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFanControl.udiInFanInputEventTime" VarB="MTI Inputs 10x Channel 1^Input event time 1" Size="32"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFanControl.udiInFanInputEventTime" VarB="MTI Inputs 10x Channel 1^Input event time 10" Size="32" OffsA="288"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFanControl.udiInFanInputEventTime" VarB="MTI Inputs 10x Channel 1^Input event time 2" Size="32" OffsA="32"/>
@@ -127,8 +127,8 @@
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bMcMoveHomeOn" VarB="Channel 2^Input" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bMcPowerOn" VarB="Channel 1^Input" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bSafetyReset" VarB="Channel 6^Input" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[11].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[11].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[11].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[11].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 12 (EL2911)">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bEL2911InputToggle" VarB="WcState^InputToggle0" Size="1"/>
@@ -140,9 +140,9 @@
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bFbEstopError" VarB="StandardInputs^RobotSafety.oFbEstopError_21" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bSafetyInRun" VarB="StandardInputs^RobotSafety.oInRun_12" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[12].bWcState[0]" VarB="WcState^WcState0" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[12].bWcState[1]" VarB="WcState^WcState1" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[12].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2.fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2.fbWcStateDiagnosis[1].bWcState" VarB="WcState^WcState0" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2.fbWcStateDiagnosis[2].bWcState" VarB="WcState^WcState1" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bFbEStopEDM" VarB="StandardOutputs^RobotSafety.iEStopEDM_7" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bFbEStopReset" VarB="StandardOutputs^RobotSafety.iFbEStopReset_5" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bInputToggleOut" VarB="StandardOutputs^RobotSafety.iEL2911InputToggle_26" Size="1"/>
@@ -150,24 +150,24 @@
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bSafetyRun_Stop" VarB="StandardOutputs^RobotSafety.iSafetyRun_Stop_2" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 2 (EL9410)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[2].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[2].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[2].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[2].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL9501)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[3].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[3].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[3].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[3].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbLoadCellForCalcValue._rEexcitationVoltage" VarB="AO Output Compact (Real32)^Value (Real32)"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL3356-0010)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[4].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[4].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[4].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[4].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbLoadCellForCalcValue.rRMBValueInput[1]" VarB="RMB Value (Real)^Value (Real)"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbLoadCellForCalcValue.tTimestamp" VarB="RMB Timestamp^Timestamp"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbLoadCellForCalcValue.bSampleMode" VarB="RMB Control^Ctrl^Sample mode" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 5 (EL3202)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[5].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[5].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[5].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[5].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFanControl._iInAirTemp" VarB="RTD Inputs Channel 1^Value"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFanControl._iOutAirTemp" VarB="RTD Inputs Channel 2^Value"/>
 			</OwnerB>
@@ -183,8 +183,8 @@
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.byPdByte3" VarB="IO-Link Port1_in^09 PD_Byte_3"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.byPdByte4" VarB="IO-Link Port1_in^10 PD_Byte_4"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fb787.byPdByte5" VarB="IO-Link Port1_in^11 PD_Byte_5"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[6].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[6].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[6].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[6].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbIoLinkMaster._bOccurrenceEvent" VarB="DeviceState Inputs Device^Device Diag" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbIoLinkMaster._bPortError" VarB="DeviceState Inputs Device^Device State" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbIoLinkMaster.byStatus[1]" VarB="DeviceState Inputs^State Ch1"/>
@@ -202,31 +202,33 @@
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbIoLinkPatlite.bYellowTier" VarB="IO-Link Port2^2nd Tier On/Off" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 7 (EL8601-8411)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[7].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[7].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[7].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[7].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbFanControl.uiPwmOutput" VarB="SlotGroup 3 (PWM_OUT_DO)^PWM Outputs Channel 1^PWM output"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbFanControl.uiPwmPeriod" VarB="SlotGroup 3 (PWM_OUT_DO)^PWM Outputs Channel 1^PWM period"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 8 (EL1004)">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bPowerSupplyOk" VarB="Channel 1^Input" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bSwitchingHubOk" VarB="Channel 2^Input" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[8].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[8].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[8].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[8].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 9 (EL2004)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[9].bWcState[0]" VarB="WcState^WcState" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[9].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[9].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc1[9].fbWcStateDiagnosis.bWcState" VarB="WcState^WcState" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbFanControl.bInFanOn" VarB="Channel 1^Output" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.fbFanControl.bOutFanOn" VarB="Channel 2^Output" Size="1"/>
 				<Link VarA="VisionTask Outputs^GVL.bLedLight" VarB="Channel 3^Output" Size="1"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 6 (EtherCAT)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisEtherCATMaster6.fbDevStateDiagnosis.uiDevState" VarB="Inputs^DevState"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmStateDiagnosis6[0].uiFrmState" VarB="Inputs^Frm0State"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbFrmWcStateDiagnosis6[0].uiFrmWcState" VarB="Inputs^Frm0WcState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATMaster6.fbDevStateDiagnosis.uiDevState" VarB="Inputs^DevState"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATMaster6.fbSlaveCountDiagnosis.uiCfgSlaveCount" VarB="InfoData^CfgSlaveCount"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATMaster6.fbSlaveCountDiagnosis.uiSlaveCount" VarB="Inputs^SlaveCount"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbFrmStateDiagnosis6[0].uiFrmState" VarB="Inputs^Frm0State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbFrmWcStateDiagnosis6[0].uiFrmWcState" VarB="Inputs^Frm0WcState"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 6 (EtherCAT)^Drive 14 (AZD4A-KED)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbDiagnosisTerminal[14].uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc0.fbStateDiagnosis.uiState" VarB="InfoData^State"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbGripper.AxisRef.NcToPlc" VarB="Outputs^ToPlc"/>

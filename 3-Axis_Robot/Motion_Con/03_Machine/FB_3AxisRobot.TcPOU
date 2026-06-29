@@ -27,20 +27,8 @@
 
 
 //------診断-------
-		fbDiagnosisTerminal						:ARRAY[E_Terminal.EL9410..E_Terminal.AZD4A_KED] OF FB_DiagnosisTerminal;	//Terminal診断用FB
-		bEtherCATOK								:BOOL;																		//EtherCAT診断結果
-		bTerminalOK								:BOOL;																		//Terminal診断結果
-
-		//デバイス2
-		fbFrmWcStateDiagnosis2					:ARRAY[0..0] OF FB_FrmWcStateDiagnosis;										//EtherCAt Master診断用FB
-		fbFrmStateDiagnosis2					:ARRAY[0..0] OF FB_FrmStateDiagnosis;										//EtherCAt Master診断用FB
-		fbDiagnosisEtherCATMaster2				:FB_DiagnosisEtherCATMaster;												//EtherCAt Master診断用FB
-
-		//デバイス6
-		fbFrmWcStateDiagnosis6					:ARRAY[0..0] OF FB_FrmWcStateDiagnosis;										//EtherCAt Master診断用FB
-		fbFrmStateDiagnosis6					:ARRAY[0..0] OF FB_FrmStateDiagnosis;										//EtherCAt Master診断用FB
-		fbDiagnosisEtherCATMaster6				:FB_DiagnosisEtherCATMaster;												//EtherCAt Master診断用FB
-
+		bEtherCATTopologyError					:BOOL;																		//EtherCATトポロジー診断結果
+		fbEtherCATTopologyDiagnosis				:FB_EtherCATTopologyDiagnosis;												//EtherCATトポロジー診断用FB
 
 //------アラーム------
 		fbMachineState							:FB_MachineState;															//マシンステートFB
@@ -59,7 +47,6 @@
 		fbAlarmZAxisError						:FB_Alarm(TC_Events.TkMachineAlarmEventClass.ZAxisError);
 		fbAlarmGripperError						:FB_Alarm(TC_Events.TkMachineAlarmEventClass.GripperError);
 		fbAlarmEtherCATError					:FB_Alarm(TC_Events.TkMachineAlarmEventClass.EtherCATError);
-		fbAlarmTerminalError					:FB_Alarm(TC_Events.TkMachineAlarmEventClass.TerminalError);
 		fbAlarmParsistentDataInit				:FB_Alarm(TC_Events.TkMachineAlarmEventClass.ParsistentDataInitialization);
 		fbAlarmPersistentDataLoadFault			:FB_Alarm(TC_Events.TkMachineAlarmEventClass.PersistentDataLoadFault);
 		fbAlarmOldPersistentDataLoad			:FB_Alarm(TC_Events.TkMachineAlarmEventClass.OldPersistentDataLoad);
@@ -494,13 +481,7 @@ END_IF
 	);
 	
 	fbAlarmEtherCATError(
-		bRaise		:=NOT bEtherCATOK,
-		bConfirm	:=bBuzzerStop,
-		bClear		:=bAlarmReset
-	);
-	
-	fbAlarmTerminalError(
-		bRaise		:=NOT bTerminalOK,
+		bRaise		:=bEtherCATTopologyError,
 		bConfirm	:=bBuzzerStop,
 		bClear		:=bAlarmReset
 	);
@@ -648,58 +629,14 @@ END_IF
     </Method>
     <Method Name="General_Diagnosis" Id="{9a8d7aaf-4600-48ce-bd79-d2627266e342}">
       <Declaration><![CDATA[METHOD General_Diagnosis
-VAR
-	//i				:UINT;
-	eTerminal		:E_Terminal;
-END_VAR
+
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[//パーシステントデータ書き込みとエラー取得
 	bPersistentDataWriteError:=fbPersistentDataManagement.WritePersistentData(bPersistentDataWriteRequest);
 
-//EtherCATマスター診断
-	//デバイス2
-	fbDiagnosisEtherCATMaster2(	fbFrmWcStateDiagnosis	:=fbFrmWcStateDiagnosis2,
-								fbFrmStateDiagnosis		:=fbFrmStateDiagnosis2);
-
-	//デバイス6
-	fbDiagnosisEtherCATMaster6(	fbFrmWcStateDiagnosis	:=fbFrmWcStateDiagnosis6,
-								fbFrmStateDiagnosis		:=fbFrmStateDiagnosis6);
-
-	//すべて問題なしで出力
-	bEtherCATOK:= NOT fbDiagnosisEtherCATMaster2.bError AND NOT fbDiagnosisEtherCATMaster6.bError;
-
-
-//ターミナル診断
-	//診断用変数リセット
-	bTerminalOK:=TRUE;
-
-	FOR eTerminal:= E_Terminal.EL3202 TO E_Terminal.AZD4A_KED DO
-		
-		CASE eTerminal OF
-			E_Terminal.AZD4A_KED:	//AZD4A-KEDはステータスしかないので、ステータスのみチェック
-				IF fbDiagnosisTerminal[eTerminal].State_Diagnosis()=FALSE THEN
-					bTerminalOK:=FALSE;
-				END_IF			
-			
-			E_Terminal.EL9410..E_Terminal.EL1088:	//通常ターミナルはステータスとワーキングカウンターをチェック
-				IF fbDiagnosisTerminal[eTerminal].State_Diagnosis()=FALSE THEN
-					bTerminalOK:=FALSE;
-				ELSIF fbDiagnosisTerminal[eTerminal].WcState_Diagnosis(0)=FALSE THEN
-					bTerminalOK:=FALSE;
-				END_IF
-				
-			E_Terminal.EL2911:	//EL2911はステータスとワーキングカウンター二個をチェック
-				IF fbDiagnosisTerminal[eTerminal].State_Diagnosis()=FALSE THEN
-					bTerminalOK:=FALSE;
-				ELSIF fbDiagnosisTerminal[eTerminal].WcState_Diagnosis(0)=FALSE THEN
-					bTerminalOK:=FALSE;
-				ELSIF fbDiagnosisTerminal[eTerminal].WcState_Diagnosis(1)=FALSE THEN
-					bTerminalOK:=FALSE;
-				END_IF
-				
-		END_CASE
-	END_FOR]]></ST>
+//EtherCATトポロジー診断
+	fbEtherCATTopologyDiagnosis	(bError=>bEtherCATTopologyError);]]></ST>
       </Implementation>
     </Method>
     <Method Name="General_Init" Id="{a4330914-15ee-490a-abb7-3364e2d18ac8}">
@@ -869,7 +806,7 @@ END_VAR]]></Declaration>
 	GVL.mb_Input_Coils[60]			:=fbAlarmZAxisError.bRaised;
 	GVL.mb_Input_Coils[61]			:=fbAlarmGripperError.bRaised;
 	GVL.mb_Input_Coils[62]			:=fbAlarmEtherCATError.bRaised;
-	GVL.mb_Input_Coils[63]			:=fbAlarmTerminalError.bRaised;
+	GVL.mb_Input_Coils[63]			:=FALSE;//旧ターミナルエラー
 	GVL.mb_Input_Coils[64]			:=fbAlarmParsistentDataInit.bRaised;
 	GVL.mb_Input_Coils[65]			:=fbAlarmPersistentDataLoadFault.bRaised;
 	GVL.mb_Input_Coils[66]			:=fbAlarmOldPersistentDataLoad.bRaised;
@@ -1838,7 +1775,8 @@ END_CASE;]]></ST>
       <LineId Id="2" Count="32" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Alarm">
-      <LineId Id="301" Count="138" />
+      <LineId Id="301" Count="89" />
+      <LineId Id="397" Count="42" />
       <LineId Id="441" Count="0" />
       <LineId Id="450" Count="8" />
       <LineId Id="259" Count="0" />
@@ -1869,13 +1807,8 @@ END_CASE;]]></ST>
     <LineIds Name="FB_3AxisRobot.General_Diagnosis">
       <LineId Id="55" Count="0" />
       <LineId Id="53" Count="1" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="73" Count="2" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="81" Count="3" />
-      <LineId Id="79" Count="1" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="22" Count="30" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="57" Count="0" />
     </LineIds>
     <LineIds Name="FB_3AxisRobot.General_Init">
       <LineId Id="269" Count="1" />
