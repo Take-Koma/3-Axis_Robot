@@ -4,14 +4,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>27ebfd05-a1a7-4de2-8c6c-eb083be16d70</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>YOLOX_CALL\4_Test_AI_Model.py</StartupFile>
+    <StartupFile>Anomalib_CALL\PaDiM\export_ONNX_PaDiM.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>Python_MachineLearning</Name>
     <RootNamespace>Python_MachineLearning</RootNamespace>
-    <InterpreterId>MSBuild|env_YOLOX|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|env_Anomalib|$(MSBuildProjectFullPath)</InterpreterId>
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -24,6 +24,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="0_CUDA_Availability_Check.py" />
+    <Compile Include="Anomalib_CALL\EfficientAD\export_ONNX_EfficientAd.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Anomalib_CALL\PaDiM\export_ONNX_PaDiM.py" />
+    <Compile Include="Anomalib_CALL\PaDiM\train_PaDiM.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Anomalib_CALL\EfficientAD\train_EfficientAD.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="OCR_Test\OCR_Test.py">
       <SubType>Code</SubType>
     </Compile>
@@ -134,15 +144,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Interpreter Include="..\..\..\..\..\..\..\..\..\Python_Venvs\env_anomalib\">
-      <Id>env_anomalib</Id>
-      <Version>3.9</Version>
-      <Description>env_anomalib (Python 3.9 (64-bit))</Description>
-      <InterpreterPath>Scripts\python.exe</InterpreterPath>
-      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
-      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
-      <Architecture>X64</Architecture>
-    </Interpreter>
     <Interpreter Include="..\..\..\..\..\..\..\..\..\Python_Venvs\env_labelme\">
       <Id>env_labelme</Id>
       <Version>3.9</Version>
@@ -161,8 +162,20 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
+    <Interpreter Include="..\..\..\..\..\..\..\..\Python_Venvs\env_Anomalib\">
+      <Id>env_Anomalib</Id>
+      <Version>3.10</Version>
+      <Description>env_Anomalib (Python 3.10 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Anomalib_CALL\" />
+    <Folder Include="Anomalib_CALL\EfficientAD\" />
+    <Folder Include="Anomalib_CALL\PaDiM\" />
     <Folder Include="OCR_Test\" />
     <Folder Include="YOLOX_CALL\" />
     <Folder Include="YOLOX\" />
