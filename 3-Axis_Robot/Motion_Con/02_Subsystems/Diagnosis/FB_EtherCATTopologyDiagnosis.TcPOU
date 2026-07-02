@@ -2,8 +2,6 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_EtherCATTopologyDiagnosis" Id="{6fe1c4c8-cec6-4d64-a8c8-dffaa5ef8150}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_EtherCATTopologyDiagnosis
-VAR_INPUT
-END_VAR
 VAR_OUTPUT
 	bError									:BOOL;
 END_VAR
@@ -21,11 +19,28 @@ VAR
 	
 
 //EtherCATスレーブ
-	eTerminal								:E_Terminal;
-	fbDiagnosisEtherCATSlaveWc1				:ARRAY[E_Terminal.EL9410..E_Terminal.EL1088] OF FB_DiagnosisEtherCATSlaveWc1;
-																														//Terminal診断用FB
-	fbDiagnosisEtherCATSlaveWc2				:FB_DiagnosisEtherCATSlaveWc2;												//Terminal診断用FB EL2911使用
-	fbDiagnosisEtherCATSlaveWc0				:FB_DiagnosisEtherCATSlaveWc0;												//Terminal診断用FB AZD4A_KED使用
+	eEtherCATSlave							:E_EtherCATSlave;															//EtherCAT Slave一覧
+	
+	fbDiagnosisEtherCATSlaveWc1				:ARRAY[E_EtherCATSlave.Term2_EL9410..E_EtherCATSlave.Term11_EL1088] OF FB_DiagnosisEtherCATSlaveWc1
+																												(	E_EtherCATSlave.Term2_EL9410,
+																													E_EtherCATSlave.Term3_EL9501,
+																													E_EtherCATSlave.Term4_EL3356_0010,
+																													E_EtherCATSlave.Term5_EL3202,
+																													E_EtherCATSlave.Term6_EL6224,
+																													E_EtherCATSlave.Term7_EL8601_8411,
+																													E_EtherCATSlave.Term8_EL1004,
+																													E_EtherCATSlave.Term9_EL2004,
+																													E_EtherCATSlave.Term10_EL1258_0010,
+																													E_EtherCATSlave.Term11_EL1088
+																													);	//EtherCAT Slave診断用FB
+																											
+	fbDiagnosisEtherCATSlaveWc2				:ARRAY[E_EtherCATSlave.Term12_EL2911..E_EtherCATSlave.Term12_EL2911] OF FB_DiagnosisEtherCATSlaveWc2
+																												(	E_EtherCATSlave.Term12_EL2911
+																													);	//EtherCAT Slave診断用FB
+																											
+	fbDiagnosisEtherCATSlaveWc0				:ARRAY[E_EtherCATSlave.Drive14_AZD4A_KED..E_EtherCATSlave.Drive14_AZD4A_KED] OF FB_DiagnosisEtherCATSlaveWc0
+																														(	E_EtherCATSlave.Drive14_AZD4A_KED
+																															);	//EtherCAT Slave診断用FB
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -53,19 +68,19 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[//EtherCATスレーブ診断
-	fbDiagnosisEtherCATSlaveWc2();
-	fbDiagnosisEtherCATSlaveWc0();
+	fbDiagnosisEtherCATSlaveWc2[E_EtherCATSlave.Term12_EL2911]();
+	fbDiagnosisEtherCATSlaveWc0[E_EtherCATSlave.Drive14_AZD4A_KED]();
 	
-	EtherCATSlaveDiagnosis:=fbDiagnosisEtherCATSlaveWc2.bError OR fbDiagnosisEtherCATSlaveWc0.bError;
+	EtherCATSlaveDiagnosis:=fbDiagnosisEtherCATSlaveWc2[E_EtherCATSlave.Term12_EL2911].bError OR fbDiagnosisEtherCATSlaveWc0[E_EtherCATSlave.Drive14_AZD4A_KED].bError;
 
-	FOR eTerminal := E_Terminal.EL9410 TO E_Terminal.EL1088 DO
-		fbDiagnosisEtherCATSlaveWc1[eTerminal]();
-		EtherCATSlaveDiagnosis:=EtherCATSlaveDiagnosis OR fbDiagnosisEtherCATSlaveWc1[eTerminal].bError;
+	FOR eEtherCATSlave := E_EtherCATSlave.Term2_EL9410 TO E_EtherCATSlave.Term11_EL1088 DO
+		fbDiagnosisEtherCATSlaveWc1[eEtherCATSlave]();
+		EtherCATSlaveDiagnosis:=EtherCATSlaveDiagnosis OR fbDiagnosisEtherCATSlaveWc1[eEtherCATSlave].bError;
 	END_FOR]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_EtherCATTopologyDiagnosis">
-      <LineId Id="1" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_EtherCATTopologyDiagnosis.EtherCATMasterDiagnosis">
       <LineId Id="1" Count="10" />

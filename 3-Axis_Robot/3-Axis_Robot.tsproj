@@ -316,14 +316,65 @@
 		<Text TxtId="Mismatch brtween SlaveCount and CfgSlaveCount">
 			<Text LcId="1041"><![CDATA[設定したスレーブ数と受信したスレーブ数が不一致]]></Text>
 		</Text>
+		<Text TxtId="TkMachineAlarmEventClass">
+			<Text LcId="1041"><![CDATA[Tkマシンアラームイベントクラス]]></Text>
+		</Text>
 		<Text TxtId="TkEtherCATSlaveDiagnosisEventClass">
 			<Text LcId="1041"><![CDATA[EtherCATスレーブ診断イベントクラス]]></Text>
 		</Text>
-		<Text TxtId="Invalid Working Counter">
-			<Text LcId="1041"><![CDATA[無効なワーキングカウンター]]></Text>
+		<Text TxtId="INIT (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[INIT（初期化） (Slave: {0} )]]></Text>
 		</Text>
-		<Text TxtId="TkMachineAlarmEventClass">
-			<Text LcId="1041"><![CDATA[Tkマシンアラームイベントクラス]]></Text>
+		<Text TxtId="PREOP (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[PREOP（事前動作） (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="BOOT (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[BOOT（ブート） (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="SAFEOP (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[SAFEOP（安全動作） (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="OP (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[OP（動作） (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Slave signals error (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[スレーブがエラーを通知 (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Invalid vendorId, productCode... read (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[無効なvendorId、productCode...の読み出し (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Initialization error occurred (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[初期化エラーが発生 (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Slave disabled (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[スレーブが無効化されています (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Slave not present (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[スレーブが存在しません (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Slave signals link error (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[スレーブがリンクエラーを通知 (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Slave signals missing link (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[スレーブがリンク未接続を通知 (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Slave Slave signals unexpected link (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[スレーブが予期しないリンクを通知 (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Communication port A (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[通信ポートA (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Communication port B (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[通信ポートB (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Communication port C (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[通信ポートC (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Communication port D (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[通信ポートD (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Invalid Working Counter (Slave: {0} )">
+			<Text LcId="1041"><![CDATA[無効なワーキングカウンター (Slave: {0} )]]></Text>
 		</Text>
 	</Translations>
 	<DataTypes>
@@ -2640,158 +2691,6 @@
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{CDAB43A8-33C2-4A02-976D-0ACBCFAC5CD4}" PersistentType="true">TkEtherCATSlaveDiagnosisEventClass</Name>
-			<DisplayName TxtId=""><![CDATA[TkEtherCATSlaveDiagnosisEventClass]]></DisplayName>
-			<EventId>
-				<Name Id="#x1">INIT</Name>
-				<DisplayName TxtId=""><![CDATA[INIT]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x2">PREOP</Name>
-				<DisplayName TxtId=""><![CDATA[PREOP]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x3">BOOT</Name>
-				<DisplayName TxtId=""><![CDATA[BOOT]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x4">SAFEOP</Name>
-				<DisplayName TxtId=""><![CDATA[SAFEOP]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x8">OP</Name>
-				<DisplayName TxtId=""><![CDATA[OP]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x10">SlaveSignalsError</Name>
-				<DisplayName TxtId=""><![CDATA[Slave signals error]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x20">InvalidVendorIdProductCodeRead</Name>
-				<DisplayName TxtId=""><![CDATA[Invalid vendorId, productCode... read]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x40">InitializationErrorOccurred</Name>
-				<DisplayName TxtId=""><![CDATA[Initialization error occurred]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x80">SlaveDisabled</Name>
-				<DisplayName TxtId=""><![CDATA[Slave disabled]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x100">SlaveNotPresent</Name>
-				<DisplayName TxtId=""><![CDATA[Slave not present]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x200">SlaveSignalsLinkError</Name>
-				<DisplayName TxtId=""><![CDATA[Slave signals link error]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x400">SlaveSignalsMissingLink</Name>
-				<DisplayName TxtId=""><![CDATA[Slave signals missing link]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x800">SlaveSlaveSignalsUnexpectedLink</Name>
-				<DisplayName TxtId=""><![CDATA[Slave Slave signals unexpected link]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x1000">CommunicationPortA</Name>
-				<DisplayName TxtId=""><![CDATA[Communication port A]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x2000">CommunicationPortB</Name>
-				<DisplayName TxtId=""><![CDATA[Communication port B]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x4000">CommunicationPortC</Name>
-				<DisplayName TxtId=""><![CDATA[Communication port C]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x8000">CommunicationPortD</Name>
-				<DisplayName TxtId=""><![CDATA[Communication port D]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x10000">InvalidWorkingCounter</Name>
-				<DisplayName TxtId=""><![CDATA[Invalid Working Counter]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<Translations>
-				<Text TxtId="INIT">
-					<Text LcId="1041"><![CDATA[INIT（初期化）]]></Text>
-				</Text>
-				<Text TxtId="PREOP">
-					<Text LcId="1041"><![CDATA[PREOP（事前動作）]]></Text>
-				</Text>
-				<Text TxtId="BOOT">
-					<Text LcId="1041"><![CDATA[BOOT（ブート）]]></Text>
-				</Text>
-				<Text TxtId="SAFEOP">
-					<Text LcId="1041"><![CDATA[SAFEOP（安全動作）]]></Text>
-				</Text>
-				<Text TxtId="OP">
-					<Text LcId="1041"><![CDATA[OP（動作）]]></Text>
-				</Text>
-				<Text TxtId="Slave signals error">
-					<Text LcId="1041"><![CDATA[スレーブがエラーを通知]]></Text>
-				</Text>
-				<Text TxtId="Invalid vendorId, productCode... read">
-					<Text LcId="1041"><![CDATA[無効なvendorId、productCode...の読み出し]]></Text>
-				</Text>
-				<Text TxtId="Initialization error occurred">
-					<Text LcId="1041"><![CDATA[初期化エラーが発生]]></Text>
-				</Text>
-				<Text TxtId="Slave disabled">
-					<Text LcId="1041"><![CDATA[スレーブが無効化されています]]></Text>
-				</Text>
-				<Text TxtId="Slave not present">
-					<Text LcId="1041"><![CDATA[スレーブが存在しません]]></Text>
-				</Text>
-				<Text TxtId="Slave signals link error">
-					<Text LcId="1041"><![CDATA[スレーブがリンクエラーを通知]]></Text>
-				</Text>
-				<Text TxtId="Slave signals missing link">
-					<Text LcId="1041"><![CDATA[スレーブがリンク未接続を通知]]></Text>
-				</Text>
-				<Text TxtId="Slave Slave signals unexpected link">
-					<Text LcId="1041"><![CDATA[スレーブが予期しないリンクを通知]]></Text>
-				</Text>
-				<Text TxtId="Communication port A">
-					<Text LcId="1041"><![CDATA[通信ポートA]]></Text>
-				</Text>
-				<Text TxtId="Communication port B">
-					<Text LcId="1041"><![CDATA[通信ポートB]]></Text>
-				</Text>
-				<Text TxtId="Communication port C">
-					<Text LcId="1041"><![CDATA[通信ポートC]]></Text>
-				</Text>
-				<Text TxtId="Communication port D">
-					<Text LcId="1041"><![CDATA[通信ポートD]]></Text>
-				</Text>
-			</Translations>
-			<Hides>
-				<Hide GUID="{3B677AA0-89AD-4534-AAD9-3A856DEA8BB4}"/>
-				<Hide GUID="{F457090F-FBA1-462A-9E51-40D8FBBEBEAE}"/>
-				<Hide GUID="{7AE94FCE-E616-4EF0-ADD1-61F99922C888}"/>
-			</Hides>
-		</DataType>
-		<DataType>
 			<Name GUID="{3ED853AC-0A32-4715-985A-6B653B1220D2}" PersistentType="true">TkMachineAlarmEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[TkMachineAlarmEventClass]]></DisplayName>
 			<EventId>
@@ -2965,6 +2864,106 @@
 				<Hide GUID="{7B824859-8556-4510-B078-2FBD5276D8DE}"/>
 				<Hide GUID="{4A1E262C-84A7-4B90-B342-0E559BA3247D}"/>
 				<Hide GUID="{9A75F45A-6844-4396-B976-A77668D02680}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{A98275F5-46C9-460B-B657-81FA8BF46015}" PersistentType="true">TkEtherCATSlaveDiagnosisEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[TkEtherCATSlaveDiagnosisEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="#x1">INIT</Name>
+				<DisplayName TxtId=""><![CDATA[INIT (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2">PREOP</Name>
+				<DisplayName TxtId=""><![CDATA[PREOP (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x3">BOOT</Name>
+				<DisplayName TxtId=""><![CDATA[BOOT (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x4">SAFEOP</Name>
+				<DisplayName TxtId=""><![CDATA[SAFEOP (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x8">OP</Name>
+				<DisplayName TxtId=""><![CDATA[OP (Slave: {0} )]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x10">SlaveSignalsError</Name>
+				<DisplayName TxtId=""><![CDATA[Slave signals error (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x20">InvalidVendorIdProductCodeRead</Name>
+				<DisplayName TxtId=""><![CDATA[Invalid vendorId, productCode... read (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x40">InitializationErrorOccurred</Name>
+				<DisplayName TxtId=""><![CDATA[Initialization error occurred (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x80">SlaveDisabled</Name>
+				<DisplayName TxtId=""><![CDATA[Slave disabled (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x100">SlaveNotPresent</Name>
+				<DisplayName TxtId=""><![CDATA[Slave not present (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x200">SlaveSignalsLinkError</Name>
+				<DisplayName TxtId=""><![CDATA[Slave signals link error (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x400">SlaveSignalsMissingLink</Name>
+				<DisplayName TxtId=""><![CDATA[Slave signals missing link (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x800">SlaveSlaveSignalsUnexpectedLink</Name>
+				<DisplayName TxtId=""><![CDATA[Slave Slave signals unexpected link (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x1000">CommunicationPortA</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port A (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2000">CommunicationPortB</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port B (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x4000">CommunicationPortC</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port C (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x8000">CommunicationPortD</Name>
+				<DisplayName TxtId=""><![CDATA[Communication port D (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x10000">InvalidWorkingCounter</Name>
+				<DisplayName TxtId=""><![CDATA[Invalid Working Counter (Slave: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{3B677AA0-89AD-4534-AAD9-3A856DEA8BB4}"/>
+				<Hide GUID="{F457090F-FBA1-462A-9E51-40D8FBBEBEAE}"/>
+				<Hide GUID="{7AE94FCE-E616-4EF0-ADD1-61F99922C888}"/>
+				<Hide GUID="{CDAB43A8-33C2-4A02-976D-0ACBCFAC5CD4}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

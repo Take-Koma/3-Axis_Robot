@@ -131,7 +131,7 @@
     <Compile Include="01_Submodules\PcManagement\FB_PcPowerManagement.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="02_Subsystems\Diagnosis\E_Terminal.TcDUT">
+    <Compile Include="02_Subsystems\Diagnosis\E_EtherCATSlave.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="02_Subsystems\Diagnosis\FB_EtherCATTopologyDiagnosis.TcPOU">

@@ -2,23 +2,34 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_WcStateDiagnosis" Id="{8fd366b1-8520-4e54-80a1-63a6da6188df}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_WcStateDiagnosis
+VAR_IN_OUT
+	eEtherCATSlave				:E_EtherCATSlave;
+END_VAR
 VAR_OUTPUT
 	bError						:BOOL;								//エラー発生を出力
 END_VAR
 VAR
 	bWcState			AT%I*	:BOOL;								//PDデータとリンク
 	
+	sSlaveName					:STRING;
+	
 	fbBitREdge					:R_TRIG;
 	fbMessage					:FB_TcMessage;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//エラー状態を出力
+      <ST><![CDATA[//スレーブ名を入力
+	IF sSlaveName<>TO_STRING(eEtherCATSlave) THEN
+		sSlaveName:=TO_STRING(eEtherCATSlave);
+	END_IF
+
+//エラー状態を出力
 	bError:=bWcState;
 
 //結果をEventloggerへ
 	fbBitREdge(CLK:=bError);
 	
 	IF fbBitREdge.Q THEN
+		fbMessage.ipArguments.Clear().AddString(sSlaveName);
 		fbMessage.Send();
 	END_IF
 ]]></ST>
@@ -37,7 +48,12 @@ END_VAR]]></Declaration>
       </Implementation>
     </Method>
     <LineIds Name="FB_WcStateDiagnosis">
-      <LineId Id="1" Count="9" />
+      <LineId Id="15" Count="2" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="2" Count="5" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="8" Count="2" />
     </LineIds>
     <LineIds Name="FB_WcStateDiagnosis.FB_Init">
       <LineId Id="1" Count="0" />

@@ -5,11 +5,16 @@
 VAR CONSTANT
 	uiFaultMask					:UINT	:=2#1111_1111_1111_0111;	//デバイスエラーのマスク
 END_VAR
+VAR_IN_OUT
+	eEtherCATSlave				:E_EtherCATSlave;
+END_VAR
 VAR_OUTPUT
 	bError						:BOOL;								//エラー発生を出力
 END_VAR
 VAR
 	uiState				AT%I*	:UINT;								//PDデータとリンク
+	
+	sSlaveName					:STRING;
 	
 	bErrorState					:ARRAY[0..16] OF BOOL;				//各ステートエラー
 	fbBitREdge					:ARRAY[0..16] OF R_TRIG;
@@ -17,10 +22,15 @@ VAR
 	i							:INT;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//エラー状態を出力
+      <ST><![CDATA[//スレーブ名を入力
+	IF sSlaveName<>TO_STRING(eEtherCATSlave) THEN
+		sSlaveName:=TO_STRING(eEtherCATSlave);
+	END_IF
+
+//エラー状態を出力
 	bError:= (uiState AND uiFaultMask)<>0 ;
 
-//ターミナルのステータスをbitから診断
+//スレーブのステータスをbitから診断
 	bErrorState[0]:=uiState.0 AND NOT uiState.1;
 	bErrorState[1]:=uiState.1 AND NOT uiState.0;
 	bErrorState[2]:=uiState.0 AND uiState.1;
@@ -37,6 +47,7 @@ END_VAR]]></Declaration>
 		fbBitREdge[i](CLK:=bErrorState[i]);
 		
 		IF fbBitREdge[i].Q THEN
+			fbMessage[i].ipArguments.Clear().AddString(sSlaveName);
 			fbMessage[i].Send();
 		END_IF
 		
@@ -69,14 +80,22 @@ fbMessage[13].CreateEx(TC_EVENTS.TkEtherCATSlaveDiagnosisEventClass.Communicatio
 fbMessage[14].CreateEx(TC_EVENTS.TkEtherCATSlaveDiagnosisEventClass.CommunicationPortB);
 fbMessage[15].CreateEx(TC_EVENTS.TkEtherCATSlaveDiagnosisEventClass.CommunicationPortC);
 fbMessage[16].CreateEx(TC_EVENTS.TkEtherCATSlaveDiagnosisEventClass.CommunicationPortD);
+
 ]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_StateDiagnosis">
-      <LineId Id="1" Count="23" />
+      <LineId Id="29" Count="3" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="2" Count="18" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="21" Count="3" />
     </LineIds>
     <LineIds Name="FB_StateDiagnosis.FB_Init">
-      <LineId Id="1" Count="17" />
+      <LineId Id="1" Count="16" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

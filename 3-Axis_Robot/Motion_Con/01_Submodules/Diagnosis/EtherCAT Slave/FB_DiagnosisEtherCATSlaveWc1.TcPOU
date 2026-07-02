@@ -6,23 +6,43 @@ VAR_OUTPUT
 	bError						:BOOL;								//エラー発生を出力
 END_VAR
 VAR
+	_eEtherCATSlave				:E_EtherCATSlave;
+	
 	fbStateDiagnosis			:FB_StateDiagnosis;
 	fbWcStateDiagnosis			:FB_WcStateDiagnosis;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//診断用FBを呼び出し
-fbStateDiagnosis();
-fbWcStateDiagnosis();
+fbStateDiagnosis(eEtherCATSlave:=_eEtherCATSlave);
+fbWcStateDiagnosis(eEtherCATSlave:=_eEtherCATSlave);
 
 bError:=fbStateDiagnosis.bError OR fbWcStateDiagnosis.bError;
 ]]></ST>
     </Implementation>
+    <Method Name="FB_Init" Id="{968a1203-d202-47ce-a297-b0203464f442}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+
+	eEtherCATSlave							:E_EtherCATSlave;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_eEtherCATSlave:=eEtherCATSlave;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_DiagnosisEtherCATSlaveWc1">
       <LineId Id="11" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="3" Count="1" />
       <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DiagnosisEtherCATSlaveWc1.FB_Init">
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

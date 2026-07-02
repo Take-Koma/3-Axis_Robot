@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="E_EtherCATSlave" Id="{d97ef109-7975-4d55-a9e6-fdbd62c14a32}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_EtherCATSlave :
+(
+	Term1_EK1200		:=1,
+	Term2_EL9410,
+	Term3_EL9501,
+	Term4_EL3356_0010,
+	Term5_EL3202,
+	Term6_EL6224,
+	Term7_EL8601_8411,
+	Term8_EL1004,
+	Term9_EL2004,
+	Term10_EL1258_0010,
+	Term11_EL1088,
+	Term12_EL2911,
+	Term13_EL9011,
+	Drive14_AZD4A_KED
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

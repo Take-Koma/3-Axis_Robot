@@ -17,6 +17,35 @@
 				</OwnerB>
 			</OwnerA>
 		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2026-07-01T18:35:14">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 12 (EL2911)">
+					<Link VarA="MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2.fbStateDiagnosis.uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+					<Link VarA="MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2.fbWcStateDiagnosis[1].bWcState" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState0" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2.fbWcStateDiagnosis[2].bWcState" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState1" Size="1" RestoreInfo="ANotFound"/>
+				</OwnerB>
+				<OwnerB Name="TIID^Device 6 (EtherCAT)^Drive 14 (AZD4A-KED)">
+					<Link VarA="MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc0.fbStateDiagnosis.uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2026-07-01T18:38:52">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 12 (EL2911)">
+					<Link VarA="MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2[11].fbStateDiagnosis.uiState" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="InfoData^State" RestoreInfo="ANotFound"/>
+					<Link VarA="MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2[11].fbWcStateDiagnosis[1].bWcState" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState0" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2[11].fbWcStateDiagnosis[2].bWcState" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState1" Size="1" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
+		<UnrestoredVarLinks ImportTime="2026-07-02T15:12:17">
+			<OwnerA Name="InputDst" Prefix="TIPC^Motion_Con^Motion_Con Instance" Type="1">
+				<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 1 (EK1200)^Term 12 (EL2911)">
+					<Link VarA="MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2[12].fbWcStateDiagnosis[1].bWcState" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState0" Size="1" RestoreInfo="ANotFound"/>
+					<Link VarA="MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2[12].fbWcStateDiagnosis[2].bWcState" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="WcState^WcState1" Size="1" RestoreInfo="ANotFound"/>
+				</OwnerB>
+			</OwnerA>
+		</UnrestoredVarLinks>
 		<Contexts>
 			<Context>
 				<Id>0</Id>
@@ -140,9 +169,9 @@
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bFbEstopError" VarB="StandardInputs^RobotSafety.oFbEstopError_21" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bGripSwich" VarB="Device Info Data^Internal I/O^Input Safe Data FSIN Module.Channel 3.Input" Size="1"/>
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.bSafetyInRun" VarB="StandardInputs^RobotSafety.oInRun_12" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2.fbStateDiagnosis.uiState" VarB="InfoData^State"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2.fbWcStateDiagnosis[1].bWcState" VarB="WcState^WcState0" Size="1"/>
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2.fbWcStateDiagnosis[2].bWcState" VarB="WcState^WcState1" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2[12].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2[12].fbWcStateDiagnosis1.bWcState" VarB="WcState^WcState0" Size="1"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc2[12].fbWcStateDiagnosis2.bWcState" VarB="WcState^WcState1" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bFbEStopEDM" VarB="StandardOutputs^RobotSafety.iEStopEDM_7" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bFbEStopReset" VarB="StandardOutputs^RobotSafety.iFbEStopReset_5" Size="1"/>
 				<Link VarA="PlcTask Outputs^MAIN.fb3AxisRobot.bInputToggleOut" VarB="StandardOutputs^RobotSafety.iEL2911InputToggle_26" Size="1"/>
@@ -228,7 +257,7 @@
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbFrmWcStateDiagnosis6[0].uiFrmWcState" VarB="Inputs^Frm0WcState"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 6 (EtherCAT)^Drive 14 (AZD4A-KED)">
-				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc0.fbStateDiagnosis.uiState" VarB="InfoData^State"/>
+				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbEtherCATTopologyDiagnosis.fbDiagnosisEtherCATSlaveWc0[14].fbStateDiagnosis.uiState" VarB="InfoData^State"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Gripper">
 				<Link VarA="PlcTask Inputs^MAIN.fb3AxisRobot.fbGripper.AxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
