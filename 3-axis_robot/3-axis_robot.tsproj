@@ -304,18 +304,6 @@
 		<Text TxtId="CircuitProtectorError">
 			<Text LcId="1041"><![CDATA[サーキットプロテクターエラー]]></Text>
 		</Text>
-		<Text TxtId="TkEtherCATMasterDiagnosisEventClass">
-			<Text LcId="1041"><![CDATA[EtherCATマスタ診断イベントクラス]]></Text>
-		</Text>
-		<Text TxtId="Wrong working counter of {0} EtherCAT command received">
-			<Text LcId="1041"><![CDATA[EtherCATコマンド {0} のワーキングカウンタが不正です]]></Text>
-		</Text>
-		<Text TxtId="{0} EtherCAT command not sent (NOP requested).">
-			<Text LcId="1041"><![CDATA[{0} EtherCATコマンドは送信されませんでした（NOPが要求されました）。]]></Text>
-		</Text>
-		<Text TxtId="Mismatch brtween SlaveCount and CfgSlaveCount">
-			<Text LcId="1041"><![CDATA[設定したスレーブ数と受信したスレーブ数が不一致]]></Text>
-		</Text>
 		<Text TxtId="TkMachineAlarmEventClass">
 			<Text LcId="1041"><![CDATA[Tkマシンアラームイベントクラス]]></Text>
 		</Text>
@@ -375,6 +363,63 @@
 		</Text>
 		<Text TxtId="Invalid Working Counter (Slave: {0} )">
 			<Text LcId="1041"><![CDATA[無効なワーキングカウンター (Slave: {0} )]]></Text>
+		</Text>
+		<Text TxtId="TkEtherCATMasterDiagnosisEventClass">
+			<Text LcId="1041"><![CDATA[EtherCATマスタ診断イベントクラス]]></Text>
+		</Text>
+		<Text TxtId="Link error (Master: {0} )">
+			<Text LcId="1041"><![CDATA[リンクエラー (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="I/O locked after link error (I/O reset required) (Master: {0} )">
+			<Text LcId="1041"><![CDATA[リンクエラー後のI/Oロック（I/Oリセットが必要） (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Link error (redundancy adapter) (Master: {0} )">
+			<Text LcId="1041"><![CDATA[リンクエラー（冗長化アダプタ） (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Missing one frame (redundancy mode) (Master: {0} )">
+			<Text LcId="1041"><![CDATA[フレームの欠落（冗長化モード） (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Out of send resources (I/O reset required) (Master: {0} )">
+			<Text LcId="1041"><![CDATA[送信リソース不足（I/Oリセットが必要） (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Watchdog triggered (Master: {0} )">
+			<Text LcId="1041"><![CDATA[ウォッチドッグ作動 (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Ethernet driver (miniport) not found (Master: {0} )">
+			<Text LcId="1041"><![CDATA[イーサネットドライバ（ミニポート）未検出 (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="I/O reset active (Master: {0} )">
+			<Text LcId="1041"><![CDATA[I/Oリセット実行中 (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="At least one device in ҅INIT҆ state (Master: {0} )">
+			<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「INIT」状態 (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="At least one device in ҅PRE-OP҆ state (Master: {0} )">
+			<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「PRE-OP」状態 (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="At least one device in ҅SAFE-OP҆ state (Master: {0} )">
+			<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「SAFE-OP」状態 (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="At least one device indicates an error state (Master: {0} )">
+			<Text LcId="1041"><![CDATA[少なくとも1つのデバイスがエラー状態を示している (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="DC not in sync (Master: {0} )">
+			<Text LcId="1041"><![CDATA[DC非同期 (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Wrong working counter of {0} EtherCAT command received (Master: {1} )">
+			<Text LcId="1041"><![CDATA[EtherCATコマンド {0} のワーキングカウンタが不正です (Master: {1} )]]></Text>
+		</Text>
+		<Text TxtId="Complete frame missing! (Master: {0} )">
+			<Text LcId="1041"><![CDATA[フレームが完全に欠落しています (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="{0} EtherCAT command not sent (NOP requested). (Master: {1} )">
+			<Text LcId="1041"><![CDATA[{0} EtherCATコマンドは送信されませんでした（NOPが要求されました）。 (Master: {1} )]]></Text>
+		</Text>
+		<Text TxtId="Complete frame not sent. (Master: {0} )">
+			<Text LcId="1041"><![CDATA[フレームは完全に送信されませんでした。 (Master: {0} )]]></Text>
+		</Text>
+		<Text TxtId="Mismatch brtween SlaveCount and CfgSlaveCount (Master: {0} )">
+			<Text LcId="1041"><![CDATA[設定したスレーブ数と受信したスレーブ数が不一致 (Master: {0} )]]></Text>
 		</Text>
 	</Translations>
 	<DataTypes>
@@ -2540,157 +2585,6 @@
 			</Hides>
 		</DataType>
 		<DataType>
-			<Name GUID="{E2F96B0F-3054-4967-99AA-BE6EE0CE5254}" PersistentType="true">TkEtherCATMasterDiagnosisEventClass</Name>
-			<DisplayName TxtId=""><![CDATA[TkEtherCATMasterDiagnosisEventClass]]></DisplayName>
-			<EventId>
-				<Name Id="#x0">LinkError</Name>
-				<DisplayName TxtId=""><![CDATA[Link error]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x1">IOLockedAfterLinkErrorIOResetRequired</Name>
-				<DisplayName TxtId=""><![CDATA[I/O locked after link error (I/O reset required)]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x2">LinkErrorRedundancyAdapter</Name>
-				<DisplayName TxtId=""><![CDATA[Link error (redundancy adapter)]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x3">MissingOneFrameRedundancyAdapter</Name>
-				<DisplayName TxtId=""><![CDATA[Missing one frame (redundancy mode)]]></DisplayName>
-				<Severity>Info</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x4">OutOfSendResourcesIOResetRequired</Name>
-				<DisplayName TxtId=""><![CDATA[Out of send resources (I/O reset required)]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x5">WatchdogTriggered</Name>
-				<DisplayName TxtId=""><![CDATA[Watchdog triggered]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x6">EthernetDriverMiniportNotFound</Name>
-				<DisplayName TxtId=""><![CDATA[Ethernet driver (miniport) not found]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x7">IOResetActive</Name>
-				<DisplayName TxtId=""><![CDATA[I/O reset active]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x8">AtLeastOneDeviceInINITState</Name>
-				<DisplayName TxtId=""><![CDATA[At least one device in ҅INIT҆ state]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x9">AtLeastOneDeviceInPREOPState</Name>
-				<DisplayName TxtId=""><![CDATA[At least one device in ҅PRE-OP҆ state]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#xA">AtLeastOneDeviceInSAFEOPState</Name>
-				<DisplayName TxtId=""><![CDATA[At least one device in ҅SAFE-OP҆ state]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#xB">AtLeastOneDeviceInERRORState</Name>
-				<DisplayName TxtId=""><![CDATA[At least one device indicates an error state]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#xC">DCNotInSync</Name>
-				<DisplayName TxtId=""><![CDATA[DC not in sync]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x10">WrongWorkingCounterEtherCATCommandReceived</Name>
-				<DisplayName TxtId=""><![CDATA[Wrong working counter of {0} EtherCAT command received]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x1F">CompleteFrameMissing</Name>
-				<DisplayName TxtId=""><![CDATA[Complete frame missing!]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x20">EtherCATCommandNotSentNOPRequested</Name>
-				<DisplayName TxtId=""><![CDATA[{0} EtherCAT command not sent (NOP requested).]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x2F">CompleteFrameNotSent</Name>
-				<DisplayName TxtId=""><![CDATA[Complete frame not sent.]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<EventId>
-				<Name Id="#x100">MismatchSlaveCountCfgSlaveCount</Name>
-				<DisplayName TxtId=""><![CDATA[Mismatch brtween SlaveCount and CfgSlaveCount]]></DisplayName>
-				<Severity>Error</Severity>
-			</EventId>
-			<Translations>
-				<Text TxtId="Link error">
-					<Text LcId="1041"><![CDATA[リンクエラー]]></Text>
-				</Text>
-				<Text TxtId="I/O locked after link error (I/O reset required)">
-					<Text LcId="1041"><![CDATA[リンクエラー後のI/Oロック（I/Oリセットが必要）]]></Text>
-				</Text>
-				<Text TxtId="Link error (redundancy adapter)">
-					<Text LcId="1041"><![CDATA[リンクエラー（冗長化アダプタ）]]></Text>
-				</Text>
-				<Text TxtId="Missing one frame (redundancy mode)">
-					<Text LcId="1041"><![CDATA[フレームの欠落（冗長化モード）]]></Text>
-				</Text>
-				<Text TxtId="Out of send resources (I/O reset required)">
-					<Text LcId="1041"><![CDATA[送信リソース不足（I/Oリセットが必要）]]></Text>
-				</Text>
-				<Text TxtId="Watchdog triggered">
-					<Text LcId="1041"><![CDATA[ウォッチドッグ作動]]></Text>
-				</Text>
-				<Text TxtId="Ethernet driver (miniport) not found">
-					<Text LcId="1041"><![CDATA[イーサネットドライバ（ミニポート）未検出]]></Text>
-				</Text>
-				<Text TxtId="I/O reset active">
-					<Text LcId="1041"><![CDATA[I/Oリセット実行中]]></Text>
-				</Text>
-				<Text TxtId="At least one device in ҅INIT҆ state">
-					<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「INIT」状態]]></Text>
-				</Text>
-				<Text TxtId="At least one device in ҅PRE-OP҆ state">
-					<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「PRE-OP」状態]]></Text>
-				</Text>
-				<Text TxtId="At least one device in ҅SAFE-OP҆ state">
-					<Text LcId="1041"><![CDATA[少なくとも1つのデバイスが「SAFE-OP」状態]]></Text>
-				</Text>
-				<Text TxtId="At least one device indicates an error state">
-					<Text LcId="1041"><![CDATA[少なくとも1つのデバイスがエラー状態を示している]]></Text>
-				</Text>
-				<Text TxtId="DC not in sync">
-					<Text LcId="1041"><![CDATA[DC非同期]]></Text>
-				</Text>
-				<Text TxtId="Complete frame missing!">
-					<Text LcId="1041"><![CDATA[フレームが完全に欠落しています]]></Text>
-				</Text>
-				<Text TxtId="Complete frame not sent.">
-					<Text LcId="1041"><![CDATA[フレームは完全に送信されませんでした。]]></Text>
-				</Text>
-			</Translations>
-			<Hides>
-				<Hide GUID="{83B32E6F-80BB-4A6D-B766-D9B3A019FA00}"/>
-				<Hide GUID="{4DB8E233-EF0E-458B-B5CB-C8119B56D9E3}"/>
-				<Hide GUID="{05C25344-9DFE-4E1A-9D7E-33DD70041527}"/>
-				<Hide GUID="{E2CF83D4-1590-4975-B479-8C267E991D45}"/>
-				<Hide GUID="{0958BF37-43ED-493E-A4DD-190C926A84CF}"/>
-				<Hide GUID="{688C85B1-082D-4DC5-BC13-F8C64F39A582}"/>
-				<Hide GUID="{254DFAB1-CF26-4388-8C8C-63ACF3778534}"/>
-				<Hide GUID="{4A99394C-E62B-47E4-8B1E-92321F7F798E}"/>
-			</Hides>
-		</DataType>
-		<DataType>
 			<Name GUID="{3ED853AC-0A32-4715-985A-6B653B1220D2}" PersistentType="true">TkMachineAlarmEventClass</Name>
 			<DisplayName TxtId=""><![CDATA[TkMachineAlarmEventClass]]></DisplayName>
 			<EventId>
@@ -2964,6 +2858,111 @@
 				<Hide GUID="{F457090F-FBA1-462A-9E51-40D8FBBEBEAE}"/>
 				<Hide GUID="{7AE94FCE-E616-4EF0-ADD1-61F99922C888}"/>
 				<Hide GUID="{CDAB43A8-33C2-4A02-976D-0ACBCFAC5CD4}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{07A2F6B5-2C98-4231-BF21-D1F387B62002}" PersistentType="true">TkEtherCATMasterDiagnosisEventClass</Name>
+			<DisplayName TxtId=""><![CDATA[TkEtherCATMasterDiagnosisEventClass]]></DisplayName>
+			<EventId>
+				<Name Id="#x0">LinkError</Name>
+				<DisplayName TxtId=""><![CDATA[Link error (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x1">IOLockedAfterLinkErrorIOResetRequired</Name>
+				<DisplayName TxtId=""><![CDATA[I/O locked after link error (I/O reset required) (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2">LinkErrorRedundancyAdapter</Name>
+				<DisplayName TxtId=""><![CDATA[Link error (redundancy adapter) (Master: {0} )]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x3">MissingOneFrameRedundancyAdapter</Name>
+				<DisplayName TxtId=""><![CDATA[Missing one frame (redundancy mode) (Master: {0} )]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x4">OutOfSendResourcesIOResetRequired</Name>
+				<DisplayName TxtId=""><![CDATA[Out of send resources (I/O reset required) (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x5">WatchdogTriggered</Name>
+				<DisplayName TxtId=""><![CDATA[Watchdog triggered (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x6">EthernetDriverMiniportNotFound</Name>
+				<DisplayName TxtId=""><![CDATA[Ethernet driver (miniport) not found (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x7">IOResetActive</Name>
+				<DisplayName TxtId=""><![CDATA[I/O reset active (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x8">AtLeastOneDeviceInINITState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device in ҅INIT҆ state (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x9">AtLeastOneDeviceInPREOPState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device in ҅PRE-OP҆ state (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#xA">AtLeastOneDeviceInSAFEOPState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device in ҅SAFE-OP҆ state (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#xB">AtLeastOneDeviceInERRORState</Name>
+				<DisplayName TxtId=""><![CDATA[At least one device indicates an error state (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#xC">DCNotInSync</Name>
+				<DisplayName TxtId=""><![CDATA[DC not in sync (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x10">WrongWorkingCounterEtherCATCommandReceived</Name>
+				<DisplayName TxtId=""><![CDATA[Wrong working counter of {0} EtherCAT command received (Master: {1} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x1F">CompleteFrameMissing</Name>
+				<DisplayName TxtId=""><![CDATA[Complete frame missing! (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x20">EtherCATCommandNotSentNOPRequested</Name>
+				<DisplayName TxtId=""><![CDATA[{0} EtherCAT command not sent (NOP requested). (Master: {1} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x2F">CompleteFrameNotSent</Name>
+				<DisplayName TxtId=""><![CDATA[Complete frame not sent. (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="#x100">MismatchSlaveCountCfgSlaveCount</Name>
+				<DisplayName TxtId=""><![CDATA[Mismatch brtween SlaveCount and CfgSlaveCount (Master: {0} )]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{83B32E6F-80BB-4A6D-B766-D9B3A019FA00}"/>
+				<Hide GUID="{4DB8E233-EF0E-458B-B5CB-C8119B56D9E3}"/>
+				<Hide GUID="{05C25344-9DFE-4E1A-9D7E-33DD70041527}"/>
+				<Hide GUID="{E2CF83D4-1590-4975-B479-8C267E991D45}"/>
+				<Hide GUID="{0958BF37-43ED-493E-A4DD-190C926A84CF}"/>
+				<Hide GUID="{688C85B1-082D-4DC5-BC13-F8C64F39A582}"/>
+				<Hide GUID="{254DFAB1-CF26-4388-8C8C-63ACF3778534}"/>
+				<Hide GUID="{4A99394C-E62B-47E4-8B1E-92321F7F798E}"/>
+				<Hide GUID="{E2F96B0F-3054-4967-99AA-BE6EE0CE5254}"/>
 			</Hides>
 		</DataType>
 	</DataTypes>

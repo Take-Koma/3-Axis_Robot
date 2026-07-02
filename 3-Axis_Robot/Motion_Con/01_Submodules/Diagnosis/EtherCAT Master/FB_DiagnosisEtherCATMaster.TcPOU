@@ -10,28 +10,45 @@ VAR_IN_OUT
 	fbFrmStateDiagnosis			:ARRAY[*] OF FB_FrmStateDiagnosis;
 END_VAR
 VAR
+	_eEtherCATMaster			:E_EtherCATMaster;	
+
 	fbDevStateDiagnosis			:FB_DevStateDiagnosis;
 	fbSlaveCountDiagnosis		:FB_SlaveCountDiagnosis;
 	i							:DINT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[//診断用FBを呼び出し
-fbDevStateDiagnosis();
-fbSlaveCountDiagnosis();
+fbDevStateDiagnosis(eEtherCATMaster:=_eEtherCATMaster);
+fbSlaveCountDiagnosis(eEtherCATMaster:=_eEtherCATMaster);
 
 bError:=fbDevStateDiagnosis.bError OR fbSlaveCountDiagnosis.bError;
 
 //可変長のアレイを診断と出力
 FOR i := LOWER_BOUND(fbFrmWcStateDiagnosis,1) TO UPPER_BOUND(fbFrmWcStateDiagnosis,1) DO
-	fbFrmWcStateDiagnosis[i]();
+	fbFrmWcStateDiagnosis[i](eEtherCATMaster:=_eEtherCATMaster);
 	bError:=bError OR fbFrmWcStateDiagnosis[i].bError;
 END_FOR
 
 FOR i := LOWER_BOUND(fbFrmStateDiagnosis,1) TO UPPER_BOUND(fbFrmStateDiagnosis,1) DO
-	fbFrmStateDiagnosis[i]();
+	fbFrmStateDiagnosis[i](eEtherCATMaster:=_eEtherCATMaster);
 	bError:=bError OR fbFrmStateDiagnosis[i].bError;
 END_FOR]]></ST>
     </Implementation>
+    <Method Name="FB_Init" Id="{f96e1ce9-536b-48ad-ae01-8a8fafddca42}">
+      <Declaration><![CDATA[//FB_Init は常に暗黙的に使用可能で、主に初期化に使用されます。
+//戻り値は評価されません。特定の結果を得るために、メソッドを明示的に宣言し、
+//そのメソッドに標準の初期化コードをもったコードを追加することができます。戻り値を評価できます。
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: 保持変数は初期化されます (ウォーム リセット、あるいはコールド リセット)
+    bInCopyCode: BOOL;  // TRUE: 後でコードをコピーする (オンライン変更) ために、インスタンスをコピーします。
+	
+	eEtherCATMaster	:E_EtherCATMaster;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_eEtherCATMaster:=eEtherCATMaster;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_DiagnosisEtherCATMaster">
       <LineId Id="19" Count="0" />
       <LineId Id="2" Count="0" />
@@ -47,6 +64,9 @@ END_FOR]]></ST>
       <LineId Id="48" Count="0" />
       <LineId Id="50" Count="0" />
       <LineId Id="18" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DiagnosisEtherCATMaster.FB_Init">
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

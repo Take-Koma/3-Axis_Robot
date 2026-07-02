@@ -10,12 +10,12 @@ VAR
 	//デバイス2
 	fbFrmWcStateDiagnosis2					:ARRAY[0..0] OF FB_FrmWcStateDiagnosis;										//EtherCAt Master診断用FB
 	fbFrmStateDiagnosis2					:ARRAY[0..0] OF FB_FrmStateDiagnosis;										//EtherCAt Master診断用FB
-	fbDiagnosisEtherCATMaster2				:FB_DiagnosisEtherCATMaster;												//EtherCAt Master診断用FB
+	fbDiagnosisEtherCATMaster2				:FB_DiagnosisEtherCATMaster(E_EtherCATMaster.Device2_EtherCAT);				//EtherCAt Master診断用FB
 	
 	//デバイス6
 	fbFrmWcStateDiagnosis6					:ARRAY[0..0] OF FB_FrmWcStateDiagnosis;										//EtherCAt Master診断用FB
 	fbFrmStateDiagnosis6					:ARRAY[0..0] OF FB_FrmStateDiagnosis;										//EtherCAt Master診断用FB
-	fbDiagnosisEtherCATMaster6				:FB_DiagnosisEtherCATMaster;												//EtherCAt Master診断用FB
+	fbDiagnosisEtherCATMaster6				:FB_DiagnosisEtherCATMaster(E_EtherCATMaster.Device6_EtherCAT);				//EtherCAt Master診断用FB
 	
 
 //EtherCATスレーブ

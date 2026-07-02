@@ -2,6 +2,9 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_SlaveCountDiagnosis" Id="{02ab8264-55ea-46ed-995e-d44a3481583b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_SlaveCountDiagnosis
+VAR_IN_OUT
+	eEtherCATMaster				:E_EtherCATMaster;	
+END_VAR
 VAR_OUTPUT
 	bError						:BOOL;								//エラー発生を出力
 END_VAR
@@ -9,18 +12,26 @@ VAR
 	uiSlaveCount 		AT%I*	:UINT;								//PDデータとリンク
 	uiCfgSlaveCount 	AT%I*	:UINT;								//PDデータとリンク
 	
+	sMasterName					:STRING;
+	
 	fbBitREdge					:R_TRIG;
 	fbMessage					:FB_TcMessage;
 	i							:INT;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//エラー状態を出力
+      <ST><![CDATA[//マスター名を入力
+	IF sMasterName<>TO_STRING(eEtherCATMaster) THEN
+		sMasterName:=TO_STRING(eEtherCATMaster);
+	END_IF
+
+//エラー状態を出力
 	bError:=uiSlaveCount<>uiCfgSlaveCount OR uiSlaveCount=0 OR uiCfgSlaveCount=0;
 
 //エラーをEventloggerへ
 	fbBitREdge(CLK:=bError);
 	
 	IF fbBitREdge.Q THEN
+		fbMessage.ipArguments.Clear().AddString(sMasterName);
 		fbMessage.Send();
 	END_IF]]></ST>
     </Implementation>
@@ -38,7 +49,11 @@ END_VAR]]></Declaration>
       </Implementation>
     </Method>
     <LineIds Name="FB_SlaveCountDiagnosis">
-      <LineId Id="11" Count="7" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="11" Count="6" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="18" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_SlaveCountDiagnosis.FB_Init">

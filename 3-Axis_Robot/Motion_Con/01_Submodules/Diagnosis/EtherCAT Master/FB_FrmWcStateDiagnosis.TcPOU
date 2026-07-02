@@ -2,11 +2,16 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_FrmWcStateDiagnosis" Id="{4e91cd08-8953-4bd4-ae28-be45cc439d43}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_FrmWcStateDiagnosis
+VAR_IN_OUT
+	eEtherCATMaster				:E_EtherCATMaster;	
+END_VAR
 VAR_OUTPUT
 	bError						:BOOL;								//エラー発生を出力
 END_VAR
 VAR
 	uiFrmWcState 		AT%I*	:UINT;								//PDデータとリンク
+	
+	sMasterName					:STRING;
 	
 	bErrorState					:ARRAY[0..15] OF BOOL;				//各ステートエラー
 	fbBitREdge					:ARRAY[0..15] OF R_TRIG;
@@ -18,7 +23,12 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//エラー状態を出力
+      <ST><![CDATA[//マスター名を入力
+	IF sMasterName<>TO_STRING(eEtherCATMaster) THEN
+		sMasterName:=TO_STRING(eEtherCATMaster);
+	END_IF
+
+//エラー状態を出力
 	bError:= uiFrmWcState<>0 ;
 	
 //サイクリックフレームごとのワーキングカウンターチェック、エラーは複数発生する可能性があるので全bitチェック
@@ -51,7 +61,7 @@ END_VAR
 	END_FOR
 	
 	IF bSendMsg THEN
-		fbMessage[0].ipArguments.Clear().AddString(sSendMsgString);
+		fbMessage[0].ipArguments.Clear().AddString(sSendMsgString).AddString(sMasterName);
 		fbMessage[0].Send();
 		
 		bSendMsg:=FALSE;
@@ -62,6 +72,7 @@ END_VAR
 	fbBitREdge[15](CLK:=bErrorState[15]);
 	
 	IF fbBitREdge[15].Q THEN
+		fbMessage[1].ipArguments.Clear().AddString(sMasterName);
 		fbMessage[1].Send();
 	END_IF
 	]]></ST>
@@ -82,10 +93,14 @@ fbMessage[1].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.CompleteFram
       </Implementation>
     </Method>
     <LineIds Name="FB_FrmWcStateDiagnosis">
+      <LineId Id="301" Count="2" />
+      <LineId Id="299" Count="1" />
       <LineId Id="228" Count="3" />
       <LineId Id="260" Count="1" />
       <LineId Id="247" Count="1" />
-      <LineId Id="262" Count="36" />
+      <LineId Id="262" Count="35" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="298" Count="0" />
       <LineId Id="257" Count="0" />
       <LineId Id="227" Count="0" />
     </LineIds>

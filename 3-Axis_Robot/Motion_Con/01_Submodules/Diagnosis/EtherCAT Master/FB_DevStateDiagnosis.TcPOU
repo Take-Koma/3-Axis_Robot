@@ -5,11 +5,16 @@
 VAR CONSTANT
 	uiFaultMask					:UINT	:=2#0001_1111_1111_0011;	//デバイスエラーのマスク
 END_VAR
+VAR_IN_OUT
+	eEtherCATMaster				:E_EtherCATMaster;	
+END_VAR
 VAR_OUTPUT
 	bError						:BOOL;								//エラー発生を出力
 END_VAR
 VAR
 	uiDevState 			AT%I*	:UINT;								//PDデータとリンク
+	
+	sMasterName					:STRING;
 	
 	bErrorState					:ARRAY[0..15] OF BOOL;				//各ステートエラー
 	fbBitREdge					:ARRAY[0..15] OF R_TRIG;
@@ -18,7 +23,12 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//エラー状態を出力
+      <ST><![CDATA[//マスター名を入力
+	IF sMasterName<>TO_STRING(eEtherCATMaster) THEN
+		sMasterName:=TO_STRING(eEtherCATMaster);
+	END_IF
+
+//エラー状態を出力
 	bError:= (uiDevState AND uiFaultMask)<>0 ;
 
 //デバイスの状態チェック、エラーは複数発生する可能性があるので全bitチェック
@@ -31,6 +41,7 @@ END_VAR
 		fbBitREdge[i](CLK:=bErrorState[i]);
 		
 		IF fbBitREdge[i].Q THEN
+			fbMessage[i].ipArguments.Clear().AddString(sMasterName);
 			fbMessage[i].Send();
 		END_IF
 		
@@ -63,8 +74,12 @@ fbMessage[12].CreateEx(TC_EVENTS.TkEtherCATMasterDiagnosisEventClass.DCNotInSync
       </Implementation>
     </Method>
     <LineIds Name="FB_DevStateDiagnosis">
+      <LineId Id="321" Count="2" />
+      <LineId Id="319" Count="1" />
       <LineId Id="286" Count="6" />
-      <LineId Id="310" Count="8" />
+      <LineId Id="310" Count="5" />
+      <LineId Id="324" Count="0" />
+      <LineId Id="316" Count="2" />
       <LineId Id="32" Count="0" />
     </LineIds>
     <LineIds Name="FB_DevStateDiagnosis.FB_Init">
