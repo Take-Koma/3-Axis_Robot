@@ -3,8 +3,6 @@
   <GVL Name="Param_CalcLoadCell" Id="{8528ca08-7a21-409e-8634-5db7910475a1}" ParameterList="True">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
-	iOverSamples							:INT		:=1;													//1スキャン当たりのデータ数
-
 	//------ロードセルの仕様------
 	lrRatedCapacity							:LREAL		:=10.19716(*100N*);										//ロードセル定格容量　R.C. [kg]
 	lrRatedOutput							:LREAL		:=1.59710;												//ロードセル定格出力 R.O. [mV/V]
@@ -18,12 +16,12 @@ VAR_GLOBAL CONSTANT
 
 
 	//------TF3685用の設定------
-	stParamsComboFilter			:ST_WG_ComboFilter		:=(	nOrder					:=4,		(*4次フィルター*)
+	stParamsComboFilter			:ST_WG_ComboFilter		:=(	nOrder					:=6,		(*4次フィルターだと効きが弱かったので6次フィルター*)
 															fCutoff					:=20.0,		(*20Hz*)
 															fSamplingRate			:=2000,		(*0.5ms*)
 															nSamplesToFilter		:=100,		(*100サンプル(50ms)の移動平均*)
 															fNotchFrequency			:=0.0,		(*ノッチフィルター一旦無しで0*)
-															bReset					:=TRUE);	(*TRUEは過去値はリセット時消去*)
+															bReset					:=TRUE);	(*TRUEは過去値はリコンフィグ時消去*)
 																												// Filter用
 	
 	stParamsScale				:ST_WG_Scaling			:=(	fRawLow					:=0.0,
@@ -33,16 +31,51 @@ VAR_GLOBAL CONSTANT
 																												// Scaling用
 	
 	stParamsWeighing			:ST_WG_Weighing			:=(	nWindowLength			:=200,		(*安定判定は100ms継続で判定*)
-															Validation				:=(	nValidationSamples		:=200, 
-																						fThresholdWeight		:=1.0,		(*1g以上でワークあり*)
-																						fMaxStd					:=0.15,		(*4次フィルターが良く効いているので標準偏差小さめに*)
-																						fMaxWeightDeviation		:=0.4),		(*1g台の判定ミスを防ぐために振れ幅も小さめに*)
-															AutoTare				:=(	nValidationSamples		:=200,
-																						fThresholdWeight		:=0.5,		(*0.5g以下はワークなし*)
-																						fMaxStd					:=0.05,
-																						fMaxWeightDeviation		:=0.2));
+															Validation				:=(	fThresholdWeight		:=1.0,		(*1g以上でワークあり*)
+																						nValidationSamples		:=200,
+																						fMaxStd					:=0.15,		(*6次フィルターが良く効いているので標準偏差小さめに*)
+																						fMaxWeightDeviation		:=0.4,		(*1g台の判定ミスを防ぐために振れ幅も小さめに*)
+																						fRelativeWeightLimit	:=0.0),		(*ロボットの掴んだワーク重量測定なので未使用*)
+																						
+															AutoTare				:=(	fThresholdWeight		:=0.5,		(*0.5g以下はワークなし*)
+																						nValidationSamples		:=200,
+																						fMaxStd					:=0.05,		(*オート0なので標準偏差はさらに小さめに*)
+																						fMaxWeightDeviation		:=0.1));	(*オート0なので振れ幅もさらに小さめに*)
 																												// Weighing用
 
-END_VAR]]></Declaration>
+END_VAR
+
+(*
+
+変数の意味
+ST_WG_ComboFilter
+nOrder: 			フィルタの効き（次数）1〜10で設定。数字を大きくするほどノイズを急峻にカットできるが重量データの応答に遅延が出る。通常使用では初期値の 6 で十分高性能。
+fCutoff:			カットオフ周波数 [Hz]これより大きい周波数の振動ノイズは消す境界線。初期値の 10.0 であれば、1秒間に10回以上震えるような細かなノイズを遮断。
+fSamplingRate:		サンプリングレート [Hz]データを読み込む周期です。EtherCATの通信周期やPLCタスクの周期に合わせる。タスク周期が 1ms（0.001秒）なら 1000.0 を、2msなら 500.0 を設定。
+nSamplesToFilter:	移動平均のウィンドウサイズ（データ個数） 1000Hz（1ms周期）で 200 だと、過去0.2秒間の平均を取り続ける。0を入れるとこの移動平均機能は無効。
+fNotchFrequency:	ノッチフィルタの周波数 [Hz] ※任意特定の周波数だけをピンポイントで狙い撃ちして消すフィルタ。モーターの振動で、25Hzのノイズが載ってしまう時に 25.0 を設定すると、その振動だけを消せる。0.0だと無効。
+bReset:				再構成時に内部の過去値をリセットすべきかどうかを指定する
+
+ST_WG_Weighing
+nWindowLength:		移動平均を形成するサンプル数。パラメータはFBのVAR_OUTPUTを計算するために使う値の数を指定します。既存の入力値の数がサンプル数より少ない場合は、既存の入力値を用いて計算を行います。
+Validation:			ST_WG_Weighing_Validation; FBのVAR_OUTPUTのbValidMeasurement、bNewResult、tLastResult、fLastWeight、fLastStdに影響
+AutoTare:			ST_WG_Weighing_AutoTare;
+
+ST_WG_Weighing_Validation
+fThresholdWeight:		測定重量の最小値。「ワークが載り始めた」と判断するしきい値重量	fThresholdWeight <= FB_WG_Weighing.fWeightで、この条件が満たされます(FB_WG_Weighing.bValidMeasurement=TRUEに影響)
+nValidationSamples:		他のST_WG_Weighing_Validationパラメータ（fThresholdWeight、fMaxStd、fMaxWeightDeviation）が条件を満たす必要のある入力値の回数（サンプル数）。	全て満たすとFB_WG_Weighing.bValidMeasurement=TRUE
+fMaxStd:				標準偏差の上限値。「これ以下ならブレていない」とみなす標準偏差の上限値	FB_WG_Weighing.fStd <= fMaxStdで、この条件が満たされます(FB_WG_Weighing.bValidMeasurement=TRUEに影響)
+fMaxWeightDeviation:	最大重量偏差の上限値。「サンプル数内の、最大値 − 最小値」の許容差	FB_WG_Weighing.fMax - FB_WG_Weighing.fMin <= fMaxWeightDeviationで、この条件が満たされます(FB_WG_Weighing.bValidMeasurement=TRUEに影響)
+fRelativeWeightLimit:	最速で計量完了を出すための重量低下パーセント。	FB_WG_Weighing.fWeight < fRelativeWeightLimit * FB_WG_Weighing.fLastWeightで、FB_WG_Weighing.bNewResultおよびFB_WG_Weighing.tLastResultが更新される
+
+ST_WG_Weighing_AutoTare
+fThresholdWeight:		測定重量の最大値。「ここより軽くなったら空（カラ）だ」と判断するしきい値重量	FB_WG_Weighing.fWeight <= fThresholdWeightで、この条件が満たされます(FB_WG_Weighing.fAutoTareOffsetが更新に影響)
+nValidationSamples:		他のST_WG_Weighing_AutoTareパラメータ(fThresholdWeight, fMaxStd, fMaxWeightDeviation)が条件を満たす必要のある入力値の回数（サンプル数）。	全て満たすとFB_WG_Weighing.fAutoTareOffsetが更新
+fMaxStd:				標準偏差の上限。	ゼロ点判定するときの、ブレ（標準偏差）の許容上限	FB_WG_Weighing.fStd <= fMaxStdで、この条件が満たされます(FB_WG_Weighing.fAutoTareOffsetが更新に影響)
+fMaxWeightDeviation:	最大重量偏差の上限値。「サンプル数内の、最大値 − 最小値」の許容差	FB_WG_Weighing.fMax - FB_WG_Weighing.fMin <= fMaxWeightDeviationで、この条件が満たされます(FB_WG_Weighing.fAutoTareOffsetが更新に影響)
+
+
+
+*)]]></Declaration>
   </GVL>
 </TcPlcObject>

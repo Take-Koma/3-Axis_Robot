@@ -1,22 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_LoadCell_ForCalcValue" Id="{d9f382fb-d7be-402c-819f-8abf17c52f28}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_LoadCell_ForCalcValue
-VAR PERSISTENT
-	_lrTareWeight					:LREAL;													//風袋重量[kg]
-END_VAR
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_LoadCell_ForCalcValue IMPLEMENTS I_LoadCell
 VAR
-	rRMBValueInput			AT %I*	:ARRAY[1..Param_CalcLoadCell.iOverSamples] OF REAL;		//EtherCATターミナルからの入力
+	rRMBValueInput			AT %I*	:REAL;													//EtherCATターミナルからの入力
 	tTimestamp				AT %I*	:T_DCTIME64;											//EtherCATターミナルからのTimestamp
 	_rEexcitationVoltage	AT %Q*	:REAL;													//ロードセル印加電圧 [V] 							
 	bSampleMode				AT %Q*	:BOOL	:=TRUE;											//EL3356-0010のConversion mode 0=7.2ms 1=0.72ms latency
+	bCalibrationInProgress	AT %I*	:BOOL;													//EL3356-0010のセルフキャリブレーション実行中
 
-	_lrCalibrationWeight			:LREAL;													//校正重量[kg]		
-	_lrGrossWeight					:LREAL;													//測定重量[kg]
-	_lrNetWeight					:LREAL;													//正味重量[kg]
-	lrSlope							:LREAL;													//校正後の傾き
+	_lrTareWeight					:LREAL;													//風袋重量[g]
+	_lrCalibrationWeight			:LREAL;													//校正重量[g]		
+	_lrGrossWeight					:LREAL;													//測定重量[g]
+	_lrNetWeight					:LREAL;													//正味重量[g]
+	
 	_lrZAxisSetAcc					:LREAL;													//Z軸の設定加速度[mm/s2]
 	i								:INT;													//演算用
+	
+	nNumTareSamples					:UDINT	:=100;											//風袋引きサンプル数
 
 	_bError							:BOOL;
 	_ipResultMessage				:I_TCMessage;
@@ -32,19 +33,18 @@ VAR
 	fbWeighing						:FB_WG_Weighing;
 
 	//-----中間の変数-----
-	aInput							:ARRAY[1..Param_CalcLoadCell.iOverSamples] OF LREAL;
-	aOutFilter						:ARRAY[1..Param_CalcLoadCell.iOverSamples] OF LREAL;
-	aOutScaling						:ARRAY[1..Param_CalcLoadCell.iOverSamples] OF LREAL;
+	lrInput							:LREAL;
+	lrOutFilter						:LREAL;
+	lrOutScaling					:LREAL;
 
 
 
-// --- 過去のデータを保存しておくための棚（履歴バッファ） ---
-    // 0.5ms(2000Hz)周期で301要素持つことで、150ms分までの過去を記録可能
-    alrAccHistory    				:ARRAY[0..300] OF LREAL;								//加速度指令値(Set値)の履歴
-    anTimeHistory					:ARRAY[0..300] OF T_DCTIME64;							//その時のDC時刻(Timestamp)の履歴
+	//履歴バッファ タスク0.5msで150msまで保存
+    alrAccHistory    				:ARRAY[0..300] OF LREAL;								//加速度指令値(Set値)
+    anTimeHistory					:ARRAY[0..300] OF T_DCTIME64;							//DC時刻(Timestamp)
 	
-    tDelayOffset     				:T_DCTIME64 := 108*1000000;								//ScopeのTime Markerで測った遅延時間
-    _lrGripperWeight				:LREAL;													//グリッパー重量
+    tDelayOffset     				:T_DCTIME64 := 126*1000000;								//ScopeのTime Markerで測った遅延時間
+    _lrGripperWeight				:LREAL;													//グリッパー重量[g]
     
     // --- 計算の過程で使う一時的な変数 ---
 	tSearchTime      : T_DCTIME64;              // 「今」から108ms遡った「ターゲットとなる過去の時刻」
@@ -58,25 +58,33 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="BackgroundCalc" Id="{02c9ef25-9f6b-4e76-b02f-bb3d3a618f0d}">
-      <Declaration><![CDATA[METHOD BackgroundCalc
+    <Property Name="bError" Id="{0cdc9bc5-aa8f-42a0-ae11-5ca9c897b478}">
+      <Declaration><![CDATA[PROPERTY bError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ef05628c-fc54-42ac-8db2-7543f2d86856}">
+        <Declaration><![CDATA[VAR
+END_VAR
 ]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bError:=_bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Execute" Id="{811b902e-43b5-48d8-9a70-0e968cff8140}">
+      <Declaration><![CDATA[METHOD Execute]]></Declaration>
       <Implementation>
-        <ST><![CDATA[//------EtherCATターミナルからの読み出しデータをアレイへ------
-	FOR i := 1 TO Param_CalcLoadCell.iOverSamples BY 1 DO
-		aInput[i]:=REAL_TO_LREAL(rRMBValueInput[i]);
-	END_FOR
+        <ST><![CDATA[//------EtherCATターミナルからの読み出しデータ中間変数へ------
+	lrInput:=REAL_TO_LREAL(rRMBValueInput);
 
 //------TF3685のライブラリーで計算------
-	IF NOT fbComboFilter.Call(ADR(aInput), SIZEOF(aInput), ADR(aOutFilter), SIZEOF(aOutFilter)) THEN
+	IF NOT fbComboFilter.Call(ADR(lrInput), SIZEOF(lrInput), ADR(lrOutFilter), SIZEOF(lrOutFilter)) THEN
 		SetError(fbComboFilter);
 	END_IF
 	
-	IF NOT fbScale.Call(ADR(aOutFilter), SIZEOF(aOutFilter), ADR(aOutScaling), SIZEOF(aOutScaling)) THEN
+	IF NOT fbScale.Call(ADR(lrOutFilter), SIZEOF(lrOutFilter), ADR(lrOutScaling), SIZEOF(lrOutScaling)) THEN
 		SetError(fbScale);
 	END_IF
 	
-	IF NOT fbWeighing.Call(ADR(aOutScaling), SIZEOF(aOutScaling)) THEN
+	IF NOT fbWeighing.Call(ADR(lrOutScaling), SIZEOF(lrOutScaling)) THEN
 		SetError(fbWeighing);
 	END_IF
 
@@ -126,44 +134,18 @@ END_VAR]]></Declaration>
 lrCompValue := (_lrGripperWeight * lrTargetAcc / 9.80665);
 
 // TF3685で綺麗にフィルタリングされた後の重量値から、108ms前の慣性力を引く
-fCorrectedWeight := fbWeighing.fWeight + lrCompValue;]]></ST>
-      </Implementation>
-    </Method>
-    <Property Name="bError" Id="{0cdc9bc5-aa8f-42a0-ae11-5ca9c897b478}">
-      <Declaration><![CDATA[PROPERTY bError : BOOL]]></Declaration>
-      <Get Name="Get" Id="{ef05628c-fc54-42ac-8db2-7543f2d86856}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[bError:=_bError;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Method Name="CalibrationWeightSet" Id="{1695b396-fe9a-44fc-8db5-e624d46ba147}">
-      <Declaration><![CDATA[METHOD CalibrationWeightSet
-VAR_INPUT
-	bCalibrationWeightSet	:BOOL;
-END_VAR
-VAR
-	lrNowGrossWeight		:LREAL;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[	IF bCalibrationWeightSet=TRUE THEN
-		
-		//今のグロスウェイト確認[kg]
-		lrNowGrossWeight:=fbWeighing.fWeight / -1000;
+fCorrectedWeight := fbWeighing.fWeight + lrCompValue;
 
-		
-		//今のグロスウェイトが風袋重量より重いことを確認
-		IF _lrTareWeight+0.010 < lrNowGrossWeight THEN
-			//切片を計算
-			IF lrNowGrossWeight<>0 AND _lrTareWeight<>0 THEN
-				lrSlope:=(_lrCalibrationWeight-0)/(lrNowGrossWeight-_lrTareWeight);
-			END_IF
-		END_IF
-		
-	END_IF
+
+//------各重量を計算------
+	//グロスウェイト計算
+	_lrGrossWeight:=lrOutFilter;
+
+	//風袋重量計算
+	_lrTareWeight:=fbScale.fCurrentTareOffset;
+	
+	//ネットウェイト計算
+	_lrNetWeight:=fbWeighing.fWeight;
 ]]></ST>
       </Implementation>
     </Method>
@@ -192,9 +174,13 @@ END_VAR
 	_stParamsScale			:=stParamsScale;
 	_stParamsWeighing		:=stParamsWeighing;
 	
-	fbComboFilter.Configure(stConfig:=_stParamsComboFilter);
-	fbScale.Configure(stConfig:=_stParamsScale);
-	fbWeighing.Configure(stConfig:=_stParamsWeighing);
+	IF NOT fbComboFilter.Configure(stConfig:=_stParamsComboFilter) THEN
+		SetError(fbComboFilter);
+	ELSIF NOT fbScale.Configure(stConfig:=_stParamsScale) THEN
+		SetError(fbScale);
+	ELSIF NOT fbWeighing.Configure(stConfig:=_stParamsWeighing) THEN
+		SetError(fbWeighing);
+	END_IF
 
 	_rEexcitationVoltage:=rEexcitationVoltage;
 
@@ -213,17 +199,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="lrCalibrationWeight" Id="{4bf87394-09e2-47c4-b296-25bafb6057b5}">
-      <Declaration><![CDATA[PROPERTY lrCalibrationWeight : LREAL]]></Declaration>
-      <Set Name="Set" Id="{a39ddbb3-6f4a-45ae-bba6-d652ae469b1b}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[_lrCalibrationWeight:=lrCalibrationWeight;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Property Name="lrGrossWeight" Id="{f824e025-1bda-49e5-a5ca-e69403dda2db}">
       <Declaration><![CDATA[PROPERTY lrGrossWeight : LREAL]]></Declaration>
       <Get Name="Get" Id="{cd61a536-fecb-4fa0-a7f1-dca8495e7368}">
@@ -231,10 +206,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[//グロスウェイト計算[kg]
-	_lrGrossWeight:=fbWeighing.fWeight * 1000.0;
-	
-	lrGrossWeight:=_lrGrossWeight;]]></ST>
+          <ST><![CDATA[lrGrossWeight:=_lrGrossWeight;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -245,10 +217,7 @@ END_VAR
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[	//ネットウェイト計算[kg]
-	_lrNetWeight:=_lrGrossWeight-_lrTareWeight;
-	
-	lrNetWeight:=_lrNetWeight;]]></ST>
+          <ST><![CDATA[lrNetWeight:=_lrNetWeight;]]></ST>
         </Implementation>
       </Get>
     </Property>
@@ -285,20 +254,18 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF bReconfigureExe= TRUE THEN
+        <ST><![CDATA[IF bReconfigureExe THEN
 
 	_stParamsComboFilter	:=stParamsComboFilter;
 	_stParamsScale			:=stParamsScale;
 	_stParamsWeighing		:=stParamsWeighing;
 	
-	IF fbComboFilter.Configure(stConfig:=_stParamsComboFilter)=FALSE THEN
+	IF NOT fbComboFilter.Configure(stConfig:=_stParamsComboFilter) THEN
 		SetError(fbComboFilter);
-	ELSIF fbScale.Configure(stConfig:=_stParamsScale)=FALSE THEN
+	ELSIF NOT fbScale.Configure(stConfig:=_stParamsScale) THEN
 		SetError(fbScale);
-	ELSIF fbWeighing.Configure(stConfig:=_stParamsWeighing)=FALSE THEN
+	ELSIF NOT fbWeighing.Configure(stConfig:=_stParamsWeighing) THEN
 		SetError(fbWeighing);
-	ELSE
-		;
 	END_IF
 	
 	bReconfigureExe:=FALSE;
@@ -308,7 +275,7 @@ END_IF
       </Implementation>
     </Method>
     <Method Name="SetError" Id="{505b0742-9aaf-4cd9-b34c-4a783691ae12}">
-      <Declaration><![CDATA[METHOD SetError : BOOL
+      <Declaration><![CDATA[METHOD INTERNAL SetError : BOOL
 VAR_INPUT
 	fb : REFERENCE TO _FB_WG_BasicImplementationAlgorithm;
 END_VAR
@@ -318,59 +285,72 @@ END_VAR
 THIS^._ipResultMessage := fb.ipResultMessage;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TareWeightSet" Id="{3e7a9559-43a7-4c84-b4b8-5c882b849358}">
-      <Declaration><![CDATA[METHOD TareWeightSet
+    <Method Name="SpanCalibration" Id="{1fee681a-f68b-4846-be79-ced59a079654}">
+      <Declaration><![CDATA[METHOD SpanCalibration
 VAR_INPUT
-	bTareWeightSet					:BOOL;
-	bPersistentDataWriteRequest		:REFERENCE TO BOOL;
-END_VAR]]></Declaration>
+	bSpanCalibrationExe		:REFERENCE TO BOOL;	
+	lrCalibrationWeight		:LREAL;
+END_VAR
+]]></Declaration>
       <Implementation>
-        <ST><![CDATA[	//風袋重量セット[kg]	
-	IF bTareWeightSet=TRUE THEN
-		_lrTareWeight:=fbWeighing.fWeight / -1000;
-		bPersistentDataWriteRequest:=TRUE;
-		
-	ELSE
-		bPersistentDataWriteRequest:=FALSE;
-	END_IF]]></ST>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ZeroCalibration" Id="{d9b77107-e635-4cec-af50-821abec08df5}">
+      <Declaration><![CDATA[METHOD ZeroCalibration
+VAR_INPUT
+	bZeroCalibrationExe		:REFERENCE TO BOOL;	
+END_VAR
+	
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF bZeroCalibrationExe AND_THEN NOT fbScale.Tare(nNumTareSamples) THEN
+	SetError(fbScale);
+	bZeroCalibrationExe:=FALSE;
+ELSIF bZeroCalibrationExe THEN
+	bZeroCalibrationExe:=FALSE;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_LoadCell_ForCalcValue">
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="FB_LoadCell_ForCalcValue.BackgroundCalc">
-      <LineId Id="110" Count="0" />
-      <LineId Id="1" Count="15" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="111" Count="0" />
-      <LineId Id="64" Count="8" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="76" Count="33" />
-      <LineId Id="17" Count="0" />
-    </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.bError.Get">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_LoadCell_ForCalcValue.CalibrationWeightSet">
-      <LineId Id="1" Count="15" />
+    <LineIds Name="FB_LoadCell_ForCalcValue.Execute">
+      <LineId Id="1" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="5" Count="60" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="69" Count="2" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="72" Count="0" />
     </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.FB_Init">
-      <LineId Id="1" Count="8" />
+      <LineId Id="1" Count="2" />
+      <LineId Id="25" Count="2" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="22" Count="1" />
       <LineId Id="12" Count="2" />
       <LineId Id="10" Count="1" />
     </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.ipResultMessage.Get">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_LoadCell_ForCalcValue.lrCalibrationWeight.Set">
-      <LineId Id="1" Count="0" />
-    </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.lrGrossWeight.Get">
-      <LineId Id="17" Count="3" />
+      <LineId Id="20" Count="0" />
     </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.lrNetWeight.Get">
-      <LineId Id="1" Count="3" />
+      <LineId Id="4" Count="0" />
     </LineIds>
     <LineIds Name="FB_LoadCell_ForCalcValue.lrTareWeight.Get">
       <LineId Id="1" Count="0" />
@@ -381,8 +361,9 @@ END_VAR]]></Declaration>
     <LineIds Name="FB_LoadCell_ForCalcValue.Reconfigure">
       <LineId Id="8" Count="0" />
       <LineId Id="13" Count="0" />
-      <LineId Id="1" Count="4" />
-      <LineId Id="15" Count="9" />
+      <LineId Id="1" Count="3" />
+      <LineId Id="25" Count="5" />
+      <LineId Id="22" Count="2" />
       <LineId Id="14" Count="0" />
       <LineId Id="11" Count="1" />
     </LineIds>
@@ -390,8 +371,12 @@ END_VAR]]></Declaration>
       <LineId Id="4" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="FB_LoadCell_ForCalcValue.TareWeightSet">
-      <LineId Id="1" Count="7" />
+    <LineIds Name="FB_LoadCell_ForCalcValue.SpanCalibration">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LoadCell_ForCalcValue.ZeroCalibration">
+      <LineId Id="2" Count="4" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

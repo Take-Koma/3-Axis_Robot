@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="FB_LoadCell_ForRowValue" Id="{0956b8bf-68cc-43c5-8995-ef78b567874c}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_LoadCell_ForRowValue
 VAR_INPUT
@@ -100,17 +100,6 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="lrCalibrationWeight" Id="{19683f21-feff-4baf-bfb5-90fdc3240760}">
-      <Declaration><![CDATA[PROPERTY lrCalibrationWeight : LREAL]]></Declaration>
-      <Set Name="Set" Id="{22eb9df9-5c9b-4b01-97d8-99b90abf7bde}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[_lrCalibrationWeight:=lrCalibrationWeight;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
     <Property Name="lrGrossWeight" Id="{5ae6203e-6278-486c-a510-7319e4b22091}">
       <Declaration><![CDATA[PROPERTY lrGrossWeight : LREAL]]></Declaration>
       <Get Name="Get" Id="{b11c2004-4946-46b7-8dbe-1c30e8af148e}">
@@ -201,9 +190,6 @@ END_VAR]]></Declaration>
     </LineIds>
     <LineIds Name="FB_LoadCell_ForRowValue.lrBridgeVoltage.Get">
       <LineId Id="1" Count="5" />
-    </LineIds>
-    <LineIds Name="FB_LoadCell_ForRowValue.lrCalibrationWeight.Set">
-      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_LoadCell_ForRowValue.lrGrossWeight.Get">
       <LineId Id="1" Count="5" />

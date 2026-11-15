@@ -8,7 +8,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>Motion_Con</Name>
-    <ProgramVersion>3.1.4026.23</ProgramVersion>
+    <ProgramVersion>3.1.4026.25</ProgramVersion>
     <Application>{3e578fbf-8593-4971-a049-a334d40a2de2}</Application>
     <TypeSystem>{06c75c1e-0f40-44c5-a8bf-ddc4f0ae36a3}</TypeSystem>
     <Implicit_Task_Info>{558334a8-64b5-43ad-807e-2d9c9d5c9ec6}</Implicit_Task_Info>
@@ -105,6 +105,9 @@
     <Compile Include="01_Submodules\LoadCell\CalcLoadCell\Param_CalcLoadCell.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="01_Submodules\LoadCell\I_LoadCell.TcIO">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="01_Submodules\LoadCell\RowLoadCell\FB_LoadCell_ForRowValue.TcPOU">
       <SubType>Code</SubType>
