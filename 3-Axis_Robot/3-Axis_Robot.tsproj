@@ -2976,8 +2976,8 @@
 			<Licenses>
 				<Target>
 					<ManualSelect>{7141DE01-F769-4354-9738-D7453BC0876F}</ManualSelect>
+					<ManualSelect>{796D380F-D49E-4C0C-A05F-500052FAC883}</ManualSelect>
 					<ManualSelect>{E0BE463B-AC1C-4966-A617-286B6222D736}</ManualSelect>
-					<ManualSelect>{B1065A48-8131-4608-A378-D67FA8BD826E}</ManualSelect>
 					<ManualSelect>{6952449D-F68C-49A2-ADE4-8639D85B33A4}</ManualSelect>
 				</Target>
 			</Licenses>
