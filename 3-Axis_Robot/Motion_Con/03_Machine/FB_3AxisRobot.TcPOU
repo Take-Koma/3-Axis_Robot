@@ -171,7 +171,10 @@
 																						rEexcitationVoltage		:=Param_CalcLoadCell.rEexcitationVoltage,
 																						lrGripperWeight			:=Param_3AxisRobot.lrGripperWeight);
 																																//ロードセル制御ファンクションブロック
-																
+		
+		stParamsComboFilter						:ST_WG_ComboFilter		:=Param_CalcLoadCell.stParamsComboFilter;				// Filter用
+		stParamsScale							:ST_WG_Scaling			:=Param_CalcLoadCell.stParamsScale;						// Scaling用
+		stParamsWeighing						:ST_WG_Weighing			:=Param_CalcLoadCell.stParamsWeighing;					// Weighing用
 
 
 //------三菱と通信------
@@ -680,17 +683,17 @@ END_IF
 	fbLoadCellForRowValue.lrCalibrationWeight:=WORD_TO_LREAL(wFromCalibrationWeight)/1000;
 *)
 //test
-	fbLoadCellForCalcValue.BackgroundCalc();
+	fbLoadCellForCalcValue.Execute();
 	fbLoadCellForCalcValue.lrGrossWeight;
 	
 	fbLoadCellForCalcValue.lrZAxisSetAcc:=fbZAxis.fZAxisAcc;
 
 	fbLoadCellForCalcValue.Reconfigure(	bReconfigureExe			:=bTest,
-										stParamsComboFilter		:=Param_CalcLoadCell.stParamsComboFilter,
-										stParamsScale			:=Param_CalcLoadCell.stParamsScale,
-										stParamsWeighing		:=Param_CalcLoadCell.stParamsWeighing);
+										stParamsComboFilter		:=stParamsComboFilter,
+										stParamsScale			:=stParamsScale,
+										stParamsWeighing		:=stParamsWeighing);
 
-	]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="General_MachineManagement" Id="{e4607e6b-531b-4c3e-8e88-b2ed7fff2738}">

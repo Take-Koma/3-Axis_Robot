@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="I_LoadCell" Id="{520615ce-f0c2-4fa8-aeea-c4b3971c2cd1}">
+    <Declaration><![CDATA[INTERFACE I_LoadCell EXTENDS __System.IQueryInterface]]></Declaration>
+    <Property Name="bError" Id="{4f78371f-1873-44d3-94b9-2a28d45f011f}">
+      <Declaration><![CDATA[PROPERTY bError : BOOL]]></Declaration>
+      <Get Name="Get" Id="{bc72567e-c831-41ab-98ae-5448ae65ddd4}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Execute" Id="{58aff30f-24a0-4db5-8484-2a191179df62}">
+      <Declaration><![CDATA[METHOD Execute
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="lrGrossWeight" Id="{e9ba53ac-72dc-441c-bd4f-f4153bf7fa94}">
+      <Declaration><![CDATA[PROPERTY lrGrossWeight : LREAL]]></Declaration>
+      <Get Name="Get" Id="{68247de2-196f-46c0-9acf-90e1b9a8cbc7}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="lrNetWeight" Id="{0a35ec90-0d95-40f9-bf86-c7010aa6658f}">
+      <Declaration><![CDATA[PROPERTY lrNetWeight : LREAL]]></Declaration>
+      <Get Name="Get" Id="{b24616c8-b518-40ec-9659-9e8192b633a5}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="lrTareWeight" Id="{03910e29-81d8-4b40-9336-c2a9371ea209}">
+      <Declaration><![CDATA[PROPERTY lrTareWeight : LREAL]]></Declaration>
+      <Get Name="Get" Id="{64570ade-50d9-4303-8fd7-836e104e8986}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="SpanCalibration" Id="{5ea7b58a-bbaf-4bf2-9324-33e00160c10f}">
+      <Declaration><![CDATA[METHOD SpanCalibration
+VAR_INPUT
+	bSpanCalibrationExe		:REFERENCE TO BOOL;	
+	lrCalibrationWeight		:LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ZeroCalibration" Id="{1d9e1daf-73c3-42b6-8bf2-1eafcd435283}">
+      <Declaration><![CDATA[METHOD ZeroCalibration
+VAR_INPUT
+	bZeroCalibrationExe		:REFERENCE TO BOOL;	
+END_VAR]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
