@@ -1,0 +1,14 @@
+{
+    "AVERAGING_INTERVAL": 0,
+    "RUNTIMES": {
+        "PLC1": {
+            "AMS_NET_ID": "127.0.0.1.1.1",
+            "ENABLED": true,
+            "PORT": 851,
+            "STREAM_SERVER_PORT": 64802,
+            "USE_WHITELISTING": false
+        }
+    },
+    "extensionHostMaxReloads": 10,
+    "extensionHostReloadInterval": "PT10S"
+}

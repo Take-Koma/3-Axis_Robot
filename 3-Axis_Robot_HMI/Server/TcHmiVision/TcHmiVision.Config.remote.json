@@ -1,0 +1,11 @@
+{
+    "RUNTIMES": {
+        "PLC1": {
+            "AMS_NET_ID": "127.0.0.1.1.1",
+            "ENABLED": true,
+            "PORT": 851,
+            "STREAM_SERVER_PORT": -1,
+            "USE_WHITELISTING": false
+        }
+    }
+}
